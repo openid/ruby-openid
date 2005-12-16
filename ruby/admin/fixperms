@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+cat <<EOF | xargs chmod +x
+admin/prepare-release
+admin/build-docs
+admin/fixperms
+admin/runtests
+admin/graph-require.sh
+examples/discover
+EOF
+
+find "examples/rails_openid/script/" -type f | xargs chmod +x

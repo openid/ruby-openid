@@ -1,0 +1,8 @@
+This directory contains examples that demonstrate use of the OpenID
+conusmer library.
+
+consumer.rb runs a simple web server (webrick) and will verify OpenID identities.  To test this out, you'll need a valid OpenID URL, and to install the library (see ../INSTALL), and run ruby consumer.rb
+
+Point your web browser at http://localhost:2000/ to test.
+
+

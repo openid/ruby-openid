@@ -1,0 +1,24 @@
+Ruby OpenID Consumer
+
+Author: Janrain, Inc - Brian Ellin - brian@janrain.com
+Copyright: 2005, Janrain, In
+License: LGPL
+
+This OpenID consumer library is a port of the consumer functionality
+of the Python-OpenID library - http://www.openidenabled.com/openid/libraries/python/
+
+Please read the INSTALL file, and then have a look at the examples
+directory.  A fully functional example using Ruby's WEBrick HTTP
+server library is available.  I encorage you to run the example, and
+have a look at the code.
+
+The library is well documented.  To get started, have a look at the
+example source code(examples/consumer.rb) and lib/openid/consumer.rb.
+
+To run the test suite, make sure the library is installed, use the
+runtests script in the test directory.
+
+The library and dependancies have been tested using Ruby 1.8 only,
+though it may work with earlier versions.
+
+

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+case "$1" in
+    --coverage)
+        shift
+	RUBY="rcov --exclude=^lib/hmac/,^admin/ --sort=coverage"
+	;;
+    *)
+	RUBY="ruby"
+	;;
+esac
+
+HERE=$(dirname $(readlink --canonicalize "$0"))
+REPOROOT=$(dirname "$HERE")
+TESTING_MEMCACHE="localhost:11211" RUBYLIB="$REPOROOT/lib" $RUBY "$@" "$REPOROOT/admin/runtests.rb"

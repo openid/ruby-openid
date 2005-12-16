@@ -1,0 +1,6 @@
+#!/usr/bin/ruby
+
+require "teststore"
+require "assoc"
+require "dh"
+
