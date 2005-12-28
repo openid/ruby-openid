@@ -69,10 +69,11 @@ module OpenID
 
     def Util.randomString(length, chars=nil)
       s = ""
+
       unless chars.nil?
-        Util.randomInts(length, chars.length).each { |i| s << chars[i] }
+        length.times { s << chars[Util.rand(chars.length)] }
       else
-        Util.randomInts(length, 256).each { |i| s << i.chr }
+        length.times { s << Util.rand(256).chr }
       end
       s
     end
@@ -129,25 +130,44 @@ module OpenID
       return y_p
     end
 
-    # generate an array for random ints, where size is the number of elements
-    # that should be in the array, and max is the ceiling for each random num
+    # Generate a random number less than max.  Uses urandom if available.
 
-    def Util.randomInts(size, max=256)
-      data = []
+    def Util.rand(max)
       unless Util::HAS_URANDOM
-        size.times { data << rand(max) }
-      else
-        f = File.open("/dev/urandom")
-        size.times { data << f.read(4).unpack('i')[0] % max }
-        f.close
-      end      
-      return data
-    end
-    
-    # change the message below to do whatever you like for logging
+        return Kernel::rand(max)
+      end
 
+      start = 0
+      stop = max
+      step = 1
+      r = ((stop-start)/step).to_i
+
+      # figure out how many bytes we need
+      rbytes = Util::numToStr(r)
+      nbytes = rbytes.length
+      nbytes -= 1 if rbytes[0].chr == "\000"
+            
+      bytes = "\000" + Util::_getBytes(nbytes)
+      n = Util::strToNum(bytes)
+      
+      return start + (n % r) * step
+    end
+
+    # change the message below to do whatever you like for logging
     def Util.log(message)
       p 'OpenID Log: ' + message
+    end
+
+
+    def Util._getBytes(n)
+      bytes = ""
+      f = File.open("/dev/urandom")
+      while n != 0
+        _bytes = f.read(n)
+        n -= _bytes.length
+        bytes << _bytes
+      end
+      return bytes
     end
 
   end
