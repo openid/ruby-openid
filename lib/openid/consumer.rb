@@ -217,15 +217,10 @@ module OpenID
       return [nonce, consumer_id, server_id, server_url].freeze
     end
 
-    def quoteMinimal(s)
-      s
-    end
-
     def normalizeURL(url)
       url.strip!
       parsed = URI.parse(url)
       parsed = URI.parse("http://"+url) if parsed.scheme.nil?
-      # XXX: do idna conversion & quoteMinimal
       parsed.normalize!
       parsed.to_s
     end
