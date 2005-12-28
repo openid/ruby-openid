@@ -2,12 +2,20 @@ require "html/htmltokenizer"
 
 def parseLinkAttrs(data)
   parser = HTMLTokenizer.new(data)
-  while el = parser.getTag('link', 'body')
-    if el.tag_name == 'link'
-      yield el.attr_hash
-    elsif el.tag_name == 'body'
-      return
+  in_head = false
+  begin
+    while el = parser.getTag("head", "link", "body")
+      if el.tag_name == "head"
+        in_head = true
+      elsif el.tag_name == "link"
+        continue unless in_head
+        yield el.attr_hash
+      elsif el.tag_name == "body"
+        return
+      end
     end
+  rescue
+    return
   end  
 end
 
