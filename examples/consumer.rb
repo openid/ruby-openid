@@ -9,7 +9,7 @@ require "openid/filestore"
 
 ################ endconfig ##########################
 # use your desired store implementation here
-store = OpenID::FilesystemOpenIDStore.new("/tmp/simpleopenid/")
+store = OpenID::FilesystemOpenIDStore.new("/tmp/rubyopenid/")
 
 $host = "localhost"
 $port = 2000
