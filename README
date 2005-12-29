@@ -21,7 +21,7 @@ have a look at the code.
 The library is well documented.  To get started, have a look at the
 example source code(examples/consumer.rb) and OpenID::OpenIDConsumer.
 
-The library and dependancies have been tested using Ruby 1.8 only,
+The library and dependancies have been tested using Ruby 1.8,
 though it may work with earlier versions.
 
 ==Homepage

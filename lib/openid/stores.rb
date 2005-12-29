@@ -1,9 +1,8 @@
 require "openid/util"
 
-# Consumer's view of an association
-
 module OpenID
 
+  # Consumer's view of an association with a server
   class ConsumerAssociation
 
     @@assoc_keys = [

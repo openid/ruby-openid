@@ -5,14 +5,12 @@ require 'tempfile'
 require 'openid/util'
 require 'openid/stores'
 
-# Filesystem-based store for OpenID associations and nonces.
-#
-# Methods of this object may raise SystemCallError if filestystem
-# related errors are encountered.
-
-
 module OpenID
 
+  # Filesystem-based store for OpenID associations and nonces.
+  #
+  # Methods of this object may raise SystemCallError if filestystem
+  # related errors are encountered.
   class FilesystemOpenIDStore < OpenIDStore
   
     @@FILENAME_ALLOWED = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-".split("")

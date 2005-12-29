@@ -1,24 +1,34 @@
-Ruby-OpenID-Consumer Installation
+= Ruby OpenID Consumer Installation
 
-Requirements:
+== Requirements
 
-These packages are required by the OpenID library.
+These following external libraries are required.  Make sure they are installed before continuing.
 
-htmltokenizer - http://rubyforge.org/projects/htmltokenizer/
-              - Debian users may: apt-get install libhtml-htmltokenizer-ruby
+* htmltokenizer - http://rubyforge.org/projects/htmltokenizer/
+   Debian users may: apt-get install libhtml-htmltokenizer-ruby
 
-ruby-hmac - http://deisui.org/~ueno/ruby/hmac.html
+* ruby-hmac - http://deisui.org/~ueno/ruby/hmac.html
 
-Installation:
+== Installation
 
-unpack the archive and run setup.rb (you may need to be root)
+Unpack the archive and run setup.rb (you may need to be root)
 
-ruby setup.rb
+ ruby setup.rb
+
+setup.rb installs the library into your system ruby.  If don't want to add openid to you system ruby, make sure to add the *lib* directory of the extracted tarball to your RUBYLIB environment variable.
 
 Make sure everything installed ok:
-$> irb
-irb(main):001:0> require "openid/consumer"
-=> true
+ $> irb
+ irb(main):001:0> require "openid/consumer"
+ => true
 
+== Run the test suite
+
+Go into the test directory and execute the *runtests* script.
+
+== Next steps
+
+* Run consumer.rb in the examples directory. 
+* Get started writing your own consumer using OpenID::OpenIDConsumer
 
 

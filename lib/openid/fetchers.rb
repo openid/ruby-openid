@@ -1,10 +1,9 @@
 require "uri"
 require "net/http"
 
-# Base Object used by consumer to send http messages
-
 module OpenID
 
+  # Base Object used by consumer to send http messages
   class OpenIDHTTPFetcher
 
     # Fetch the content of url, following redirects, and return the
