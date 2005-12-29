@@ -11,6 +11,14 @@ module OpenID
 
     HAS_URANDOM = File.chardev? '/dev/urandom'
 
+    def Util.getOpenIDParameters(query)
+      params = {}
+      query.each do |k,v|
+        params[k] = v if k.index("openid.") == 0
+      end
+      params
+    end
+
     def Util.hmacSha1(key, text)
       HMAC::SHA1.digest(key, text)
     end

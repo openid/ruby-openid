@@ -25,14 +25,6 @@ module OpenID
   HTTP_FAILURE = 'http failure'
   PARSE_ERROR = 'parse error'
 
-  def OpenID.getOpenIDParameters(query)
-    params = {}
-    query.each do |k,v|
-      params[k] = v if k.index("openid.") == 0
-    end
-    params
-  end
-
   class OpenIDConsumer
 
     @@NONCE_LEN = 8
@@ -136,7 +128,7 @@ module OpenID
     
       if assoc.nil? or assoc.handle != assoc_handle or assoc.expiresIn <= 0
         # It's not an associtaion we know about.  Dumb mode is our only recovery
-        check_args = OpenID::getOpenIDParameters(query)
+        check_args = OpenID::Util.getOpenIDParameters(query)
         check_args["openid.mode"] = "check_authentication"
         post_data = OpenID::Util.urlencode(check_args)
         return self.checkAuth(nonce, consumer_id, post_data, server_url)
@@ -147,7 +139,7 @@ module OpenID
       signed = query["openid.signed"]
       return [FAILURE, consumer_id] if sig.nil? or signed.nil?
       
-      args = OpenID::getOpenIDParameters(query)
+      args = OpenID::Util.getOpenIDParameters(query)
       signed_list = signed.split(",")
       _signed, v_sig = OpenID::Util.signReply(args, assoc.secret, signed_list)
       
