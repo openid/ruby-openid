@@ -1,11 +1,17 @@
-Ruby OpenID Consumer
+=OpenID Consumer
 
-Author: Janrain, Inc - Brian Ellin - brian@janrain.com
-Copyright: 2005, Janrain, In
-License: LGPL
+A Ruby library for verifying OpenID identities.
 
-This OpenID consumer library is a port of the consumer functionality
-of the Python-OpenID library - http://www.openidenabled.com/openid/libraries/python/
+This library is a port of the Python OpenID library's consumer functionality. See http://www.openidenabled.com/openid/libraries/python for more info on the Python library.
+
+==Features
+* Easy to use interface (OpenID::OpenIDConsumer)
+* Does not depend on underlying web framework
+* Supports multiple storage mechanisms (Filesystem, SQL)
+* Example code to help you get started
+* Test suite
+
+==Getting Started
 
 Please read the INSTALL file, and then have a look at the examples
 directory.  A fully functional example using Ruby's WEBrick HTTP
@@ -13,12 +19,22 @@ server library is available.  I encorage you to run the example, and
 have a look at the code.
 
 The library is well documented.  To get started, have a look at the
-example source code(examples/consumer.rb) and lib/openid/consumer.rb.
-
-To run the test suite, make sure the library is installed, use the
-runtests script in the test directory.
+example source code(examples/consumer.rb) and OpenID::OpenIDConsumer.
 
 The library and dependancies have been tested using Ruby 1.8 only,
 though it may work with earlier versions.
+
+==Homepage
+http://www.openidenabled.com/openid/libraries/ruby
+
+==Author
+Copyright 2005, Janrain, Inc.
+Contact Brian Ellin: brian -at- janrain -dot- com
+
+==License
+LGPL.  For more information see the COPYING file.
+
+
+
 
 
