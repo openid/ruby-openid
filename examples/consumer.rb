@@ -10,7 +10,7 @@ include WEBrick
 require "openid/consumer"
 require "openid/filestore"
 
-################ endconfig ##########################
+################ start config ##########################
 # use your desired store implementation here
 store_dir = Pathname.new(Dir.tmpdir).join("rubyopenid")
 store = OpenID::FilesystemOpenIDStore.new(store_dir)
