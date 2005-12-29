@@ -82,13 +82,11 @@ module OpenID
 
 
   # Interface for the abstract OpenIDStore
-
   class OpenIDStore
 
     @@AUTH_KEY_LEN = 20
 
     # Put a ConsumerAssociation object into storace
-
     def storeAssociation(association)
       raise NotImplementedError
     end
@@ -97,41 +95,35 @@ module OpenID
     # the server_url.  Returns nil if no such association is found or if
     # the one matching association is expired. (Is allowed to GC expired
     # associations when found.)
-
     def getAssociation(server_url)
       raise NotImplementedError
     end
 
     # If there is a matching association, remove it from the store and
     # return true, otherwise return false.
-
     def removeAssociation(server_url, handle)
       raise NotImplementedError
     end
 
     # Stores a nonce (which is passed in as a string).
-
     def storeNonce(nonce)
       raise NotImplementedError
     end
 
     # If the nonce is in the store, remove it and return true. Otherwise
     # return false.
-
     def useNonce(nonce)
       raise NotImplementedError
     end
 
     # Returns a 20-byte auth key used to sign the tokens, to ensure
     # that they haven't been tampered with in transit. It must return
-    # the same key every time it is called.
-    
+    # the same key every time it is called.   
     def getAuthKey
       raise NotImplementedError
     end
 
     # Method return true if the store is dumb-mode-style store.
-
     def isDumb?
       false
     end

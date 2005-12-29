@@ -15,8 +15,7 @@ module OpenID
   
     @@FILENAME_ALLOWED = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-".split("")
   
-    # Init the store, putting all data in directory
-
+    # Create a FilesystemOpenIDStore instance, putting all data in +directory+.
     def initialize(directory)
       p_dir = Pathname.new(directory)
       @nonce_dir = p_dir.join('nonces')
@@ -33,7 +32,6 @@ module OpenID
 
     # Read the auth key from the auth key file. Returns nil if there
     # is currently no auth key.
-
     def readAuthKey
       f = nil
       begin
@@ -49,7 +47,6 @@ module OpenID
 
     # Generate a new random auth key and safely store it in the location
     # specified by @auth_key_name
-
     def createAuthKey
       auth_key = OpenID::Util.randomString(@@AUTH_KEY_LEN)
       f, tmp = mktemp
@@ -74,7 +71,6 @@ module OpenID
     
     # Retrieve the auth key from the file specified by
     # @auth_key_file, creating it if it does not exist
-
     def getAuthKey
       auth_key = readAuthKey
       if auth_key.nil?
@@ -91,14 +87,12 @@ module OpenID
     # Create a unique filename for a given server url and handle. The
     # filename that is returned will contain the domain name from the
     # server URL for ease of human inspection of the data dir.
-
     def getAssociationFilename(server_url)
       filename = self.filenameFromURL(server_url)
       @association_dir.join(filename)
     end
 
     # Store an association in the assoc directory
-
     def storeAssociation(association)
       assoc_s = OpenID::ConsumerAssociation.serialize(association)
       filename = getAssociationFilename(association.server_url)
@@ -132,7 +126,6 @@ module OpenID
     end
     
     # Retrieve an association
-    
     def getAssociation(server_url)
       filename = getAssociationFilename(server_url)
       begin
@@ -165,7 +158,6 @@ module OpenID
     end
 
     # Remove an association if it exists, otherwise do nothing.
-    
     def removeAssociation(server_url, handle)
       assoc = getAssociation(server_url)
       if assoc.nil? or assoc.handle != handle
@@ -176,8 +168,7 @@ module OpenID
       end
     end
 
-    # Mark this nonce as present
-    
+    # Mark this nonce as present    
     def storeNonce(nonce)
       filename = @nonce_dir.join(nonce)
       File.open(filename, "w").close
@@ -185,7 +176,6 @@ module OpenID
 
     # Return whether this nonce is present.  As a side-effect, mark it 
     # as no longer present.
-
     def useNonce(nonce)
       filename = @nonce_dir.join(nonce)
       begin
@@ -204,7 +194,6 @@ module OpenID
     end
 
     # Garbage collection routine.  Clean up old associations and nonces.
-
     def clean
       nonces = Dir[@nonce_dir.join("*")]
       now = Time.now
@@ -247,8 +236,7 @@ module OpenID
 
     protected
 
-    # Create a temporary file and return the File object and filename.
-    
+    # Create a temporary file and return the File object and filename.    
     def mktemp
       f = Tempfile.new('tmp', @temp_dir)
       [f, f.path]
@@ -268,7 +256,6 @@ module OpenID
     end
 
     # remove file if present in filesystem
-
     def removeIfPresent(filename)
       begin
         File.unlink(filename)
