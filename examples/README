@@ -1,6 +1,19 @@
 This directory contains examples that demonstrate use of the OpenID
-conusmer library.
+conusmer library.  Make sure you have properly installed this library before
+running the examples.
 
+==Ruby on Rails example
+This example simply prompts the user for an
+identity URL and verifies it.  This is done from the lauded Ruby on
+Rails framework, and you can get a look at how it works in
+app/controllers/openid_controller.rb
+
+===Run the rails example
+* Unpack openid_rails.tar.gz 
+* run openid_rails/script/server
+* point your browser to http://localhost:3000/
+
+==WEBrick example
 consumer.rb runs a simple web server (webrick) and will verify OpenID identities.  To test this out, you'll need a valid OpenID URL, and to install the library (see ../INSTALL), and run ruby consumer.rb
 
 Point your web browser at http://localhost:2000/ to test.
