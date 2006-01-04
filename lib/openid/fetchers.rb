@@ -44,7 +44,8 @@ module OpenID
       begin
         u = URI.parse(url)
         http = getHTTPobj(u.host, u.port)
-        resp = http.post(u.request_uri, body)
+        resp = http.post(u.request_uri, body,
+                         {"Content-type"=>"application/x-www-form-urlencoded"})
       rescue
         nil
       else
