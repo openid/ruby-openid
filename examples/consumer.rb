@@ -208,7 +208,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
   <body>
     <h1>#{title}</h1>
     <p>
-      This example consumer uses the Ruby-OpenID-Consumer library
+      This example consumer uses the <a href="http://openidenabled.com/openid/libraries/ruby">Ruby OpenID</a> library
       on a WEBrick platform.  The example just verifies that the URL that
       you enter is your identity URL.
     </p>
