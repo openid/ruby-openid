@@ -13,6 +13,17 @@ app/controllers/openid_controller.rb
 * run openid_rails/script/server
 * point your browser to http://localhost:3000/
 
+==Ruby on Rails OpenIDLoginGenerator
+A port of the standard LoginGenerator that uses OpenID authentication.  Use this generator as a starting point for your OpenID enabled rails app.
+
+You can read about LoginGenerator at http://wiki.rubyonrails.com/rails/pages/LoginGenerator
+
+===Running the generator
+* Copy the contents of openid_login_generator into ~/.rails/generators/openid_login
+* run script/generate openid_login Auth
+
+You will now have an auth_controller.rb in app/controllers.  For more information see the USAGE and README in the openid_login_generator directory.
+
 ==WEBrick example
 consumer.rb runs a simple web server (webrick) and will verify OpenID identities.  To test this out, you'll need a valid OpenID URL, and to install the library (see ../INSTALL), and run ruby consumer.rb
 
