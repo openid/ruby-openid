@@ -564,7 +564,11 @@ module OpenID
     end
 
     def findIdentityInfo(identity_url)
-      url = self.normalizeURL(identity_url)
+      begin
+        url = self.normalizeURL(identity_url)
+      rescue URI::InvalidURIError
+        return [HTTP_FAILURE, nil]
+      end
       ret = @fetcher.get(url)
       return [HTTP_FAILURE, nil] if ret.nil?
       
