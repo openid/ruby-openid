@@ -228,7 +228,7 @@ module OpenID
             self.removeIfPresent(af)
             next
           else
-            self.removeIfPresent(af) if association.getExpiresIn == 0          
+            self.removeIfPresent(af) if association.expiresIn == 0          
           end
         end
       end

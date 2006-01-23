@@ -71,6 +71,10 @@ module OpenID
       [0, @issued + @lifetime - Time.now.to_i].max
     end
 
+    def expired?
+      return expiresIn == 0
+    end
+
     def ==(other)    
       def iv_values(o)
         o.instance_variables.collect {|i| o.instance_variable_get(i)}
