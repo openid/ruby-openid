@@ -1,14 +1,5 @@
 = Ruby OpenID Consumer Installation
 
-== Requirements
-
-These following external libraries are required.  Make sure they are installed before continuing.
-
-* htmltokenizer - http://rubyforge.org/projects/htmltokenizer/
-   Debian users may: apt-get install libhtml-htmltokenizer-ruby
-
-* ruby-hmac - http://deisui.org/~ueno/ruby/hmac.html
-
 == Installation
 
 Unpack the archive and run setup.rb (you may need to be root)
