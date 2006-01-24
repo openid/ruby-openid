@@ -239,7 +239,7 @@ EOF
 
     results = []
     cases.split("\n\n").each do |c|
-      parseLinkAttrs(c){ |x| results << x }
+      parse_link_attrs(c){ |x| results << x }
     end
 
     results.each {|r| assert(r == {}, r.to_s)}
@@ -258,7 +258,7 @@ EOF
     
     results = []
     cases.each do |c|
-      parseLinkAttrs(c) { |x| results << x }
+      parse_link_attrs(c) { |x| results << x }
     end
 
     assert_equal(cases.length, results.length)
@@ -296,7 +296,7 @@ EOF
 
     cases.each do |unparsed, expected|
       actual = []
-      parseLinkAttrs(unparsed) {|x| actual << x}
+      parse_link_attrs(unparsed) {|x| actual << x}
       assert_equal(expected, actual)
     end
 

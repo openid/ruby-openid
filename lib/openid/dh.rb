@@ -9,12 +9,12 @@ module OpenID
 
     attr_reader :p, :g, :public
     
-    def DiffieHellman.fromBase64(p=nil, g=nil)
+    def DiffieHellman.from_base64(p=nil, g=nil)
       unless p.nil?
-        p = OpenID::Util.strToNum(OpenID::Util.fromBase64(p))
+        p = OpenID::Util.str_to_num(OpenID::Util.from_base64(p))
       end
       unless g.nil?
-        g = OpenID::Util.strToNum(OpenID::Util.fromBase64(g))
+        g = OpenID::Util.str_to_num(OpenID::Util.from_base64(g))
       end
       DiffieHellman.new(p, g)
     end
@@ -27,7 +27,7 @@ module OpenID
       @public = OpenID::Util.powermod(@g, @private, @p)
     end
 
-    def getSharedSecret(composite)
+    def get_shared_secret(composite)
       OpenID::Util.powermod(composite, @private, @p)
     end
 

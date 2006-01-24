@@ -40,11 +40,11 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       when "", "/", "/start"
         self.render
       when "/begin"
-        self.doBegin
+        self.do_begin
       when "/complete"
-        self.doComplete
+        self.do_complete
       else
-        self.redirect(self.buildURL("/"))
+        self.redirect(self.build_url("/"))
       end
     ensure
       @req = nil
@@ -52,7 +52,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     end
   end 
 
-  def doBegin
+  def do_begin
     # First make sure the user entered something
     openid_url = @req.query.fetch("openid_url", "")
     if openid_url.empty?
@@ -62,7 +62,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     end    
     
     # Then ask the openid library to begin the authorization
-    status, info = $consumer.beginAuth(openid_url)
+    status, info = $consumer.begin_auth(openid_url)
     
     # If the URL was unusable (either because of network conditions,
     # a server error, or that the response returned was not an OpenID
@@ -89,14 +89,14 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       # available. For this example, we have no session and we
       # do not want to deal with cookies, so just add it as a
       # query parameter to the URL.
-      return_to = self.buildURL("/complete", {"token"=>info.token})
+      return_to = self.build_url("/complete", {"token"=>info.token})
 
       # Now ask the library for the URL to redirect the user to
       # his OpenID server. The auth request is what the library
       # returned before. We just constructed the return_to. The
       # return_to URL must be under the specified trust_root. We
       # just use the base_url for this server as a trust root.
-      redirect_url = $consumer.constructRedirect(info,
+      redirect_url = $consumer.construct_redirect(info,
                                                  return_to,
                                                  trust_root=$base_url)
       
@@ -109,7 +109,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
   end
 
   # handle the redirect from the OpenID server
-  def doComplete
+  def do_complete
     # get the token from the environment (in this case, the URL)
     token = @req.query.fetch("token", "")
 
@@ -117,7 +117,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     # us.  Status is a code indicating the response type. info is
     # either nil or a string containing more information about
     # the return type.
-    status, info = $consumer.completeAuth(token, @req.query)
+    status, info = $consumer.complete_auth(token, @req.query)
 
     css_class = "error"
     openid_url = nil
@@ -153,9 +153,9 @@ class SimpleServlet < HTTPServlet::AbstractServlet
 
   # build a URL relative to the server base URL, with the given query
   # parameters added.
-  def buildURL(action, query=nil)
+  def build_url(action, query=nil)
     url = @req.request_uri.merge(action).to_s
-    url = OpenID::Util.appendArgs(url, query) unless query.nil?
+    url = OpenID::Util.append_args(url, query) unless query.nil?
     url
   end
    
@@ -164,14 +164,14 @@ class SimpleServlet < HTTPServlet::AbstractServlet
   end
 
   def render(message=nil, css_class="alert", form_contents="")
-    @res.body = self.pageHeader
+    @res.body = self.page_header
     unless message.nil?
       @res.body << "<div class=\"#{css_class}\">#{message}</div>"
     end
-    @res.body << self.pageFooter(form_contents)    
+    @res.body << self.page_footer(form_contents)    
   end
 
-  def pageHeader(title="Ruby OpenID WEBrick example")
+  def page_header(title="Ruby OpenID WEBrick example")
     header = <<END_OF_STRING
 <html>
   <head><title>#{title}</title></head>
@@ -216,11 +216,11 @@ END_OF_STRING
   end
 
 
-  def pageFooter(form_contents="")
+  def page_footer(form_contents="")
     form_contents = "" if form_contents == "/"    
     footer = <<END_OF_STRING
     <div id="verify-form">
-      <form method="get" action=#{self.buildURL("/begin")}>
+      <form method="get" action=#{self.build_url("/begin")}>
         Identity&nbsp;URL:
       <input type="text" name="openid_url" value="#{form_contents}" />
         <input type="submit" value="Verify" />

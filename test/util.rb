@@ -17,14 +17,14 @@ class UtilTestCase < Test::Unit::TestCase
       "baz" => "hat:pants"
     }
     
-    parsed = OpenID::Util.kvForm(kv)
+    parsed = OpenID::Util.kvform(kv)
     unparsed = OpenID::Util.parsekv(parsed)
     assert(kv == unparsed)
   end
 
   def test_packing
     cases = [1,2,4305783490578, 457092437545247574732543905702435734958]
-    cases.each { |c| assert(c == OpenID::Util.strToNum(OpenID::Util.numToStr(c))) }
+    cases.each { |c| assert(c == OpenID::Util.str_to_num(OpenID::Util.num_to_str(c))) }
   end
 
   def test_base64
@@ -33,12 +33,12 @@ class UtilTestCase < Test::Unit::TestCase
              "\000",
              "\001",
              "\000" * 100,
-             OpenID::Util.randomString(100),
+             OpenID::Util.random_string(100),
             ]
 
     cases.each do |c|
-      encoded = OpenID::Util.toBase64(c)
-      decoded = OpenID::Util.fromBase64(encoded)
+      encoded = OpenID::Util.to_base64(c)
+      decoded = OpenID::Util.from_base64(encoded)
       assert(c == decoded)
     end
       

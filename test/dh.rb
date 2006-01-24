@@ -11,8 +11,8 @@ class DiffieHellmanTestCase < Test::Unit::TestCase
     dh1 = OpenID::DiffieHellman.new
     dh2 = OpenID::DiffieHellman.new
     
-    secret1 = dh1.getSharedSecret(dh2.public)
-    secret2 = dh2.getSharedSecret(dh1.public)
+    secret1 = dh1.get_shared_secret(dh2.public)
+    secret2 = dh2.get_shared_secret(dh1.public)
     assert(secret1 == secret2)
   end
 

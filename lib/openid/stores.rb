@@ -16,7 +16,7 @@ module OpenID
 
     attr_reader :server_url, :handle, :secret, :issued, :lifetime
 
-    def ConsumerAssociation.fromExpiresIn(expires_in, server_url,
+    def ConsumerAssociation.from_expires_in(expires_in, server_url,
                                           handle, secret)
       issued = Time.now.to_i
       lifetime = expires_in
@@ -28,7 +28,7 @@ module OpenID
         '1',
         assoc.server_url,
         assoc.handle,
-        OpenID::Util.toBase64(assoc.secret),
+        OpenID::Util.to_base64(assoc.secret),
         assoc.issued.to_i.to_s,
         assoc.lifetime.to_i.to_s
       ]
@@ -53,7 +53,7 @@ module OpenID
       version, server_url, handle, secret, issued, lifetime = values
       raise 'VersionError' if version != '1'
   
-      secret = OpenID::Util.fromBase64(secret)
+      secret = OpenID::Util.from_base64(secret)
       issued = issued.to_i
       lifetime = lifetime.to_i
       ConsumerAssociation.new(server_url, handle, secret, issued, lifetime)
@@ -67,12 +67,12 @@ module OpenID
       @lifetime = lifetime
     end
 
-    def expiresIn
+    def expires_in
       [0, @issued + @lifetime - Time.now.to_i].max
     end
 
     def expired?
-      return expiresIn == 0
+      return expires_in == 0
     end
 
     def ==(other)    
@@ -91,7 +91,7 @@ module OpenID
     @@AUTH_KEY_LEN = 20
 
     # Put a ConsumerAssociation object into storace
-    def storeAssociation(association)
+    def store_association(association)
       raise NotImplementedError
     end
 
@@ -99,7 +99,7 @@ module OpenID
     # the server_url.  Returns nil if no such association is found or if
     # the one matching association is expired. (Is allowed to GC expired
     # associations when found.)
-    def getAssociation(server_url)
+    def get_association(server_url)
       raise NotImplementedError
     end
 
@@ -110,25 +110,25 @@ module OpenID
     end
 
     # Stores a nonce (which is passed in as a string).
-    def storeNonce(nonce)
+    def store_nonce(nonce)
       raise NotImplementedError
     end
 
     # If the nonce is in the store, remove it and return true. Otherwise
     # return false.
-    def useNonce(nonce)
+    def use_nonce(nonce)
       raise NotImplementedError
     end
 
     # Returns a 20-byte auth key used to sign the tokens, to ensure
     # that they haven't been tampered with in transit. It must return
     # the same key every time it is called.   
-    def getAuthKey
+    def get_auth_key
       raise NotImplementedError
     end
 
     # Method return true if the store is dumb-mode-style store.
-    def isDumb?
+    def dumb?
       false
     end
 
@@ -142,11 +142,11 @@ module OpenID
       @auth_key = Digest::SHA1.hexdigest(secret_phrase)
     end
 
-    def storeAssociation(assoc)
+    def store_association(assoc)
       nil
     end
 
-    def getAssociation(server_url)
+    def get_association(server_url)
       nil
     end
   
@@ -154,19 +154,19 @@ module OpenID
       false
     end
 
-    def storeNonce(nonce)
+    def store_nonce(nonce)
       nil
     end
 
-    def useNonce(nonce)
+    def use_nonce(nonce)
       true
     end
 
-    def getAuthKey
+    def get_auth_key
       @auth_key
     end
 
-    def isDumb?
+    def dumb?
       true
     end
 

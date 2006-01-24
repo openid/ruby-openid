@@ -11,12 +11,12 @@ class <%= class_name %>Controller < ApplicationController
     openid_url = @params[:identity_url]
 
     if @request.post?
-      status, info = $consumer.beginAuth(openid_url)
+      status, info = $consumer.begin_auth(openid_url)
       case status
       when OpenID::SUCCESS
-        return_to = url_for(:action=>:completeAuth, :token=>info.token)
+        return_to = url_for(:action=>:complete_auth, :token=>info.token)
         trust_root = url_for(:controller=>"")
-        redirect_url = $consumer.constructRedirect(info, return_to, trust_root)
+        redirect_url = $consumer.construct_redirect(info, return_to, trust_root)
 
         redirect_to(redirect_url)
 
@@ -30,10 +30,10 @@ class <%= class_name %>Controller < ApplicationController
     end    
   end
 
-  def completeAuth
+  def complete_auth
     token = @params[:token]
     
-    status, info = $consumer.completeAuth(token, @params)
+    status, info = $consumer.complete_auth(token, @params)
     
     if status == OpenID::SUCCESS
       openid_url = info

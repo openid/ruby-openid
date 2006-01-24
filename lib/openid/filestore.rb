@@ -24,15 +24,15 @@ module OpenID
       @auth_key_name = p_dir.join('auth_key')
       @max_nonce_age = 6 * 60 * 60
       
-      self.ensureDir(@nonce_dir)
-      self.ensureDir(@association_dir)
-      self.ensureDir(@temp_dir)
-      self.ensureDir(File.dirname(@auth_key_name))
+      self.ensure_dir(@nonce_dir)
+      self.ensure_dir(@association_dir)
+      self.ensure_dir(@temp_dir)
+      self.ensure_dir(File.dirname(@auth_key_name))
     end
 
     # Read the auth key from the auth key file. Returns nil if there
     # is currently no auth key.
-    def readAuthKey
+    def read_auth_key
       f = nil
       begin
         f = File.open(@auth_key_name)      
@@ -47,8 +47,8 @@ module OpenID
 
     # Generate a new random auth key and safely store it in the location
     # specified by @auth_key_name
-    def createAuthKey
-      auth_key = OpenID::Util.randomString(@@AUTH_KEY_LEN)
+    def create_auth_key
+      auth_key = OpenID::Util.random_string(@@AUTH_KEY_LEN)
       f, tmp = mktemp
       begin
         begin
@@ -60,10 +60,10 @@ module OpenID
         begin
           File.link(tmp, @auth_key_name)
         rescue Errno::EEXIST
-          raise if readAuthKey.nil?
+          raise if read_auth_key.nil?
         end      
       ensure
-        self.removeIfPresent(tmp)
+        self.remove_if_present(tmp)
       end
 
       auth_key
@@ -71,10 +71,10 @@ module OpenID
     
     # Retrieve the auth key from the file specified by
     # @auth_key_file, creating it if it does not exist
-    def getAuthKey
-      auth_key = readAuthKey
+    def get_auth_key
+      auth_key = read_auth_key
       if auth_key.nil?
-        auth_key = createAuthKey
+        auth_key = create_auth_key
       end
       
       if auth_key.length != @@AUTH_KEY_LEN
@@ -87,15 +87,15 @@ module OpenID
     # Create a unique filename for a given server url and handle. The
     # filename that is returned will contain the domain name from the
     # server URL for ease of human inspection of the data dir.
-    def getAssociationFilename(server_url)
-      filename = self.filenameFromURL(server_url)
+    def get_association_filename(server_url)
+      filename = self.filename_from_url(server_url)
       @association_dir.join(filename)
     end
 
     # Store an association in the assoc directory
-    def storeAssociation(association)
+    def store_association(association)
       assoc_s = OpenID::ConsumerAssociation.serialize(association)
-      filename = getAssociationFilename(association.server_url)
+      filename = get_association_filename(association.server_url)
       f, tmp = mktemp
     
       begin
@@ -120,14 +120,14 @@ module OpenID
         end
         
       rescue
-        self.removeIfPresent(tmp)
+        self.remove_if_present(tmp)
         raise
       end
     end
     
     # Retrieve an association
-    def getAssociation(server_url)
-      filename = getAssociationFilename(server_url)
+    def get_association(server_url)
+      filename = get_association_filename(server_url)
       begin
         assoc_file = File.open(filename, "r")
       rescue Errno::ENOENT
@@ -142,13 +142,13 @@ module OpenID
         begin
           association = OpenID::ConsumerAssociation.deserialize(assoc_s)      
         rescue "VersionError"
-          self.removeIfPresent(filename)
+          self.remove_if_present(filename)
           return nil
         end
 
         # clean up expired associations
-        if association.expiresIn == 0
-          self.removeIfPresent(filename)
+        if association.expires_in == 0
+          self.remove_if_present(filename)
           return nil
         else
           return association
@@ -159,24 +159,24 @@ module OpenID
 
     # Remove an association if it exists, otherwise do nothing.
     def removeAssociation(server_url, handle)
-      assoc = getAssociation(server_url)
+      assoc = get_association(server_url)
       if assoc.nil? or assoc.handle != handle
         false
       else
-        filename = getAssociationFilename(server_url)
-        self.removeIfPresent(filename)
+        filename = get_association_filename(server_url)
+        self.remove_if_present(filename)
       end
     end
 
     # Mark this nonce as present    
-    def storeNonce(nonce)
+    def store_nonce(nonce)
       filename = @nonce_dir.join(nonce)
       File.open(filename, "w").close
     end
 
     # Return whether this nonce is present.  As a side-effect, mark it 
     # as no longer present.
-    def useNonce(nonce)
+    def use_nonce(nonce)
       filename = @nonce_dir.join(nonce)
       begin
         st = File.stat(filename)
@@ -206,7 +206,7 @@ module OpenID
           next
         else
           nonce_age = now - st.mtime
-          self.removeIfPresent(filename) if nonce_age > @max_nonce_age
+          self.remove_if_present(filename) if nonce_age > @max_nonce_age
         end
       end
 
@@ -225,10 +225,10 @@ module OpenID
           begin
             association = OpenID::ConsumerAssociation.deserialize(assoc_s)
           rescue "VersionError"
-            self.removeIfPresent(af)
+            self.remove_if_present(af)
             next
           else
-            self.removeIfPresent(af) if association.expiresIn == 0          
+            self.remove_if_present(af) if association.expires_in == 0          
           end
         end
       end
@@ -243,7 +243,7 @@ module OpenID
     end
 
     # create a safe filename from a url
-    def filenameFromURL(url)
+    def filename_from_url(url)
       filename = []
       url.sub('://','-').split("").each do |c|
         if @@FILENAME_ALLOWED.index(c)
@@ -256,7 +256,7 @@ module OpenID
     end
 
     # remove file if present in filesystem
-    def removeIfPresent(filename)
+    def remove_if_present(filename)
       begin
         File.unlink(filename)
       rescue Errno::ENOENT
@@ -267,7 +267,7 @@ module OpenID
   
     # ensure that a path exists
 
-    def ensureDir(dir_name)
+    def ensure_dir(dir_name)
       FileUtils::mkdir_p(dir_name)
     end
     

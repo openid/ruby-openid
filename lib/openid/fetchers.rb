@@ -32,7 +32,7 @@ module OpenID
     end
     
     def get(url)    
-      resp, final_url = doGet(url)
+      resp, final_url = do_get(url)
       if resp.nil?
         nil
       else
@@ -43,7 +43,7 @@ module OpenID
     def post(url, body)
       begin
         u = URI.parse(url)
-        http = getHTTPobj(u.host, u.port)
+        http = get_http_obj(u.host, u.port)
         resp = http.post(u.request_uri, body,
                          {"Content-type"=>"application/x-www-form-urlencoded"})
       rescue
@@ -57,7 +57,7 @@ module OpenID
     
     # return a Net::HTTP object ready for use
     
-    def getHTTPobj(host, port)
+    def get_http_obj(host, port)
       http = Net::HTTP.start(host, port)
       http.read_timeout = @read_timeout
       http.open_timeout = @open_timeout
@@ -66,20 +66,20 @@ module OpenID
     
     # do a GET following redirects limit deep
     
-    def doGet(url, limit=5)
+    def do_get(url, limit=5)
       if limit == 0
         return nil
       end
       begin
         u = URI.parse(url)
-        http = getHTTPobj(u.host, u.port)
+        http = get_http_obj(u.host, u.port)
         resp = http.get(u.request_uri)
       rescue
         nil
       else
         case resp
         when Net::HTTPSuccess then [resp, URI.parse(url).to_s]
-        when Net::HTTPRedirection then doGet(resp["location"], limit-1)
+        when Net::HTTPRedirection then do_get(resp["location"], limit-1)
         else
           nil
         end

@@ -11,7 +11,7 @@ module OpenID
 
     HAS_URANDOM = File.chardev? '/dev/urandom'
 
-    def Util.getOpenIDParameters(query)
+    def Util.get_openid_params(query)
       params = {}
       query.each do |k,v|
         params[k] = v if k.index("openid.") == 0
@@ -19,7 +19,7 @@ module OpenID
       params
     end
 
-    def Util.hmacSha1(key, text)
+    def Util.hmac_sha1(key, text)
       HMAC::SHA1.digest(key, text)
     end
 
@@ -27,15 +27,15 @@ module OpenID
       Digest::SHA1.digest(s)
     end
    
-    def Util.toBase64(s)
+    def Util.to_base64(s)
       Base64.encode64(s).gsub("\n", "")
     end
 
-    def Util.fromBase64(s)
+    def Util.from_base64(s)
       Base64.decode64(s)
     end
  
-    def Util.kvForm(hash)
+    def Util.kvform(hash)
       form = ""
       hash.each do |k,v|
         form << "#{k}:#{v}\n"
@@ -56,7 +56,7 @@ module OpenID
       form
     end
 
-    def Util.numToStr(n)
+    def Util.num_to_str(n)
       # taken from openid-ruby 0.0.1
       bits = n.to_s(2)
       prepend = (8 - bits.length % 8) || (bits.index(/^1/) ? 8 : 0)
@@ -64,7 +64,7 @@ module OpenID
       [bits].pack('B*')
     end
 
-    def Util.strToNum(s)
+    def Util.str_to_num(s)
       # taken from openid-ruby 0.0.1
       s = "\000" * (4 - (s.length % 4)) + s
       num = 0
@@ -75,7 +75,7 @@ module OpenID
       num    
     end
 
-    def Util.randomString(length, chars=nil)
+    def Util.random_string(length, chars=nil)
       s = ""
 
       unless chars.nil?
@@ -94,7 +94,7 @@ module OpenID
       a.join("&")
     end
     
-    def Util.appendArgs(url, args)
+    def Util.append_args(url, args)
       url if args.length == 0
       url << (url.include?("?") ? "&" : "?")
       url << Util.urlencode(args)
@@ -109,13 +109,13 @@ module OpenID
     # Sign the given fields from the reply with the specified key.
     # Return [signed, sig]
   
-    def Util.signReply(reply, key, signed_fields)
+    def Util.sign_reply(reply, key, signed_fields)
       token = []
       signed_fields.each do |sf|
         token << [sf+":"+reply["openid."+sf]+"\n"]
       end
       text = token.join("")
-      signed = Util.toBase64(Util.hmacSha1(key, text))
+      signed = Util.to_base64(Util.hmac_sha1(key, text))
       return [signed_fields.join(","), signed]
     end
 
@@ -151,12 +151,12 @@ module OpenID
       r = ((stop-start)/step).to_i
 
       # figure out how many bytes we need
-      rbytes = Util::numToStr(r)
+      rbytes = Util::num_to_str(r)
       nbytes = rbytes.length
       nbytes -= 1 if rbytes[0].chr == "\000"
             
-      bytes = "\000" + Util::_getBytes(nbytes)
-      n = Util::strToNum(bytes)
+      bytes = "\000" + Util::get_random_bytes(nbytes)
+      n = Util::str_to_num(bytes)
       
       return start + (n % r) * step
     end
@@ -167,7 +167,7 @@ module OpenID
     end
 
 
-    def Util._getBytes(n)
+    def Util.get_random_bytes(n)
       bytes = ""
       f = File.open("/dev/urandom")
       while n != 0

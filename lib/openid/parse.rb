@@ -1,6 +1,6 @@
 require "html/htmltokenizer"
 
-def parseLinkAttrs(data)
+def parse_link_attrs(data)
   parser = HTMLTokenizer.new(data)
   in_head = false
   begin
