@@ -509,7 +509,7 @@ module OpenID
       if is_valid == "true"
         invalidate_handle = results["invalidate_handle"]
         unless invalidate_handle.nil?
-          @store.removeAssociation(server_url, invalidate_handle)
+          @store.remove_association(server_url, invalidate_handle)
         end
         unless @store.use_nonce(nonce)
           return [FAILURE, consumer_id]
@@ -642,9 +642,9 @@ module OpenID
                                      OpenID::Util.sha1(OpenID::Util.num_to_str(dh_shared)))
       end
    
-      assoc = OpenID::Association.from_expires_in(expires_in, server_url,
-                                                        assoc_handle, secret)
-      @store.store_association(assoc)
+      assoc = OpenID::Association.from_expires_in(expires_in, assoc_handle,
+                                                  secret, 'HMAC-SHA1')
+      @store.store_association(server_url, assoc)
       assoc
     end
 

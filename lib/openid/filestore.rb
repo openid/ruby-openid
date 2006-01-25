@@ -164,7 +164,7 @@ module OpenID
         
         begin
           association = OpenID::Association.deserialize(assoc_s)      
-        rescue "VersionError"
+        rescue
           self.remove_if_present(filename)
           return nil
         end
