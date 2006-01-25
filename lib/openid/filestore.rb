@@ -4,6 +4,7 @@ require 'tempfile'
 
 require 'openid/util'
 require 'openid/stores'
+require 'openid/association'
 
 module OpenID
 
@@ -94,7 +95,7 @@ module OpenID
 
     # Store an association in the assoc directory
     def store_association(association)
-      assoc_s = OpenID::ConsumerAssociation.serialize(association)
+      assoc_s = OpenID::Association.serialize(association)
       filename = get_association_filename(association.server_url)
       f, tmp = mktemp
     
@@ -140,7 +141,7 @@ module OpenID
         end
         
         begin
-          association = OpenID::ConsumerAssociation.deserialize(assoc_s)      
+          association = OpenID::Association.deserialize(assoc_s)      
         rescue "VersionError"
           self.remove_if_present(filename)
           return nil
@@ -223,7 +224,7 @@ module OpenID
             f.close
           end
           begin
-            association = OpenID::ConsumerAssociation.deserialize(assoc_s)
+            association = OpenID::Association.deserialize(assoc_s)
           rescue "VersionError"
             self.remove_if_present(af)
             next

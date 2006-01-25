@@ -3,7 +3,7 @@ require 'fileutils'
 
 require 'openid/util'
 require 'openid/filestore'
-
+require 'openid/association'
 
 $allowed_handle = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
 $allowed_nonce = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -26,7 +26,7 @@ module StoreTestCase
     server_url = "http://www.myopenid.com/openid"
     secret = generateSecret(20)
     handle = generateHandle(128)
-    assoc = OpenID::ConsumerAssociation.from_expires_in(600, server_url, handle, secret)
+    assoc = OpenID::Association.from_expires_in(600, server_url, handle, secret)
 
     # Make sure that a missing association returns no result
     missing_assoc = @store.get_association(server_url)
@@ -69,8 +69,8 @@ module StoreTestCase
     # one association w/ server_url
     @store.store_association(assoc)
     handle2 = generateHandle(128)
-    assoc2 = OpenID::ConsumerAssociation.from_expires_in(600, server_url,
-                                               handle2, secret)
+    assoc2 = OpenID::Association.from_expires_in(600, server_url,
+                                                 handle2, secret)
     @store.store_association(assoc2)
     
     # After storing an association with a different handle, but the

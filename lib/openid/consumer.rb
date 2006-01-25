@@ -4,6 +4,7 @@ require "openid/util"
 require "openid/dh"
 require "openid/parse"
 require "openid/fetchers"
+require "openid/association"
 
 # Core OpenID library module.  Users of
 # the library should look at OpenID::OpenIDConsumer
@@ -641,7 +642,7 @@ module OpenID
                                      OpenID::Util.sha1(OpenID::Util.num_to_str(dh_shared)))
       end
    
-      assoc = OpenID::ConsumerAssociation.from_expires_in(expires_in, server_url,
+      assoc = OpenID::Association.from_expires_in(expires_in, server_url,
                                                         assoc_handle, secret)
       @store.store_association(assoc)
       assoc

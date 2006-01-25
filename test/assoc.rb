@@ -1,6 +1,5 @@
 require 'test/unit'
-
-require "openid/stores"
+require "openid/association"
 
 class AssociationTestCase < Test::Unit::TestCase
 
@@ -8,11 +7,10 @@ class AssociationTestCase < Test::Unit::TestCase
     
     issued = Time.now.to_i
     lifetime = 600
-    assoc = OpenID::ConsumerAssociation.new('server_url','handle', 'secret',
-                                            issued, lifetime)
-    s = OpenID::ConsumerAssociation.serialize(assoc)
-    assert(OpenID::ConsumerAssociation.deserialize(s) == assoc)
-
+    assoc = OpenID::Association.new('server_url','handle', 'secret',
+                                    issued, lifetime)
+    s = OpenID::Association.serialize(assoc)
+    assert(OpenID::Association.deserialize(s) == assoc)
   end
 
 end
