@@ -88,15 +88,16 @@ module OpenID
     # Create a unique filename for a given server url and handle. The
     # filename that is returned will contain the domain name from the
     # server URL for ease of human inspection of the data dir.
-    def get_association_filename(server_url)
+    def get_association_filename(server_url, handle)      
       filename = self.filename_from_url(server_url)
+      filename += '-' + safe64(handle)
       @association_dir.join(filename)
     end
 
     # Store an association in the assoc directory
-    def store_association(association)
+    def store_association(server_url, association)
       assoc_s = OpenID::Association.serialize(association)
-      filename = get_association_filename(association.server_url)
+      filename = get_association_filename(server_url, association.handle)
       f, tmp = mktemp
     
       begin
@@ -127,8 +128,29 @@ module OpenID
     end
     
     # Retrieve an association
-    def get_association(server_url)
-      filename = get_association_filename(server_url)
+    def get_association(server_url, handle=nil)
+      unless handle.nil?
+        filename = get_association_filename(server_url, handle)
+        return _get_association(filename)
+      end
+      
+      # search though existing files looking for a match
+      prefix = filename_from_url(server_url)
+      assoc_filenames = Dir.entries(@association_dir)
+      assoc_filenames = assoc_filenames.find_all { |f| f.index(prefix) == 0 }
+      
+      assocs = assoc_filenames.collect do |f|
+        _get_association(@association_dir.join(f))
+      end
+
+      assocs = assocs.find_all { |a| not a.nil? }
+      assocs = assocs.sort_by { |a| a.issued }
+      
+      return nil if assocs.empty?
+      return assocs[-1]
+    end
+
+    def _get_association(filename)
       begin
         assoc_file = File.open(filename, "r")
       rescue Errno::ENOENT
@@ -155,17 +177,17 @@ module OpenID
           return association
         end
       end
-      
     end
 
     # Remove an association if it exists, otherwise do nothing.
-    def removeAssociation(server_url, handle)
-      assoc = get_association(server_url)
-      if assoc.nil? or assoc.handle != handle
-        false
+    def remove_association(server_url, handle)
+      assoc = get_association(server_url, handle)
+      
+      if assoc.nil?
+        return false
       else
-        filename = get_association_filename(server_url)
-        self.remove_if_present(filename)
+        filename = get_association_filename(server_url, handle)
+        return self.remove_if_present(filename)
       end
     end
 
@@ -254,6 +276,15 @@ module OpenID
         end    
       end
       filename.join("")
+    end
+
+    def safe64(s)
+      s = OpenID::Util.sha1(s)
+      s = OpenID::Util.to_base64(s)
+      s.gsub!('+', '_')
+      s.gsub!('/', '.')
+      s.gsub!('=', '')
+      return s
     end
 
     # remove file if present in filesystem

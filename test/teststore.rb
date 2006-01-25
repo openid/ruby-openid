@@ -22,74 +22,128 @@ end
   
 module StoreTestCase 
 
-  def test_store
-    server_url = "http://www.myopenid.com/openid"
+  def _gen_assoc(issued, lifetime=600)
     secret = generateSecret(20)
     handle = generateHandle(128)
-    assoc = OpenID::Association.from_expires_in(600, server_url, handle, secret)
+    OpenID::Association.new(handle, secret, Time.now.to_i + issued, lifetime,
+                            'HMAC-SHA1') 
+  end
+    
+  def _check_retrieve(url, handle=nil, expected=nil)
+    ret_assoc = @store.get_association(url, handle)
+
+    if expected.nil? or @store.dumb?
+      assert_nil(ret_assoc)
+    else
+      assert_equal(ret_assoc, expected)
+      assert_equal(ret_assoc.handle, expected.handle)
+      assert_equal(ret_assoc.secret, expected.secret)
+    end
+  end
+
+  def _check_remove(url, handle, expected)
+    present = @store.remove_association(url, handle)
+    expected_present = ((not @store.dumb?) and expected)
+    assert ((not expected_present and not present) or \
+            (expected_present and present))    
+  end
+
+  def test_store
+    server_url = "http://www.myopenid.com/openid"
+    assoc = _gen_assoc(issued=0)
 
     # Make sure that a missing association returns no result
-    missing_assoc = @store.get_association(server_url)
-    assert(missing_assoc.nil?)
+    _check_retrieve(server_url)
 
     # Check that after storage, getting returns the same result
-    @store.store_association(assoc)
-    retrieved_assoc = @store.get_association(server_url)
-    assert(retrieved_assoc.secret == assoc.secret)
-    assert(retrieved_assoc.handle == assoc.handle)
-    assert(retrieved_assoc.server_url == assoc.server_url)
-    assert(retrieved_assoc == assoc)
+    @store.store_association(server_url, assoc)
+    _check_retrieve(server_url, nil, assoc)
 
     # more than once
-    retrieved_assoc = @store.get_association(server_url)
-    assert(retrieved_assoc.secret == assoc.secret)
-    assert(retrieved_assoc.handle == assoc.handle)
-    assert(retrieved_assoc.server_url == assoc.server_url)
+    _check_retrieve(server_url, nil, assoc)
 
-    # storing more than once has no ill effect
-    @store.store_association(assoc)
-    retrieved_assoc = @store.get_association(server_url)
-    assert(retrieved_assoc.secret == assoc.secret)
-    assert(retrieved_assoc.handle == assoc.handle)
-    assert(retrieved_assoc.server_url == assoc.server_url)
-    assert(retrieved_assoc == assoc)
+    # Storing more than once has no ill effect
+    @store.store_association(server_url, assoc)
+    _check_retrieve(server_url, nil, assoc)
 
-    # removing an assoc that does not exist returns not present
-    present = @store.removeAssociation(server_url+'x', handle)
-    assert(present == false)
+    # Removing an association that does not exist returns not present
+    _check_remove(server_url, assoc.handle + 'x', false)
 
-    # removing an assoc that is present returns present
-    present = @store.removeAssociation(server_url, handle)
-    assert(present)
+    # Removing an association that does not exist returns not present
+    _check_remove(server_url + 'x', assoc.handle, false)
+
+    # Removing an association that is present returns present
+    _check_remove(server_url, assoc.handle, true)
 
     # but not present on subsequent calls
-    present = @store.removeAssociation(server_url, handle)
-    assert(present == false)
+    _check_remove(server_url, assoc.handle, false)
 
-    # one association w/ server_url
-    @store.store_association(assoc)
-    handle2 = generateHandle(128)
-    assoc2 = OpenID::Association.from_expires_in(600, server_url,
-                                                 handle2, secret)
-    @store.store_association(assoc2)
-    
+    # Put assoc back in the store
+    @store.store_association(server_url, assoc)
+
+    # More recent and expires after assoc
+    assoc2 = _gen_assoc(issued=1)
+    @store.store_association(server_url, assoc2)
+
     # After storing an association with a different handle, but the
-    # same server_url, the most recent association is available. There
-    # is no guarantee either way about the first association. (and
-    # thus about the return value of removeAssociation)
-    retrieved_assoc = @store.get_association(server_url)
-    assert retrieved_assoc.server_url == server_url
-    assert retrieved_assoc.handle == handle2
-    assert retrieved_assoc.secret == secret
+    # same server_url, the handle with the later expiration is returned.
+    _check_retrieve(server_url, nil, assoc2)
 
-    ### Nonce stuff
+    # We can still retrieve the older association
+    _check_retrieve(server_url, assoc.handle, assoc)
+
+    # Plus we can retrieve the association with the later expiration
+    # explicitly
+    _check_retrieve(server_url, assoc2.handle, assoc2)
+
+    # More recent, and expires earlier than assoc2 or assoc. Make sure
+    # that we're picking the one with the latest issued date and not
+    # taking into account the expiration.
+    assoc3 = _gen_assoc(issued=2, lifetime=100)
+    @store.store_association(server_url, assoc3)
+
+    _check_retrieve(server_url, nil, assoc3)
+    _check_retrieve(server_url, assoc.handle, assoc)
+    _check_retrieve(server_url, assoc2.handle, assoc2)
+    _check_retrieve(server_url, assoc3.handle, assoc3)
+
+    _check_remove(server_url, assoc2.handle, true)
+
+    _check_retrieve(server_url, nil, assoc3)
+    _check_retrieve(server_url, assoc.handle, assoc)
+    _check_retrieve(server_url, assoc2.handle, nil)
+    _check_retrieve(server_url, assoc3.handle, assoc3)
+
+    _check_remove(server_url, assoc2.handle, false)
+    _check_remove(server_url, assoc3.handle, true)
+
+    _check_retrieve(server_url, nil, assoc)
+    _check_retrieve(server_url, assoc.handle, assoc)
+    _check_retrieve(server_url, assoc2.handle, nil)
+    _check_retrieve(server_url, assoc3.handle, nil)
+
+    _check_remove(server_url, assoc2.handle, false)
+    _check_remove(server_url, assoc.handle, true)
+    _check_remove(server_url, assoc3.handle, false)
+
+    _check_retrieve(server_url, nil, nil)
+    _check_retrieve(server_url, assoc.handle, nil)
+    _check_retrieve(server_url, assoc2.handle, nil)
+    _check_retrieve(server_url, assoc3.handle, nil)
+
+    _check_remove(server_url, assoc2.handle, false)
+    _check_remove(server_url, assoc.handle, false)
+    _check_remove(server_url, assoc3.handle, false)
+  end
+    
+  def test_nonce
     nonce1 = generateNonce
     
     # a nonce is present by default
     present = @store.use_nonce(nonce1)
     assert present == false
 
-    # Storing once causes use_nonce to return True the first, and only
+    # Storing once causes use_nonce to return true the first, and only
     # the first, time it is called after the store.
     @store.store_nonce(nonce1)
     present = @store.use_nonce(nonce1)
@@ -113,7 +167,6 @@ module StoreTestCase
     # the second time we should return the same key as before
     key2 = @store.get_auth_key
     assert key == key2
-
   end
 
 end

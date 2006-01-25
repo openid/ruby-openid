@@ -5,6 +5,17 @@ require "hmac-sha1"
 
 srand(Time.now.to_f)
 
+class Object
+
+  def instance_variable_hash
+    h = {}
+    self.instance_variables.each { |k| h[k] = self.instance_variable_get(k) }
+    return h
+  end
+
+end
+
+
 module OpenID
 
   module Util

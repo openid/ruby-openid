@@ -2,36 +2,34 @@ require 'openid/util'
 
 module OpenID
 
-    # Consumer's view of an association with a server
   class Association
-
+    @@version = '2'
     @@assoc_keys = [
-      'version',
-      'server_url',
-      'handle',
-      'secret',
-      'issued',
-      'lifetime'
-    ]
+                    'version',
+                    'handle',
+                    'secret',
+                    'issued',
+                    'lifetime',
+                    'assoc_type'
+                   ]
 
-    attr_reader :server_url, :handle, :secret, :issued, :lifetime
+    attr_reader :handle, :secret, :issued, :lifetime, :assoc_type
 
-    def Association.from_expires_in(expires_in, server_url,
-                                          handle, secret)
+    def Association.from_expires_in(expires_in, handle, secret, assoc_type)
       issued = Time.now.to_i
       lifetime = expires_in
-      new(server_url, handle, secret, issued, lifetime) 
+      new(handle, secret, issued, lifetime, assoc_type) 
     end
 
     def Association.serialize(assoc)
       data = [
-        '1',
-        assoc.server_url,
-        assoc.handle,
-        OpenID::Util.to_base64(assoc.secret),
-        assoc.issued.to_i.to_s,
-        assoc.lifetime.to_i.to_s
-      ]
+              '2',
+              assoc.handle,
+              OpenID::Util.to_base64(assoc.secret),
+              assoc.issued.to_i.to_s,
+              assoc.lifetime.to_i.to_s,
+              assoc.assoc_type              
+             ]
   
       lines = ""
       (0...@@assoc_keys.length).collect do |i| 
@@ -50,21 +48,25 @@ module OpenID
         values << v.strip
       end
   
-      version, server_url, handle, secret, issued, lifetime = values
-      raise 'VersionError' if version != '1'
+      version, handle, secret, issued, lifetime, assoc_type = values
+      raise 'VersionError' if version != @@version
   
       secret = OpenID::Util.from_base64(secret)
       issued = issued.to_i
       lifetime = lifetime.to_i
-      Association.new(server_url, handle, secret, issued, lifetime)
+      Association.new(handle, secret, issued, lifetime, assoc_type)
     end
 
-    def initialize(server_url, handle, secret, issued, lifetime)
-      @server_url = server_url
+    def initialize(handle, secret, issued, lifetime, assoc_type)
+      if assoc_type != 'HMAC-SHA1'
+        raise ArgumentError, "HMAC-SHA1 is the only supported assoc_type"
+      end
+      
       @handle = handle
       @secret = secret
       @issued = issued
       @lifetime = lifetime
+      @assoc_type = assoc_type
     end
 
     def expires_in
@@ -75,11 +77,8 @@ module OpenID
       return expires_in == 0
     end
 
-    def ==(other)    
-      def iv_values(o)
-        o.instance_variables.collect {|i| o.instance_variable_get(i)}
-      end  
-      iv_values(self) == iv_values(other)
+    def ==(other)
+      self.instance_variable_hash == other.instance_variable_hash
     end
 
   end

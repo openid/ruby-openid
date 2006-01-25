@@ -7,10 +7,10 @@ class AssociationTestCase < Test::Unit::TestCase
     
     issued = Time.now.to_i
     lifetime = 600
-    assoc = OpenID::Association.new('server_url','handle', 'secret',
-                                    issued, lifetime)
+    assoc = OpenID::Association.new('handle', 'secret', issued, lifetime,
+                                    'HMAC-SHA1')
     s = OpenID::Association.serialize(assoc)
-    assert(OpenID::Association.deserialize(s) == assoc)
+    assert_equal(assoc, OpenID::Association.deserialize(s))    
   end
 
 end
