@@ -31,6 +31,13 @@ module OpenID
       OpenID::Util.powermod(composite, @private, @p)
     end
 
+    def xor_secrect(composite, secret)
+      dh_shared = get_shared_secret(composite)
+      sha1_dh_shared = OpenID::Util.sha1( \
+                          OpenID::Util.num_to_str(dh_shared))
+      return OpenID::Util.strxor(secret, sha1_dh_shared)
+    end
+
   end
 
 end
