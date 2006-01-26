@@ -86,6 +86,14 @@ module OpenID
       num    
     end
 
+    def Util.num_to_base64(l)
+      return to_base64(num_to_str(l))
+    end
+
+    def Util.base64_to_num(s)
+      return str_to_num(from_base64(s))
+    end
+
     def Util.random_string(length, chars=nil)
       s = ""
 
