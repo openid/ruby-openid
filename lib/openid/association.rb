@@ -77,6 +77,25 @@ module OpenID
       return expires_in == 0
     end
 
+    def sign(pairs)
+      kv = ''
+      pairs.each {|k,v| kv << "#{k}:#{v}\n"}
+      return OpenID::Util.hmac_sha1(@secret, kv)
+    end
+
+    def sign_hash(fields, hash, prefix='openid.')
+      pairs = []
+      fields.each { |f| pairs << [f, hash[prefix+f]] }
+      return OpenID::Util.to_base64(sign(pairs))
+    end
+
+    def add_signature(fields, hash, prefix='openid.')
+      sig = sign_hash(fields, hash, prefix)
+      signed = fields.join(',')
+      hash[prefix+'sig'] = sig
+      hash[prefix+'signed'] = signed
+    end
+
     def ==(other)
       self.instance_variable_hash == other.instance_variable_hash
     end
