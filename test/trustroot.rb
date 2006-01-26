@@ -33,6 +33,8 @@ class TrustRootTestCase < Test::Unit::TestCase
       assert_not_nil(tr)
     end
 
+    assert_good('http://*/')
+    assert_good('https://*/')
     assert_good('http://*.schtuff.com/')
     assert_good('http://*.schtuff.com')
     assert_good('http://www.schtuff.com/')
@@ -54,6 +56,8 @@ class TrustRootTestCase < Test::Unit::TestCase
       assert_equal(tr.sane?, expected)
     end
 
+    assert_sane('http://*/', false)
+    assert_sane('https://*/', false)
     assert_sane('http://*.schtuff.com/', true)
     assert_sane('http://*.foo.schtuff.com/', true)
     assert_sane('http://*.com/', false)

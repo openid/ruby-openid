@@ -5,7 +5,9 @@ TOP_LEVEL_DOMAINS = 'com|edu|gov|int|mil|net|org|biz|info|name|museum|coop|aero|
 module OpenID
 
   class TrustRoot
-    
+
+    @@empty_re = Regexp.new('^http[s]*:\/\/\*\/$')
+
     def TrustRoot._parse_url(url)
       begin
         parsed = URI::parse(url)
@@ -24,6 +26,13 @@ module OpenID
       # look for wildcard
       wildcard = (not trust_root.index('://*.').nil?)
       trust_root.sub!('*.', '') if wildcard
+
+      # handle http://*/ case
+      if not wildcard and @@empty_re.match(trust_root)
+        proto = trust_root.split(':')[0]
+        port = proto == 'http' ? 80 : 443
+        return new(unparsed, proto, true, '', port, '/')
+      end
 
       parts = TrustRoot._parse_url(trust_root)
       return nil if parts.nil?
@@ -88,3 +97,4 @@ module OpenID
 
   end
 end
+
