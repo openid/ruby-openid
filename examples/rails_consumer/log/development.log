@@ -1,0 +1,1631 @@
+
+
+Processing MyTestController#index (for 127.0.0.1 at 2005-12-30 12:27:06) [GET]
+  Parameters: {"action"=>"index", "controller"=>"my_test"}
+Completed in 0.00105 (954 reqs/sec) | 200 OK [http://localhost/MyTest]
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 12:27:09) [GET]
+  Parameters: {}
+
+
+ActionController::RoutingError (Recognition failed for "/MyTestX"):
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:469:in `recognition_failed'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:459:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 12:28:24) [GET]
+  Parameters: {}
+
+
+ActionController::RoutingError (Recognition failed for "/MyTestX"):
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:469:in `recognition_failed'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:459:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 12:28:24) [GET]
+  Parameters: {}
+
+
+ActionController::RoutingError (Recognition failed for "/MyTestX"):
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:469:in `recognition_failed'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:459:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing MyTestController#index (for 127.0.0.1 at 2005-12-30 12:28:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"my_test"}
+Completed in 0.00157 (638 reqs/sec) | 200 OK [http://localhost/MyTest]
+
+
+Processing MyTestController#index (for 127.0.0.1 at 2005-12-30 12:28:28) [GET]
+  Parameters: {"action"=>"index", "controller"=>"my_test"}
+Completed in 0.00101 (993 reqs/sec) | 200 OK [http://localhost/MyTest]
+
+
+Processing MyTestController#dilbert (for 127.0.0.1 at 2005-12-30 12:28:32) [GET]
+  Parameters: {"action"=>"dilbert", "controller"=>"my_test"}
+Completed in 0.00135 (742 reqs/sec) | 200 OK [http://localhost/MyTest/dilbert]
+
+
+Processing MyTestController#dilbert (for 127.0.0.1 at 2005-12-30 12:28:35) [GET]
+  Parameters: {"action"=>"dilbert", "controller"=>"my_test"}
+Completed in 0.00131 (763 reqs/sec) | 200 OK [http://localhost/MyTest/dilbert/]
+
+
+Processing MyTestController#dilbert (for 127.0.0.1 at 2005-12-30 12:29:11) [GET]
+  Parameters: {"action"=>"dilbert", "foo"=>nil, "controller"=>"my_test"}
+Completed in 0.00126 (792 reqs/sec) | 200 OK [http://localhost/MyTest/dilbert?foo]
+
+
+Processing MyTestController#dilbert (for 127.0.0.1 at 2005-12-30 13:29:09) [GET]
+  Parameters: {"action"=>"dilbert", "foo"=>nil, "controller"=>"my_test"}
+Completed in 0.00158 (632 reqs/sec) | 200 OK [http://localhost/MyTest/dilbert?foo]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:32:59) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Completed in 0.00314 (318 reqs/sec) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:36:34) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+ActionController::MissingTemplate (Missing template script/../config/../app/views/openid/beginAuth.rhtml):
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:930:in `assert_existance_of_template_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:653:in `render_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:595:in `render_with_no_layout'
+    .//vendor/rails/actionpack/lib/action_controller/layout.rb:228:in `render_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:854:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:41:33) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Completed in 0.00501 (199 reqs/sec) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:42:32) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Completed in 0.00480 (208 reqs/sec) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:42:36) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+Completed in 0.00451 (221 reqs/sec) | 200 OK [http://localhost/openid/beginAuth]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:42:44) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+Completed in 0.01255 (79 reqs/sec) | 200 OK [http://localhost/openid/beginAuth]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:42:46) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+Completed in 0.00717 (139 reqs/sec) | 200 OK [http://localhost/openid/beginAuth]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:42:46) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+Completed in 0.00538 (185 reqs/sec) | 200 OK [http://localhost/openid/beginAuth]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:42:47) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+Completed in 0.00548 (182 reqs/sec) | 200 OK [http://localhost/openid/beginAuth]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:44:51) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+TypeError (can't convert nil into String):
+    .//vendor/rails/actionpack/lib/action_view/base.rb:318:in `read'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:318:in `read_template_file'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:258:in `compile_and_render_template'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:244:in `render_template'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:660:in `render_template'
+    .//app/controllers/openid_controller.rb:10:in `beginAuth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:45:09) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+TypeError (can't convert nil into String):
+    .//vendor/rails/actionpack/lib/action_view/base.rb:318:in `read'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:318:in `read_template_file'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:258:in `compile_and_render_template'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:244:in `render_template'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:660:in `render_template'
+    .//app/controllers/openid_controller.rb:10:in `beginAuth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:45:10) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+TypeError (can't convert nil into String):
+    .//vendor/rails/actionpack/lib/action_view/base.rb:318:in `read'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:318:in `read_template_file'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:258:in `compile_and_render_template'
+    .//vendor/rails/actionpack/lib/action_view/base.rb:244:in `render_template'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:660:in `render_template'
+    .//app/controllers/openid_controller.rb:10:in `beginAuth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:45:13) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering openid/index
+Completed in 0.00911 (109 reqs/sec) | Rendering: 0.00278 (30%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:45:15) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering openid/index
+Completed in 0.01230 (81 reqs/sec) | Rendering: 0.00082 (6%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:45:40) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering openid/index
+Completed in 0.01202 (83 reqs/sec) | Rendering: 0.00831 (69%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:47:00) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering openid/index
+Completed in 0.00776 (128 reqs/sec) | Rendering: 0.00132 (16%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:47:03) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+ActionController::MissingTemplate (Missing template script/../config/../app/views/openid/beginAuth.rhtml):
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:930:in `assert_existance_of_template_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:653:in `render_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:595:in `render_with_no_layout'
+    .//vendor/rails/actionpack/lib/action_controller/layout.rb:228:in `render_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    .//app/controllers/openid_controller.rb:10:in `beginAuth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:47:13) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+ActionController::MissingTemplate (Missing template script/../config/../app/views/index.rhtml):
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:930:in `assert_existance_of_template_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:653:in `render_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:595:in `render_with_no_layout'
+    .//vendor/rails/actionpack/lib/action_controller/layout.rb:228:in `render_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    .//app/controllers/openid_controller.rb:10:in `beginAuth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:47:31) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+ActionController::MissingTemplate (Missing template script/../config/../app/views/index.rhtml):
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:930:in `assert_existance_of_template_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:653:in `render_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:595:in `render_with_no_layout'
+    .//vendor/rails/actionpack/lib/action_controller/layout.rb:228:in `render_with_a_layout'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:684:in `render_with_layout'
+    .//app/controllers/openid_controller.rb:10:in `beginAuth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:47:31) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+ActionController::MissingTemplate (Missing template script/../config/../app/views/index.rhtml):
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:930:in `assert_existance_of_template_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:653:in `render_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:595:in `render_with_no_layout'
+    .//vendor/rails/actionpack/lib/action_controller/layout.rb:228:in `render_with_a_layout'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:684:in `render_with_layout'
+    .//app/controllers/openid_controller.rb:10:in `beginAuth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:54:37) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+
+
+ActionController::MissingTemplate (Missing template script/../config/../app/views/openid/beginAuth.rhtml):
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:930:in `assert_existance_of_template_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:653:in `render_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:595:in `render_with_no_layout'
+    .//vendor/rails/actionpack/lib/action_controller/layout.rb:228:in `render_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:854:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:54:40) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering openid/index
+Completed in 0.00762 (131 reqs/sec) | Rendering: 0.00127 (16%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 13:55:05) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.01447 (69 reqs/sec) | Rendering: 0.00924 (63%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 13:55:10) [GET]
+  Parameters: {"action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+
+
+ActionController::MissingTemplate (Missing template script/../config/../app/views/openid/beginAuth.rhtml):
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:930:in `assert_existance_of_template_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:653:in `render_file'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:595:in `render_with_no_layout'
+    .//vendor/rails/actionpack/lib/action_controller/layout.rb:220:in `render_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:854:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:28:01) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Completed in 0.10544 (9 reqs/sec) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:28:03) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Completed in 0.00338 (295 reqs/sec) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:28:16) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.01095 (91 reqs/sec) | Rendering: 0.00753 (68%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:28:50) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00954 (104 reqs/sec) | Rendering: 0.00603 (63%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:29:18) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.01075 (92 reqs/sec) | Rendering: 0.00730 (67%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:30:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00615 (162 reqs/sec) | Rendering: 0.00256 (41%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:30:50) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00515 (194 reqs/sec) | Rendering: 0.00180 (35%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:31:13) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00566 (176 reqs/sec) | Rendering: 0.00170 (30%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:31:13) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00205 (486 reqs/sec) | Rendering: 0.00076 (36%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:31:46) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00182 (549 reqs/sec) | Rendering: 0.00067 (36%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:31:47) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00551 (181 reqs/sec) | Rendering: 0.00172 (31%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:31:48) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00498 (200 reqs/sec) | Rendering: 0.00165 (33%) | 200 OK [http://localhost/openid]
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 14:32:54) [GET]
+  Parameters: {}
+
+
+NameError (uninitialized constant FilesystemOpenIDStore):
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:200:in `const_missing'
+    .//app/controllers/openid_controller.rb:3
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:207:in `load'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:39:in `require_or_load'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:22:in `depend_on'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:178:in `require_dependency'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:134:in `load_file!'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:97:in `const_load!'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:80:in `const_load!'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:72:in `const_missing'
+    routing.rb:234:in `traverse_to_controller'
+    generated/routing/recognition.rb:3:in `eval'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:234:in `traverse_to_controller'
+    generated/routing/recognition.rb:3:in `recognize_path'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:458:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:33:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00179 (559 reqs/sec) | Rendering: 0.00067 (37%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:47:54) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00515 (194 reqs/sec) | Rendering: 0.00160 (31%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 14:47:59) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=%2Fopenid%2FcompleteAuth%3Ftoken%3DPqLvl4u0IxNsdEKJKmSxzlEGaFMxMTM1OTgyODc5AEJuRmc2OGlrAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.93521 (1 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 14:49:48) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=%2Fopenid%2FcompleteAuth%3Ftoken%3Dc%252BC67752Pd%252Fh6fXvjD0clnfb%252FVwxMTM1OTgyOTg4AGlQYVhVUldjAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.16189 (6 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 14:50:30) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00498 (200 reqs/sec) | Rendering: 0.00167 (33%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 14:50:32) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DYH6dViNp5QF0njjAMufEbtoGB%252BExMTM1OTgzMDMyAFdPRHhQanlVAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.15898 (6 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 15:09:27) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00213 (470 reqs/sec) | Rendering: 0.00076 (35%) | 200 OK [http://localhost/openid]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:09:30) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.c", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.04832 (20 reqs/sec) | Rendering: 0.00141 (2%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.c]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:12:31) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.c", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00981 (101 reqs/sec) | Rendering: 0.00131 (13%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.c]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:12:32) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.c", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.01145 (87 reqs/sec) | Rendering: 0.00080 (6%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.c]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:12:39) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.c", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00858 (116 reqs/sec) | Rendering: 0.00076 (8%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.c]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:12:40) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.c", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00904 (110 reqs/sec) | Rendering: 0.00077 (8%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.c]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:16:32) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.c", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00877 (113 reqs/sec) | Rendering: 0.00129 (14%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.c]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:16:41) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.c", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00927 (107 reqs/sec) | Rendering: 0.00087 (9%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.c]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:16:45) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DsbwTjMQyMJbvXnDtn7B4TD2DoFYxMTM1OTg0NjA1AGxCUE0yNXhhAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.32172 (3 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:21:52) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.c", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00807 (123 reqs/sec) | Rendering: 0.00077 (9%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.c]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:21:56) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3D%252FPt3%252FExc8pPeCn94dpTGziTYP1gxMTM1OTg0OTE2AFlTblRXOE1vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.15887 (6 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#completeAuth (for 127.0.0.1 at 2005-12-30 15:22:06) [GET]
+  Parameters: {"openid.sig"=>"ouG6HQ2gUksj5esi0otY0Gap/9M=", "openid.return_to"=>"http://localhost:3000/openid/completeAuth?token=%2FPt3%2FExc8pPeCn94dpTGziTYP1gxMTM1OTg0OTE2AFlTblRXOE1vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%3D%3D", "openid.mode"=>"id_res", "token"=>"/Pt3/Exc8pPeCn94dpTGziTYP1gxMTM1OTg0OTE2AFlTblRXOE1vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg==", "action"=>"completeAuth", "controller"=>"openid", "openid.identity"=>"http://brian.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43b5b9a8}{sM8csw==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/completeAuth
+Completed in 0.00374 (267 reqs/sec) | Rendering: 0.00123 (32%) | 200 OK [http://localhost/openid/completeAuth?token=%2FPt3%2FExc8pPeCn94dpTGziTYP1gxMTM1OTg0OTE2AFlTblRXOE1vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%3D%3D&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3D%252FPt3%252FExc8pPeCn94dpTGziTYP1gxMTM1OTg0OTE2AFlTblRXOE1vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.sig=ouG6HQ2gUksj5esi0otY0Gap%2F9M%3D&openid.signed=mode%2Cidentity%2Creturn_to]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:26:03) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DcyfH%252FqEbrxs3%252FGSdHMOdHjIjro0xMTM1OTg1MTY0AHl6Rjk5MVlqAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.14088 (7 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#completeAuth (for 127.0.0.1 at 2005-12-30 15:26:10) [GET]
+  Parameters: {"openid.mode"=>"cancel", "token"=>"cyfH/qEbrxs3/GSdHMOdHjIjro0xMTM1OTg1MTY0AHl6Rjk5MVlqAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "action"=>"completeAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/completeAuth
+Completed in 0.00343 (291 reqs/sec) | Rendering: 0.00133 (38%) | 200 OK [http://localhost/openid/completeAuth?token=cyfH%2FqEbrxs3%2FGSdHMOdHjIjro0xMTM1OTg1MTY0AHl6Rjk5MVlqAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.mode=cancel]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:26:14) [GET]
+  Parameters: {"openid_url"=>"google.com", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.68151 (1 reqs/sec) | Rendering: 0.00079 (0%) | 200 OK [http://localhost/openid/beginAuth?openid_url=google.com]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:35:02) [GET]
+  Parameters: {"openid_url"=>"google.com", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.48405 (2 reqs/sec) | Rendering: 0.00488 (1%) | 200 OK [http://localhost/openid/beginAuth?openid_url=google.com]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:35:23) [GET]
+  Parameters: {"openid_url"=>"foo", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00800 (125 reqs/sec) | Rendering: 0.00080 (10%) | 200 OK [http://localhost/openid/beginAuth?openid_url=foo]
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 15:46:24) [GET]
+  Parameters: {"openid_url"=>"jnvdjkfnd"}
+
+
+NoMethodError (undefined method `requrie' for main:Object):
+    .//app/controllers/openid_controller.rb:1
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:207:in `load'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:39:in `require_or_load'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:22:in `depend_on'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:178:in `require_dependency'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:134:in `load_file!'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:97:in `const_load!'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:80:in `const_load!'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:72:in `const_missing'
+    routing.rb:234:in `traverse_to_controller'
+    generated/routing/recognition.rb:3:in `eval'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:234:in `traverse_to_controller'
+    generated/routing/recognition.rb:3:in `recognize_path'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:458:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 15:46:36) [GET]
+  Parameters: {"openid_url"=>"jnvdjkfnd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00748 (133 reqs/sec) | Rendering: 0.00077 (10%) | 200 OK [http://localhost/openid/beginAuth?openid_url=jnvdjkfnd]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:00:24) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00527 (189 reqs/sec) | Rendering: 0.00166 (31%) | 200 OK [http://localhost/openid/]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:00:25) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00228 (438 reqs/sec) | Rendering: 0.00079 (34%) | 200 OK [http://localhost/openid/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:00:29) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=completeAuth%3Ftoken%3De8kHSqNXa6uWnPlna5P6ZYPVOrkxMTM1OTg3MjI5AFFQMWZtaXhlAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.31680 (3 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:01:48) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=completeAuth%3Ftoken%3D9dWdsZBaWf7epX43FPzDFlYEgLoxMTM1OTg3MzA4AFFEaTU5UkdHAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.14059 (7 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:03:33) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00336 (297 reqs/sec) | Rendering: 0.00096 (28%) | 200 OK [http://localhost/openid/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:03:34) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2FcompleteAuth%3Ftoken%3DS8Jt7tR6qdWYRtq1ijQ7%252FkQiLIcxMTM1OTg3NDE0AHNnWVdoRk5vAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.14016 (7 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:04:10) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00312 (320 reqs/sec) | Rendering: 0.00152 (48%) | 200 OK [http://localhost/openid/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:04:12) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2FcompleteAuth%3Ftoken%3DduUYXveHcMYoh25TrGnBzPmNKbAxMTM1OTg3NDUyAGJEeHNISjVoAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.14164 (7 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:08:04) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00480 (208 reqs/sec) | Rendering: 0.00359 (74%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:09:16) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2FcompleteAuth%3Ftoken%3DRbfYV07lG0t96f%252FeeXzhXNoydV4xMTM1OTg3NzU3AGtPYWZES0U5AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FbeginAuth&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.13822 (7 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 16:09:17) [GET]
+  Parameters: {"openid.mode"=>"error", "openid.error"=>"return_to(http://localhost:3000/completeAuth?token=RbfYV07lG0t96f%2FeeXzhXNoydV4xMTM1OTg3NzU3AGtPYWZES0U5AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy) not valid against trust_root(http://localhost:3000/openid/beginAuth)", "token"=>"RbfYV07lG0t96f/eeXzhXNoydV4xMTM1OTg3NzU3AGtPYWZES0U5AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy"}
+
+
+ActionController::RoutingError (Recognition failed for "/completeAuth"):
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:469:in `recognition_failed'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:459:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:10:11) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00503 (198 reqs/sec) | Rendering: 0.00380 (75%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:10:12) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00214 (467 reqs/sec) | Rendering: 0.00070 (32%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:10:12) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00280 (357 reqs/sec) | Rendering: 0.00104 (37%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:10:12) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00269 (371 reqs/sec) | Rendering: 0.00100 (37%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:10:23) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2FcompleteAuth%3Ftoken%3Dl0aNFPgZzT%252BMl6QFV9rx4QZ0z7AxMTM1OTg3ODI0AGhoczlWSW5LAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FbeginAuth&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.13860 (7 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 16:10:24) [GET]
+  Parameters: {"openid.mode"=>"error", "openid.error"=>"return_to(http://localhost:3000/completeAuth?token=l0aNFPgZzT%2BMl6QFV9rx4QZ0z7AxMTM1OTg3ODI0AGhoczlWSW5LAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy) not valid against trust_root(http://localhost:3000/openid/beginAuth)", "token"=>"l0aNFPgZzT+Ml6QFV9rx4QZ0z7AxMTM1OTg3ODI0AGhoczlWSW5LAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy"}
+
+
+ActionController::RoutingError (Recognition failed for "/completeAuth"):
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:469:in `recognition_failed'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:459:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:11:11) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2FcompleteAuth%3Ftoken%3DeuEywrB0xJ0Hs9S9yAt0Yyo3kIcxMTM1OTg3ODcyAGZwa3B2eXVMAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.26622 (3 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:11:41) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2FcompleteAuth%3Ftoken%3DQygK%252Bs%252FcYOsgOE9QJftvIpD8eDcxMTM1OTg3OTAyAGpHVUdnT2RkAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.15623 (6 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 16:11:42) [GET]
+  Parameters: {"openid.mode"=>"error", "openid.error"=>"Malformed trust_root: '/'", "token"=>"QygK+s/cYOsgOE9QJftvIpD8eDcxMTM1OTg3OTAyAGpHVUdnT2RkAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy"}
+
+
+ActionController::RoutingError (Recognition failed for "/completeAuth"):
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:469:in `recognition_failed'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:459:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:12:11) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2FcompleteAuth%3Ftoken%3Dtii8dFs3K7nF6gjFWyGa72ipgXMxMTM1OTg3OTMxAGtJeEU3ZkV6AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.13907 (7 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:12:22) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00296 (337 reqs/sec) | Rendering: 0.00117 (39%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:12:23) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00226 (442 reqs/sec) | Rendering: 0.00069 (30%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:12:24) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DUG7Oiufi3QvywDND3XGqX2Av9MQxMTM1OTg3OTQ0AFdTZVpEaHpNAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.15052 (6 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:14:22) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00425 (235 reqs/sec) | Rendering: 0.00090 (21%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:14:23) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2FcompleteAuth%3Ftoken%3D19Fw03MhFXbJQDw7WCx2dLpE6HQxMTM1OTg4MDYzAE5FWUdaRlI4AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.14143 (7 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing Base#index (for 127.0.0.1 at 2005-12-30 16:14:46) [GET]
+  Parameters: {"openid.sig"=>"DZBiR6ZdkioD84MOZM+7jMlrPFg=", "openid.return_to"=>"http://localhost:3000/completeAuth?token=19Fw03MhFXbJQDw7WCx2dLpE6HQxMTM1OTg4MDYzAE5FWUdaRlI4AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "openid.mode"=>"id_res", "token"=>"19Fw03MhFXbJQDw7WCx2dLpE6HQxMTM1OTg4MDYzAE5FWUdaRlI4AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "openid.identity"=>"http://bce.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43b5b9a8}{sM8csw==}"}
+
+
+ActionController::RoutingError (Recognition failed for "/completeAuth"):
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:469:in `recognition_failed'
+    .//vendor/rails/actionpack/lib/action_controller/routing.rb:459:in `recognize!'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:15:15) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DhELX6T%252BHU7L30XB%252BQ6DsVJH%252BT5MxMTM1OTg4MTE1AGFKdEljY1B2AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.14399 (6 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#completeAuth (for 127.0.0.1 at 2005-12-30 16:15:16) [GET]
+  Parameters: {"openid.sig"=>"CiBkZmrnpjdm8rnCja/s3XoMyJY=", "openid.return_to"=>"http://localhost:3000/openid/completeAuth?token=hELX6T%2BHU7L30XB%2BQ6DsVJH%2BT5MxMTM1OTg4MTE1AGFKdEljY1B2AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "openid.mode"=>"id_res", "token"=>"hELX6T+HU7L30XB+Q6DsVJH+T5MxMTM1OTg4MTE1AGFKdEljY1B2AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "action"=>"completeAuth", "controller"=>"openid", "openid.identity"=>"http://bce.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43b5b9a8}{sM8csw==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/completeAuth
+Completed in 0.00600 (166 reqs/sec) | Rendering: 0.00194 (32%) | 200 OK [http://localhost/openid/completeAuth?token=hELX6T%2BHU7L30XB%2BQ6DsVJH%2BT5MxMTM1OTg4MTE1AGFKdEljY1B2AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DhELX6T%252BHU7L30XB%252BQ6DsVJH%252BT5MxMTM1OTg4MTE1AGFKdEljY1B2AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.sig=CiBkZmrnpjdm8rnCja%2Fs3XoMyJY%3D&openid.signed=mode%2Cidentity%2Creturn_to]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:15:28) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DOBSiAxxAAjymhacvq6fqMqAX%252BSMxMTM1OTg4MTI4AHhxaVpieWxtAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.15553 (6 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#completeAuth (for 127.0.0.1 at 2005-12-30 16:15:38) [GET]
+  Parameters: {"openid.sig"=>"iZBJHu8k+cA8vNjIvvW7pSTSa6E=", "openid.return_to"=>"http://localhost:3000/openid/completeAuth?token=OBSiAxxAAjymhacvq6fqMqAX%2BSMxMTM1OTg4MTI4AHhxaVpieWxtAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%3D%3D", "openid.mode"=>"id_res", "token"=>"OBSiAxxAAjymhacvq6fqMqAX+SMxMTM1OTg4MTI4AHhxaVpieWxtAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg==", "action"=>"completeAuth", "controller"=>"openid", "openid.identity"=>"http://brian.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43b5b9a8}{sM8csw==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/completeAuth
+Completed in 0.00338 (295 reqs/sec) | Rendering: 0.00075 (22%) | 200 OK [http://localhost/openid/completeAuth?token=OBSiAxxAAjymhacvq6fqMqAX%2BSMxMTM1OTg4MTI4AHhxaVpieWxtAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%3D%3D&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DOBSiAxxAAjymhacvq6fqMqAX%252BSMxMTM1OTg4MTI4AHhxaVpieWxtAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.sig=iZBJHu8k%2BcA8vNjIvvW7pSTSa6E%3D&openid.signed=mode%2Cidentity%2Creturn_to]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:15:41) [GET]
+  Parameters: {"openid_url"=>"dfvdf", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00660 (151 reqs/sec) | Rendering: 0.00131 (19%) | 200 OK [http://localhost/openid/beginAuth?openid_url=dfvdf]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:26:47) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00527 (189 reqs/sec) | Rendering: 0.00165 (31%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:26:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00335 (298 reqs/sec) | Rendering: 0.00148 (44%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:26:53) [GET]
+  Parameters: {"openid_url"=>nil, "action"=>"beginAuth", "controller"=>"openid"}
+
+
+NoMethodError (You have a nil object when you didn't expect it!
+You might have expected an instance of Array.
+The error occured while evaluating nil.empty?):
+    .//app/controllers/openid_controller.rb:20:in `beginAuth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:28:10) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00332 (301 reqs/sec) | Rendering: 0.00096 (28%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:28:11) [GET]
+  Parameters: {"openid_url"=>nil, "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00260 (385 reqs/sec) | Rendering: 0.00116 (44%) | 200 OK [http://localhost/openid/beginAuth?openid_url=]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:28:31) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DAgVtO9dYjXcOoe1km1t3eW3ghhQxMTM1OTg4OTExADNEY1lFQWFTAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D
+Completed in 0.15881 (6 reqs/sec) | 302 Found [http://localhost/openid/beginAuth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#completeAuth (for 127.0.0.1 at 2005-12-30 16:28:32) [GET]
+  Parameters: {"openid.sig"=>"jZm4eFoDXCp8KL+I2IJfZhgj7fo=", "openid.return_to"=>"http://localhost:3000/openid/completeAuth?token=AgVtO9dYjXcOoe1km1t3eW3ghhQxMTM1OTg4OTExADNEY1lFQWFTAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%3D%3D", "openid.mode"=>"id_res", "token"=>"AgVtO9dYjXcOoe1km1t3eW3ghhQxMTM1OTg4OTExADNEY1lFQWFTAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg==", "action"=>"completeAuth", "controller"=>"openid", "openid.identity"=>"http://brian.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43b5b9a8}{sM8csw==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/completeAuth
+Completed in 0.00329 (304 reqs/sec) | Rendering: 0.00072 (21%) | 200 OK [http://localhost/openid/completeAuth?token=AgVtO9dYjXcOoe1km1t3eW3ghhQxMTM1OTg4OTExADNEY1lFQWFTAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%3D%3D&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43b5b9a8%7D%7BsM8csw%3D%3D%7D&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2FcompleteAuth%3Ftoken%3DAgVtO9dYjXcOoe1km1t3eW3ghhQxMTM1OTg4OTExADNEY1lFQWFTAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.sig=jZm4eFoDXCp8KL%2BI2IJfZhgj7fo%3D&openid.signed=mode%2Cidentity%2Creturn_to]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:35:44) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00512 (195 reqs/sec) | Rendering: 0.00163 (31%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2005-12-30 16:35:46) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00386 (259 reqs/sec) | Rendering: 0.00077 (19%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:35:47) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00643 (155 reqs/sec) | Rendering: 0.00077 (11%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:36:59) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00394 (253 reqs/sec) | Rendering: 0.00072 (18%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:37:00) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00415 (240 reqs/sec) | Rendering: 0.00078 (18%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:38:01) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00483 (207 reqs/sec) | Rendering: 0.00075 (15%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:38:02) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00555 (180 reqs/sec) | Rendering: 0.00075 (13%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:38:02) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00405 (247 reqs/sec) | Rendering: 0.00072 (17%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:38:02) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00787 (127 reqs/sec) | Rendering: 0.00173 (22%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:38:09) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00460 (217 reqs/sec) | Rendering: 0.00071 (15%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:38:09) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00397 (252 reqs/sec) | Rendering: 0.00073 (18%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:38:10) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00478 (209 reqs/sec) | Rendering: 0.00083 (17%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:38:10) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.01423 (70 reqs/sec) | Rendering: 0.00186 (13%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:40:21) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00481 (207 reqs/sec) | Rendering: 0.00073 (15%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:40:22) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00405 (246 reqs/sec) | Rendering: 0.00073 (17%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:40:22) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00400 (249 reqs/sec) | Rendering: 0.00074 (18%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:40:22) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00496 (201 reqs/sec) | Rendering: 0.00074 (14%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:41:00) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+
+
+ActionView::TemplateError (undefined local variable or method `msg_class' for #<#<Class:0xb74429c4>:0xb7442910>) on line #1 of app/views/openid/beginAuth.rhtml:
+1: <div class="<%=msg_class%>"><%=@msg%></div>
+
+    #{RAILS_ROOT}/app/views/openid/beginAuth.rhtml:1
+    ./script/../config/../vendor/rails/actionpack/lib/action_view/base.rb:268:in `compile_and_render_template'
+    ./script/../config/../vendor/rails/actionpack/lib/action_view/base.rb:244:in `render_template'
+    ./script/../config/../vendor/rails/actionpack/lib/action_view/base.rb:205:in `render_file'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/base.rb:655:in `render_file'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/base.rb:595:in `render_with_no_layout'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/layout.rb:220:in `render_without_benchmark'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/benchmarking.rb:53:in `render'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/base.rb:854:in `perform_action_without_filters'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    ./script/../config/../vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    ./script/../config/../vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    ./script/../config/../vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    ./script/../config/../vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    ./script/../config/../vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    ./script/../config/../vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    ./script/../config/../vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    ./script/../config/../vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2005-12-30 16:41:57) [GET]
+  Parameters: {"openid_url"=>"sdfvfd", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00604 (165 reqs/sec) | Rendering: 0.00134 (22%) | 200 OK [http://localhost/openid/beginAuth?openid_url=sdfvfd]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2006-01-24 12:01:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.05800 (17 reqs/sec) | Rendering: 0.00442 (7%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2006-01-24 12:01:31) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00242 (413 reqs/sec) | Rendering: 0.00118 (48%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#beginAuth (for 127.0.0.1 at 2006-01-24 12:01:43) [GET]
+  Parameters: {"openid_url"=>"brianellin.com", "action"=>"beginAuth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/beginAuth
+Completed in 0.00182 (548 reqs/sec) | Rendering: 0.00065 (35%) | 200 OK [http://localhost/openid/beginAuth?openid_url=brianellin.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2006-01-24 12:03:27) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.05518 (18 reqs/sec) | Rendering: 0.00424 (7%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#begin_auth (for 127.0.0.1 at 2006-01-24 12:03:30) [GET]
+  Parameters: {"openid_url"=>"brianellin.com", "action"=>"begin_auth", "controller"=>"openid"}
+
+
+NoMethodError (undefined method `constructRedirect' for #<OpenID::OpenIDConsumer:0xb7604560>):
+    .//app/controllers/openid_controller.rb:41:in `begin_auth'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:853:in `perform_action_without_filters'
+    .//vendor/rails/actionpack/lib/action_controller/filters.rb:332:in `perform_action_without_benchmark'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    .//vendor/rails/actionpack/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    .//vendor/rails/actionpack/lib/action_controller/rescue.rb:82:in `perform_action'
+    .//vendor/rails/actionpack/lib/action_controller/base.rb:369:in `process_without_session_management_support'
+    .//vendor/rails/actionpack/lib/action_controller/session_management.rb:116:in `process'
+    .//vendor/rails/railties/lib/dispatcher.rb:38:in `dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:117:in `handle_dispatch'
+    .//vendor/rails/railties/lib/webrick_server.rb:83:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    .//vendor/rails/railties/lib/webrick_server.rb:69:in `dispatch'
+    .//vendor/rails/railties/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/1.8/rubygems/custom_require.rb:21:in `require'
+    .//vendor/rails/activesupport/lib/active_support/dependencies.rb:214:in `require'
+    .//vendor/rails/railties/lib/commands/server.rb:28
+    ./script/server:3
+
+
+Rendering ./script/../config/../vendor/rails/actionpack/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2006-01-24 12:04:25) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.05544 (18 reqs/sec) | Rendering: 0.00452 (8%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#begin_auth (for 127.0.0.1 at 2006-01-24 12:04:26) [GET]
+  Parameters: {"openid_url"=>"brianellin.com", "action"=>"begin_auth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3DeB9TnfeUoeQluXg6fVeQgXx3Zj8xMTM4MTMzMDY2AHA1ZDZKRGNrAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43d68a05%7D%7BviGcog%3D%3D%7D
+Completed in 1.03031 (0 reqs/sec) | 302 Found [http://localhost/openid/begin_auth?openid_url=brianellin.com]
+
+
+Processing OpenidController#complete_auth (for 127.0.0.1 at 2006-01-24 12:04:27) [GET]
+  Parameters: {"openid.sig"=>"dOfsNt5irIbiMQCLdIW3meCV0kk=", "openid.return_to"=>"http://localhost:3000/openid/complete_auth?token=eB9TnfeUoeQluXg6fVeQgXx3Zj8xMTM4MTMzMDY2AHA1ZDZKRGNrAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "openid.mode"=>"id_res", "token"=>"eB9TnfeUoeQluXg6fVeQgXx3Zj8xMTM4MTMzMDY2AHA1ZDZKRGNrAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "action"=>"complete_auth", "controller"=>"openid", "openid.identity"=>"http://brian.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43d68a05}{viGcog==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/complete_auth
+Completed in 0.00368 (271 reqs/sec) | Rendering: 0.00117 (31%) | 200 OK [http://localhost/openid/complete_auth?token=eB9TnfeUoeQluXg6fVeQgXx3Zj8xMTM4MTMzMDY2AHA1ZDZKRGNrAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43d68a05%7D%7BviGcog%3D%3D%7D&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3DeB9TnfeUoeQluXg6fVeQgXx3Zj8xMTM4MTMzMDY2AHA1ZDZKRGNrAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.sig=dOfsNt5irIbiMQCLdIW3meCV0kk%3D&openid.signed=mode%2Cidentity%2Creturn_to]
+
+
+Processing OpenidController#begin_auth (for 127.0.0.1 at 2006-01-24 12:04:32) [GET]
+  Parameters: {"openid_url"=>"brian.myopenid.com", "action"=>"begin_auth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3DYwUv4R9HGvePIdJIPq4hpSa%252BjCgxMTM4MTMzMDcyADJQV2ROVllkAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43d68a05%7D%7BviGcog%3D%3D%7D
+Completed in 0.22497 (4 reqs/sec) | 302 Found [http://localhost/openid/begin_auth?openid_url=brian.myopenid.com]
+
+
+Processing OpenidController#complete_auth (for 127.0.0.1 at 2006-01-24 12:04:32) [GET]
+  Parameters: {"openid.sig"=>"tFNzA1vxIjyb/LmWznJZKXbrD2c=", "openid.return_to"=>"http://localhost:3000/openid/complete_auth?token=YwUv4R9HGvePIdJIPq4hpSa%2BjCgxMTM4MTMzMDcyADJQV2ROVllkAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%3D%3D", "openid.mode"=>"id_res", "token"=>"YwUv4R9HGvePIdJIPq4hpSa+jCgxMTM4MTMzMDcyADJQV2ROVllkAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg==", "action"=>"complete_auth", "controller"=>"openid", "openid.identity"=>"http://brian.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43d68a05}{viGcog==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/complete_auth
+Completed in 0.00336 (297 reqs/sec) | Rendering: 0.00074 (21%) | 200 OK [http://localhost/openid/complete_auth?token=YwUv4R9HGvePIdJIPq4hpSa%2BjCgxMTM4MTMzMDcyADJQV2ROVllkAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%3D%3D&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43d68a05%7D%7BviGcog%3D%3D%7D&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3DYwUv4R9HGvePIdJIPq4hpSa%252BjCgxMTM4MTMzMDcyADJQV2ROVllkAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly9icmlhbi5teW9wZW5pZC5jb20vAGh0dHA6Ly93d3cubXlvcGVuaWQuY29tL3NlcnZlcg%253D%253D&openid.sig=tFNzA1vxIjyb%2FLmWznJZKXbrD2c%3D&openid.signed=mode%2Cidentity%2Creturn_to]
+
+
+Processing OpenidController#begin_auth (for 127.0.0.1 at 2006-01-24 12:04:38) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"begin_auth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3DlbZ9Wv1qvOPiqDTHQ8R9J42sn4oxMTM4MTMzMDc4AEZuZDZHNEh5AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43d68a05%7D%7BviGcog%3D%3D%7D
+Completed in 0.18053 (5 reqs/sec) | 302 Found [http://localhost/openid/begin_auth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#complete_auth (for 127.0.0.1 at 2006-01-24 12:04:43) [GET]
+  Parameters: {"openid.sig"=>"wBWY43f2LW+UX+A1x46UPuyxLlQ=", "openid.return_to"=>"http://localhost:3000/openid/complete_auth?token=lbZ9Wv1qvOPiqDTHQ8R9J42sn4oxMTM4MTMzMDc4AEZuZDZHNEh5AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "openid.mode"=>"id_res", "token"=>"lbZ9Wv1qvOPiqDTHQ8R9J42sn4oxMTM4MTMzMDc4AEZuZDZHNEh5AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "action"=>"complete_auth", "controller"=>"openid", "openid.identity"=>"http://bce.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43d68a05}{viGcog==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/complete_auth
+Completed in 0.00319 (313 reqs/sec) | Rendering: 0.00071 (22%) | 200 OK [http://localhost/openid/complete_auth?token=lbZ9Wv1qvOPiqDTHQ8R9J42sn4oxMTM4MTMzMDc4AEZuZDZHNEh5AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43d68a05%7D%7BviGcog%3D%3D%7D&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3DlbZ9Wv1qvOPiqDTHQ8R9J42sn4oxMTM4MTMzMDc4AEZuZDZHNEh5AGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.sig=wBWY43f2LW%2BUX%2BA1x46UPuyxLlQ%3D&openid.signed=mode%2Cidentity%2Creturn_to]
+
+
+Processing OpenidController#begin_auth (for 127.0.0.1 at 2006-01-24 12:04:46) [GET]
+  Parameters: {"openid_url"=>"arse", "action"=>"begin_auth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/begin_auth
+Completed in 0.04293 (23 reqs/sec) | Rendering: 0.00125 (2%) | 200 OK [http://localhost/openid/begin_auth?openid_url=arse]
+
+
+Processing OpenidController#begin_auth (for 127.0.0.1 at 2006-01-24 12:04:51) [GET]
+  Parameters: {"openid_url"=>"google.com", "action"=>"begin_auth", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/begin_auth
+Completed in 0.52428 (1 reqs/sec) | Rendering: 0.00078 (0%) | 200 OK [http://localhost/openid/begin_auth?openid_url=google.com]
+
+
+Processing OpenidController#index (for 127.0.0.1 at 2006-01-31 15:24:42) [GET]
+  Parameters: {"action"=>"index", "controller"=>"openid"}
+Rendering  within layouts/openid-layout
+Rendering openid/index
+Completed in 0.00498 (200 reqs/sec) | Rendering: 0.00360 (72%) | 200 OK [http://localhost/]
+
+
+Processing OpenidController#begin_auth (for 127.0.0.1 at 2006-01-31 15:24:46) [GET]
+  Parameters: {"openid_url"=>"brianellin.com", "action"=>"begin_auth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3DFy37iNg42%252F%252FGgFCDt9af8NYqthYxMTM4NzQ5ODg2AG9YbFFQZFlsAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43dff3d1%7D%7BoOx6jg%3D%3D%7D
+Completed in 1.13759 (0 reqs/sec) | 302 Found [http://localhost/openid/begin_auth?openid_url=brianellin.com]
+
+
+Processing OpenidController#complete_auth (for 127.0.0.1 at 2006-01-31 15:24:48) [GET]
+  Parameters: {"openid.sig"=>"xmVPU79J+dGzVwhNsVPsT9WxOas=", "openid.return_to"=>"http://localhost:3000/openid/complete_auth?token=Fy37iNg42%2F%2FGgFCDt9af8NYqthYxMTM4NzQ5ODg2AG9YbFFQZFlsAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "openid.mode"=>"id_res", "token"=>"Fy37iNg42//GgFCDt9af8NYqthYxMTM4NzQ5ODg2AG9YbFFQZFlsAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "action"=>"complete_auth", "controller"=>"openid", "openid.identity"=>"http://brian.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43dff3d1}{oOx6jg==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/complete_auth
+Completed in 0.00376 (266 reqs/sec) | Rendering: 0.00116 (30%) | 200 OK [http://localhost/openid/complete_auth?token=Fy37iNg42%2F%2FGgFCDt9af8NYqthYxMTM4NzQ5ODg2AG9YbFFQZFlsAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43dff3d1%7D%7BoOx6jg%3D%3D%7D&openid.identity=http%3A%2F%2Fbrian.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3DFy37iNg42%252F%252FGgFCDt9af8NYqthYxMTM4NzQ5ODg2AG9YbFFQZFlsAGh0dHA6Ly9icmlhbmVsbGluLmNvbS8AaHR0cDovL2JyaWFuLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.sig=xmVPU79J%2BdGzVwhNsVPsT9WxOas%3D&openid.signed=mode%2Cidentity%2Creturn_to]
+
+
+Processing OpenidController#begin_auth (for 127.0.0.1 at 2006-01-31 15:24:55) [GET]
+  Parameters: {"openid_url"=>"bce.myopenid.com", "action"=>"begin_auth", "controller"=>"openid"}
+Redirected to http://www.myopenid.com/server?openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3D8lJ5weUxFgzN%252B7M%252ByJeVy6BbSqQxMTM4NzQ5ODk1AGtlTHZKc2ZUAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.trust_root=http%3A%2F%2Flocalhost%3A3000%2F&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43dff3d1%7D%7BoOx6jg%3D%3D%7D
+Completed in 0.23221 (4 reqs/sec) | 302 Found [http://localhost/openid/begin_auth?openid_url=bce.myopenid.com]
+
+
+Processing OpenidController#complete_auth (for 127.0.0.1 at 2006-01-31 15:25:02) [GET]
+  Parameters: {"openid.sig"=>"4N14nvyKEBfTsJIDvrTp3RADqrM=", "openid.return_to"=>"http://localhost:3000/openid/complete_auth?token=8lJ5weUxFgzN%2B7M%2ByJeVy6BbSqQxMTM4NzQ5ODk1AGtlTHZKc2ZUAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "openid.mode"=>"id_res", "token"=>"8lJ5weUxFgzN+7M+yJeVy6BbSqQxMTM4NzQ5ODk1AGtlTHZKc2ZUAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy", "action"=>"complete_auth", "controller"=>"openid", "openid.identity"=>"http://bce.myopenid.com/", "openid.signed"=>"mode,identity,return_to", "openid.assoc_handle"=>"{HMAC-SHA1}{43dff3d1}{oOx6jg==}"}
+Rendering  within layouts/openid-layout
+Rendering openid/complete_auth
+Completed in 0.00352 (284 reqs/sec) | Rendering: 0.00074 (21%) | 200 OK [http://localhost/openid/complete_auth?token=8lJ5weUxFgzN%2B7M%2ByJeVy6BbSqQxMTM4NzQ5ODk1AGtlTHZKc2ZUAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.assoc_handle=%7BHMAC-SHA1%7D%7B43dff3d1%7D%7BoOx6jg%3D%3D%7D&openid.identity=http%3A%2F%2Fbce.myopenid.com%2F&openid.mode=id_res&openid.return_to=http%3A%2F%2Flocalhost%3A3000%2Fopenid%2Fcomplete_auth%3Ftoken%3D8lJ5weUxFgzN%252B7M%252ByJeVy6BbSqQxMTM4NzQ5ODk1AGtlTHZKc2ZUAGh0dHA6Ly9iY2UubXlvcGVuaWQuY29tLwBodHRwOi8vYmNlLm15b3BlbmlkLmNvbS8AaHR0cDovL3d3dy5teW9wZW5pZC5jb20vc2VydmVy&openid.sig=4N14nvyKEBfTsJIDvrTp3RADqrM%3D&openid.signed=mode%2Cidentity%2Creturn_to]
