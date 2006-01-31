@@ -1,0 +1,12 @@
+<table>
+ <tr><td>Identity:</td><td><%= @auth_info.identity_url %></td></tr>
+ <tr><td>Site:</td><td><%= @auth_info.trust_root %></td></tr>
+</table>
+
+<form method="post" action="<%= url_for :controller => 'server', :action => 'decision' %>">
+
+<input type="hidden" name="auth_info" value="<%= @auth_info.serialize %>" />
+<input type="submit" name="yes" value="yes" />
+<input type="submit" name="no" value="no" />
+
+</form>
