@@ -40,7 +40,7 @@
 
     <% if session[:username] %>
       <div style="float:right;">
-        Welcome, <%= session[:username] %> | <%= link_to ('Log out', :controller => 'login', :action => 'logout') %>
+        Welcome, <%= session[:username] %> | <%= link_to('Log out', :controller => 'login', :action => 'logout') %>
       </div>
     <% end %>
 
