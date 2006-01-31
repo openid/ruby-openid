@@ -297,10 +297,9 @@ module OpenID
     
   class AuthorizationInfo
 
+    attr_reader :cancel_url, :identity_url, :trust_root, :return_to
+    
     def initialize(server_url, args)
-      # XXX: raise ArgumentError is there is not return_to or other 
-      # XXX: openid attrs?
-
       @server_url = server_url
       @return_to = args['openid.return_to']
       @identity_url = args['openid.identity']
@@ -319,20 +318,8 @@ module OpenID
       return [REDIRECT, @cancel_url]
     end
 
-    def get_retry_url
+    def retry_url
       OpenID::Util.append_args(@server_url, @args)
-    end
-
-    def get_cancel_url
-      @cancel_url
-    end
-
-    def get_identity_url
-      @identity_url
-    end
-
-    def get_trust_root
-      @trust_root
     end
 
     def serialize

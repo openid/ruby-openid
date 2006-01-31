@@ -222,8 +222,8 @@ class TestGetAuthResponseDumb < Test::Unit::TestCase
     status, info = @server.get_auth_response(false, args)
 
     assert_equal(status, OpenID::DO_AUTH)
-    assert_equal(info.get_trust_root, @tr_url)
-    assert_equal(info.get_identity_url, @id_url)
+    assert_equal(info.trust_root, @tr_url)
+    assert_equal(info.identity_url, @id_url)
   end
 
   def test_checkid_setup_cancel
