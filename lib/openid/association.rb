@@ -59,7 +59,7 @@ module OpenID
 
     def initialize(handle, secret, issued, lifetime, assoc_type)
       if assoc_type != 'HMAC-SHA1'
-        raise ArgumentError, "HMAC-SHA1 is the only supported assoc_type"
+        raise ArgumentError, "HMAC-SHA1 is the only supported assoc_type, got #{assoc_type}"
       end
       
       @handle = handle

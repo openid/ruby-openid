@@ -135,9 +135,11 @@ module StoreTestCase
   def test_nonce
     nonce1 = _gen_nonce
     
+    assert_not_nil(nonce1)
+
     # a nonce is present by default
     present = @store.use_nonce(nonce1)
-    assert present == false
+    assert_equal(present, false)
 
     # Storing once causes use_nonce to return true the first, and only
     # the first, time it is called after the store.
@@ -145,7 +147,7 @@ module StoreTestCase
     present = @store.use_nonce(nonce1)
     assert present
     present = @store.use_nonce(nonce1)
-    assert present == false
+    assert_equal(present, false)
     
     # Storing twice has the same effect as storing once.
     @store.store_nonce(nonce1)
@@ -153,7 +155,7 @@ module StoreTestCase
     present = @store.use_nonce(nonce1)
     assert present
     present = @store.use_nonce(nonce1)
-    assert present == false
+    assert_equal(present, false)
     
     ### Auth key stuff
     
