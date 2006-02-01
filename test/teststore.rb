@@ -1,16 +1,15 @@
 require 'test/unit'
 require 'fileutils'
+require 'pathname'
+require 'tmpdir'
 
-require 'openid/util'
 require 'openid/filestore'
-require 'openid/association'
-
 require 'storetestcase'
 
 class FileStoreTestCase < Test::Unit::TestCase
   include StoreTestCase
 
-  @@dir = "/tmp/filstoretest"
+  @@dir = Pathname.new(Dir.tmpdir).join('filstoretest')
 
   def setup
     FileUtils.rm_rf(@@dir)
