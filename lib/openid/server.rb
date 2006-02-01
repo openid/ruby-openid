@@ -6,20 +6,184 @@ require 'openid/trustroot'
 
 module OpenID
 
+  # Status code returned OpenIDServer.get_openid_response when the framework
+  # using the library should issue a redirect to the user's browser.
   REDIRECT     = 'redirect'
+
+  # Status code is returned by OpenIDServer.get_openid_response when the
+  # library has determined that it's up to the application and user to
+  # fix the reason the library isn't authorized to return a successful
+  # authentication response.
   DO_AUTH      = 'do_auth'
+
+  # Status code returned by OpenIDServer.get_openid_response when there
+  # are no openid arguments provided. Standard behavior is to render a
+  # page saying that this URL is an OpenID server.
   DO_ABOUT     = 'do_about'
-  
+
+  # Status code is returned by OpenIDServer.get_openid_response when the
+  # server should send a 200 response code and an exact message body.
+  # This is for informing a remote site everything worked correctly. 
   REMOTE_OK    = 'exact_ok'
+
+  # Status code is returned by OpenIDServer.get_openid_response when the
+  # server should send a 400 response code and an exact message body.
+  # This is for informing a remote site that an error occured while
+  # processing the request.
   REMOTE_ERROR = 'exact_error'
   
+  # Status code is returned by OpenIDServer.get_openid_response when
+  # something went wrong, and the library isn't able to find an
+  # appropriate in-protocol response.  When this happens, a short
+  # plaintext description of the error will be provided.  The server
+  # will probably want to return some sort of error page here, but its
+  # contents are not strictly prescribed, like those of the
+  # OpenID::REMOTE_ERROR case.
   LOCAL_ERROR  = 'local_error'
 
+  # Below is the documentation for the OpenIDServer class.  The only
+  # part of the server library which has to be used and is not
+  # documented here is the store for associations.  See
+  # OpenID::OpenIDStore and OpenID::FilesystemOpenIDStore for more
+  # information.
+  #
+  # ==Overview
+  #
+  # There are two different classes of requests that identity servers
+  # need to be able to handle.  First are the requests made directly
+  # by identity consumers.  Second are the requests made indirectly,
+  # via redirects sent to the user's web browser.
+  #
+  # The first class are the requests made to it directly by identity
+  # consumers.  These are HTTP POST requests made to the published
+  # OpenID server URL.  There are two types of these requests, requests
+  # to create an association, and requests to verify identity requests
+  # signed with a secret that is entirely private to the server.
+  #
+  # The second class are the requests made through redirects.  These
+  # are HTTP GET requests coming from the user's web browser.  For
+  # these requests, the identity server must perform several steps.
+  # It has to determine the identity of the user making the request,
+  # determine if they are allowed to use the identity requested, and
+  # then take the correct action depending on the exact form of the
+  # request and the answers to those questions.
+  #
+  # ==Library Design
+  #
+  # This server library is designed to make dealing with both classes
+  # of requests as straightforward as possible.
+  #
+  # At a high level, there are two parts of the library which are
+  # important.  First, there is the OpenIDServer class.
+  # Second, there is the OpenIDStore interface, which
+  # defines the necessary persistent state mechanisms. This library
+  # comes bundled with serveral OpenIDStore implemetations.
+  #
+  # ==Stores
+  #
+  # The OpenID server needs to maintain state between requests in
+  # order to function.  Its mechanism for doing this is called a
+  # store.  The store interface is defined in OpenIDStore.
+  # Additionally, several
+  # concrete store implementations are provided, so that most sites
+  # won't need to implement a custom store.  For a store backed by
+  # flat files on disk, see FilesystemOpenIDStore.  For rails users
+  # needing an SQL store, please see the ActiveRecord store in the 
+  # examples directory.
+  # 
+  # ==Using this Library
+  #
+  # This library is designed to be easy to use for handling OpenID
+  # requests.  There is, however, additional work a site has to do as
+  # an OpenID server which is beyond the scope of this library.  That
+  # work consists primarily of creating a couple additional pages for
+  # handling verifying that the user wants to confirm their identity
+  # to the consumer site.  Implementing an OpenID server using this
+  # library should follow this basic plan:
+  #
+  # First, you need to choose a URL to be your OpenID server URL.
+  # This URL needs to be able to handle both GET and POST requests,
+  # and distinguish between them.
+  #
+  # Next, you need to have some system for mapping identity URLs to
+  # users of your system.  The easiest method to do this is to insert
+  # an appropriate <link> tag into your users' public pages.  See the
+  # OpenID spec[http://openid.net/specs.bml#linkrel] for the
+  # precise format the <link> tag needs to follow.  Then, each user's
+  # public page URL is that user's identity URL.  There are many
+  # alternative approaches, most of which should be fairly obvious.
+  #
+  # The next step is to write the code to handle requests to the
+  # server URL.  When a request comes in, several steps need to take
+  # place:
+  #
+  # 1. Get an OpenIDServer instance with an appropriate
+  #    store.  This may be a previously created instance, or a new
+  #    one, whichever is convenient for your application.
+  #
+  # 2. Call the OpenIDServer instance's get_openid_response
+  #    method.  The first argument is a string indicating the HTTP
+  #    method used to make the request.  This should be either
+  #    'GET' or 'POST', the two HTTP methods that OpenID
+  #    uses.  The second argument is the GET or POST (as
+  #    appropriate) arguments provided for this request, parsed
+  #    into a hash-like structure.  The third argument is a
+  #    callback function for determining if authentication
+  #    requests can proceed.  For more details on the callback
+  #    function, see the the documentation for
+  #    OpenIDServer.get_openid_response
+  #
+  # 3. The return value from that call is an array of two: [status, info].
+  #    Depending on the status value returned, there are several
+  #    different actions you might take.  See the documentation
+  #    for the OpenIDServer.get_openid_response method for a full list
+  #    of possible results, what they mean, and what the
+  #    appropriate action for each is.
+  #
+  # Processing all the results from that last step is fairly simple,
+  # but it involves adding a few additional pages to your site.  There
+  # needs to be a page about OpenID that users who visit the server
+  # URL directly can be shown, so they have some idea what the URL is
+  # for.  It doesn't need to be a fancy page, but there should be one.
+  #
+  # Usually the OpenID::DO_AUTH case will also require at least one
+  # page, and perhaps more.  These pages could be arranged many
+  # different ways, depending on your site's policies on interacting
+  # with its users.
+  #
+  # Overall, implementing an OpenID server is a fairly straightforward
+  # process, but it requires significant application-specific work
+  # above what this library provides.        
+  #
+  # ==OpenIDServer
+  # 
+  # This class is the interface to the OpenID server logic.  Instances
+  # contain no per-request state, so a single instance can be reused
+  # (or even used concurrently by multiple threads) as needed.
+  #
+  # This class presents an extremely high-level interface to the
+  # OpenID server library via the get_openid_response method.
   class OpenIDServer
     
     @@SECRET_LIFETIME = 14 * 24 * 60 * 60 # 14 days
     @@SIGNED_FIELDS = ['mode', 'identity', 'return_to']
 
+    # Creates a new OpenIDServer instance.
+    # C{L{OpenIDServer}} instance contain no per-request internal
+    # state, so they can be reused or used concurrently by multiple
+    # threads, if desired.
+    #
+    # [+server_url+]
+    #   The server's OpenID URL.  It is
+    #   used whenever the server needs to generate a URL that will
+    #   cause another OpenID request to be made, which can happen
+    #   in authentication requests.  It's also used as part of the
+    #   key for looking up and storing the server's secrets.
+    #
+    # [+store+]
+    #   An object implementing the OpenIDStore interface which the library
+    #   will use for persistent storage.  Please note that this may not be
+    #   a "dumb" style store, it must be able to store association information.
     def initialize(server_url, store)
       raise ArgumentError("Server cannot use a dumb store") if store.dumb?
 
@@ -63,6 +227,8 @@ module OpenID
         return [LOCAL_ERROR, "HTTP method #{http_method} not valid in OpenID"]
       end
     end
+
+    protected
 
     def check_trust_root(args)
       return_to = args['openid.return_to']

@@ -12,6 +12,7 @@ require 'openid/dh'
 class TestOpenIDServer < OpenID::OpenIDServer
   
   attr_reader :dumb_key
+  public :associate, :get_auth_response, :check_authentication
 
 end
 

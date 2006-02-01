@@ -6,8 +6,8 @@ require "openid/parse"
 require "openid/fetchers"
 require "openid/association"
 
-# Core OpenID library module.  Users of
-# the library should look at OpenID::OpenIDConsumer
+# Everything in this library exists within the OpenID Module.  Users of
+# the library should look at OpenID::OpenIDConsumer and/or OpenID::OpenIDServer
 module OpenID
 
   # Code returned when either the of the
