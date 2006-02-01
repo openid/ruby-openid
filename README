@@ -1,4 +1,4 @@
-=OpenID Consumer
+=Ruby OpenID
 
 A Ruby library for verifying and serving OpenID identities.
 
