@@ -1,4 +1,4 @@
-= Ruby OpenID Consumer Installation
+= Ruby OpenID Library Installation
 
 == Installation
 
@@ -21,5 +21,5 @@ Go into the test directory and execute the *runtests* script.
 
 * Run consumer.rb in the examples directory. 
 * Get started writing your own consumer using OpenID::OpenIDConsumer
-
+* Write your own server with OpenID::OpenIDServer
 

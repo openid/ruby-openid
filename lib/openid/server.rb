@@ -193,6 +193,94 @@ module OpenID
       @store = store
     end
 
+
+    # get_openid_response processes an OpenID request, and determines the
+    # proper way to respond.  It then communicates what that
+    # response should be back to its caller via return codes.
+    #
+    # The return value of this method is an array, [status, info].
+    # The first value is the status code describing what action
+    # should be taken.  The second value is additional information
+    # for taking that action, and varies based on the status.
+    #
+    # The following return codes are possible:
+    #
+    # 1. OpenID::REDIRECT - This code indicates that the server
+    #    should respond with an HTTP redirect.  In this case,
+    #    info is the URL to redirect the client to.
+    #
+    # 2. OpenID::DO_AUTH - This code indicates that the server
+    #    should take whatever actions are necessary to allow
+    #    this authentication to succeed or be cancelled, then
+    #    try again.  In this case info is a
+    #    AuthorizationInfo object, which contains additional
+    #    useful information.
+    #
+    # 3. OpenID::DO_ABOUT - This code indicates that the server
+    #    should display a page containing information about
+    #    OpenID.  This is returned when it appears that a user
+    #    entered an OpenID server URL directly in their
+    #    browser, and the request wasn't an OpenID request at
+    #    all.  In this case info is nil.
+    #
+    # 4. OpenID::REMOTE_OK - This code indicates that the server
+    #    should return content verbatim in response to this
+    #    request, with an HTTP status code of 200.  In this
+    #    case, info is a String containing the content to
+    #    return.
+    #
+    # 5. OpenID::REMOTE_ERROR - This code indicates that the
+    #    server should return content verbatim in response to
+    #    this request, with an HTTP status code of 400.  In
+    #    this case, info is a String containing the content
+    #    to return.
+    #
+    # 6. OpenID::LOCAL_ERROR - This code indicates an error that
+    #    can't be handled within the protocol.  When this
+    #    happens, the server may inform the user that an error
+    #    has occured as it sees fit.  In this case, info is
+    #    a short description of the error.
+    #
+    #
+    # ===Paramters
+    #
+    # [+http_method+]
+    #   String describing the HTTP method used to make the current request.
+    #   The only expected values are 'GET' and 'POST'.  Case will be ignored.
+    #
+    # [+args+]
+    #   Hash-like object that contains the unparsed, unescaped arguments that
+    #   were sent with the OpenID request being handled.  The keys and values
+    #   in the args hash should all be String objects.
+    #
+    # [+is_authorized+]
+    #   Proc object that get_openid_response uses to determine whether or
+    #   not this OpenID request should succeed. This callback needs to perform
+    #   two tasks, and only evaluate to true if they both succeed, otherwise
+    #   it should return false.
+    #   
+    #   The first task is to determine the user making this request, and
+    #   if they are authorized to claim the identity URL passed into the
+    #   block.  If the user making the request isn't authorized to claim the
+    #   identity URL, the block should evaluate to false.
+    #  
+    #   The second task is to determine if the user will allow the trust_root
+    #   in question to determine her identity.  If they have have not
+    #   previously authorized the trust_root, then the block should evaluate
+    #   to false.
+    #
+    #   If both above tasks evaluate to true, then the block should evaluate
+    #   to true.
+    #   
+    #   An example:
+    #
+    #    is_authorized = Proc.new do |identity_url, trust_root|
+    #      if logged_in? and (url_for_user == identity_url)
+    #        trust_root_approved?(trust_root)
+    #      else
+    #        false
+    #      end
+    #    end
     def get_openid_response(http_method, args, is_authorized)
       http_method.upcase!
 
@@ -460,11 +548,43 @@ module OpenID
 
   end
 
-    
+  # This is a class to encapsulate information that is useful when
+  # interacting with a user to determine if an authentication request
+  # can be authorized to succeed.  This class provides methods to get
+  # the identity URL and trust root from the request that failed.
+  # Given those, the server can determine what needs to happen in
+  # order to allow the request to proceed, and can ask the user to
+  # perform the necessary actions.
+  #
+  # The user may choose to either perform the actions or not.  If they
+  # do, the server should try to perform the request OpenID request
+  # again.  If they choose not to, and inform the server by hitting
+  # some form of cancel button, the server should redirect them back
+  # to the consumer with a notification of that for the consumer.
+  #
+  # This class provides two approaches for each of those actions.  The
+  # server can either send the user redirects which will cause the
+  # user to retry the OpenID request, or it can help perform those
+  # actions without involving an extra redirect, producing output that
+  # works like that of OpenIDServer.get_openid_response.
+  #
+  # Both approaches work equally well, and you should choose the one
+  # that fits into your framework better.
+  #
+  # The AuthorizationInfo.retry and AuthorizationInfo.cancel methods produce
+  # [status,info] arrays that should be handled exactly like the responses
+  # from OpenIDServer.get_openid_response.
+  #
+  # The retry_url and cancel_url attributes return URLs
+  # to which the user can be redirected to automatically retry or
+  # cancel this OpenID request.
   class AuthorizationInfo
 
     attr_reader :cancel_url, :identity_url, :trust_root, :return_to
     
+    # creates a new AuthorizationInfo object for the
+    # given values.  AuthorizationInfo objects are generated by the various
+    # methods in OpenIDServer, and should not be created directly by the user.
     def initialize(server_url, args)
       @server_url = server_url
       @return_to = args['openid.return_to']
@@ -476,10 +596,14 @@ module OpenID
       @args = args.dup
     end
 
-    def retry(openid_server, is_authorized)
+    # Retries an OpenID authentication request.  Basically just calls
+    # OpenIDServer instance passed in with its request arguments,
+    # and the is_authorized Proc passed in.
+    def retry(openid_server, is_authorized)      
       openid_server.get_openid_response('GET', @args, is_authorized)
     end
 
+    # Cancels an OpenID request
     def cancel
       return [REDIRECT, @cancel_url]
     end
@@ -488,6 +612,9 @@ module OpenID
       OpenID::Util.append_args(@server_url, @args)
     end
 
+    # Generate a string representing this object. The string can be
+    # passed into the AuthorizationInfo.deserialize class method to
+    # recreate the instance.
     def serialize
       @server_url + '|' + OpenID::Util.urlencode(@args)
     end
