@@ -1,32 +1,71 @@
-This directory contains examples that demonstrate use of the OpenID
-library.  Make sure you have properly installed this library before
-running the examples.
+This directory contains several examples that demonstrate use of the
+OpenID library.  Make sure you have properly installed the library
+before running the examples.  These examples are a great place to
+start in integrating OpenID into your application.
 
-==Ruby on Rails example
-This example simply prompts the user for an
-identity URL and verifies it.  This is done from the lauded Ruby on
-Rails framework, and you can get a look at how it works in
-app/controllers/openid_controller.rb
+==consumer.rb
+consumer.rb runs a simple web server (WEBrick) and will
+verify OpenID identities.  To test this out you'll need a valid
+OpenID URL and to run:
 
-===Run the rails example
-* Unpack openid_rails.tar.gz 
-* run openid_rails/script/server
-* point your browser to http://localhost:3000/
+ ruby consumer.rb
 
-==Ruby on Rails OpenIDLoginGenerator
-A port of the standard LoginGenerator that uses OpenID authentication.  Use this generator as a starting point for your OpenID enabled rails app.
+Point your browser at http://localhost:2000/ and follow the instructions.
 
-You can read about LoginGenerator at http://wiki.rubyonrails.com/rails/pages/LoginGenerator
+
+==Rails consumer example
+
+This example is functionally a clone of consumer.rb but uses the Ruby
+on Rails web framework.  To run the example you'll need the latest
+version of rails installed.
+
+ cd rails_consumer
+ ./script/server
+
+Open a web browser and go to http://localhost:3000/ and follow the
+instructions.
+
+
+==Rails server example
+
+The rails_server contains a fully functions OpenID server, and acts as
+a starting point for implementing your own production rails server.
+You'll need the latest version of Ruby on Rails installed, and then:
+
+ cd rails_server
+ ./script/server
+
+Open a web browser to http://localhost:3000/ and follow the instructions.
+
+
+==Rails OpenIDLoginGenerator
+
+A port of the standard LoginGenerator OpenID authentication instead of
+passwords.  Use this generator as a starting point for your OpenID
+enabled rails app.
+
+You can read about LoginGenerator at
+http://wiki.rubyonrails.com/rails/pages/LoginGenerator
 
 ===Running the generator
-* Copy the contents of openid_login_generator into ~/.rails/generators/openid_login
-* run script/generate openid_login Auth
 
-You will now have an auth_controller.rb in app/controllers.  For more information see the USAGE and README in the openid_login_generator directory.
+* Copy the contents of rails_openid_login_generator into ~/.rails/generators/openid_login
+* run script/generate openid_login Openid
 
-==WEBrick example
-consumer.rb runs a simple web server (webrick) and will verify OpenID identities.  To test this out, you'll need a valid OpenID URL, and to install the library (see ../INSTALL), and run ruby consumer.rb
+You will now have an openid_controller.rb in app/controllers.  For more
+information see the USAGE and README in the rails_openid_login_generator
+directory.
 
-Point your web browser at http://localhost:2000/ to test.
+You can check out the running code by doing a ./script/server and
+browsing to http://localhost:3000/auth/login
+
+
+==Rails ActiveRecord OpenIDStore example
+
+For various reasons you may want or need to deploy your ruby openid
+consumer/server using an SQL based store.  The README and code in the
+rails_active_record_store example explain in detail how this can be
+done.
+
 
 
