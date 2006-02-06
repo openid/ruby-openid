@@ -2,6 +2,7 @@ require "base64"
 require "cgi"
 require "digest/sha1"
 require "hmac-sha1"
+require "uri"
 
 srand(Time.now.to_f)
 
@@ -196,6 +197,14 @@ module OpenID
         bytes << _bytes
       end
       return bytes
+    end
+
+    def Util.normalize_url(url)
+      url = url.strip
+      parsed = URI.parse(url)
+      parsed = URI.parse("http://"+url) if parsed.scheme.nil?
+      parsed.normalize!
+      parsed.to_s
     end
 
   end
