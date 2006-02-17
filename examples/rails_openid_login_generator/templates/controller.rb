@@ -21,10 +21,10 @@ class <%= class_name %>Controller < ApplicationController
         redirect_to(redirect_url)
 
       when OpenID::PARSE_ERROR
-        flash["notice"] = "Could not find OpenID server for page #{openid_url}"
+        flash[:notice] = "Could not find OpenID server for page #{openid_url}"
         
       when OpenID::HTTP_FAILURE
-        flash["notice"] = "Could not fetch page #{openid_url}"
+        flash[:notice] = "Could not fetch page #{openid_url}"
 
       end      
     end    
@@ -48,16 +48,16 @@ class <%= class_name %>Controller < ApplicationController
       @session[:user] = @user 
 
       @session[:user] = openid_url
-      flash["notice"] = "Logged in as #{openid_url}"
+      flash[:notice] = "Logged in as #{openid_url}"
        
-      redirect_back_or_default :action => "welcome"
+      redirect_to :action => "welcome"
       return
 
     elsif status == OpenID::FAILURE and info
-      flash["notice"] = "Verification of #{info} failed."
+      flash[:notice] = "Verification of #{info} failed."
 
     else
-      flash["notice"] = "Verification cancelled"
+      flash[:notice] = "Verification cancelled"
     end
   
     redirect_to :action => "login"

@@ -3,7 +3,7 @@ class OpenidLoginGenerator < Rails::Generator::NamedBase
     record do |m|
       
       # Login module, controller class, functional test, and helper.
-      m.template "login_system.rb", "lib/login_system.rb"
+      m.template "openid_login_system.rb", "lib/openid_login_system.rb"
       m.template "controller.rb", File.join("app/controllers", class_path, "#{file_name}_controller.rb")
       m.template "controller_test.rb", File.join("test/functional", class_path, "#{file_name}_controller_test.rb")
       m.template "helper.rb", File.join("app/helpers", class_path, "#{file_name}_helper.rb")

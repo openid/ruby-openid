@@ -13,19 +13,19 @@ Read more at:
 Done generating the openidlogin system. but there are still a few
 things you have to do manually. First open your application.rb and add
 
-  require_dependency "login_system"
+  require_dependency "openid_login_system"
 
 to the top of the file and include the login system with
 
-  include OpenIDLoginSystem 
+  include OpenidLoginSystem 
 
 The beginning of your ApplicationController.
 It should look something like this : 
 
-  require_dependency "login_system"
+  require_dependency "openid_login_system"
 
   class ApplicationController < ActionController::Base
-    include OpenIDLoginSystem
+    include OpenidLoginSystem
     model :user
 
 After you have done the modifications the the AbstractController you can import

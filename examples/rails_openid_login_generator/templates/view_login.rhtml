@@ -3,8 +3,8 @@
 <div title="Account login" id="loginform" class="form">
     <h3>Please login</h3>
     
-    <%% if @flash['notice'] %>
-      <div id="message"><%%= @flash['notice'] %></div>
+    <%% if @flash[:notice] %>
+      <div id="message"><%%= @flash[:notice] %></div>
     <%% end %>
 
     <label for="user_login">Login:</label><br/>
