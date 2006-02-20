@@ -41,7 +41,7 @@ Open a web browser to http://localhost:3000/ and follow the instructions.
 ==Rails OpenidLoginGenerator
 
 A port of the standard LoginGenerator OpenID authentication instead of
-passwords.  Use this generator as a starting point for your OpenID
+passwords.  Use this generator as a *starting point* for your OpenID
 enabled rails app.
 
 You can read about LoginGenerator at
@@ -52,13 +52,10 @@ http://wiki.rubyonrails.com/rails/pages/LoginGenerator
 * Copy the contents of rails_openid_login_generator into ~/.rails/generators/openid_login (or symlink: ln -s examples/rails_openid_login_generator ~/.rails/generators/openid_login)
 * run script/generate openid_login openid
 
-You will now have an openid_controller.rb in app/controllers.  For more
-information see the USAGE and README in the rails_openid_login_generator
-directory.
-
-You can check out the running code by doing a ./script/server and
-browsing to http://localhost:3000/openid/login
-
+You will now have an openid_controller.rb in app/controllers. You'll
+need to create your 'users' database table before running the
+application.  For schemas and more details about this generator, read
+README_LOGIN in you rails root directory.
 
 ==Rails ActiveRecord OpenIDStore example
 
