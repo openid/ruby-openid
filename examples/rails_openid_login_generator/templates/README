@@ -10,8 +10,9 @@ Read more at:
 
 == Installation
 
-Done generating the openidlogin system. but there are still a few
-things you have to do manually. First open your application.rb and add
+If you are reading this, then you have installed the openid_login
+system, but there are still a few things you have to do
+manually. First open your app/controllers/application.rb and add
 
   require_dependency "openid_login_system"
 

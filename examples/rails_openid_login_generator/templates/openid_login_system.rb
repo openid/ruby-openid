@@ -1,6 +1,6 @@
 require_dependency "user"
 
-module OpenIDLoginSystem 
+module OpenidLoginSystem 
   
   protected
   
