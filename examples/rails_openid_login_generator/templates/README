@@ -81,12 +81,10 @@ How do I...
 
   ... access the user who is currently logged in
 
-  A: You can get the user object from the session using @session['user']
+  A: You can get the user id from the session using @session[:user_id]
      Example: 
-       You may get the id and openid_url of the logged in user:
 	
 	@session[:user_id] 
-	@session[:openid_url]
 
        To get the User object:
 

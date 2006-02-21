@@ -49,7 +49,6 @@ class <%= class_name %>Controller < ApplicationController
       # storing both the openid_url and user id in the session for for quick
       # access to both bits of information.  Change as needed.
       @session[:user_id] = @user.id
-      @session[:openid_url] = @user.openid_url
 
       flash[:notice] = "Logged in as #{openid_url}"
        
@@ -67,7 +66,7 @@ class <%= class_name %>Controller < ApplicationController
   end
   
   def logout
-    @session[:user] = nil
+    @session[:user_id] = nil
   end
     
   def welcome
@@ -78,7 +77,7 @@ class <%= class_name %>Controller < ApplicationController
   # get the logged in user object
   def find_user
     return nil if session[:user_id].nil?
-    User.find(session[:user_ud])
+    User.find(session[:user_id])
   end
   
 end
