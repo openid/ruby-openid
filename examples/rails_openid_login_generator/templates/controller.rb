@@ -1,6 +1,8 @@
 require "openid/filestore"
 require "openid/consumer"
 
+# Please choose a non-world readable directory for your OpenID store.
+# I've set it to use /tmp for simplicity.
 store = OpenID::FilesystemOpenIDStore.new("/tmp/railsgen")
 $consumer = OpenID::OpenIDConsumer.new(store)
 
