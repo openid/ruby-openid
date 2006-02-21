@@ -31,6 +31,6 @@ class OpenidLoginGenerator < Rails::Generator::NamedBase
   attr_accessor :controller_class_name
   
   def login_views
-    %w(welcome login logout signup)
+    %w(welcome login logout)
   end
 end

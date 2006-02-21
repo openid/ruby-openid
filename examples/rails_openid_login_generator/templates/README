@@ -68,16 +68,12 @@ starting point
 Now you can go around and happily add "before_filter :login_required" to the
 controllers which you would like to protect. 
 
-After integrating the login system with your rails application navigate to your
-new controller's signup method. There you can create a new account. After you
-are done you should have a look at your DB. Your freshly created user will be
-there but the password will be a sha1 hashed 40 digit mess. I find this should
-be the minimum of security which every page offering login&password should give
-its customers. Now you can move to one of those controllers which you protected
-with the before_filter :login_required snippet. You will automatically be re-
-directed to your freshly created login controller and you are asked for a
-password. After entering valid account data you will be taken back to the
-controller which you requested earlier. Simple huh?
+After integrating the login system with your rails application
+navigate to your new controller's login method. There you may login
+which will create a new User object if you've never logged in
+before. After you are done you should have a look at your DB, and
+you'll see the record for your User with the openid_url you entered.
+
 
 == Tips & Tricks
 
@@ -87,7 +83,19 @@ How do I...
 
   A: You can get the user object from the session using @session['user']
      Example: 
-       Welcome <%%= @session[:user].name %> 
+       You may get the id and openid_url of the logged in user:
+	
+	@session[:user_id] 
+	@session[:openid_url]
+
+       To get the User object:
+
+	user = User.find(@session[:user_id])
+
+      	The OpenidController also has a find_user method
+     	which will return the User object of the logged in user, or nil
+	if no user is logged in.
+	
 
   ... restrict access to only a few methods? 
   
@@ -98,19 +106,13 @@ How do I...
      
   ... check if a user is logged-in in my views?
   
-  A: @session[:user] will tell you. Here is an example helper which you can use to make this more pretty:
+  A: @session[:user_id] will tell you. Here is an example helper which you can use to make this more pretty:
      Example: 
        def user?
-         !@session[:user].nil?
+         !@session[:user_id].nil?
        end
 
-  ... return a user to the page they came from before logging in?
 
-  A: The user will be send back to the last url which called the method "store_location"
-     Example:
-       User was at /articles/show/1, wants to log in.
-       in articles_controller.rb, add store_location to the show function and send the user
-       to the login form. 
-       After he logs in he will be send back to /articles/show/1
+
 
 

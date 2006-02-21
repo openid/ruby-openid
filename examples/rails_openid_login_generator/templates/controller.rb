@@ -8,7 +8,7 @@ class <%= class_name %>Controller < ApplicationController
   layout  'scaffold'
 
   def login
-    openid_url = @params[:identity_url]
+    openid_url = @params[:openid_url]
 
     if @request.post?
       status, info = $consumer.begin_auth(openid_url)
@@ -45,9 +45,12 @@ class <%= class_name %>Controller < ApplicationController
         @user = User.new(:openid_url => openid_url)
         @user.save
       end
-      @session[:user] = @user 
 
-      @session[:user] = openid_url
+      # storing both the openid_url and user id in the session for for quick
+      # access to both bits of information.  Change as needed.
+      @session[:user_id] = @user.id
+      @session[:openid_url] = @user.openid_url
+
       flash[:notice] = "Logged in as #{openid_url}"
        
       redirect_to :action => "welcome"
@@ -68,6 +71,14 @@ class <%= class_name %>Controller < ApplicationController
   end
     
   def welcome
+  end
+
+  private
+
+  # get the logged in user object
+  def find_user
+    return nil if session[:user_id].nil?
+    User.find(session[:user_ud])
   end
   
 end
