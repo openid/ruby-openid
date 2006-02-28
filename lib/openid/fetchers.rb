@@ -61,12 +61,12 @@ module OpenID
       begin
         uri = URI.parse(url)
         http = get_http_obj(uri)
-        resp = http.post(u.request_uri, body,
+        resp = http.post(uri.request_uri, body,
                          {"Content-type"=>"application/x-www-form-urlencoded"})
       rescue
         nil
       else
-        [u.to_s, resp.body]
+        [uri.to_s, resp.body]
       end
     end
 
