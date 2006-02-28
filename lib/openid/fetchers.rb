@@ -1,13 +1,17 @@
 require "uri"
+require "openid/util"
 
 begin
   require "net/https"
 rescue LoadError # no openssl
   require "net/http" 
   HAS_OPENSSL = false
+  OpenID::Util.log('Unable to load openssl. Cannot fetch https urls.')
 else
   HAS_OPENSSL = true
 end
+
+
 
 module OpenID
 
@@ -75,9 +79,13 @@ module OpenID
       http.read_timeout = @read_timeout
       http.open_timeout = @open_timeout
 
-      if HAS_OPENSSL and uri.scheme == 'https'
-        http.use_ssl = true
-        http.verify_mode = @ssl_verify_mode
+      if uri.scheme == 'https'
+        if HAS_OPENSSL
+          http.use_ssl = true
+          http.verify_mode = @ssl_verify_mode
+        else
+          OpenID::Util.log("Trying to fetch HTTPS page without openssl. #{uri.to_s}")
+        end
       end
 
       return http
