@@ -184,7 +184,7 @@ module OpenID
 
     # change the message below to do whatever you like for logging
     def Util.log(message)
-      p 'OpenID Log: ' + message
+      STDERR.puts('OpenID Log: ' + message)
     end
 
 
