@@ -1,5 +1,13 @@
 require "uri"
-require "net/http"
+
+begin
+  require "net/https"
+rescue LoadError # no openssl
+  require "net/http" 
+  HAS_OPENSSL = false
+else
+  HAS_OPENSSL = true
+end
 
 module OpenID
 
@@ -26,9 +34,14 @@ module OpenID
   
   class NetHTTPFetcher < OpenIDHTTPFetcher
     
-    def initialize(read_timeout=20, open_timeout=20)
+    def initialize(read_timeout=20, open_timeout=20, ssl_verify_mode=nil)
       @read_timeout = read_timeout
       @open_timeout = open_timeout
+      
+      if HAS_OPENSSL
+        ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE if ssl_verify_mode.nil?
+        @ssl_verify_mode = ssl_verify_mode
+      end
     end
     
     def get(url)    
@@ -42,8 +55,8 @@ module OpenID
   
     def post(url, body)
       begin
-        u = URI.parse(url)
-        http = get_http_obj(u.host, u.port)
+        uri = URI.parse(url)
+        http = get_http_obj(uri)
         resp = http.post(u.request_uri, body,
                          {"Content-type"=>"application/x-www-form-urlencoded"})
       rescue
@@ -57,11 +70,17 @@ module OpenID
     
     # return a Net::HTTP object ready for use
     
-    def get_http_obj(host, port)
-      http = Net::HTTP.start(host, port)
+    def get_http_obj(uri)
+      http = Net::HTTP.new(uri.host, uri.port)
       http.read_timeout = @read_timeout
       http.open_timeout = @open_timeout
-      http
+
+      if HAS_OPENSSL and uri.scheme == 'https'
+        http.use_ssl = true
+        http.verify_mode = @ssl_verify_mode
+      end
+
+      return http
     end
     
     # do a GET following redirects limit deep
@@ -72,7 +91,7 @@ module OpenID
       end
       begin
         u = URI.parse(url)
-        http = get_http_obj(u.host, u.port)
+        http = get_http_obj(u)
         resp = http.get(u.request_uri)
       rescue
         nil
