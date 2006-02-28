@@ -59,7 +59,11 @@ module OpenID
           f.close
         end
         begin
-          File.link(tmp, @auth_key_name)
+          begin
+            File.link(tmp, @auth_key_name)
+          rescue NotImlementedError # no link under windows
+            File.rename(tmp, @auth_key_name)
+          end
         rescue Errno::EEXIST
           raise if read_auth_key.nil?
         end      
