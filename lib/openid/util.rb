@@ -190,12 +190,18 @@ module OpenID
 
     def Util.get_random_bytes(n)
       bytes = ""
-      f = File.open("/dev/urandom")
-      while n != 0
-        _bytes = f.read(n)
-        n -= _bytes.length
-        bytes << _bytes
+
+      if Util::HAS_URANDOM
+        f = File.open("/dev/urandom")
+        while n != 0
+          _bytes = f.read(n)
+          n -= _bytes.length
+          bytes << _bytes
+        end
+      else
+        bytes = Util.random_string(n)
       end
+
       return bytes
     end
 
