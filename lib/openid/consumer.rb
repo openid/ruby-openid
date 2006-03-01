@@ -453,6 +453,11 @@ module OpenID
       return [FAILURE, nil] if ret.nil?
       
       nonce, consumer_id, server_id, server_url = ret
+
+      user_setup_url = query["openid.user_setup_url"]
+      unless user_setup_url.nil?
+        return [SETUP_NEEDED, user_setup_url]
+      end
       
       return_to = query["openid.return_to"]
       server_id2 = query["openid.identity"]
@@ -465,20 +470,18 @@ module OpenID
       if server_id != server_id2
         return [FAILURE, consumer_id]
       end
-
-      user_setup_url = query["openid.user_setup_url"]
-      unless user_setup_url.nil?
-        return [SETUP_NEEDED, user_setup_url]
-      end
       
       assoc = @store.get_association(server_url)
     
-      if assoc.nil? or assoc.handle != assoc_handle or assoc.expires_in <= 0
-        # It's not an associtaion we know about.  Dumb mode is our only recovery
-        check_args = OpenID::Util.get_openid_params(query)
-        check_args["openid.mode"] = "check_authentication"
-        post_data = OpenID::Util.urlencode(check_args)
-        return self.check_auth(nonce, consumer_id, post_data, server_url)
+      if assoc.nil?
+        # It's not an association we know about. Dumb mode is our
+        # only possible path for recovery.
+        return [self.check_auth(nonce, query, server_url), consumer_id]
+      end
+
+      if assoc.expires_in <= 0
+        OpenID::Util.log("Association with #{server_url} expired")
+        return [FAILURE, consumer_id]
       end
 
       # Check the signature
@@ -495,10 +498,14 @@ module OpenID
       return [SUCCESS, consumer_id]
     end
 
-    def check_auth(nonce, consumer_id, post_data, server_url)
+    def check_auth(nonce, query, server_url)
+      check_args = OpenID::Util.get_openid_params(query)
+      check_args["openid.mode"] = "check_authentication"
+      post_data = OpenID::Util.urlencode(check_args)
+
       ret = @fetcher.post(server_url, post_data)
       if ret.nil?
-        return [FAILURE, consumer_id]
+        return FAILURE
       else
         url, body = ret
       end
@@ -512,14 +519,14 @@ module OpenID
           @store.remove_association(server_url, invalidate_handle)
         end
         unless @store.use_nonce(nonce)
-          return [FAILURE, consumer_id]
+          return FAILURE
         end
-        return [SUCCESS, consumer_id]
+        return SUCCESS
       end
     
       error = results["error"]
-      return [FAILURE, consumer_id] unless error.nil?
-      return [FAILURE, consumer_id]
+      return FAILURE unless error.nil?
+      return FAILURE
     end
 
     def get_association(server_url)
