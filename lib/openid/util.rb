@@ -130,10 +130,10 @@ module OpenID
     # Sign the given fields from the reply with the specified key.
     # Return [signed, sig]
   
-    def Util.sign_reply(reply, key, signed_fields)
+    def Util.sign_reply(reply, key, signed_fields, prefix="openid.")
       token = []
       signed_fields.each do |sf|
-        token << [sf+":"+reply["openid."+sf]+"\n"]
+        token << [sf+":"+reply[prefix+sf]+"\n"]
       end
       text = token.join("")
       signed = Util.to_base64(Util.hmac_sha1(key, text))
