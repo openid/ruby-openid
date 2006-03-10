@@ -4,10 +4,6 @@ require "pathname"
 require "openid/consumer"
 require "openid/filestore"
 
-store_dir = Pathname.new(Dir.tmpdir).join("rubyopenid")
-store = OpenID::FilesystemOpenIDStore.new("/tmp/openidonrails")
-$consumer = OpenID::OpenIDConsumer.new(store)
-
 class OpenidController < ApplicationController
   layout "openid-layout"
 
@@ -22,8 +18,10 @@ class OpenidController < ApplicationController
       return
     end
     
+    consumer = get_consumer
+    
     # ask the openid library to begin the authorization
-    status, info = $consumer.begin_auth(openid_url)
+    status, info = consumer.begin_auth(openid_url)
     
     case status      
     when OpenID::SUCCESS
@@ -38,7 +36,7 @@ class OpenidController < ApplicationController
       # query parameter to the URL.      
       return_to = url_for(:action=>"complete_auth", :token=>info.token)
       trust_root = url_for(:controller => "openid")
-      redirect_url = $consumer.construct_redirect(info, return_to,
+      redirect_url = consumer.construct_redirect(info, return_to,
                                                   trust_root=trust_root)
 
       # send redirect via user's browser to their openid server
@@ -63,7 +61,7 @@ class OpenidController < ApplicationController
     # get the token from the environment, in this case the URL
     token = @params["token"]
     
-    status, info = $consumer.complete_auth(token, @params)
+    status, info = get_consumer.complete_auth(token, @params)
 
     @msg_class = "error"
 
@@ -94,6 +92,14 @@ class OpenidController < ApplicationController
       message = "Verification failed."      
     end
 
+  end
+
+  private
+  
+  def get_consumer
+    store_dir = Pathname.new(Dir.tmpdir).join("rubyopenid")
+    store = OpenID::FilesystemOpenIDStore.new(store_dir)
+    OpenID::OpenIDConsumer.new(store, @session)    
   end
 
 end

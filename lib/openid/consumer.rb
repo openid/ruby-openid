@@ -6,6 +6,8 @@ require "openid/parse"
 require "openid/fetchers"
 require "openid/association"
 
+require "yadis"
+
 # Everything in this library exists within the OpenID Module.  Users of
 # the library should look at OpenID::OpenIDConsumer and/or OpenID::OpenIDServer
 module OpenID
@@ -249,7 +251,7 @@ module OpenID
     #   Optional boolean.  Controls whether the library uses immediate mode, as
     #   explained in the module description.  The default value is false,
     #   which disables immediate mode.    
-    def initialize(store, fetcher=nil, immediate=false)
+    def initialize(store, session, fetcher=nil, immediate=false)
       if fetcher.nil?
         fetcher = NetHTTPFetcher.new
       end
@@ -258,6 +260,7 @@ module OpenID
       @fetcher = fetcher
       @immediate = immediate
       @mode = immediate ? "checkid_immediate" : "checkid_setup"
+      @session = session
     end
 
     # begin_auth is called to start the OpenID login process.
@@ -326,7 +329,48 @@ module OpenID
     # This method does not handle any exceptions raised by the store or
     # fetcher it is using.  It raises no exceptions itself.
     def begin_auth(user_url)
-      status, info = self.find_identity_info(user_url)
+      # normalize url
+      begin
+        identity_url = OpenID::Util.normalize_url(user_url)
+      rescue URI::InvalidURIError
+        # XXX: really it is a bad url they entered
+        return [HTTP_FAILURE, nil]
+      end
+     
+      # discover from session (previous yadis)
+      status = SUCCESS
+      info = discover_from_session
+
+      if info.nil?
+        # nothing in session, so do yadis disco     
+        yadis = YADIS.discover(identity_url)
+        unless yadis.nil?
+          infos = []
+          yadis.openid_servers.each do |server|
+            consumer_id = OpenID::Util.normalize_url(yadis.uri)            
+            server_url = OpenID::Util.normalize_url(server.uri)
+
+            delegate = server.other['openid:Delegate']
+            if delegate.nil?
+              server_id = consumer_id
+            else
+              server_id = OpenID::Util.normalize_url(delegate)
+            end
+
+            infos << [consumer_id, server_id, server_url]
+          end
+          if @session.nil?
+            info = infos[0]
+          else
+            @session[:server_urls] = infos
+            info = discover_from_session
+          end
+        else
+          status, info = find_identity_info(identity_url)
+        end
+      end
+
+      #status, info = self.find_identity_info(user_url)
       return [status, info] if status != SUCCESS
     
       consumer_id, server_id, server_url = info
@@ -336,7 +380,6 @@ module OpenID
       token = self.gen_token(nonce, consumer_id, server_id, server_url)
       [SUCCESS, OpenIDAuthRequest.new(token, server_id, server_url, nonce)]
     end
-    
     
     # Called to construct the redirect URL sent to
     # the browser to ask the server to verify its identity.  This is
@@ -429,6 +472,8 @@ module OpenID
     # This method does not handle any exceptions raised by the fetcher or
     # store.  It raises no exceptions itself.
     def complete_auth(token, query)
+      @session[:server_urls] = nil unless @session.nil?
+
       mode = query["openid.mode"]
       case mode
       when "cancel"
@@ -495,7 +540,7 @@ module OpenID
       
       return [FAILURE, consumer_id] if v_sig != sig    
       return [FAILURE, consumer_id] unless @store.use_nonce(nonce)
-      return [SUCCESS, consumer_id]
+      return [SUCCESS, consumer_id]        
     end
 
     def check_auth(nonce, query, server_url)
@@ -563,17 +608,26 @@ module OpenID
       return [nonce, consumer_id, server_id, server_url].freeze
     end
 
-    def normalize_url(url)
-      url.strip!
-      parsed = URI.parse(url)
-      parsed = URI.parse("http://"+url) if parsed.scheme.nil?
-      parsed.normalize!
-      parsed.to_s
+    def discover_from_session
+      return nil if @session.nil?
+
+      # discover from session (previous yadis)
+      if @session[:server_urls]
+        status = SUCCESS
+        info = @session[:server_urls].shift
+        
+        if @session[:server_urls].length == 0
+          @session[:server_urls] = nil
+        end
+
+        return info
+      end
+      return nil
     end
 
     def find_identity_info(identity_url)
       begin
-        url = self.normalize_url(identity_url)
+        url = OpenID::Util.normalize_url(identity_url)
       rescue URI::InvalidURIError
         return [HTTP_FAILURE, nil]
       end
@@ -600,9 +654,9 @@ module OpenID
     
       server_id = delegate.nil? ? consumer_id : delegate
 
-      consumer_id = self.normalize_url(consumer_id)
-      server_id = self.normalize_url(server_id)
-      server = self.normalize_url(server)
+      consumer_id = OpenID::Util.normalize_url(consumer_id)
+      server_id = OpenID::Util.normalize_url(server_id)
+      server = OpenID::Util.normalize_url(server)
       
       return [SUCCESS, [consumer_id, server_id, server].freeze]
     end
