@@ -23,9 +23,8 @@ This library is a port of the Python OpenID library. See http://www.openidenable
 Before running the examples or writing your own code you'll need to install
 the library.  See the INSTALL file.
 
-The library has been tested using Ruby 1.8,
-though it may work with earlier versions.  Examples were tested with
-Rails 1.0.
+The library is known to work with Ruby 1.8.4 on Unix, Max OSX and
+Win32.  Examples were tested with Rails 1.0.
 
 
 ==Getting Started with OpenID::OpenIDConsumer

@@ -14,12 +14,9 @@ require "openid/filestore"
 # use your desired store implementation here
 store_dir = Pathname.new(Dir.tmpdir).join("rubyopenid")
 store = OpenID::FilesystemOpenIDStore.new(store_dir)
-
 $host = "localhost"
 $port = 2000
 ################ end config ##########################
-
-$consumer = OpenID::OpenIDConsumer.new(store)
 
 if $port.nil?
   $base_url = "http://#{$host}/"
@@ -27,9 +24,17 @@ else
   $base_url = "http://#{$host}:#{$port}/"
 end
 
+# NOTE: Please note that a Hash is not a valid session storage type, it is just
+# used here to get something that works.  In a production environment this
+# should be an object representing the CURRENT USER's session, NOT a global
+# hash.  Every user visiting this running consumer.rb will write into this
+# same hash.
+session = {}
+
+trust_root = $base_url
+$consumer = OpenID::OpenIDConsumer.new(store, session, trust_root)
 
 server = HTTPServer.new(:Port=>$port)
-
 class SimpleServlet < HTTPServlet::AbstractServlet
 
   def do_GET(req, res)
@@ -61,8 +66,12 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       return HTTPStatus::Success
     end    
     
+    # Build the URL of to which we should return from the server
+    # to complete the authentication
+    return_to = self.build_url("/complete")
+
     # Then ask the openid library to begin the authorization
-    status, info = $consumer.begin_auth(openid_url)
+    status, info = $consumer.begin_auth(openid_url, return_to)
     
     # If the URL was unusable (either because of network conditions,
     # a server error, or that the response returned was not an OpenID
@@ -80,28 +89,10 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       return HTTPStatus::Success
 
     when OpenID::SUCCESS
-      # The URL was a valid identity URL. Now we construct a URL
-      # that will get us to process the server response. We will
-      # need the token from the auth request when processing the
-      # response, so we have to save it somewhere. The obvious
-      # options are including it in the URL, storing it in a
-      # cookie, and storing it in a session object if one is
-      # available. For this example, we have no session and we
-      # do not want to deal with cookies, so just add it as a
-      # query parameter to the URL.
-      return_to = self.build_url("/complete", {"token"=>info.token})
+      # The URL was a valid identity URL. Now we just need to send a redirect
+      # to the server with the redirect_url the library created for us.     
+      self.redirect(info.redirect_url)
 
-      # Now ask the library for the URL to redirect the user to
-      # his OpenID server. The auth request is what the library
-      # returned before. We just constructed the return_to. The
-      # return_to URL must be under the specified trust_root. We
-      # just use the base_url for this server as a trust root.
-      redirect_url = $consumer.construct_redirect(info,
-                                                 return_to,
-                                                 trust_root=$base_url)
-      
-      # Send the redirect response
-      self.redirect(redirect_url)
     else
       # Should never get here
       raise "Not Reached"
@@ -110,14 +101,11 @@ class SimpleServlet < HTTPServlet::AbstractServlet
 
   # handle the redirect from the OpenID server
   def do_complete
-    # get the token from the environment (in this case, the URL)
-    token = @req.query.fetch("token", "")
-
     # Ask the library to check the response that the server sent
     # us.  Status is a code indicating the response type. info is
     # either nil or a string containing more information about
     # the return type.
-    status, info = $consumer.complete_auth(token, @req.query)
+    status, info = $consumer.complete_auth(@req.query)
 
     css_class = "error"
     openid_url = nil
