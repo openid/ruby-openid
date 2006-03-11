@@ -18,10 +18,9 @@ class OpenidController < ApplicationController
       return
     end
     
-    consumer = get_consumer
-    
     # ask the openid library to begin the authorization
-    status, info = consumer.begin_auth(openid_url)
+    return_to = url_for :action => "complete_auth"
+    status, info = openid_consumer.begin_auth(openid_url, return_to)
     
     case status      
     when OpenID::SUCCESS
@@ -34,13 +33,9 @@ class OpenidController < ApplicationController
       # available. For this example, we have no session and we
       # do not want to deal with cookies, so just add it as a
       # query parameter to the URL.      
-      return_to = url_for(:action=>"complete_auth", :token=>info.token)
-      trust_root = url_for(:controller => "openid")
-      redirect_url = consumer.construct_redirect(info, return_to,
-                                                  trust_root=trust_root)
 
       # send redirect via user's browser to their openid server
-      redirect_to(redirect_url)
+      redirect_to(info.redirect_url)
 
     when OpenID::HTTP_FAILURE
       # If the URL was unusable (either because of network conditions,
@@ -59,9 +54,7 @@ class OpenidController < ApplicationController
 
   def complete_auth
     # get the token from the environment, in this case the URL
-    token = @params["token"]
-    
-    status, info = get_consumer.complete_auth(token, @params)
+    status, info = openid_consumer.complete_auth(@params)
 
     @msg_class = "error"
 
@@ -96,10 +89,11 @@ class OpenidController < ApplicationController
 
   private
   
-  def get_consumer
+  def openid_consumer
     store_dir = Pathname.new(Dir.tmpdir).join("rubyopenid")
     store = OpenID::FilesystemOpenIDStore.new(store_dir)
-    OpenID::OpenIDConsumer.new(store, @session)    
+    trust_root = url_for :controller => ''
+    OpenID::OpenIDConsumer.new(store, @session, trust_root)    
   end
 
 end

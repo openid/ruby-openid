@@ -5,7 +5,6 @@ require "openid/dh"
 require "openid/parse"
 require "openid/fetchers"
 require "openid/association"
-
 require "yadis"
 
 # Everything in this library exists within the OpenID Module.  Users of
