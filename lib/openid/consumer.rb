@@ -251,7 +251,7 @@ module OpenID
     #   Optional boolean.  Controls whether the library uses immediate mode, as
     #   explained in the module description.  The default value is false,
     #   which disables immediate mode.    
-    def initialize(store, session, fetcher=nil, immediate=false)
+    def initialize(store, session, trust_root, fetcher=nil, immediate=false)
       if fetcher.nil?
         fetcher = NetHTTPFetcher.new
       end
@@ -261,6 +261,7 @@ module OpenID
       @immediate = immediate
       @mode = immediate ? "checkid_immediate" : "checkid_setup"
       @session = session
+      @trust_root = trust_root
     end
 
     # begin_auth is called to start the OpenID login process.
@@ -328,7 +329,7 @@ module OpenID
     # ==Exceptions
     # This method does not handle any exceptions raised by the store or
     # fetcher it is using.  It raises no exceptions itself.
-    def begin_auth(user_url)
+    def begin_auth(user_url, return_to)
       # normalize url
       begin
         identity_url = OpenID::Util.normalize_url(user_url)
@@ -359,12 +360,9 @@ module OpenID
 
             infos << [consumer_id, server_id, server_url]
           end
-          if @session.nil?
-            info = infos[0]
-          else
-            @session[:server_urls] = infos
-            info = discover_from_session
-          end
+          
+          @session[:_openid_server_urls] = infos
+          info = discover_from_session          
         else
           status, info = find_identity_info(identity_url)
         end
@@ -378,7 +376,19 @@ module OpenID
       @store.store_nonce(nonce)
     
       token = self.gen_token(nonce, consumer_id, server_id, server_url)
-      [SUCCESS, OpenIDAuthRequest.new(token, server_id, server_url, nonce)]
+      @session[:_openid_token] = token
+
+      redirect_url = self.construct_redirect(server_id, server_url,
+                                             return_to, @trust_root)
+
+      info = OpenIDAuthRequest.new(token,
+                                   server_id,
+                                   server_url,
+                                   nonce,
+                                   redirect_url,
+                                   consumer_id)
+
+      return [SUCCESS, info]
     end
     
     # Called to construct the redirect URL sent to
@@ -417,18 +427,18 @@ module OpenID
     #
     # ==Exceptions
     # This method does not handle exceptions thrown by the store it is using.
-    def construct_redirect(auth_req, return_to, trust_root)
+    def construct_redirect(server_id, server_url, return_to, trust_root)
       redir_args = {
-        "openid.identity" => auth_req.server_id,
+        "openid.identity" => server_id,
         "openid.return_to" => return_to,
         "openid.trust_root" => trust_root,
         "openid.mode" => @mode
       }
 
-      assoc = self.get_association(auth_req.server_url)
+      assoc = self.get_association(server_url)
       redir_args["openid.assoc_handle"] = assoc.handle unless assoc.nil?
 
-      OpenID::Util.append_args(auth_req.server_url, redir_args).to_s
+      OpenID::Util.append_args(server_url, redir_args).to_s
     end
 
     # Called to interpret the server's response to an OpenID request. It
@@ -471,8 +481,8 @@ module OpenID
     # ==Exceptions
     # This method does not handle any exceptions raised by the fetcher or
     # store.  It raises no exceptions itself.
-    def complete_auth(token, query)
-      @session[:server_urls] = nil unless @session.nil?
+    def complete_auth(query)
+      token = @session.delete(:_openid_token)
 
       mode = query["openid.mode"]
       case mode
@@ -485,7 +495,9 @@ module OpenID
         end
         return [FAILURE, nil]
       when "id_res"
-        return self.do_id_res(token, query)
+        code, info = self.do_id_res(token, query)
+        @session.delete(:_openid_server_urls) if code == SUCCESS
+        return [code, info]
       else
         return [FAILURE, nil]
       end
@@ -609,15 +621,13 @@ module OpenID
     end
 
     def discover_from_session
-      return nil if @session.nil?
-
       # discover from session (previous yadis)
-      if @session[:server_urls]
+      if @session[:_openid_server_urls]
         status = SUCCESS
-        info = @session[:server_urls].shift
+        info = @session[:_openid_server_urls].shift
         
-        if @session[:server_urls].length == 0
-          @session[:server_urls] = nil
+        if @session[:_openid_server_urls].length == 0
+          @session[:_openid_server_urls] = nil
         end
 
         return info
@@ -713,7 +723,7 @@ module OpenID
 
   class OpenIDAuthRequest
     
-    attr_reader :token, :server_id, :server_url, :nonce
+    attr_reader :token, :server_id, :server_url, :nonce, :redirect_url, :identity_url
     
     # Creates a new OpenIDAuthRequest object.  This just stores each
     # argument in an appropriately named field.
@@ -722,11 +732,14 @@ module OpenID
     # class.  Instances of this class are created by the library
     # when needed.
     
-    def initialize(token, server_id, server_url, nonce)
+    def initialize(token, server_id, server_url, nonce,
+                   redirect_url, identity_url)
       @token = token
       @server_id = server_id
       @server_url = server_url
       @nonce = nonce
+      @redirect_url = redirect_url
+      @identity_url = identity_url
     end
 
   end
