@@ -23,7 +23,7 @@ module OpenID
       @p = p.nil? ? @@DEFAULT_MOD : p
       @g = g.nil? ? @@DEFAULT_GEN : g
       
-      @private = rand(@p-2) + 1
+      @private = OpenID::Util.rand(@p-2) + 1
       @public = OpenID::Util.powermod(@g, @private, @p)
     end
 
