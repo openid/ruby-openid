@@ -90,7 +90,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
 
     when OpenID::SUCCESS
       # The URL was a valid identity URL. Now we just need to send a redirect
-      # to the server with the redirect_url the library created for us.     
+      # to the server using the redirect_url the library created for us.     
       self.redirect(info.redirect_url)
 
     else

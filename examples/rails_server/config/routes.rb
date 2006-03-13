@@ -12,6 +12,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect '', :controller => 'login'
   map.connect 'user/:username', :controller => 'server', :action => 'user_page'
+  map.connect 'user/:username/xrds', :controller => 'server', :action => 'xrds'
 
   # Allow downloading Web Service WSDL as a file with an extension
   # instead of a file named 'wsdl'
