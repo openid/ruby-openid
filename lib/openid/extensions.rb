@@ -16,6 +16,19 @@ module OpenID
       new(secret, query, @prefix, @schema)
     end
 
+    def Extension.uses_extension(query)
+      return query.has_key?(@prefix+'.sig')
+    end
+
+    def Extension.extract(query)
+      args = {}
+      @schema.each do |s|
+        key = @prefix + '.' + 's'
+        args[key] = query[key] if query.has_key?(key)
+      end
+      args
+    end
+
     def check_sig
       gen_sig == @extension_sig
     end
