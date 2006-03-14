@@ -16,6 +16,16 @@ class Object
 
 end
 
+class String
+
+  def start_with?(other)
+    other = other.to_str
+    head = self[0, other.length]
+    head == other
+  end
+
+end
+
 
 module OpenID
 
@@ -207,8 +217,12 @@ module OpenID
 
     def Util.normalize_url(url)
       url = url.strip
+
+      unless url.start_with?('http://') or url.start_with?('https://')
+        url = 'http://' + url
+      end
+
       parsed = URI.parse(url)
-      parsed = URI.parse("http://"+url) if parsed.scheme.nil?
       parsed.normalize!
       parsed.to_s
     end
