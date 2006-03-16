@@ -13,7 +13,7 @@ module OpenID
     def Extension.create(secret, query)
       return nil unless query[@prefix+'.sig']
       return nil unless query['openid.sig']
-      new(secret, query, @prefix, @schema)
+      new(secret, query, @prefix, @schema, @url)
     end
 
     def Extension.uses_extension(query)
