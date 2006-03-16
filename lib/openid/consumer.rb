@@ -215,8 +215,8 @@ module OpenID
     # [+session+]
     #   A hash-like object representing the user's session data.  This is
     #   used for keeping state of the OpenID transaction when the user is
-    #   redirected to the server.  In a rails application, the @session
-    #   variable should be passed in for this argument.
+    #   redirected to the server.  In a rails application, the controller's
+    #   @session variable should be passed in for this argument.
     #
     # [+trust_root+]
     #   This is a URL that will be sent to the
@@ -289,7 +289,9 @@ module OpenID
     # contains the server URL to which you should redirect the user.
     # The OpenIDAuthRequest.server_url might also be
     # of interest, if you wish to blacklist or whitelist OpenID
-    # servers.  
+    # servers.  You may find out if the OpenID server supports
+    # extension you are using through the OpenIDAuthRequest.uses_extension?
+    # method.
     #
     # ==Details
     # First, the YADIS protocol is used on the claimed URL to
@@ -325,7 +327,7 @@ module OpenID
       
       # Yadis discovery failed, try OpenID 1.1 discovery
       if status != SUCCESS
-        status, info = openid_1_discovery(identity_url)
+        status, info = openid_discovery(identity_url)
       end
 
       # No more ways to discover. Must bail if we aren't successful by now.
@@ -333,7 +335,9 @@ module OpenID
         return [status, info]
       end
     
-      consumer_id, server_id, server_url = info
+      consumer_id = info.consumer_id
+      server_id = info.server_id
+      server_url = info.server_url
 
       # build the nonce and store it
       nonce = OpenID::Util.random_string(@@NONCE_LEN, @@NONCE_CHRS)
@@ -352,7 +356,8 @@ module OpenID
                                    server_url,
                                    nonce,
                                    redirect_url,
-                                   consumer_id)
+                                   consumer_id,
+                                   info.extensions)
 
       return [SUCCESS, info]
     end
@@ -371,11 +376,18 @@ module OpenID
     # OpenID::FAILURE, and OpenID::SETUP_NEEDED.
     #
     # When OpenID::SUCCESS is returned, the additional information
-    # returned is either nil or a string.  If it is nil, it
+    # returned is either nil or an OpenIDAuthResponse object.  If it is nil, it
     # means the user cancelled the login, and no further information
-    # can be determined.  If the additional information is a string,
-    # it is the identity that has been verified as belonging to the
-    # user making this request.
+    # can be determined.
+    #
+    # If an OpenIDAuthResponse object is returned the identity
+    # of ths user making the request has been verified, and their identity
+    # URL may be accessed by calling the OpenIDAuthResponse.identity_url
+    # method. OpenIDAuthResponse.extension_response exposes an interface for
+    # extracting extension response arguments. You may extract simple
+    # registration response arguments for example:
+    #
+    #   openid_auth_response.extension_response(OpenID::SREG)
     # 
     # When OpenID::FAILURE is returned, the additional information is
     # either nil or a string.  In either case, this code means
@@ -518,7 +530,7 @@ module OpenID
       
       return [FAILURE, consumer_id] if v_sig != sig    
       return [FAILURE, consumer_id] unless @store.use_nonce(nonce)
-      return [SUCCESS, consumer_id]        
+      return [SUCCESS, OpenIDAuthResponse.new(consumer_id, query)]
     end
 
     def check_auth(nonce, query, server_url)
@@ -610,7 +622,13 @@ module OpenID
           server_id = OpenID::Util.normalize_url(delegate)
         end
 
-        infos << [consumer_id, server_id, server_url]
+        extensions = []
+        server.element.elements.each('openid:Extension') do |e|
+          extensions << e.text
+        end
+          
+        infos << DiscoverData.new(consumer_id, server_id,
+                                  server_url, extensions)
       end
           
       @session[:_openid_server_urls] = infos
@@ -665,9 +683,9 @@ module OpenID
 
       consumer_id = OpenID::Util.normalize_url(consumer_id)
       server_id = OpenID::Util.normalize_url(server_id)
-      server = OpenID::Util.normalize_url(server)
-      
-      return [SUCCESS, [consumer_id, server_id, server].freeze]
+      server_url = OpenID::Util.normalize_url(server)
+                  
+      return [SUCCESS, DiscoverData.new(consumer_id, server_id, server_url)]
     end    
 
     def associate(server_url)
@@ -720,6 +738,24 @@ module OpenID
 
   end
 
+  # Internal object that contains server and service discovery information.
+  class DiscoverData
+    
+    attr_reader :consumer_id, :server_id, :server_url, :extensions
+
+    def initialize(consumer_id, server_id, server_url, extensions=nil)
+      @consumer_id = consumer_id
+      @server_id = server_id
+      @server_url = server_url
+      
+      extensions = [] if extensions.nil?
+      @extensions = extensions.collect {|e| OpenID::Util.normalize_url(e)}
+    end
+
+  end
+
+  # Encapsulates the information the library retrieves and uses during
+  # OpenIDConsumer.begin_auth.
   class OpenIDAuthRequest
     
     attr_reader :token, :server_id, :server_url, :nonce, :redirect_url, :identity_url
@@ -728,17 +764,77 @@ module OpenID
     # argument in an appropriately named field.
     #
     # Users of this library should not create instances of this
-    # class.  Instances of this class are created by the library
-    # when needed.
-    
+    # class.  Instances of this class are created by OpenIDConsumer
+    # during begin_auth.
     def initialize(token, server_id, server_url, nonce,
-                   redirect_url, identity_url)
+                   redirect_url, identity_url, extensions)
       @token = token
       @server_id = server_id
       @server_url = server_url
       @nonce = nonce
       @redirect_url = redirect_url
       @identity_url = identity_url
+      @extensions = extensions
+    end
+
+
+    # Checks to see if the user's OpenID server supports a given
+    # extension, as defined in their Yadis file.  Example:
+    #
+    #   uses_extension?(OpenID::SREG)
+    #   => true
+    def uses_extension?(extension_class)
+      url = OpenID::Util.normalize_url(extension_class.protocol_url)
+      return @extensions.member?(url)
+    end
+
+  end
+
+  # Encapsulates the information that is useful after a successful
+  # OpenIDConsumer.complete_auth call.  Verified identity URL and
+  # signed extension response values are available through this object.
+  class OpenIDAuthResponse
+    
+    attr_reader :identity_url
+
+    # Instances of this object will be created for you automatically
+    # by OpenIDConsumer.  You should *never* have to construct this
+    # object yourself.
+    def initialize(identity_url, query)
+      @identity_url = identity_url
+      @query = query
+    end
+
+    # Returns all the arguments from an extension's namespace.  For example
+    # 
+    #   openid_auth_response.extension_response(OpenID::SREG)
+    # 
+    # may return something like:
+    #
+    #  {'email' => 'mayor@example.com', 'nickname' => 'MayorMcCheese'}
+    #
+    # The extension namespace is not included in the keys of the returned
+    # hash.  Values returned from this method are guaranteed to be signed.
+    # Calling this method should be the *only* way you access extension
+    # response data!
+    def extension_response(extension_class)      
+      prefix = extension_class.prefix
+      
+      signed = @query['openid.signed']
+      return nil if signed.nil?
+      
+      signed = signed.split(',')
+      extension_args = {}
+      extension_prefix = prefix + '.'
+      
+      signed.each do |arg|
+        if arg.index(extension_prefix) == 0
+          query_key = 'openid.'+arg
+          extension_args[arg[(1+prefix.length..-1)]] = @query[query_key]
+        end
+      end
+      
+      return extension_args
     end
 
   end
