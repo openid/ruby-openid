@@ -29,6 +29,18 @@ module OpenID
       args
     end
 
+    def Extension.prefix
+      @prefix
+    end
+
+    def Extension.schema
+      @schema
+    end
+
+    def Extension.protocol_url
+      @url
+    end
+
     def check_sig
       gen_sig == @extension_sig
     end
@@ -47,9 +59,10 @@ module OpenID
 
     private
 
-    def initialize(secret, query, prefix, schema)
+    def initialize(secret, query, prefix, schema, url)
       @prefix = prefix
       @schema = schema
+      @url = url
 
       @secret = secret
       @openid_sig = query['openid.sig']
