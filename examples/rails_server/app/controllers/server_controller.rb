@@ -33,6 +33,7 @@ class ServerController < ApplicationController
 </head><body><p>OpenID identity page for #{@params[:username]}</p>
 </body></html>
 EOS
+
     # Also add the Yadis location header, so that they don't have
     # to parse the html unless absolutely necessary.
     response.headers['X-XRDS-Location'] = xrds_url
