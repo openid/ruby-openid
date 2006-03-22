@@ -1,17 +1,6 @@
 require "uri"
+require "net/https"
 require "openid/util"
-
-begin
-  require "net/https"
-rescue LoadError # no openssl
-  require "net/http" 
-  HAS_OPENSSL_ = false
-  OpenID::Util.log('Unable to load openssl. Cannot fetch https urls.')
-else
-  HAS_OPENSSL_ = true
-end
-
-
 
 module OpenID
 
@@ -38,14 +27,13 @@ module OpenID
   
   class NetHTTPFetcher < OpenIDHTTPFetcher
     
-    def initialize(read_timeout=20, open_timeout=20, ssl_verify_mode=nil)
+    attr_accessor :ca_path
+
+    def initialize(read_timeout=20, open_timeout=20)
       @read_timeout = read_timeout
       @open_timeout = open_timeout
-      
-      if HAS_OPENSSL_
-        ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE if ssl_verify_mode.nil?
-        @ssl_verify_mode = ssl_verify_mode
-      end
+      @ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE 
+      @ca_path = nil
     end
     
     def get(url)    
@@ -80,11 +68,13 @@ module OpenID
       http.open_timeout = @open_timeout
 
       if uri.scheme == 'https'
-        if HAS_OPENSSL_
-          http.use_ssl = true
-          http.verify_mode = @ssl_verify_mode
+        http.use_ssl = true
+
+        if @ca_path
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          http.ca_file = @ca_path
         else
-          OpenID::Util.log("Trying to fetch HTTPS page without openssl. #{uri.to_s}")
+          OpenID::Util.log('Warning: making https request without verifying server certificate.')
         end
       end
 

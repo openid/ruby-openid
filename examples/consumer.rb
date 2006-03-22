@@ -33,6 +33,7 @@ session = {}
 
 trust_root = $base_url
 $consumer = OpenID::OpenIDConsumer.new(store, session, trust_root)
+$consumer.ca_path = 'cacert.pem'
 
 server = HTTPServer.new(:Port=>$port)
 class SimpleServlet < HTTPServlet::AbstractServlet
@@ -123,7 +124,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       # the verification.
       css_class = "alert"
       if info
-        openid_url = info
+        openid_url = info.identity_url
         message = "You have successfully verified #{openid_url} as your identity."
       else
         # cancelled

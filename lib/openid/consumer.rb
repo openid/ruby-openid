@@ -250,6 +250,22 @@ module OpenID
       @mode = immediate ? "checkid_immediate" : "checkid_setup"
       @session = session
       @trust_root = trust_root
+      @ca_path = nil
+    end
+    
+    # Set the path to a pem certificate authority file for verifying
+    # server certificates during HTTPS.  If you are interested in verifying
+    # certs like the mozilla web browser, have a look at the files here:
+    #
+    # http://curl.haxx.se/docs/caextract.html
+    def ca_path=(ca_path)
+      ca_path = ca_path.to_s
+      if File.exists?(ca_path)
+        @ca_path = ca_path
+        @fetcher.ca_path = ca_path
+      else
+        raise ArgumentError, "#{ca_path} is not a valid file path"
+      end
     end
 
     # begin_auth is called to start the OpenID login process.
@@ -602,8 +618,9 @@ module OpenID
 
     # Yadis discovery of server URL.
     def yadis_discovery(identity_url)
+      YADIS.ca_path = @ca_path if @ca_path
       begin
-        yadis = YADIS.discover_verbose(identity_url)      
+        yadis = YADIS.new(identity_url)
       rescue YADISHTTPError
         return [HTTP_FAILURE, nil]      
       rescue YADISParseError

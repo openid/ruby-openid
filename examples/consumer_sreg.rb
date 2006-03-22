@@ -16,7 +16,7 @@ require "openid/sreg"
 # use your desired store implementation here
 store_dir = Pathname.new(Dir.tmpdir).join("rubyopenid")
 store = OpenID::FilesystemOpenIDStore.new(store_dir)
-$host = "localhost"
+$host = "bacon.janrain.com"
 $port = 2000
 ################ end config ############################
 
