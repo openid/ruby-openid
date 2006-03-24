@@ -79,10 +79,9 @@ module OpenID
     end
 
     def Util.num_to_str(n)
-      # taken from openid-ruby 0.0.1
       bits = n.to_s(2)
-      prepend = (8 - bits.length % 8) || (bits.index(/^1/) ? 8 : 0)
-      bits = ('0' * prepend) + bits if prepend
+      prepend = (8 - bits.length % 8)
+      bits = ('0' * prepend) + bits
       [bits].pack('B*')
     end
 
