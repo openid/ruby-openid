@@ -18,7 +18,7 @@ end
 
 class String
 
-  def start_with?(other)
+  def starts_with?(other)
     other = other.to_str
     head = self[0, other.length]
     head == other
@@ -218,7 +218,7 @@ module OpenID
     def Util.normalize_url(url)
       url = url.strip
 
-      unless url.start_with?('http://') or url.start_with?('https://')
+      unless url.starts_with?('http://') or url.starts_with?('https://')
         url = 'http://' + url
       end
 
