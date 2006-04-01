@@ -2,38 +2,14 @@ require "uri"
 
 require "openid/util"
 require "openid/dh"
-require "openid/parse"
 require "openid/fetchers"
 require "openid/association"
-require "yadis"
+require "openid/discovery"
+
 
 # Everything in this library exists within the OpenID Module.  Users of
 # the library should look at OpenID::OpenIDConsumer and/or OpenID::OpenIDServer
 module OpenID
-
-  # Code returned when either the of the
-  # OpenID::OpenIDConsumer.begin_auth or OpenID::OpenIDConsumer.complete_auth
-  # methods return successfully.
-  SUCCESS = 'success'
-
-  # Code OpenID::OpenIDConsumer.complete_auth
-  # returns when the value it received indicated an invalid login.
-  FAILURE = 'failure'
-
-  # Code returned by OpenID::OpenIDConsumer.complete_auth when the
-  # OpenIDConsumer instance is in immediate mode and ther server sends back a
-  # URL for the user to login with.
-  SETUP_NEEDED = 'setup needed'  
-
-  # Code returned by OpenID::OpenIDConsumer.begin_auth when it is unable
-  # to fetch the URL given by the user.
-  HTTP_FAILURE = 'http failure'
-
-  # Code returned by OpenID::OpenIDConsumer.begin_auth when the page fetched
-  # from the OpenID URL doesn't contain the necessary link tags to function
-  # as an identity page.
-  PARSE_ERROR = 'parse error'
-
 
   # This class implements the interface for using the OpenID consumer
   # libary.
@@ -239,17 +215,13 @@ module OpenID
     #   Optional boolean.  Controls whether the library uses immediate mode, as
     #   explained in the module description.  The default value is false,
     #   which disables immediate mode.    
-    def initialize(store, session, trust_root, fetcher=nil, immediate=false)
+    def initialize(store, fetcher=nil)
       if fetcher.nil?
         fetcher = NetHTTPFetcher.new
       end
 
       @store = store
       @fetcher = fetcher
-      @immediate = immediate
-      @mode = immediate ? "checkid_immediate" : "checkid_setup"
-      @session = session
-      @trust_root = trust_root
       @ca_path = nil
     end
     
@@ -324,60 +296,37 @@ module OpenID
     # ==Exceptions
     # This method does not handle any exceptions raised by the store or
     # fetcher it is using.  It raises no exceptions itself.
-    def begin_auth(user_url, return_to)
-      # normalize url
-      begin
-        identity_url = OpenID::Util.normalize_url(user_url)
-      rescue URI::InvalidURIError
-        return [HTTP_FAILURE, nil]
-      end
-     
-      # discover from session (previous yadis)
-      status = SUCCESS
-      info = session_discovery
-           
-      # Yadis discovery
-      if info.nil?
-        status, info = yadis_discovery(identity_url)
-      end
-      
-      # Yadis discovery failed, try OpenID 1.1 discovery
-      if status != SUCCESS
-        status, info = openid_discovery(identity_url)
+    def begin(user_url, session)
+      service = OpenID::Discovery.new(session, @fetcher).discover(user_url)
+
+      if service.nil?
+        m = "Could not find OpenID server for #{CGI::escape(user_url)}"
+        return FailureRequest.new(m)
       end
 
-      # No more ways to discover. Must bail if we aren't successful by now.
-      if status != SUCCESS
-        return [status, info]
-      end
-    
-      consumer_id = info.consumer_id
-      server_id = info.server_id
-      server_url = info.server_url
-
-      # build the nonce and store it
-      nonce = OpenID::Util.random_string(@@NONCE_LEN, @@NONCE_CHRS)
-      @store.store_nonce(nonce)
-    
-      # make the token and store it in the session
-      token = self.gen_token(nonce, consumer_id, server_id, server_url)
-      @session[:_openid_token] = token
-
-      # construct redirect to the server using our discovery information
-      redirect_url = self.construct_redirect(server_id, server_url,
-                                             return_to, @trust_root)
-      
-      info = OpenIDAuthRequest.new(token,
-                                   server_id,
-                                   server_url,
-                                   nonce,
-                                   redirect_url,
-                                   consumer_id,
-                                   info.extensions)
-
-      return [SUCCESS, info]
+      self.begin_without_discovery(service, session)
     end
-    
+
+    def begin_without_discovery(service, session)
+      nonce = self.create_nonce
+      token = self.gen_token(nonce, service.consumer_id,
+                             service.server_id, service.server_url)
+
+      if session
+        session[:_openid_token] = token
+      end
+
+      assoc = self.get_association(service.server_url)
+
+      return SuccessRequest.new(assoc,
+                                token,
+                                service.server_id,
+                                service.server_url,
+                                nonce,
+                                service.consumer_id,
+                                service.extensions)
+    end
+
     # Called to interpret the server's response to an OpenID request. It
     # is called in step 4 of the flow described in the overview.
     #
@@ -421,93 +370,51 @@ module OpenID
     # ==Exceptions
     # This method does not handle any exceptions raised by the fetcher or
     # store.  It raises no exceptions itself.
-    def complete_auth(query)
-      token = @session[:_openid_token]
-      @session[:_openid_token] = nil
+    def complete(query, session, token=nil)
+      if session
+        token = session[:_openid_token]
+        session[:_openid_token] = nil
+      end
+      
+      # try to clean up service manager
+      service = OpenID::Discovery.cleanup(session)
 
       mode = query["openid.mode"]
       case mode
       when "cancel"
-        return [SUCCESS, nil]
+        consumer_id = self.split_token(token)[1]
+        return CancelResponse.new(consumer_id)
       when "error"
         error = query["openid.error"]
         unless error.nil?
           OpenID::Util.log('Error: '+error)
         end
-        return [FAILURE, nil]
+        return FailureResponse.new(nil, msg=error)
       when "id_res"
-        code, info = self.do_id_res(token, query)
-        @session[:_openid_server_urls] = nil if code == SUCCESS
-        return [code, info]
+        resp = self.do_id_res(token, query)
+
+        if resp.status == SUCCESS
+          resp.service = service
+        end
+
+        return resp
       else
-        return [FAILURE, nil]
+        return FailureResponse.new(nil, msg="unknown mode #{mode}")
       end
     end
 
-    # Called to construct the redirect URL sent to
-    # the browser to ask the server to verify its identity.  This is
-    # called in step 3 of the flow described in the overview.
-    # Please note that you don't need to call this method directly
-    # unless you need to create a custom redirect, as it is called
-    # directly during begin_auth. The generated redirect should be
-    # sent to the browser which initiated the authorization request.
-    #
-    # ==Parameters
-    # [+server_id+]
-    #   The user's identity URL on the server. This is the
-    #   delegate URL if one exists.
-    #
-    # [+server_url+]
-    #   The URL of the user's OpenID server endpoint.
-    #
-    # [+return_to+]
-    #   This is the URL that will be included in the
-    #   generated redirect as the URL the OpenID server will send
-    #   its response to.  The URL passed in must handle OpenID
-    #   authentication responses.
-    # 
-    # [+trust_root+]
-    #   This is a URL that will be sent to the
-    #   server to identify this site.  The OpenID spec (
-    #   http://www.openid.net/specs.bml#mode-checkid_immediate )
-    #   has more information on what the trust_root value is for
-    #   and what its form can be.  While the trust root is
-    #   officially optional in the OpenID specification, this
-    #   implementation requires that it be set.  Nothing is
-    #   actually gained by leaving out the trust root, as you can
-    #   get identical behavior by specifying the return_to URL as
-    #   the trust root.
-    #
-    # ==Return Value
-    # Return a string which is the URL to which you should redirect the user.
-    #
-    # ==Exceptions
-    # This method does not handle exceptions thrown by the store it is using.
-    def construct_redirect(server_id, server_url, return_to, trust_root)
-      redir_args = {
-        "openid.identity" => server_id,
-        "openid.return_to" => return_to,
-        "openid.trust_root" => trust_root,
-        "openid.mode" => @mode
-      }
-
-      assoc = self.get_association(server_url)
-      redir_args["openid.assoc_handle"] = assoc.handle unless assoc.nil?
-
-      OpenID::Util.append_args(server_url, redir_args).to_s
-    end
 
     protected
 
     def do_id_res(token, query)
       ret = self.split_token(token)
-      return [FAILURE, nil] if ret.nil?
+      return FailureResponse.new(nil, msg='bad token') if ret.nil?
       
       nonce, consumer_id, server_id, server_url = ret
 
       user_setup_url = query["openid.user_setup_url"]
       unless user_setup_url.nil?
-        return [SETUP_NEEDED, user_setup_url]
+        return SetupNeededResponse.new(user_setup_url)
       end
       
       return_to = query["openid.return_to"]
@@ -515,11 +422,11 @@ module OpenID
       assoc_handle = query["openid.assoc_handle"]
       
       if return_to.nil? or server_id.nil? or assoc_handle.nil?
-        return [FAILURE, consumer_id]
+        return FailureResponse.new(consumer_id, msg='something was nil')
       end
 
       if server_id != server_id2
-        return [FAILURE, consumer_id]
+        return FailureResponse.new(consumer_id, msg='server ids do not match')
       end
       
       assoc = @store.get_association(server_url)
@@ -527,26 +434,31 @@ module OpenID
       if assoc.nil?
         # It's not an association we know about. Dumb mode is our
         # only possible path for recovery.
-        return [self.check_auth(nonce, query, server_url), consumer_id]
+        code = self.check_auth(nonce, query, server_url)
+        if code == SUCCESS
+          return SuccessResponse.new(consumer_id, query)
+        else
+          return FailureResponse.new(consumer_id, 'check_auth failed')
+        end
       end
 
       if assoc.expires_in <= 0
         OpenID::Util.log("Association with #{server_url} expired")
-        return [FAILURE, consumer_id]
+        FailureResponse.new(consumer_id, 'assoc expired')
       end
 
       # Check the signature
       sig = query["openid.sig"]
       signed = query["openid.signed"]
-      return [FAILURE, consumer_id] if sig.nil? or signed.nil?
+      return FailureResponse.new(consumer_id, 'sig/signed is nil') if sig.nil? or signed.nil?
       
       args = OpenID::Util.get_openid_params(query)
       signed_list = signed.split(",")
       _signed, v_sig = OpenID::Util.sign_reply(args, assoc.secret, signed_list)
-      
-      return [FAILURE, consumer_id] if v_sig != sig    
-      return [FAILURE, consumer_id] unless @store.use_nonce(nonce)
-      return [SUCCESS, OpenIDAuthResponse.new(consumer_id, query)]
+
+      return FailureResponse.new(consumer_id, 'sig mismatch') if v_sig != sig    
+      return FailureResponse.new(consumer_id, 'nonce already used') unless @store.use_nonce(nonce)
+      return SuccessResponse.new(consumer_id, query)
     end
 
     def check_auth(nonce, query, server_url)
@@ -564,6 +476,8 @@ module OpenID
       results = OpenID::Util.parsekv(body)
       is_valid = results.fetch("is_valid", "false")
     
+      p is_valid
+
       if is_valid == "true"
         invalidate_handle = results["invalidate_handle"]
         unless invalidate_handle.nil?
@@ -578,6 +492,13 @@ module OpenID
       error = results["error"]
       return FAILURE unless error.nil?
       return FAILURE
+    end
+
+    def create_nonce
+      # build the nonce and store it
+      nonce = OpenID::Util.random_string(@@NONCE_LEN, @@NONCE_CHRS)
+      @store.store_nonce(nonce)
+      return nonce
     end
 
     def get_association(server_url)
@@ -615,95 +536,6 @@ module OpenID
       
       return [nonce, consumer_id, server_id, server_url].freeze
     end
-
-    # Yadis discovery of server URL.
-    def yadis_discovery(identity_url)
-      YADIS.ca_path = @ca_path if @ca_path
-      begin
-        yadis = YADIS.new(identity_url)
-      rescue YADISHTTPError
-        return [HTTP_FAILURE, nil]      
-      rescue YADISParseError
-        return [PARSE_ERROR, nil]
-      end
-      
-      infos = []
-      yadis.openid_servers.each do |server|
-        consumer_id = OpenID::Util.normalize_url(yadis.uri)            
-        server_url = OpenID::Util.normalize_url(server.uri)
-        
-        delegate = server.other['openid:Delegate']
-        if delegate.nil?
-          server_id = consumer_id
-        else
-          server_id = OpenID::Util.normalize_url(delegate)
-        end
-
-        extensions = []
-        server.element.elements.each('openid:Extension') do |e|
-          extensions << e.text
-        end
-          
-        infos << DiscoverData.new(consumer_id, server_id,
-                                  server_url, extensions)
-      end
-          
-      @session[:_openid_server_urls] = infos
-      return [SUCCESS, session_discovery]
-    end
-
-    def session_discovery
-      # discover from session (previous yadis)
-      if @session[:_openid_server_urls]
-        status = SUCCESS
-        info = @session[:_openid_server_urls].shift
-        
-        if @session[:_openid_server_urls].length == 0
-          @session[:_openid_server_urls] = nil
-        end
-
-        return info
-      end
-      return nil
-    end
-
-    # OpenID 1.1 style discovery using
-    # <link rel="openid.server" href="http://example.com/server" />
-    def openid_discovery(identity_url)
-      begin
-        url = OpenID::Util.normalize_url(identity_url)
-      rescue URI::InvalidURIError
-        return [HTTP_FAILURE, nil]
-      end
-      ret = @fetcher.get(url)
-      return [HTTP_FAILURE, nil] if ret.nil?
-      
-      consumer_id, data = ret
-      server = nil
-      delegate = nil
-      parse_link_attrs(data) do |attrs|
-        rel = attrs["rel"]
-        if rel == "openid.server" and server.nil?
-          href = attrs["href"]
-          server = href unless href.nil?
-        end
-        
-        if rel == "openid.delegate" and delegate.nil?
-          href = attrs["href"]
-          delegate = href unless href.nil?
-        end
-      end
-
-      return [PARSE_ERROR, nil] if server.nil?
-    
-      server_id = delegate.nil? ? consumer_id : delegate
-
-      consumer_id = OpenID::Util.normalize_url(consumer_id)
-      server_id = OpenID::Util.normalize_url(server_id)
-      server_url = OpenID::Util.normalize_url(server)
-                  
-      return [SUCCESS, DiscoverData.new(consumer_id, server_id, server_url)]
-    end    
 
     def associate(server_url)
       dh = OpenID::DiffieHellman.new
@@ -755,27 +587,32 @@ module OpenID
 
   end
 
-  # Internal object that contains server and service discovery information.
-  class DiscoverData
-    
-    attr_reader :consumer_id, :server_id, :server_url, :extensions
+  class OpenIDStatus
 
-    def initialize(consumer_id, server_id, server_url, extensions=nil)
-      @consumer_id = consumer_id
-      @server_id = server_id
-      @server_url = server_url
-      
-      extensions = [] if extensions.nil?
-      @extensions = extensions.collect {|e| OpenID::Util.normalize_url(e)}
+    attr_reader :status
+
+    def initialize(status)
+      @status = status
+    end
+
+  end
+
+  class FailureRequest < OpenIDStatus
+
+    attr_reader :msg
+
+    def initialize(msg='')
+      super(FAILURE)
+      @msg = msg
     end
 
   end
 
   # Encapsulates the information the library retrieves and uses during
   # OpenIDConsumer.begin_auth.
-  class OpenIDAuthRequest
+  class SuccessRequest < OpenIDStatus
     
-    attr_reader :token, :server_id, :server_url, :nonce, :redirect_url, :identity_url
+    attr_reader :token, :server_id, :server_url, :nonce, :identity_url
     
     # Creates a new OpenIDAuthRequest object.  This just stores each
     # argument in an appropriately named field.
@@ -783,25 +620,85 @@ module OpenID
     # Users of this library should not create instances of this
     # class.  Instances of this class are created by OpenIDConsumer
     # during begin_auth.
-    def initialize(token, server_id, server_url, nonce,
-                   redirect_url, identity_url, extensions)
+    def initialize(assoc, token, server_id, server_url, nonce,
+                   identity_url, extensions)
+      super(SUCCESS)
+      @assoc = assoc
       @token = token
       @server_id = server_id
       @server_url = server_url
       @nonce = nonce
-      @redirect_url = redirect_url
       @identity_url = identity_url
       @extensions = extensions
+      @extension_args = {}
     end
 
+
+    # Called to construct the redirect URL sent to
+    # the browser to ask the server to verify its identity.  This is
+    # called in step 3 of the flow described in the overview.
+    # Please note that you don't need to call this method directly
+    # unless you need to create a custom redirect, as it is called
+    # directly during begin_auth. The generated redirect should be
+    # sent to the browser which initiated the authorization request.
+    #
+    # ==Parameters
+    # [+server_id+]
+    #   The user's identity URL on the server. This is the
+    #   delegate URL if one exists.
+    #
+    # [+server_url+]
+    #   The URL of the user's OpenID server endpoint.
+    #
+    # [+return_to+]
+    #   This is the URL that will be included in the
+    #   generated redirect as the URL the OpenID server will send
+    #   its response to.  The URL passed in must handle OpenID
+    #   authentication responses.
+    # 
+    # [+trust_root+]
+    #   This is a URL that will be sent to the
+    #   server to identify this site.  The OpenID spec (
+    #   http://www.openid.net/specs.bml#mode-checkid_immediate )
+    #   has more information on what the trust_root value is for
+    #   and what its form can be.  While the trust root is
+    #   officially optional in the OpenID specification, this
+    #   implementation requires that it be set.  Nothing is
+    #   actually gained by leaving out the trust root, as you can
+    #   get identical behavior by specifying the return_to URL as
+    #   the trust root.
+    #
+    # ==Return Value
+    # Return a string which is the URL to which you should redirect the user.
+    #
+    # ==Exceptions
+    # This method does not handle exceptions thrown by the store it is using.
+    def redirect_url(trust_root, return_to, immediate=false)
+      redir_args = {
+        "openid.identity" => @server_id,
+        "openid.return_to" => return_to,
+        "openid.trust_root" => trust_root,
+        "openid.mode" => immediate ? 'checkid_immediate' : 'checkid_setup'
+      }
+
+      redir_args["openid.assoc_handle"] = @assoc.handle if @assoc
+      redir_args.update(@extension_args)
+     
+      return OpenID::Util.append_args(server_url, redir_args).to_s
+    end
+
+
+    def add_extension_arg(namespace, key, value)
+      @extension_args['openid.'+namespace+'.'+key] = value
+    end
 
     # Checks to see if the user's OpenID server supports a given
     # extension, as defined in their Yadis file.  Example:
     #
     #   uses_extension?(OpenID::SREG)
     #   => true
-    def uses_extension?(extension_class)
-      url = OpenID::Util.normalize_url(extension_class.protocol_url)
+    def uses_extension?(extension_url)
+      url = OpenID::Util.normalize_url(extension_url)
       return @extensions.member?(url)
     end
 
@@ -810,21 +707,24 @@ module OpenID
   # Encapsulates the information that is useful after a successful
   # OpenIDConsumer.complete_auth call.  Verified identity URL and
   # signed extension response values are available through this object.
-  class OpenIDAuthResponse
+  class SuccessResponse < OpenIDStatus
     
     attr_reader :identity_url
+    attr_accessor :service
 
     # Instances of this object will be created for you automatically
     # by OpenIDConsumer.  You should *never* have to construct this
     # object yourself.
     def initialize(identity_url, query)
+      super(SUCCESS)
       @identity_url = identity_url
       @query = query
+      @service = nil
     end
 
     # Returns all the arguments from an extension's namespace.  For example
     # 
-    #   openid_auth_response.extension_response(OpenID::SREG)
+    #   response.extension_response('sreg')
     # 
     # may return something like:
     #
@@ -834,8 +734,8 @@ module OpenID
     # hash.  Values returned from this method are guaranteed to be signed.
     # Calling this method should be the *only* way you access extension
     # response data!
-    def extension_response(extension_class)      
-      prefix = extension_class.prefix
+    def extension_response(extension_name)      
+      prefix = extension_name
       
       signed = @query['openid.signed']
       return nil if signed.nil?
@@ -855,5 +755,36 @@ module OpenID
     end
 
   end
-  
+
+  class FailureResponse < OpenIDStatus
+    
+    attr_reader :identity_url, :msg
+
+    def initialize(identity_url=nil, msg=nil)
+      super(FAILURE)
+      @identity_url = identity_url
+      @msg = msg
+    end
+
+  end
+
+  class SetupNeededResponse < OpenIDStatus
+    
+    attr_reader :setup_url
+
+    def initialize(setup_url)
+      super(SETUP_NEEDED)
+      @setup_url = setup_url
+    end
+
+  end
+
+  class CancelResponse < OpenIDStatus
+    attr_reader :identity_url
+    def initialize(identity_url)
+      super(CANCEL)
+      @identity_url = identity_url
+    end
+  end
+
 end

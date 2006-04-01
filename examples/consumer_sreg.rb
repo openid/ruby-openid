@@ -16,8 +16,17 @@ require "openid/sreg"
 # use your desired store implementation here
 store_dir = Pathname.new(Dir.tmpdir).join("rubyopenid")
 store = OpenID::FilesystemOpenIDStore.new(store_dir)
-$host = "bacon.janrain.com"
+
+#require "openid/stores"
+#store = OpenID::DumbStore.new('mysecret')
+
+$host = "localhost"
 $port = 2000
+
+# change the value below to false if you want to skip ignore
+# simple registration.  Otherwise it will automatically ask
+# for some registration info.
+$do_sreg = true
 ################ end config ############################
 
 if $port.nil?
@@ -31,10 +40,10 @@ end
 # should be an object representing the CURRENT USER's session, NOT a global
 # hash.  Every user visiting this running consumer.rb will write into this
 # same hash.
-session = {}
+$session = {}
 
-trust_root = $base_url
-$consumer = OpenID::OpenIDConsumer.new(store, session, trust_root)
+$trust_root = $base_url
+$consumer = OpenID::OpenIDConsumer.new(store)
 
 server = HTTPServer.new(:Port=>$port)
 class SimpleServlet < HTTPServlet::AbstractServlet
@@ -67,26 +76,17 @@ class SimpleServlet < HTTPServlet::AbstractServlet
                   css_class="error", form_contents=openid_url)
       return HTTPStatus::Success
     end    
-    
-    # Build the URL of to which we should return from the server
-    # to complete the authentication
-    return_to = self.build_url("/complete")
 
     # Then ask the openid library to begin the authorization
-    status, info = $consumer.begin_auth(openid_url, return_to)
-    
+    request = $consumer.begin(openid_url, $session)
+   
     # If the URL was unusable (either because of network conditions,
     # a server error, or that the response returned was not an OpenID
     # identity page), the library will return HTTP_FAILURE or PARSE_ERROR.
     # Let the user know that the URL is unusable.
-    case status
-    when OpenID::HTTP_FAILURE
-      self.render("Failed to retrieve <q>#{openid_url}</q>",
-                  css_class="error", form_contents=openid_url)
-      return HTTPStatus::Success
-
-    when OpenID::PARSE_ERROR
-      self.render("Failed to retrieve <q>#{openid_url}</q>",
+    case request.status
+    when OpenID::FAILURE
+      self.render("Unable to find openid server for <q>#{openid_url}</q>",
                   css_class="error", form_contents=openid_url)
       return HTTPStatus::Success
 
@@ -94,22 +94,20 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       # The URL was a valid identity URL. Now we just need to send a redirect
       # to the server using the redirect_url the library created for us.
 
-      # Even though we skip this step here, you may check
-      # to see if the server supports sreg using:
-      # info.uses_extension?(OpenID::SREG)
+      if $do_sreg
+        request.add_extension_arg('sreg','required','email,nickname')
+        request.add_extension_arg('sreg','optional','fullname,dob,gender,postcode,country')
+      end
 
-      # sreg query arguments
-      sreg = {
-        'openid.sreg.required' => 'email,nickname',
-        'openid.sreg.optional' => 'fullname,dob,gender,postcode,country'
-      }
+      # Build the URL of to which we should return from the server
+      # to complete the authentication
+      return_to = self.build_url("/complete")
 
-      # append them to the url
-      redirect_url = OpenID::Util.append_args(info.redirect_url, sreg)    
+      # build the redirect
+      redirect_url = request.redirect_url($trust_root, return_to)
 
-      # redirect to the server
+      # send redirect to the server
       self.redirect(redirect_url)
-
     else
       # Should never get here
       raise "Not Reached"
@@ -122,47 +120,47 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     # us.  Status is a code indicating the response type. info is
     # either nil or a string containing more information about
     # the return type.
-    status, info = $consumer.complete_auth(@req.query)
+    response = $consumer.complete(@req.query, $session)
 
     css_class = "error"
-    openid_url = nil
     
-    if status == OpenID::FAILURE and info
+    if response.status == OpenID::FAILURE
       # In the case of failure, if info is non-nil, it is the
       # URL that we were verifying. We include it in the error
       # message to help the user figure out what happened.
-      openid_url = info
-      message = "Verification of #{openid_url} failed"
+      if response.identity_url
+        message = "Verification of #{response.identity_url} failed"
+      else
+        message = 'Verification failed.'
+      end
+      message += response.msg.to_s
 
-    elsif status == OpenID::SUCCESS
+    elsif response.status == OpenID::SUCCESS
       # Success means that the transaction completed without
       # error. If info is nil, it means that the user cancelled
       # the verification.
       css_class = "alert"
-      if info
-        openid_url = info.identity_url
 
-        message = "You have successfully verified #{openid_url} as your identity."
+      message = "You have successfully verified #{response.identity_url} as your identity."
+
+      if $do_sreg
         # get the signed extension sreg arguments
-        sreg = info.extension_response(OpenID::SREG)
+        sreg = response.extension_response('sreg')
 
         if sreg.length > 0
           message += "<hr/> With simple registration fields:<br/>"
           sreg.keys.sort.each {|k| message += "<br/><b>#{k}</b>: #{sreg[k]}"}
         end
-
-      else
-        # cancelled
-        message = "Verification cancelled."
       end
+    
+    elsif response.status == OpenID::CANCEL
+      message = "Verification cancelled."
+
     else
-      # Either we don't understand the code or there is no
-      # openid_url included with the error. Give a generic
-      # failure message. The library should supply debug
-      # information in a log.
-      message = "Verification failed."      
+      message = "Unknown response status: #{response.status}"
+
     end
-    self.render(message, css_class, openid_url)
+    self.render(message, css_class, response.identity_url)
   end
 
   # build a URL relative to the server base URL, with the given query
