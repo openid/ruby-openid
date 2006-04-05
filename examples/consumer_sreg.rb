@@ -166,7 +166,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
   # build a URL relative to the server base URL, with the given query
   # parameters added.
   def build_url(action, query=nil)
-    url = @req.request_uri.merge(action).to_s
+    url = URI.parse($base_url).merge(action).to_s
     url = OpenID::Util.append_args(url, query) unless query.nil?
     url
   end
