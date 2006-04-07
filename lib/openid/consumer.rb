@@ -376,10 +376,12 @@ module OpenID
         session[:_openid_token] = nil
       end
 
-      consumer_id = self.split_token(token)[1]
-      unless consumer_id
+      pieces = self.split_token(token)
+      if pieces
+        consumer_id = pieces[1]
+      else
         m = "unable to extract consumer_id from token"
-        return FailureResponse.new(nil, msg=m)
+        return FailureResponse.new(nil, msg=m)        
       end
 
       # completing the openid transaction, so cleanup the
