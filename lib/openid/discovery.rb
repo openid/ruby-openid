@@ -38,10 +38,10 @@ module OpenID
         return nil
       end
 
-      ysm = YadisServiceManager.get_manager(@session, @@ysm_key)
+      ysm = YadisServiceManager.get_manager(@session, identity_url, @@ysm_key)
       if ysm and ysm.dead_end?
         ysm = nil
-        YadisServiceManager.destroy(@session, @@ysm_key)
+        YadisServiceManager.destroy(@session, identity_url, @@ysm_key)
       end
 
       if ysm.nil?        
@@ -51,7 +51,7 @@ module OpenID
           nil
         else
           services = yadis.filter_services([@service_filter])
-          ysm = YadisServiceManager.create(@session, services, @@ysm_key)
+          ysm = YadisServiceManager.create(@session, identity_url, services, @@ysm_key)
         end
       end
 
@@ -59,7 +59,7 @@ module OpenID
       if ysm.nil?        
         status, service = self.openid_discovery(identity_url)
         if status == SUCCESS
-          ysm = YadisServiceManager.create(@session, [service], @@ysm_key)
+          ysm = YadisServiceManager.create(@session, identity_url, [service], @@ysm_key)
         end
       end
       
