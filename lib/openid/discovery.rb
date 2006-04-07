@@ -10,16 +10,16 @@ module OpenID
   class Discovery
 
     attr_accessor :service_filter
-    @@ysm_key = '_openid_services'
+    @@ysm_key = 'openid_services'
 
-    def Discovery.cleanup(session)
+    def Discovery.cleanup(session, starting_url)
       return nil unless session
 
       service = nil
-      ysm = YadisServiceManager.get_manager(session, @@ysm_key)
+      ysm = YadisServiceManager.get_manager(session, starting_url, @@ysm_key)
       if ysm
         service = ysm.current_service
-        YadisServiceManager.destroy(session, @@ysm_key)
+        YadisServiceManager.destroy(session, ysm.starting_url, @@ysm_key)
       end
       
       return service

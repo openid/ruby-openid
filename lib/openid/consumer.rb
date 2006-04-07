@@ -371,25 +371,34 @@ module OpenID
     # This method does not handle any exceptions raised by the fetcher or
     # store.  It raises no exceptions itself.
     def complete(query, session, token=nil)
-      if session
+      if session and token.nil?
         token = session[:_openid_token]
         session[:_openid_token] = nil
       end
-      
-      # try to clean up service manager
-      service = OpenID::Discovery.cleanup(session)
+
+      consumer_id = self.split_token(token)[1]
+      unless consumer_id
+        m = "unable to extract consumer_id from token"
+        return FailureResponse.new(nil, msg=m)
+      end
+
+      # completing the openid transaction, so cleanup the
+      # discovery manager
+      service = OpenID::Discovery.cleanup(session, consumer_id)
 
       mode = query["openid.mode"]
+
       case mode
-      when "cancel"
-        consumer_id = self.split_token(token)[1]
+      when "cancel"        
         return CancelResponse.new(consumer_id)
+
       when "error"
         error = query["openid.error"]
         unless error.nil?
           OpenID::Util.log('Error: '+error)
         end
         return FailureResponse.new(nil, msg=error)
+
       when "id_res"
         resp = self.do_id_res(token, query)
 
@@ -398,17 +407,20 @@ module OpenID
         end
 
         return resp
+
       else
         return FailureResponse.new(nil, msg="unknown mode #{mode}")
       end
-    end
 
+    end
 
     protected
 
     def do_id_res(token, query)
+      return FailureResponse.new(nil, msg='no token') unless token
+
       ret = self.split_token(token)
-      return FailureResponse.new(nil, msg='bad token') if ret.nil?
+      return FailureResponse.new(nil, msg='bad token') unless ret
       
       nonce, consumer_id, server_id, server_url = ret
 
