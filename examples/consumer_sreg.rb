@@ -172,7 +172,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
   end
    
   def redirect(url)
-    @res.set_redirect(HTTPStatus::MovedPermanently, url)
+    @res.set_redirect(HTTPStatus::TemporaryRedirect, url)
   end
 
   def render(message=nil, css_class="alert", form_contents="")
