@@ -62,12 +62,6 @@ module OpenID
   # which cover a wide variety of situations in which consumers may
   # use the library.
   #
-  # The OpenIDConsumer class contains two public methods
-  # corresponding to the actions necessary in steps 3 and
-  # 4 described in the overview.  Use of this library should be as easy
-  # as creating an OpenIDConsumer object and calling the methods
-  # appropriate for the action the site wants to take.
-  #
   #
   # ==Stores and Dumb Mode
   #
