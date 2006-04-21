@@ -79,7 +79,7 @@ module OpenID
   # requests in order to operate efficiently and securely.
   #
   # Several store implementation are provided, and the interface is
-  # fully documented so that custom stores can be used as well. The concrete
+  # fully documented so that custom stores can be used as well. The
   # implementations that are provided allow the consumer site to store
   # the necessary data in several different ways: in the filesystem,
   # or in an SQL database.
