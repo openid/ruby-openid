@@ -124,22 +124,29 @@ module OpenID
   #
   # When your site receives that request, it should create an
   # OpenID::OpenIDConsumer instance, and call
-  # OpenID::OpenIDConsumer.begin_auth>.  If begin_auth completes successfully,
+  # OpenID::OpenIDConsumer.begin.  If begin completes successfully,
   # it will return an OpenID::OpenIDAuthRequest.  Otherwise it will
   # provide some useful information for giving the user an error
   # message.
   #
-  # Next, send the user a redirect to the URL provided by
-  # OpenIDAuthRequest.redirect_url.
+  # Next, the application should call the
+  # OpenID::OpenIDRequestBuilder.buildRedirect.  The return_to URL is the
+  # URL that the OpenID server will send the user back to after
+  # attempting to verify his or her identity.  The trust_root is the
+  # URL (or URL pattern) that identifies your web site to the user
+  # when he or she is authorizing it.  Send a redirect to the
+  # resulting URL to the user's browser.
   #
-  # That's the first half of the process.  The second half of the
-  # process is done after the user's OpenID server sends the user a
-  # redirect back to your site to complete their login.
+  # That's the first half of the authentication process.  The second
+  # half of the process is done after the user's ID server sends the
+  # user's browser a redirect back to your site to complete their
+  # login.
   #
   # When that happens, the user will contact your site at the URL
-  # given as the return_to URL you provided to the OpenIDConsumer.begin_auth
-  # call made above.  The request will have several query parameters added
-  # to the URL by the identity server as the information necessary to
+  # given as the return_to URL to the
+  # OpenID::OpenIDRequestBuilder.buildRedirect call made above.  The
+  # request will have several query parameters added to
+  # the URL by the identity server as the information necessary to
   # finish the request.
   #
   # The next step is to call the OpenID::OpenIDConsumer.complete_auth method
