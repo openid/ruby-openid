@@ -241,11 +241,11 @@ module OpenID
       end
     end
 
-    # begin_auth is called to start the OpenID login process.
+    # begin is called to start the OpenID login process.
     #
     # ==Parameters
     # [+user_url+]
-    #   Identity URL given by the user. begin_auth takes care of
+    #   Identity URL given by the user. begin takes care of
     #   normalizing and resolving and redirects the server might issue. 
     #
     # [+return_to+]
@@ -624,7 +624,7 @@ module OpenID
   end
 
   # Encapsulates the information the library retrieves and uses during
-  # OpenIDConsumer.begin_auth.
+  # OpenIDConsumer.begin.
   class SuccessRequest < OpenIDStatus
     
     attr_reader :token, :server_id, :server_url, :nonce, :identity_url
@@ -634,7 +634,7 @@ module OpenID
     #
     # Users of this library should not create instances of this
     # class.  Instances of this class are created by OpenIDConsumer
-    # during begin_auth.
+    # during begin.
     def initialize(assoc, token, server_id, server_url, nonce,
                    identity_url, extensions)
       super(SUCCESS)
@@ -654,7 +654,7 @@ module OpenID
     # called in step 3 of the flow described in the overview.
     # Please note that you don't need to call this method directly
     # unless you need to create a custom redirect, as it is called
-    # directly during begin_auth. The generated redirect should be
+    # directly during begin. The generated redirect should be
     # sent to the browser which initiated the authorization request.
     #
     # ==Parameters
