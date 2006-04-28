@@ -10,23 +10,14 @@ include WEBrick
 require "openid/consumer"
 require "openid/filestore"
 require "openid/util"
-require "openid/sreg"
 
 ################ start config ##########################
 # use your desired store implementation here
-store_dir = Pathname.new(Dir.tmpdir).join("rubyopenid")
-store = OpenID::FilesystemOpenIDStore.new(store_dir)
-
-#require "openid/stores"
-#store = OpenID::DumbStore.new('mysecret')
+store_dir = Pathname.new(Dir.tmpdir).join("ruby-openid-store")
+store = OpenID::FilesystemStore.new(store_dir)
 
 $host = "localhost"
 $port = 2000
-
-# change the value below to false if you want to skip ignore
-# simple registration.  Otherwise it will automatically ask
-# for some registration info.
-$do_sreg = true
 ################ end config ############################
 
 if $port.nil?
@@ -43,7 +34,7 @@ end
 $session = {}
 
 $trust_root = $base_url
-$consumer = OpenID::OpenIDConsumer.new(store)
+$consumer = OpenID::Consumer.new($session, store)
 
 server = HTTPServer.new(:Port=>$port)
 class SimpleServlet < HTTPServlet::AbstractServlet
@@ -51,6 +42,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
   def do_GET(req, res)
     @req = req
     @res = res
+
     begin
       case req.path
       when "", "/", "/start"
@@ -59,6 +51,8 @@ class SimpleServlet < HTTPServlet::AbstractServlet
         self.do_begin
       when "/complete"
         self.do_complete
+      when '/policy'
+        self.do_policy
       else
         self.redirect(self.build_url("/"))
       end
@@ -78,7 +72,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     end    
 
     # Then ask the openid library to begin the authorization
-    request = $consumer.begin(openid_url, $session)
+    request = $consumer.begin(openid_url)
    
     # If the URL was unusable (either because of network conditions,
     # a server error, or that the response returned was not an OpenID
@@ -94,14 +88,27 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       # The URL was a valid identity URL. Now we just need to send a redirect
       # to the server using the redirect_url the library created for us.
 
-      if $do_sreg
+      # check to see if we want to make an SREG request. Generally this will
+      # not take the form of a checkbox, but will be part of your site policy.
+      # For example, you may perform an sreg request if the user appears
+      # to be new to the site.  The checkbox is here for convenience of
+      # testing.
+      do_sreg = @req.query.fetch('sreg', nil)
+
+      if do_sreg and request.uses_extension?('http://openid.net/sreg/1.0')
+        policy_url = self.build_url('/policy')
+        request.add_extension_arg('sreg','policy_url', policy_url)
         request.add_extension_arg('sreg','required','email,nickname')
         request.add_extension_arg('sreg','optional','fullname,dob,gender,postcode,country')
       end
 
-      # Build the URL of to which we should return from the server
-      # to complete the authentication
-      return_to = self.build_url("/complete")
+      if do_sreg
+        extra = {'did_sreg' => 'true'}
+      else
+        extra = {}
+      end
+
+      return_to = self.build_url("/complete", extra)
 
       # build the redirect
       redirect_url = request.redirect_url($trust_root, return_to)
@@ -120,9 +127,12 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     # us.  Status is a code indicating the response type. info is
     # either nil or a string containing more information about
     # the return type.
-    response = $consumer.complete(@req.query, $session)
-
+    response = $consumer.complete(@req.query)
+    
     css_class = "error"
+   
+    did_sreg = @req.query.fetch('did_sreg', nil)
+    sreg_checked = did_sreg ? 'checked="checked"' : ''
     
     if response.status == OpenID::FAILURE
       # In the case of failure, if info is non-nil, it is the
@@ -133,7 +143,9 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       else
         message = 'Verification failed.'
       end
-      message += response.msg.to_s
+
+      # add on the failure message for a little debug info
+      message += ' '+response.msg.to_s
 
     elsif response.status == OpenID::SUCCESS
       # Success means that the transaction completed without
@@ -143,14 +155,13 @@ class SimpleServlet < HTTPServlet::AbstractServlet
 
       message = "You have successfully verified #{response.identity_url} as your identity."
 
-      if $do_sreg
-        # get the signed extension sreg arguments
-        sreg = response.extension_response('sreg')
-
-        if sreg.length > 0
-          message += "<hr/> With simple registration fields:<br/>"
-          sreg.keys.sort.each {|k| message += "<br/><b>#{k}</b>: #{sreg[k]}"}
-        end
+      # get the signed extension sreg arguments
+      sreg = response.extension_response('sreg')
+      if sreg.length > 0
+        message += "<hr/> With simple registration fields:<br/>"
+        sreg.keys.sort.each {|k| message += "<br/><b>#{k}</b>: #{sreg[k]}"}
+      elsif did_sreg
+        message += "<hr/> But the server does not support simple registration."
       end
     
     elsif response.status == OpenID::CANCEL
@@ -160,7 +171,24 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       message = "Unknown response status: #{response.status}"
 
     end
-    self.render(message, css_class, response.identity_url)
+    self.render(message, css_class, response.identity_url, sreg_checked)
+  end
+  
+  def do_policy
+    @res.body = <<END
+<html>
+<head></head>
+<body>
+<h3>Ruby Consumer Simple Registration Policy</h3>
+<p>This consumer makes a simple registration request for the following fields:<br/><br/>
+<b>Required:</b> email, nickname<br/>
+<b>Optional:</b> fullname, dob, gender, postcode, country<br/><br/>
+Nothing is actually done with the data provided, it simply exists to illustrate the simple registration protocol.
+</p>
+</body>
+</html>
+
+END
   end
 
   # build a URL relative to the server base URL, with the given query
@@ -168,19 +196,19 @@ class SimpleServlet < HTTPServlet::AbstractServlet
   def build_url(action, query=nil)
     url = URI.parse($base_url).merge(action).to_s
     url = OpenID::Util.append_args(url, query) unless query.nil?
-    url
+    return url
   end
    
   def redirect(url)
     @res.set_redirect(HTTPStatus::TemporaryRedirect, url)
   end
 
-  def render(message=nil, css_class="alert", form_contents="")
+  def render(message=nil, css_class="alert", form_contents="", checked="")
     @res.body = self.page_header
     unless message.nil?
       @res.body << "<div class=\"#{css_class}\">#{message}</div>"
     end
-    @res.body << self.page_footer(form_contents)    
+    @res.body << self.page_footer(form_contents, checked)
   end
 
   def page_header(title="Ruby OpenID WEBrick example")
@@ -228,20 +256,24 @@ END_OF_STRING
   end
 
 
-  def page_footer(form_contents="")
+  def page_footer(form_contents="", checked="")
     form_contents = "" if form_contents == "/"    
     footer = <<END_OF_STRING
     <div id="verify-form">
-      <form method="get" action=#{self.build_url("/begin")}>
+      <form method="get" action="#{self.build_url("/begin")}">
         Identity&nbsp;URL:
       <input type="text" name="openid_url" value="#{form_contents}" />
         <input type="submit" value="Verify" />
+        <input type="checkbox" id="sregbox" name="sreg" #{checked} />
+        <label for="sregbox">with simple registration</label>
+        <a href="http://www.openidenabled.com/openid/simple-registration-extension" target="_blank">?</a>
       </form>
     </div>
   </body>
 </html>
 END_OF_STRING
   end
+
 
 
 end

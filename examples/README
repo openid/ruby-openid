@@ -12,20 +12,6 @@ OpenID URL and to run:
 
 Point your browser at http://localhost:2000/ and follow the instructions.
 
-
-==Rails consumer example
-
-This example is functionally a clone of consumer.rb but uses the Ruby
-on Rails web framework.  To run the example you'll need the latest
-version of rails installed.
-
- cd rails_consumer
- ./script/server
-
-Open a web browser and go to http://localhost:3000/ and follow the
-instructions.
-
-
 ==Rails server example
 
 The rails_server contains a fully functions OpenID server, and acts as
