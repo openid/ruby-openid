@@ -12,11 +12,11 @@ module OpenID
   #
   # Methods of this object may raise SystemCallError if filestystem
   # related errors are encountered.
-  class FilesystemOpenIDStore < OpenIDStore
+  class FilesystemStore < Store
   
     @@FILENAME_ALLOWED = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-".split("")
   
-    # Create a FilesystemOpenIDStore instance, putting all data in +directory+.
+    # Create a FilesystemStore instance, putting all data in +directory+.
     def initialize(directory)
       p_dir = Pathname.new(directory)
       @nonce_dir = p_dir.join('nonces')

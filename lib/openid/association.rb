@@ -2,6 +2,10 @@ require 'openid/util'
 
 module OpenID
 
+  # Represents an "association" between a consumer and server, and
+  # is also used for storage of the information exchanged
+  # during the openid.mode='associate' transaction.
+  # This class is used by the both the server and consumer.
   class Association
     @@version = '2'
     @@assoc_keys = [

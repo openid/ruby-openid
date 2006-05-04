@@ -25,7 +25,7 @@ module ServerTestCase
     @id_url = 'http://foo.com/'
     @rt_url = 'http://return.to/rt'
     @tr_url = 'http://return.to/'
-    @store = OpenID::FilesystemOpenIDStore.new(@@dir)
+    @store = OpenID::FilesystemStore.new(@@dir)
     @server = TestOpenIDServer.new(@sv_url, @store)
   end
 

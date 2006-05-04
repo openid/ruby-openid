@@ -13,7 +13,7 @@ class FileStoreTestCase < Test::Unit::TestCase
 
   def setup
     FileUtils.rm_rf(@@dir)
-    @store = OpenID::FilesystemOpenIDStore.new(@@dir)    
+    @store = OpenID::FilesystemStore.new(@@dir)    
   end
 
   def teardown

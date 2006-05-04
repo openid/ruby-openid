@@ -20,6 +20,6 @@ Go into the test directory and execute the *runtests* script.
 == Next steps
 
 * Run consumer.rb in the examples directory. 
-* Get started writing your own consumer using OpenID::OpenIDConsumer
-* Write your own server with OpenID::OpenIDServer
+* Get started writing your own consumer using OpenID::Consumer
+* Write your own server with OpenID::Server
 

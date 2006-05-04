@@ -158,6 +158,7 @@ module OpenID
     end
     
     def Util.strxor(s1, s2)
+      raise ArgumentError if s1.length != s2.length
       length = [s1.length, s2.length].min - 1
       a = (0..length).collect {|i| (s1[i]^s2[i]).chr}
       a.join("")
@@ -165,11 +166,10 @@ module OpenID
     
     # Sign the given fields from the reply with the specified key.
     # Return [signed, sig]
-  
     def Util.sign_reply(reply, key, signed_fields, prefix="openid.")
       token = []
       signed_fields.each do |sf|
-        token << [sf+":"+reply[prefix+sf]+"\n"]
+        token << [sf+":"+reply[prefix+sf].to_s+"\n"]
       end
       text = token.join("")
       signed = Util.to_base64(Util.hmac_sha1(key, text))
@@ -196,7 +196,6 @@ module OpenID
     end
 
     # Generate a random number less than max.  Uses urandom if available.
-
     def Util.rand(max)
       unless Util::HAS_URANDOM
         return Kernel::rand(max)
@@ -248,13 +247,21 @@ module OpenID
         url = 'http://' + url
       end
 
-      parsed = URI.parse(url)
-      parsed.normalize!
-      parsed.to_s
+      begin
+        parsed = URI.parse(url)
+      rescue URI::InvalidURIError
+        return nil
+      else
+        return parsed.normalize.to_s
+      end
+    end
+
+    def Util.urls_equal?(url1, url2)
+      url1 = Util.normalize_url(url1)
+      return false if url1.nil?
+      return url1 == Util.normalize_url(url2)
     end
 
   end
 
 end
-
-

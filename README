@@ -2,16 +2,13 @@
 
 A Ruby library for verifying and serving OpenID identities.
 
-This library is a port of the Python OpenID library. See http://www.openidenabled.com/openid/libraries/python for more info on the Python library.
-
 ==Features
-* Easy to use API for verifying OpenID identites - OpenID::OpenIDConsumer
+* Easy to use API for verifying OpenID identites - OpenID::Consumer
 * New support for serving OpenID identites - OpenID::OpenIDServer
 * Does not depend on underlying web framework
 * Supports multiple storage mechanisms (Filesystem, SQL)
 * Example code to help you get started, including:
   * WEBrick based consumer
-  * Ruby on rails based consumer
   * Ruby on rails based server
   * OpeIDLoginGenerator for quickly getting creating a rails app that uses
     OpenID for authentication
@@ -27,22 +24,31 @@ The library is known to work with Ruby 1.8.4 on Unix, Max OSX and
 Win32.  Examples were tested with Rails 1.0.
 
 
-==Getting Started with OpenID::OpenIDConsumer
-OpenID::OpenIDConsumer is the place to start if you'd like to support
-OpenID login or verification on your website.  The examples contains
+==Getting Started with OpenID::Consumer
+OpenID::Consumer is the place to start if you'd like to support
+OpenID authentication on your website.  The examples contains
 several working examples to help you get started, and the
-OpenID::OpenIDConsumer class is well documented.
+OpenID::Consumer class is well documented.
 
 
-==Serving OpenID with OpenID::OpenIDServer
+==Serving OpenID with OpenID::Server
 The examples directory contains fully functional OpenID server that
 uses the Ruby on Rails framework.  Start by reading about the
-OpenID::OpenIDServer interface documentation and looking at the example.
+OpenID::Server interface documentation and looking at the example.
 
 
 ==Homepage
 http://www.openidenabled.com/openid/libraries/ruby
 
+See also:
+http://openid.net/
+http://www.openidenabled.com/
+
+==Community
+Discussion regarding the Ruby OpenID library and other JanRain OpenID libraries
+takes place on the the OpenID mailing list on openidenabled.com.
+Please join this list to discuss, ask implementation questions, report
+bugs, etc.  Also check out the openid channel on the freenode IRC network.
 
 ==Author
 Copyright 2006, Janrain, Inc.

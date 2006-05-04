@@ -1,79 +1,56 @@
 require "openid/util"
-require "openid/yadis"
+require "openid/service"
 require "openid/parse"
 
-require "yadis"
-require "yadis/manager"
+# try and use the yadis gem, falling back to system yadis
+begin
+  require 'rubygems'
+  require_gem 'ruby-yadis', ">=0.2.3"  
+rescue LoadError
+  require "yadis"
+end
 
 module OpenID
 
-  class Discovery
+  # OpenID::Discovery encapsulates the logic for doing Yadis and OpenID 1.0
+  # style server discovery.  This class uses a session object to manage 
+  # a list of tried OpenID servers for implemeting server fallback.  This is
+  # useful the case when a user's primary server(s) is not available, and
+  # will allow then to try again with one of their alternates.
+  class OpenIDDiscovery < Discovery
 
-    attr_accessor :service_filter
-    @@ysm_key = 'openid_services'
-
-    def Discovery.cleanup(session, starting_url)
-      return nil unless session
-
-      service = nil
-      ysm = YadisServiceManager.get_manager(session, starting_url, @@ysm_key)
-      if ysm
-        service = ysm.current_service
-        YadisServiceManager.destroy(session, ysm.starting_url, @@ysm_key)
-      end
-      
-      return service
-    end
-
-    def initialize(session, fetcher)
-      @session = session
+    def initialize(session, url, fetcher, suffix=nil)
+      super(session, url, suffix)
       @fetcher = fetcher
-      @service_filter = Proc.new {|s| OpenIDService.from_service(s)}
     end
 
-    def discover(url)
-      begin
-        identity_url = OpenID::Util.normalize_url(url)
-      rescue URI::InvalidURIError
-        return nil
-      end
-
-      ysm = YadisServiceManager.get_manager(@session, identity_url, @@ysm_key)
-      if ysm and ysm.dead_end?
-        ysm = nil
-        YadisServiceManager.destroy(@session, identity_url, @@ysm_key)
-      end
-
-      if ysm.nil?        
-        begin
-          yadis = YADIS.new(identity_url)
-        rescue YADISParseError, YADISHTTPError
-          nil
-        else
-          services = yadis.filter_services([@service_filter])
-          ysm = YadisServiceManager.create(@session, identity_url, services, @@ysm_key)
-        end
-      end
-
-      # URL doesn't support Yadis.  Try old school OpenID discovery
-      if ysm.nil?        
-        status, service = self.openid_discovery(identity_url)
-        if status == SUCCESS
-          ysm = YadisServiceManager.create(@session, identity_url, [service], @@ysm_key)
-        end
+    # Pass in a custom filter here if you like.  Otherwise you'll get all
+    # OpenID sso services. filter should produce objects or subclasses of
+    # OpenIDServiceEndpoint.
+    def discover(filter=nil)
+      unless filter
+        filter = lambda {|s| OpenIDServiceEndpoint.from_endpoint(s)}
       end
       
-      return nil if ysm.nil?
-      return ysm.next_service
+      begin
+        # do yadis discover, filtering out OpenID services
+        return super(filter)
+      rescue YADISParseError, YADISHTTPError
+
+        # Couldn't do Yadis discovery, fall back on OpenID 1.0 disco
+        status, service = self.openid_discovery(@url)
+        if status == SUCCESS
+          return [service.consumer_id, [service]]
+        end
+      end
+
+      return [nil, []]
     end
 
-
-    def openid_discovery(identity_url)
-      begin
-        url = OpenID::Util.normalize_url(identity_url)
-      rescue URI::InvalidURIError
-        return [HTTP_FAILURE, nil]
-      end
+    # Perform OpenID 1.0 style link rel discovery.  No string normalization
+    # will be done on +url+.  See Util.normalize_url for information on
+    # textual URL transformations.
+    def openid_discovery(url)
       ret = @fetcher.get(url)
       return [HTTP_FAILURE, nil] if ret.nil?
       
@@ -101,7 +78,9 @@ module OpenID
       server_id = OpenID::Util.normalize_url(server_id)
       server_url = OpenID::Util.normalize_url(server)
                   
-      service = FakeOpenIDService.new(consumer_id, server_id, server_url)
+      service = OpenID::FakeOpenIDServiceEndpoint.new(consumer_id,
+                                                      server_id,
+                                                      server_url)
       return [SUCCESS, service]
     end    
 

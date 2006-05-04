@@ -1,4 +1,4 @@
-require "html/htmltokenizer"
+require "openid/htmltokenizer"
 
 def parse_link_attrs(data)
   parser = HTMLTokenizer.new(data)
