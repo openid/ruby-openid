@@ -7,30 +7,35 @@ require 'openid/server2'
 class ServerController < ApplicationController
 
   include ServerHelper
+  include OpenID::Server
   layout nil
   
   def index
-    request = server.decode_request(@params)
-
+    begin
+      request = server.decode_request(@params)
+    rescue ProtocolError => e
+      # invalid openid request, so just display a page with an error message
+      render_text e.to_s
+      return
+    end
+      
     # no openid.mode was given
     unless request
       render_text "This is an OpenID server endpoint."
       return
     end
     
-    if request.class == OpenID::Server::CheckIDRequest
+    if request.kind_of?(CheckIDRequest)
 
       if self.is_authorized(request.identity_url, request.trust_root)
         response = request.answer(true)
-        self.add_sreg(response)
+        
+        # add the sreg response if requested
+        self.add_sreg(request, response)
 
       elsif request.immediate
-        # immediate mode and not authorized, send 'em to setup url
-        retry_query = query.dup
-        retry_query['openid.mode'] = 'checkid_setup'
-        setup_url = url_for :action => 'index'
-        setup_url = OpenID::Util.append_args(setup_url, retry_query)
-        response = request.answer(false, setup_url)
+        server_url = url_for :action => 'index'
+        response = request.answer(false, server_url)
         
       else
         @session[:last_request] = request
@@ -50,6 +55,10 @@ class ServerController < ApplicationController
   def user_page
     # Yadis content-negotiation: we want to return the xrds if asked for.
     accept = request.env['HTTP_ACCEPT']
+    
+    # This is not technically correct, and should eventually be updated
+    # to do real Accept header parsing and logic.  Though I expect it will work
+    # 99% of the time.
     if accept and accept.include?('application/xrds+xml')
       render_xrds
       return
@@ -85,7 +94,7 @@ EOS
     else
       session[:approvals] << request.trust_root
       response = request.answer(true)
-      self.add_sreg(response)
+      self.add_sreg(request, response)
       return self.render_response(response)
     end
   end
@@ -99,8 +108,8 @@ EOS
   def server
     if @server.nil?
       dir = Pathname.new(Dir.tmpdir).join('openid-server')
-      store = OpenID::FilesystemOpenIDStore.new(dir)
-      @server = OpenID::Server::OpenIDServer.new(store)
+      store = OpenID::FilesystemStore.new(dir)
+      @server = Server.new(store)
     end
     return @server
   end
@@ -123,7 +132,8 @@ EOS
     xmlns="xri://$xrd*($v*2.0)">
   <XRD>
     <Service priority="1">
-      <Type>http://openid.net/signon/1.1</Type>
+      <Type>http://openid.net/signon/1.0</Type>
+      <Type>http://openid.net/sreg/1.0</Type>
       <URI>#{url_for(:controller => 'server')}</URI>
     </Service>
   </XRD>
@@ -134,30 +144,45 @@ EOS
     render_text yadis
   end  
 
-  def add_sreg(response)
-    # this should be taken out of the user's profile,
-    # but since we don't have one lets just make up some data.
-    # Also, the user should be able to approve the transfer
-    # and modify each field if she likes.
-    sreg = {
-      'openid.sreg.email' => 'foo@example.com',
-      'openid.sreg.nickname' => 'Mr. Foo'
-    }
-    
-    response.fields.update(sreg)
-    response.signed += ['sreg.nickname', 'sreg.email']    
+  def add_sreg(request, response)
+    # Your code should examine request.query
+    # for openid.sreg.required, openid.sreg.optional, and
+    # openid.sreg.policy_url, and generate add fields to your response
+    # accordingly. For this example, we'll just see if there are any
+    # sreg args and add some sreg data to the response.  Take note,
+    # that this does not actually respect the sreg query, it just sends
+    # back some fake sreg data.  Your implemetation should be better! :)
+
+    required = request.query['openid.sreg.required']
+    optional = request.query['openid.sreg.optional']
+    policy_url = request.query['openid.sreg.policy_url']
+
+    if required or optional or policy_url
+      # this should be taken out of the user's profile,
+      # but since we don't have one lets just make up some data.
+      # Also, the user should be able to approve the transfer
+      # and modify each field if she likes.
+      sreg_fields = {
+        'email' => 'mayor@example.com',
+        'nickname' => 'Mayor McCheese'
+      }    
+      response.add_fields('sreg', sreg_fields)
+    end
+
   end
 
   def render_response(response)    
-    response = server.encode_response(response)
+    web_response = server.encode_response(response)
 
-    case response.code
-    when OpenID::Server::HTTP_OK
-      render_text response.body, :status => 200           
-    when OpenID::Server::HTTP_REDIRECT
-      redirect_to response.redirect_url
+    case web_response.code
+    when HTTP_OK
+      render_text web_response.body, :status => 200           
+
+    when HTTP_REDIRECT
+      redirect_to web_response.redirect_url
+
     else
-      render_text response.body, :status => 400
+      render_text web_response.body, :status => 400
     end   
   end
 
