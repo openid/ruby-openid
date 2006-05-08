@@ -2,7 +2,7 @@ require 'tmpdir'
 require 'pathname'
 
 require 'openid/filestore'
-require 'openid/server2'
+require 'openid/server'
 
 class ServerController < ApplicationController
 

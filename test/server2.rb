@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'uri'
 
-require 'openid/server2'
+require 'openid/server'
 require 'openid/stores'
 
 include OpenID::Server
