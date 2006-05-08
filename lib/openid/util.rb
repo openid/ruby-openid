@@ -150,6 +150,12 @@ module OpenID
       a.join("&")
     end
     
+    def Util.parse_query(qs)
+      query = {}
+      CGI::parse(qs).each {|k,v| query[k] = v[0]}
+      return query
+    end
+    
     def Util.append_args(url, args)
       url = url.dup
       url if args.length == 0
