@@ -16,10 +16,10 @@ module OpenID
     
     def DiffieHellman.from_base64(p=nil, g=nil)
       unless p.nil?
-        p = OpenID::Util.str_to_num(OpenID::Util.from_base64(p))
+        p = OpenID::Util.base64_to_num(p)
       end
       unless g.nil?
-        g = OpenID::Util.str_to_num(OpenID::Util.from_base64(g))
+        g = OpenID::Util.base64_to_num(g)
       end
       DiffieHellman.new(p, g)
     end
