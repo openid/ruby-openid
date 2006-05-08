@@ -4,13 +4,13 @@ A Ruby library for verifying and serving OpenID identities.
 
 ==Features
 * Easy to use API for verifying OpenID identites - OpenID::Consumer
-* New support for serving OpenID identites - OpenID::OpenIDServer
+* Support for serving OpenID identites - OpenID::Server
 * Does not depend on underlying web framework
 * Supports multiple storage mechanisms (Filesystem, SQL)
 * Example code to help you get started, including:
   * WEBrick based consumer
   * Ruby on rails based server
-  * OpeIDLoginGenerator for quickly getting creating a rails app that uses
+  * OpenIDLoginGenerator for quickly getting creating a rails app that uses
     OpenID for authentication
   * ActiveRecord adapter for using an SQL store in rails
 * Comprehensive test suite
