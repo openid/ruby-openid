@@ -1,50 +1,63 @@
+require "pathname"
+require "cgi"
+
 require "openid/filestore"
 require "openid/consumer"
 
-# Please choose a non-world readable directory for your OpenID store.
-# I've set it to use /tmp for simplicity.
-store = OpenID::FilesystemOpenIDStore.new("/tmp/railsgen")
-$consumer = OpenID::OpenIDConsumer.new(store)
-
 class <%= class_name %>Controller < ApplicationController
   layout  'scaffold'
-
+  
+  # process the login request, disover the openid server, and
+  # then redirect.
   def login
     openid_url = @params[:openid_url]
 
     if @request.post?
-      status, info = $consumer.begin_auth(openid_url)
-      case status
+      request = consumer.begin(openid_url)
+
+      p 'XXX', request
+
+      case request.status
       when OpenID::SUCCESS
-        return_to = url_for(:action=>:complete_auth, :token=>info.token)
-        trust_root = url_for(:controller=>"")
-        redirect_url = $consumer.construct_redirect(info, return_to, trust_root)
+        return_to = url_for(:action=> 'complete')
+        trust_root = url_for(:controller=>'')
 
-        redirect_to(redirect_url)
+        url = request.redirect_url(trust_root, return_to)
+        p 'REDIRECTURL', url
 
-      when OpenID::PARSE_ERROR
-        flash[:notice] = "Could not find OpenID server for page #{openid_url}"
+        redirect_to(url)
+
+        p 'REDIRECT SENT', @session
+        return
+
+      when OpenID::FAILURE
+        escaped_url = CGI::escape(openid_url)
+        flash[:notice] = "Could not find OpenID server for #{escaped_url}"
         
-      when OpenID::HTTP_FAILURE
-        flash[:notice] = "Could not fetch page #{openid_url}"
+      else
+        flash[:notice] = "An unknown error occured."
 
       end      
     end    
+
+    p 'Done'
+
   end
 
-  def complete_auth
+  # handle the openid server response
+  def complete
     token = @params[:token]
     
-    status, info = $consumer.complete_auth(token, @params)
+    response = consumer.complete(@params)
     
-    if status == OpenID::SUCCESS
-      openid_url = info
+    case response.status
+    when OpenID::SUCCESS
 
-      @user = User.get(openid_url)
+      @user = User.get(response.identity_url)
       
       # create user object if one does not exist
       if @user.nil?
-        @user = User.new(:openid_url => openid_url)
+        @user = User.new(:openid_url => response.identity_url)
         @user.save
       end
 
@@ -52,19 +65,27 @@ class <%= class_name %>Controller < ApplicationController
       # access to both bits of information.  Change as needed.
       @session[:user_id] = @user.id
 
-      flash[:notice] = "Logged in as #{openid_url}"
+      flash[:notice] = "Logged in as #{CGI::escape(response.identity_url)}"
        
       redirect_to :action => "welcome"
       return
 
-    elsif status == OpenID::FAILURE and info
-      flash[:notice] = "Verification of #{info} failed."
+    when OpenID::FAILURE
+      if response.identity_url
+        flash[:notice] = "Verification of #{CGI::escape(response.identity_url)} failed."
+
+      else
+        flash[:notice] = 'Verification failed.'
+      end
+
+    when OpenID::CANCEL
+      flash[:notice] = 'Verification cancelled.'
 
     else
-      flash[:notice] = "Verification cancelled"
+      flash[:notice] = 'Unknown response from OpenID server.'
     end
   
-    redirect_to :action => "login"
+    redirect_to :action => 'login'
   end
   
   def logout
@@ -75,6 +96,16 @@ class <%= class_name %>Controller < ApplicationController
   end
 
   private
+
+  # Get the OpenID::Consumer object.
+  def consumer
+    # create the OpenID store for storing associations and nonces,
+    # putting it in your app's db directory
+    store_dir = Pathname.new(RAILS_ROOT).join('db').join('openid-store')
+    store = OpenID::FilesystemStore.new(store_dir)
+
+    return OpenID::Consumer.new(@session, store)
+  end
 
   # get the logged in user object
   def find_user
