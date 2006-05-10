@@ -47,11 +47,14 @@ http://www.openidenabled.com/
 ==Community
 Discussion regarding the Ruby OpenID library and other JanRain OpenID libraries
 takes place on the the OpenID mailing list on openidenabled.com.
+
+http://lists.openidenabled.com/mailman/listinfo/dev
+
 Please join this list to discuss, ask implementation questions, report
 bugs, etc.  Also check out the openid channel on the freenode IRC network.
 
 ==Author
-Copyright 2006, Janrain, Inc.
+Copyright 2006, JanRain, Inc.
 Contact Brian Ellin: brian -at- janrain -dot- com
 
 

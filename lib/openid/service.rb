@@ -25,7 +25,7 @@ module OpenID
   class OpenIDServiceEndpoint < ServiceEndpoint
     
     @@namespace = {'openid' => 'http://openid.net/xmlns/1.0'}
-    attr_accessor :service_types, :uri, :yadis_url, :element, :yadis
+    attr_accessor :service_types, :uri, :yadis_url, :delegate_url
 
     # Class method to produce OpenIDService objects. Call with a Yadis Service
     # object.  Will return nil if the Service object does not represent an
@@ -36,9 +36,13 @@ module OpenID
       s = new
       s.service_types = service.service_types
       s.uri = service.uri
-      s.element = service.element
-      s.yadis = service.yadis
       s.yadis_url = service.yadis.uri
+
+      s.delegate_url = nil
+      REXML::XPath.each(service.element, 'openid:Delegate', @@namespace) do |e|
+        s.delegate_url = e.text.strip
+      end
+
       return s
     end
 
@@ -61,16 +65,26 @@ module OpenID
       return false
     end
 
+    # Alias for +supports?+
     def uses_extension?(extension_url)
+      return self.supports?(extension_url)
+    end
+    
+    # Same as uses_extension? Checks to see if the provided URL is
+    # in the list of service types. Example that checks for support
+    # of the simple registratino protocol:
+    #
+    #   service.supports?('http://openid.net/sreg/1.0')
+    #
+    def supports?(url)
       return @service_types.member?(extension_url)
     end
 
-    # Returns the OpenID delegate URL.
+    # Returns the OpenID delegate URL.  This is the URL on the OpenID server,
+    # For example if example.com delegates to example-server.com/user, then
+    # this will return example-server.com/user
     def delegate
-      REXML::XPath.each(@element, 'openid:Delegate', @@namespace) do |e|
-        return e.text.strip
-      end
-      return self.consumer_id
+      @delegate_url or self.consumer_id
     end
 
     # Returns the OpenID server endpoint URL.
@@ -105,7 +119,6 @@ module OpenID
       @delegate = server_id
       @yadis_url = consumer_id     
       @service_types = ['http://openid.net/signon/1.0']
-      @element = nil
       @yadis = nil
     end
 
@@ -113,7 +126,7 @@ module OpenID
       @delegate
     end
 
-    def uses_extension?
+    def supports?(url)
       false
     end
 

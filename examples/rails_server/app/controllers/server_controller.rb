@@ -1,4 +1,3 @@
-require 'tmpdir'
 require 'pathname'
 
 require 'openid/filestore'
@@ -101,13 +100,9 @@ EOS
 
   protected
 
-  # Please note that for simplicity, this example uses the filestore and
-  # places it's files in /tmp.  This is NOT a good idea for production servers!
-  # Make sure to put the filstore directory in a place unavailable to other
-  # system users.
   def server
     if @server.nil?
-      dir = Pathname.new(Dir.tmpdir).join('openid-server')
+      dir = Pathname.new(RAILS_ROOT).join('db').join('openid-store')
       store = OpenID::FilesystemStore.new(dir)
       @server = Server.new(store)
     end

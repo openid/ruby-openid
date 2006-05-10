@@ -300,7 +300,7 @@ module OpenID
     # for more information.
     def begin_without_discovery(service)
       request = @consumer.begin(service)
-      @session[@token_key] = request.token
+      @session[@@token_key] = request.token
       return request
     end
     
@@ -346,10 +346,10 @@ module OpenID
     # new browser window.
     def complete(query)
       begin
-        token = @session.delete(@token_key)
+        token = @session.delete(@@token_key)
       rescue
-        token = @session[@token_key]
-        @session[@token_key] = nil
+        token = @session[@@token_key]
+        @session[@@token_key] = nil
       end
       
       if token.nil?

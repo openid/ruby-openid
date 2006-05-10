@@ -1,5 +1,14 @@
 = Ruby OpenID Library Installation
 
+== Dependencies
+
+This library depends on the Ruby Yadis library available at:
+
+http://www.openidenabled.com/yadis/libraries/ruby/about/
+
+Please make sure you have the Yadis library installed, or use
+rubygems for installation.
+
 == Installation
 
 Unpack the archive and run setup.rb (you may need to be root)
@@ -15,7 +24,7 @@ Make sure everything installed ok:
 
 == Run the test suite
 
-Go into the test directory and execute the *runtests* script.
+Go into the test directory and execute the *runtests.rb* script.
 
 == Next steps
 

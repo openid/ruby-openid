@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require "cgi"
 require "uri"
-require "tmpdir"
 require "pathname"
 
 require "webrick"
@@ -13,7 +12,7 @@ require "openid/util"
 
 ################ start config ##########################
 # use your desired store implementation here
-store_dir = Pathname.new(Dir.tmpdir).join("ruby-openid-store")
+store_dir = Pathname.new(Dir.pwd).join("openid-store")
 store = OpenID::FilesystemStore.new(store_dir)
 
 $host = "localhost"
