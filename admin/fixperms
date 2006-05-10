@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-chmod +x admin/prepare-release admin/build-docs admin/fixperms test/runtests examples/rails_consumer/script/* examples/rails_server/script/* examples/consumer.rb
+chmod +x admin/prepare-release admin/build-docs admin/fixperms test/runtests.rb  examples/rails_server/script/* examples/consumer.rb
