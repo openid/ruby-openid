@@ -1,7 +1,12 @@
 require 'pathname'
 
-require 'openid/filestore'
-require 'openid/server'
+# load the openid library, first trying rubygems
+begin
+  require "rubygems"
+  require_gem "ruby-openid", ">= 1.0"
+rescue LoadError
+  require "openid"
+end
 
 class ServerController < ApplicationController
 

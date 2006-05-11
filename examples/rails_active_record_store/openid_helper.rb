@@ -1,4 +1,10 @@
-require 'openid/association'
+# load the openid library
+begin
+  require "rubygems"
+  require_gem "ruby-openid", ">= 1.0"
+rescue LoadError
+  require "openid"
+end
 
 module OpenidHelper
 

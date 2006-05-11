@@ -1,8 +1,13 @@
 require "pathname"
 require "cgi"
 
-require "openid/filestore"
-require "openid/consumer"
+# load the openid library
+begin
+  require "rubygems"
+  require_gem "ruby-openid", ">= 1.0"
+rescue LoadError
+  require "openid"
+end
 
 class <%= class_name %>Controller < ApplicationController
   layout  'scaffold'
@@ -15,19 +20,13 @@ class <%= class_name %>Controller < ApplicationController
     if @request.post?
       request = consumer.begin(openid_url)
 
-      p 'XXX', request
-
       case request.status
       when OpenID::SUCCESS
         return_to = url_for(:action=> 'complete')
         trust_root = url_for(:controller=>'')
 
         url = request.redirect_url(trust_root, return_to)
-        p 'REDIRECTURL', url
-
         redirect_to(url)
-
-        p 'REDIRECT SENT', @session
         return
 
       when OpenID::FAILURE
@@ -39,8 +38,6 @@ class <%= class_name %>Controller < ApplicationController
 
       end      
     end    
-
-    p 'Done'
 
   end
 

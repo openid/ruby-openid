@@ -1,4 +1,9 @@
-require 'openid/association'
+begin
+  require "rubygems"
+  require_gem "ruby-openid", ">= 1.0"
+rescue LoadError
+  require "openid"
+end
 
 class OpenidAssociation < ActiveRecord::Base
 

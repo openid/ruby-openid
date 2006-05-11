@@ -6,9 +6,13 @@ require "pathname"
 require "webrick"
 include WEBrick
 
-require "openid/consumer"
-require "openid/filestore"
-require "openid/util"
+# load the openid library, first trying rubygems
+begin
+  require "rubygems"
+  require_gem "ruby-openid", ">= 1.0"
+rescue LoadError
+  require "openid"
+end
 
 ################ start config ##########################
 # use your desired store implementation here
