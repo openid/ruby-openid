@@ -43,8 +43,6 @@ class <%= class_name %>Controller < ApplicationController
 
   # handle the openid server response
   def complete
-    token = @params[:token]
-    
     response = consumer.complete(@params)
     
     case response.status
