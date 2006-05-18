@@ -7,8 +7,8 @@ module OpenID
 
     @@AUTH_KEY_LEN = 20
 
-    # Put a Association object into storace
-    def store_association(association)
+    # Put a Association object into storage
+    def store_association(server_url, association)
       raise NotImplementedError
     end
 
@@ -16,13 +16,13 @@ module OpenID
     # the server_url.  Returns nil if no such association is found or if
     # the one matching association is expired. (Is allowed to GC expired
     # associations when found.)
-    def get_association(server_url)
+    def get_association(server_url, handle=nil)
       raise NotImplementedError
     end
 
     # If there is a matching association, remove it from the store and
     # return true, otherwise return false.
-    def removeAssociation(server_url, handle)
+    def remove_association(server_url, handle)
       raise NotImplementedError
     end
 
@@ -59,11 +59,11 @@ module OpenID
       @auth_key = Digest::SHA1.hexdigest(secret_phrase)
     end
 
-    def store_association(assoc)
+    def store_association(server_url, assoc)
       nil
     end
 
-    def get_association(server_url)
+    def get_association(server_url, handle=nil)
       nil
     end
   
