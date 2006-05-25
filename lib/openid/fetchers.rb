@@ -5,7 +5,7 @@ require "openid/util"
 begin
   require 'net/https'
 rescue LoadError
-  OpenID::Util.log('WARNING: unable no SSL support found.  Will not be able to fetch HTTPS URLs!')
+  OpenID::Util.log('WARNING: no SSL support found.  Will not be able to fetch HTTPS URLs!')
   HAS_OPENSSL = false
   require 'net/http'  
 else
