@@ -452,6 +452,14 @@ module OpenID
 
         q['openid.trust_root'] = @trust_root if @trust_root
         q['openid.assoc_handle'] = @assoc_handle if @assoc_handle
+
+        # add other openid stuff into the query (extensions)
+        @query.each do |k,v|
+          if k.starts_with?('openid.') and not q.has_key?(k)
+            q[k] = v
+          end
+        end
+
         return OpenID::Util.append_args(server_url, q)
       end
 
