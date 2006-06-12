@@ -1,10 +1,10 @@
-require 'rexml/document'
+ require 'rexml/document'
 
 begin
-  require 'rubygems'
-  require_gem 'ruby-yadis', '>=0.2.3'
+  require 'yadis'
 rescue LoadError
-  require 'yadis/service'
+  require 'rubygems'
+  require_gem 'ruby-yadis'
 end
 
 module OpenID
@@ -24,7 +24,11 @@ module OpenID
   # internally by the OpenIDConsumer object.
   class OpenIDServiceEndpoint < ServiceEndpoint
     
-    @@namespace = {'openid' => 'http://openid.net/xmlns/1.0'}
+    @@namespace = {
+      'xrdsns' => 'xri://$xrds',
+      'xrdns' => 'xri://$xrd*($v*2.0)',
+      'openidns' => 'http://openid.net/xmlns/1.0'
+    }
     attr_accessor :service_types, :uri, :yadis_url, :delegate_url
 
     # Class method to produce OpenIDService objects. Call with a Yadis Service
@@ -39,7 +43,8 @@ module OpenID
       s.yadis_url = service.yadis.uri
 
       s.delegate_url = nil
-      REXML::XPath.each(service.element, 'openid:Delegate', @@namespace) do |e|
+      REXML::XPath.each(service.element, 'openidns:Delegate',
+                        @@namespace) do |e|
         s.delegate_url = e.text.strip
       end
 
@@ -67,7 +72,7 @@ module OpenID
 
     # Alias for +supports?+
     def uses_extension?(extension_url)
-      return self.supports?(extension_url)
+      return supports?(extension_url)
     end
     
     # Same as uses_extension? Checks to see if the provided URL is
@@ -77,7 +82,7 @@ module OpenID
     #   service.supports?('http://openid.net/sreg/1.0')
     #
     def supports?(url)
-      return @service_types.member?(extension_url)
+      return @service_types.member?(url)
     end
 
     # Returns the OpenID delegate URL.  This is the URL on the OpenID server,
