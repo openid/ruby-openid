@@ -6,7 +6,7 @@
 begin
   STDERR.reopen('/dev/null', 'w')
 rescue
-  print ''
+  puts "\nPlease ignore the non Test::Unit error messages generated below.\n"
 end
 
 require "teststore"
