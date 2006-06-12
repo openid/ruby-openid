@@ -3,20 +3,21 @@ require "cgi"
 require "uri"
 require "pathname"
 
+
 require "webrick"
 include WEBrick
 
 # load the openid library, first trying rubygems
 begin
-  require "rubygems"
-  require_gem "ruby-openid", ">= 1.0"
-rescue LoadError
   require "openid"
+rescue LoadError
+  require "rubygems"
+  require_gem "ruby-openid"
 end
 
 ################ start config ##########################
-# use your desired store implementation here
-store_dir = Pathname.new(Dir.pwd).join("openid-store")
+# use your desired store implementation here.
+store_dir = Pathname.new(Dir.tmpdir).join("openid-store")
 store = OpenID::FilesystemStore.new(store_dir)
 
 $host = "localhost"
@@ -98,7 +99,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
       # testing.
       do_sreg = @req.query.fetch('sreg', nil)
 
-      if do_sreg and request.uses_extension?('http://openid.net/sreg/1.0')
+      if do_sreg
         policy_url = self.build_url('/policy')
         request.add_extension_arg('sreg','policy_url', policy_url)
         request.add_extension_arg('sreg','required','email,nickname')
