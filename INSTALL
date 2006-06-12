@@ -7,19 +7,41 @@ This library depends on the Ruby Yadis library available at:
 http://www.openidenabled.com/yadis/libraries/ruby/about/
 
 Please make sure you have the Yadis library installed, or use
-rubygems for installation.
+rubygems for installation
 
-== Installation
+== Rubygems Installation
 
-Unpack the archive and run setup.rb (you may need to be root)
+Rubygems is a tool for installing ruby libraries and their
+dependancies.  If you have rubygems installed, simply:
+
+  gem install ruby-openid
+
+== Manual Installation
+
+Unpack the archive and run setup.rb to install:
 
  ruby setup.rb
 
-setup.rb installs the library into your system ruby.  If don't want to add openid to you system ruby, make sure to add the *lib* directory of the extracted tarball to your RUBYLIB environment variable.
+setup.rb installs the library into your system ruby.  If don't want to
+add openid to you system ruby, you may instead add the *lib* directory of
+the extracted tarball to your RUBYLIB environment variable:
+
+  $ export RUBYLIB=${RUBYLIB}:/path/to/ruby-openid/lib
+
+
+== Testing the Installation
 
 Make sure everything installed ok:
  $> irb
- irb(main):001:0> require "openid/consumer"
+ irb$> require "openid"
+ => true
+
+Or, if you installed via rubygems:
+
+ $> irb
+ irb$> require "rubygems"
+ => true
+ irb$> require_gem "ruby-openid" 
  => true
 
 == Run the test suite
@@ -31,4 +53,4 @@ Go into the test directory and execute the *runtests.rb* script.
 * Run consumer.rb in the examples directory. 
 * Get started writing your own consumer using OpenID::Consumer
 * Write your own server with OpenID::Server
-
+* Use the OpenIDLoginGenerator!  Read example/README for more info.
