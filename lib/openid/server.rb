@@ -362,7 +362,7 @@ module OpenID
           raise MalformedReturnURL.new(query, return_to)
         end
 
-        if trust_root and not OpenID::TrustRoot.parse(return_to)
+        if trust_root and not OpenID::TrustRoot.parse(trust_root)
           raise MalformedTrustRoot.new(query, trust_root)
         end
        
