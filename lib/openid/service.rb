@@ -29,7 +29,7 @@ module OpenID
       'xrdns' => 'xri://$xrd*($v*2.0)',
       'openidns' => 'http://openid.net/xmlns/1.0'
     }
-    attr_accessor :service_types, :uri, :yadis_url, :delegate_url
+    attr_accessor :service_types, :uri, :yadis_url, :delegate_url, :xrds_uri
 
     # Class method to produce OpenIDService objects. Call with a Yadis Service
     # object.  Will return nil if the Service object does not represent an
@@ -41,7 +41,8 @@ module OpenID
       s.service_types = service.service_types
       s.uri = service.uri
       s.yadis_url = service.yadis.uri
-
+      s.xrds_uri = service.yadis.xrds_uri
+      
       s.delegate_url = nil
       REXML::XPath.each(service.element, 'openidns:Delegate',
                         @@namespace) do |e|
@@ -125,6 +126,7 @@ module OpenID
       @yadis_url = consumer_id     
       @service_types = ['http://openid.net/signon/1.0']
       @yadis = nil
+      @xrds_uri = nil
     end
 
     def delegate
