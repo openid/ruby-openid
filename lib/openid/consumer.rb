@@ -345,12 +345,7 @@ module OpenID
     # in to the +setup_url+, either in the current window or in a 
     # new browser window.
     def complete(query)
-      begin
-        token = @session.delete(@@token_key)
-      rescue
-        token = @session[@@token_key]
-        @session[@@token_key] = nil
-      end
+      token = @session[@@token_key]
       
       if token.nil?
         resp = FailureResponse.new(nil, 'No session state found.')
@@ -366,6 +361,13 @@ module OpenID
         end
       else
         resp.service = disco.current
+      end
+
+      # want to delete token unless status is SETUP_NEEDED,
+      # because we still need the token when the user returns from
+      # the server
+      unless resp.status == SETUP_NEEDED
+        @session[@@token_key] = nil
       end
 
       return resp
