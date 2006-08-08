@@ -12,6 +12,40 @@ else
   HAS_OPENSSL = true
 end
 
+# Not all versions of Ruby 1.8.4 have the version of post_connection_check
+# that properly handles wildcard hostnames.  This version of
+# post_connection_check is copied from post April 2006 release of 1.8.4.
+module Net
+  class HTTP
+    def post_connection_check(hostname)
+      check_common_name = true
+      cert = @socket.io.peer_cert
+      cert.extensions.each { |ext|
+        next if ext.oid != "subjectAltName"
+        ext.value.split(/,\s+/).each{ |general_name|
+          if /\ADNS:(.*)/ =~ general_name
+            check_common_name = false
+            reg = Regexp.escape($1).gsub(/\\\*/, "[^.]+")
+            return true if /\A#{reg}\z/i =~ hostname
+          elsif /\AIP Address:(.*)/ =~ general_name
+            check_common_name = false
+            return true if $1 == hostname
+          end
+        }
+      }
+      if check_common_name
+        cert.subject.to_a.each{ |oid, value|
+          if oid == "CN"
+            reg = Regexp.escape(value).gsub(/\\\*/, "[^.]+")
+            return true if /\A#{reg}\z/i =~ hostname
+          end
+        }
+      end
+      raise OpenSSL::SSL::SSLError, "hostname does not match"
+    end
+  end
+end
+
 module OpenID
 
   # Base Object used by consumer to send http messages
@@ -101,6 +135,13 @@ module OpenID
       begin
         u = URI.parse(url)
         http = get_http_obj(u)
+        http.start {
+          if HAS_OPENSSL and u.is_a?(URI::HTTPS) and @ca_path
+            # do the post_connection_check, which verifies that
+            # the host matches the cert
+            http.post_connection_check(u.host)
+          end
+        }
         resp = http.get(u.request_uri)
       rescue
         nil
