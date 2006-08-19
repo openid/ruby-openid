@@ -63,19 +63,32 @@ module OpenID
       return true if @host == 'localhost'
       
       host_parts = @host.split('.')
-      return false unless TOP_LEVEL_DOMAINS.member?(host_parts[-1])
+      # a note: ruby string split does not put an empty string
+      # at the end of the list if the split element is last.  for example,
+      # 'foo.com.'.split('.') => ['foo','com'].  Mentioned because the python
+      # code differs here.
       
-      # wacky heurestic for extracting a sane tld
-      host = []
-      if host_parts[-1].length == 2 and host_parts.length > 1
-        if host_parts[-2].length <= 3
-          host = host_parts[0...-2]
+      return false if host_parts.length == 0
+
+      # no adjacent dots
+      return false if host_parts.member?('')
+
+      # last part must be a tld
+      tld = host_parts[-1]
+      return false unless TOP_LEVEL_DOMAINS.member?(tld)
+
+      return false if host_parts.length == 1
+
+      if @wildcard
+        if tld.length == 2 and host_parts[-2].length <= 3
+          # It's a 2-letter tld with a short second to last segment
+          # so there needs to be more than two segments specified 
+          # (e.g. *.co.uk is insane)
+          return host_parts.length > 2
         end
-      elsif host_parts[-1].length == 3
-        host = host_parts[0...-1]
       end
-      
-      return (host.length > 0)
+
+      return true
     end
     
     def validate_url(url)

@@ -53,7 +53,7 @@ class TrustRootTestCase < Test::Unit::TestCase
     def assert_sane(s, expected)
       tr = OpenID::TrustRoot.parse(s)
       assert_not_nil(tr)
-      assert_equal(tr.sane?, expected)
+      assert_equal(tr.sane?, expected, s)
     end
 
     assert_sane('http://*/', false)
@@ -66,6 +66,8 @@ class TrustRootTestCase < Test::Unit::TestCase
     assert_sane('http://localhost:8082/?action=openid', true)
     assert_sane('http://*.foo.notatld', false)
     assert_sane('http://*.museum/', false)
+    assert_sane('http://kink.fm/', true)
+    assert_sane('http://beta.lingu.no/', true)
   end
 
   def test_validate
@@ -77,6 +79,8 @@ class TrustRootTestCase < Test::Unit::TestCase
       assert_equal(tr.validate_url(url), expected)
     end
 
+    assert_valid('http://*.foo.com', 'http://foo.com', true)
+    assert_valid('http://*.foo.com/', 'http://foo.com/', true)
     assert_valid('http://*.foo.com', 'http://b.foo.com', true)
     assert_valid('http://*.foo.com', 'http://b.foo.com/', true)
     assert_valid('http://*.foo.com', 'http://b.foo.com/', true)
