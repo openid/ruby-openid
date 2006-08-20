@@ -243,12 +243,7 @@ class TestIdRes < Test::Unit::TestCase
       'openid.user_setup_url' => setup_url
     }
 
-    # this isn't really necessary, but we'll make sure the token
-    # generation and extraction stuff works
-    token = consumer.gen_token(consumer_id, server_id, server_url)
-    consumer_id, server_id, server_url = consumer.split_token(token)
     nonce = consumer.create_nonce
-
     ret = consumer.do_id_res(nonce, consumer_id, server_id, server_url, query)
 
     assert_equal(OpenID::SETUP_NEEDED, ret.status)
@@ -278,9 +273,6 @@ class TestCheckAuth < Test::Unit::TestCase
     @server_url = "http://server.com/url"
     @consumer_id = "consu"
     @nonce = @consumer.create_nonce
-    @token = @consumer.gen_token(@consumer_id,
-                                 @server_id,
-                                 @server_url)
     @setup_url = "http://example.com/setup-here"
   end
 
