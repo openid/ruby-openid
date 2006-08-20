@@ -266,13 +266,12 @@ module OpenID
     # +msg+ method which provides more detailed information as to why
     # the request failed.
     def begin(user_url)
-      user_url = OpenID::Util.normalize_url(user_url)
-      unless user_url
-        user_url = user_url.to_s
-        return FailureRequest.new("Invalid URL: #{user_url}")
+      discovery = self.get_discovery(user_url)
+
+      unless discovery
+        return FailureRequest.new("Don't know how to find services for that identifier")
       end
 
-      discovery = self.get_discovery(user_url)
       service = discovery.next_service
 
       if service.nil?
@@ -377,8 +376,17 @@ module OpenID
     
     # Used internally to create an instnace of the OpenIDDiscovery object.
     def get_discovery(url)
-      return OpenIDDiscovery.new(@session, url, @consumer.fetcher,
-                                 @@disco_suffix)
+      if XRI::identifier_scheme(url) == :xri
+        XRIDiscovery.new(@session, url, @@disco_suffix)
+      else
+        url = OpenID::Util.normalize_url(url)
+        if url
+          user_url = user_url.to_s
+          OpenIDDiscovery.new(@session, url, @consumer.fetcher, @@disco_suffix)
+        else
+          nil
+        end
+      end
     end
 
   end

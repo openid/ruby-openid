@@ -5,12 +5,20 @@ require "openid/parse"
 # try and use the yadis gem, falling back to system yadis
 begin
   require 'rubygems'
-  require_gem 'ruby-yadis', ">=0.3"  
+  require_gem 'ruby-yadis', ">=0.4"  
 rescue LoadError
   require "yadis"
 end
 
 module OpenID
+
+  OPENID_IDP_2_0_TYPE = 'http://openid.net/server/2.0'
+  OPENID_2_0_TYPE = 'http://openid.net/signon/2.0'
+  OPENID_1_2_TYPE = 'http://openid.net/signon/1.2'
+  OPENID_1_1_TYPE = 'http://openid.net/signon/1.1'
+  OPENID_1_0_TYPE = 'http://openid.net/signon/1.0'
+  OPENID_TYPE_URIS = [OPENID_2_0_TYPE,OPENID_1_2_TYPE,
+                     OPENID_1_1_TYPE,OPENID_1_0_TYPE]
 
   # OpenID::Discovery encapsulates the logic for doing Yadis and OpenID 1.0
   # style server discovery.  This class uses a session object to manage 
@@ -83,6 +91,31 @@ module OpenID
                                                       server_url)
       return [SUCCESS, service]
     end    
+
+  end
+
+  class XRIDiscovery < Discovery
+    def initialize(session, iname, suffix=nil)
+      super(session, iname, suffix)
+    end
+
+    def discover(filter=nil)
+      begin
+        services = XRI::ProxyResolver.new.query(@url, OPENID_TYPE_URIS)
+      rescue XRI::XRIHTTPError
+        return [nil, []]
+      end
+      endpoints = []
+      services.each {|s|
+        se = OpenIDServiceEndpoint.from_endpoint(s)
+        if se
+          se.delegate_url = @url
+          se.yadis_url = @url
+          endpoints << se
+        end
+      }
+      return [@url, endpoints]      
+    end
 
   end
 
