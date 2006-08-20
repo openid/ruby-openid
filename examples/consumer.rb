@@ -3,7 +3,6 @@ require "cgi"
 require "uri"
 require "pathname"
 
-
 require "webrick"
 include WEBrick
 
@@ -69,6 +68,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
   def do_begin
     # First make sure the user entered something
     openid_url = @req.query.fetch("openid_url", "")
+
     if openid_url.empty?
       self.render("Enter an identity URL to verify",
                   css_class="error", form_contents=openid_url)
@@ -116,7 +116,7 @@ class SimpleServlet < HTTPServlet::AbstractServlet
 
       # build the redirect
       redirect_url = request.redirect_url($trust_root, return_to)
-
+      
       # send redirect to the server
       self.redirect(redirect_url)
     else
