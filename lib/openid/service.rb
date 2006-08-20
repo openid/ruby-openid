@@ -29,7 +29,7 @@ module OpenID
       'xrdns' => 'xri://$xrd*($v*2.0)',
       'openidns' => 'http://openid.net/xmlns/1.0'
     }
-    attr_accessor :service_types, :uri, :yadis_url, :delegate_url, :xrds_uri
+    attr_accessor :service_types, :uri, :yadis_url, :delegate_url, :xrds_uri, :canonical_id
 
     # Class method to produce OpenIDService objects. Call with a Yadis Service
     # object.  Will return nil if the Service object does not represent an
@@ -40,9 +40,10 @@ module OpenID
       s = new
       s.service_types = service.service_types
       s.uri = service.uri
-      s.yadis_url = service.yadis.uri
-      s.xrds_uri = service.yadis.xrds_uri
-      
+      s.yadis_url = service.yadis.uri if service.yadis
+      s.xrds_uri = service.yadis.xrds_uri if service.yadis
+      s.canonical_id = service.canonical_id
+
       s.delegate_url = nil
       REXML::XPath.each(service.element, 'openidns:Delegate',
                         @@namespace) do |e|
@@ -110,6 +111,10 @@ module OpenID
     # method will return http://example.com/
     def consumer_id
       @yadis_url
+    end
+
+    def canonical_id
+      @canonical_id or self.consumer_id
     end
   end
 
