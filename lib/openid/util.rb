@@ -4,6 +4,8 @@ require "digest/sha1"
 require "hmac-sha1"
 require "uri"
 
+require "openid/urinorm"
+
 srand(Time.now.to_f)
 
 class Object
@@ -254,11 +256,9 @@ module OpenID
       end
 
       begin
-        parsed = URI.parse(url)
+        return Util.urinorm(url)
       rescue URI::InvalidURIError
         return nil
-      else
-        return parsed.normalize.to_s
       end
     end
 
