@@ -102,7 +102,7 @@ module OpenID
     def discover(filter=nil)
       begin
         services = XRI::ProxyResolver.new.query(@url, OPENID_TYPE_URIS)
-      rescue XRI::XRIHTTPError
+      rescue XRI::XRIHTTPError, ArgumentError
         return [nil, []]
       end
       endpoints = []
