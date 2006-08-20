@@ -62,7 +62,7 @@ class <%= class_name %>Controller < ApplicationController
 
       flash[:notice] = "Logged in as #{CGI::escape(response.identity_url)}"
        
-      redirect_to :action => "welcome"
+      redirect_back_or_default :action => "welcome"
       return
 
     when OpenID::FAILURE
