@@ -16,5 +16,5 @@ SPEC = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = ['README','INSTALL','COPYING','TODO']
   s.rdoc_options << '--main' << 'README'
-  s.add_dependency('ruby-yadis', '>= 0.3')
+  s.add_dependency('ruby-yadis', '>= 0.3.3')
 end
