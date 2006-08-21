@@ -357,7 +357,8 @@ module OpenID
         raise ProtocolError.new(query, 'openid.return_to missing') unless return_to
 
         trust_root = query['openid.trust_root']
-        
+        trust_root = nil if trust_root and trust_root.empty?
+
         unless OpenID::TrustRoot.parse(return_to)
           raise MalformedReturnURL.new(query, return_to)
         end
