@@ -530,17 +530,17 @@ module OpenID
       if assoc.nil?
         # It's not an association we know about. Dumb mode is our
         # only possible path for recovery.
-        code = self.check_auth(nonce, query, server_url)
+        code, msg = self.check_auth(nonce, query, server_url)
         if code == SUCCESS
           return SuccessResponse.new(consumer_id, query)
         else
-          return FailureResponse.new(consumer_id, 'check_auth failed')
+          return FailureResponse.new(consumer_id, 'check_auth failed: #{msg}')
         end
       end
 
       if assoc.expires_in <= 0
         OpenID::Util.log("Association with #{server_url} expired")
-        FailureResponse.new(consumer_id, 'assoc expired')
+        return FailureResponse.new(consumer_id, 'assoc expired')
       end
 
       # Check the signature
@@ -572,7 +572,7 @@ module OpenID
 
       ret = @fetcher.post(server_url, post_data)
       if ret.nil?
-        return FAILURE
+        return FAILURE, "unable to post to #{server_url}"
       else
         url, body = ret
       end
@@ -581,19 +581,31 @@ module OpenID
       is_valid = results.fetch("is_valid", "false")
     
       if is_valid == "true"
+
+        # we started this request with a bad association,
+        # falling back to dumb mode, the invalidate_handle tells
+        # us to handle of the assoc to remove from our store.
         invalidate_handle = results["invalidate_handle"]
-        unless invalidate_handle.nil?
+        if invalidate_handle
           @store.remove_association(server_url, invalidate_handle)
         end
+
+        # make sure response is not getting replayed by checking the nonce
         unless @store.use_nonce(nonce)
-          return FAILURE
+          return FAILURE, "#{server_url}, nonce #{nonce} already used"
         end
-        return SUCCESS
+
+        # is_valid = true, and we successfully used the nonce.
+        return SUCCESS, nil
       end
     
       error = results["error"]
-      return FAILURE unless error.nil?
-      return FAILURE
+      if error
+        msg = "error from server: #{error}"
+      else
+        msg = "is_valid was false"
+      end
+      return FAILURE, msg
     end
 
     # Create a nonce and store it for preventing replace attacks.
