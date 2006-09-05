@@ -291,14 +291,94 @@ module OpenID
       @args.delete([namespace,key].freeze)
     end
 
-    def eq?(other)
+    def eql?(other)
       return @args == other.args
     end
 
   end
 
+  # Maintains a bidirectional map between namespace URIs and aliases.
+  class NamespaceMap
+    
+    # Namespaces that should use a certain alias (for backwards-
+    # compatability or beauty). If a URI in this hash is added to the
+    # namespace map without an explicit desired name,
+    # it will default to the value supplied here.
+    @@default_aliases = {SREG_URI => 'sreg'}
 
+    def initialize
+      @alias_to_namespace = {}
+      @namespace_to_alias = {}
+    end
 
+    def get_alias(namespace_uri)
+      @namespace_to_alias.fetch(namespace_uri)
+    end
 
+    def get_namespace_uri(namespace_alias)
+      @alias_to_namespace.fetch(namespace_alias)
+    end
+
+    # Add an alias from this namespace URI to the alias.
+    def add_alias(namespace_uri, desired_alias)
+      # check that there is not a namespace already defined for the
+      # desired alias
+      current_namespace_uri = @alias_to_namespace.fetch(desired_alias)
+      if current_namespace_uri and current_namespace_uri != namespace_uri
+        raise IndexError, "Cannot map #{namespace_uri} to alias #{desired_alias}. #{current_namespace_uri} is already mapped to alias #{desired_alias}"
+      end
+      
+      # check that there is not already a (different) alias for this
+      # namespace URI.
+      _alias = @namespace_to_alias.fetch(namespace_uri)
+      if _alias and _alias != desired_alias
+        raise IndexError, "Cannot map #{namespace_uri} to alias #{desired_alias}. It is already mapped to alias #{_alias}"
+      end
+
+      @alias_to_namespace[desired_alias] = namespace_uri
+      @namespace_to_alias[namespace_uri] = desired_alias
+      return desired_alias
+    end
+
+    # Add this namespace URI to the mapping, without caring what alias
+    # it ends up with.
+    def add(namespace_uri)
+      # see if this namepace is already mapped to an alias
+      _alias = @namespace_to_alias.fetch(namespace_uri)
+      return _alias if _alias
+
+      # see if there is a default alias for this namespace
+      default_alias = @@default_aliases.fetch(namespace_uri)
+      if default_alias
+        begin
+          self.add_alias(namespace_uri, default_alias)
+        rescue IndexError
+          nil
+        else
+          return default_alias
+        end
+      end
+
+      # Fall back to generating a numberical alias
+      i = 0
+      while true
+        _alias = i.to_s
+        begin
+          self.add_alias(namespace_uri, _alias)
+        rescue IndexError
+          i += 1
+        else
+          return _alias
+        end
+      end
+    
+      raise StandardError, 'Unreachable'
+    end
+
+    def defined?(namespace_uri)
+      @namespace_to_alias.has_key?(namespace_uri)
+    end
+
+  end
 
 end
