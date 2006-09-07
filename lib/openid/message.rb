@@ -390,6 +390,7 @@ module OpenID
     def defined?(namespace_uri)
       @namespace_to_alias.has_key?(namespace_uri)
     end
+    alias :contains? :defined?
     
     def each
       @namespace_to_alias.each {|k,v| yield k,v}
