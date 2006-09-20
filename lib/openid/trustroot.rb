@@ -19,8 +19,9 @@ module OpenID
     end
 
     def TrustRoot.parse(trust_root)
-      return nil unless trust_root.instance_of?(String)
+      return nil unless trust_root.instance_of?(String)    
 
+      trust_root = trust_root.dup      
       unparsed = trust_root.dup
 
       # look for wildcard
