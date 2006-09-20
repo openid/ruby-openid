@@ -352,15 +352,23 @@ module OpenID
         resp = @consumer.complete(query, service)
       end
 
-      disco = self.get_discovery(resp.identity_url)
-
-      if [SUCCESS, CANCEL].member?(resp.status)
-        if resp.identity_url
-          resp.service = disco.finish
+      # If the response has an non-nil identity_url attribute,
+      # then we can get te discovery object and finalize the request.
+      # Otherwise it is a failure or replay, and we set the response
+      # servce to nil.
+      if resp.identity_url
+        disco = self.get_discovery(resp.identity_url)
+        if [SUCCESS, CANCEL].member?(resp.status)
+          if resp.identity_url
+            resp.service = disco.finish
+          end
+        else
+          resp.service = disco.current
         end
       else
-        resp.service = disco.current
+        resp.service = nil
       end
+
 
       # want to delete service unless status is SETUP_NEEDED,
       # because we still need the service info when the user returns from
