@@ -46,9 +46,9 @@ README_LOGIN in you rails root directory.
 ==Rails ActiveRecord OpenIDStore example
 
 For various reasons you may want or need to deploy your ruby openid
-consumer/server using an SQL based store.  The README and code in the
-rails_active_record_store example explain in detail how this can be
-done.
+consumer/server using an SQL based store.  The
+active_record_openid_store is a plugin that makes using an SQL based
+store simple.  Follow the README inside the plugin's dir for usage.
 
 
 
