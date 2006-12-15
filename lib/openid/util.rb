@@ -147,6 +147,7 @@ module OpenID
     def Util.urlencode(args)
       a = []
       args.each do |key, val|
+        val = '' unless val
         a << (CGI::escape(key) + "=" + CGI::escape(val))
       end
       a.join("&")
