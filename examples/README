@@ -43,7 +43,7 @@ need to create your 'users' database table before running the
 application.  For schemas and more details about this generator, read
 README_LOGIN in you rails root directory.
 
-==Rails ActiveRecord OpenIDStore example
+==Rails ActiveRecord OpenIDStore plugin
 
 For various reasons you may want or need to deploy your ruby openid
 consumer/server using an SQL based store.  The
