@@ -51,3 +51,4 @@ end
 # end
 
 # Include your application configuration below
+ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS[:session_key] = '_session_id_2'
