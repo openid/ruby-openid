@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = %q{openid_login_generator}
-  s.version = "0.1"
-  s.date = %q{2006-06-12}
+  s.version = "0.2"
+  s.date = %q{2007-1-4}
   s.summary = %q{[Rails] OpenID Login generator.}
   s.require_paths = ["."]
   s.email = %q{brian@janrain.com}

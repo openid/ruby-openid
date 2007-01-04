@@ -81,14 +81,14 @@ How do I...
 
   ... access the user who is currently logged in
 
-  A: You can get the user id from the session using @session[:user_id]
+  A: You can get the user id from the session using session[:user_id]
      Example: 
 	
-	@session[:user_id] 
+	session[:user_id] 
 
        To get the User object:
 
-	user = User.find(@session[:user_id])
+	user = User.find(session[:user_id])
 
       	The OpenidController also has a find_user method
      	which will return the User object of the logged in user, or nil
@@ -104,10 +104,10 @@ How do I...
      
   ... check if a user is logged-in in my views?
   
-  A: @session[:user_id] will tell you. Here is an example helper which you can use to make this more pretty:
+  A: session[:user_id] will tell you. Here is an example helper which you can use to make this more pretty:
      Example: 
        def user?
-         !@session[:user_id].nil?
+         !session[:user_id].nil?
        end
 
 

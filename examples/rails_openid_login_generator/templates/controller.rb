@@ -15,9 +15,9 @@ class <%= class_name %>Controller < ApplicationController
   # process the login request, disover the openid server, and
   # then redirect.
   def login
-    openid_url = @params[:openid_url]
+    openid_url = params[:openid_url]
 
-    if @request.post?
+    if request.post?
       request = consumer.begin(openid_url)
 
       case request.status
@@ -43,7 +43,7 @@ class <%= class_name %>Controller < ApplicationController
 
   # handle the openid server response
   def complete
-    response = consumer.complete(@params)
+    response = consumer.complete(params)
     
     case response.status
     when OpenID::SUCCESS
@@ -58,7 +58,7 @@ class <%= class_name %>Controller < ApplicationController
 
       # storing both the openid_url and user id in the session for for quick
       # access to both bits of information.  Change as needed.
-      @session[:user_id] = @user.id
+      session[:user_id] = @user.id
 
       flash[:notice] = "Logged in as #{CGI::escape(response.identity_url)}"
        
@@ -67,7 +67,7 @@ class <%= class_name %>Controller < ApplicationController
 
     when OpenID::FAILURE
       if response.identity_url
-        flash[:notice] = "Verification of #{CGI::escape(response.identity_url)} failed."
+        flash[:notice] = "Verification of #{response.identity_url} failed."
 
       else
         flash[:notice] = 'Verification failed.'
@@ -84,7 +84,7 @@ class <%= class_name %>Controller < ApplicationController
   end
   
   def logout
-    @session[:user_id] = nil
+    session[:user_id] = nil
   end
     
   def welcome
@@ -94,12 +94,14 @@ class <%= class_name %>Controller < ApplicationController
 
   # Get the OpenID::Consumer object.
   def consumer
-    # create the OpenID store for storing associations and nonces,
-    # putting it in your app's db directory
+    # Create the OpenID store for storing associations and nonces,
+    # putting it in your app's db directory.
+    # Note: see the plugin located at examples/active_record_openid_store 
+    # if you need to store this information in your database. 
     store_dir = Pathname.new(RAILS_ROOT).join('db').join('openid-store')
     store = OpenID::FilesystemStore.new(store_dir)
 
-    return OpenID::Consumer.new(@session, store)
+    return OpenID::Consumer.new(session, store)
   end
 
   # get the logged in user object
