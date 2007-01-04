@@ -14,7 +14,7 @@ SPEC = Gem::Specification.new do |s|
   s.autorequire = 'openid'
   s.test_file = 'test/runtests.rb'
   s.has_rdoc = true
-  s.extra_rdoc_files = ['README','INSTALL','COPYING']
+  s.extra_rdoc_files = ['README','INSTALL','COPYING','LICENSE']
   s.rdoc_options << '--main' << 'README'
-  s.add_dependency('ruby-yadis', '>= 0.3.3')
+  s.add_dependency('ruby-yadis', '>= 0.3.4')
 end
