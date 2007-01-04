@@ -542,7 +542,7 @@ module OpenID
         if code == SUCCESS
           return SuccessResponse.new(consumer_id, query)
         else
-          return FailureResponse.new(consumer_id, 'check_auth failed: #{msg}')
+          return FailureResponse.new(consumer_id, "check_auth failed: #{msg}")
         end
       end
 
