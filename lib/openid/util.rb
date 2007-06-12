@@ -6,6 +6,8 @@ require "uri"
 
 require "openid/urinorm"
 
+require "logger"
+
 srand(Time.now.to_f)
 
 class Object
@@ -226,9 +228,16 @@ module OpenID
       return start + (n % r) * step
     end
 
+    @@logger = Logger.new(STDERR)
+    @@logger.progname = "OpenID"
+
+    def Util.setLogger(logger)
+      @@logger = logger
+    end
+
     # change the message below to do whatever you like for logging
     def Util.log(message)
-      STDERR.puts('OpenID Log: ' + message)
+      @@logger.info(message)
     end
 
 
