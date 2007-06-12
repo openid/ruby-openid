@@ -1,29 +1,23 @@
 #!/usr/bin/ruby
 
-# the tests exploit some corner cases which generate warning messages
-# on stderr.  try and silence those messages to avoid unnecessarily concerning
-# the library user.
-begin
-  STDERR.reopen('/dev/null', 'w')
-rescue
-  puts "\nPlease ignore the non Test::Unit error messages generated below.\n"
-end
+require "openid/util"
+require "logger"
+require "stringio"
 
-require "teststore"
-require "assoc"
-require "dh"
-require "util"
-require "linkparse"
-require "trustroot"
-require "assoc"
-require "server2"
-require "consumer"
-require "service"
-require "urinorm"
+# Redirect logging output to a buffer.
+logfile = StringIO.new
+OpenID::Util.setLogger(Logger.new(logfile))
 
-# run the yadis tests
-require 'test_discovery'
-require 'test_parse'
-require 'test_xrds'
-require 'test_yadis'
+require 'test/unit'
+require 'test/unit/collector/dir'
 
+# Collect tests from everything named test_*.rb.
+c = Test::Unit::Collector::Dir.new
+suite = c.collect
+
+require 'test/unit/ui/console/testrunner'
+Test::Unit::UI::Console::TestRunner.run(suite)
+
+# Dump the logs.
+#logfile.rewind
+#puts logfile.read
