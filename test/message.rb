@@ -642,7 +642,7 @@ class NamespaceMapTestCase < Test::Unit::TestCase
     (1..23).each { |i|
       assert_equal(false, nsm.contains?(uripat % i))
       assert_equal(false, nsm.defined?(uripat % i))
-      nsm.add()
+      nsm.add(uripat % i)
     }
   end
 
