@@ -163,7 +163,7 @@ module OpenID
     
     def Util.append_args(url, args)
       url = url.dup
-      url if args.length == 0
+      return url if args.length == 0
       url << (url.include?("?") ? "&" : "?")
       url << Util.urlencode(args)
     end
