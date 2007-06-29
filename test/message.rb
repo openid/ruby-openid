@@ -438,8 +438,15 @@ class OpenID2MessageTest < Test::Unit::TestCase
   end
 
   def _test_urlencoded(s)
-    expected = "openid.error=unit+test&openid.mode=error&openid.ns=#{CGI.escape(OPENID2_NS)}&xey=value"
-    assert_equal(expected, s)
+    expected_list = ["openid.error=unit+test",
+                     "openid.mode=error",
+                     "openid.ns=#{CGI.escape(OPENID2_NS)}",
+                     "xey=value"]
+    # Hard to do this with string comparison since the mapping doesn't
+    # preserve order.
+    encoded_list = s.split('&')
+    encoded_list.sort!
+    assert_equal(expected_list, encoded_list)
   end
 
   def test_to_urlencoded
