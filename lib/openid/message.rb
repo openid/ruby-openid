@@ -137,6 +137,14 @@ module OpenID
       return @openid_ns_uri
     end
 
+    def is_openid1
+      return @openid_ns_uri == OPENID1_NS
+    end
+
+    def is_openid2
+      return @openid_ns_uri == OPENID2_NS
+    end
+
     # Create a message from a KVForm string
     def Message.from_kvform(kvform_string)
       return Message.from_openid_args(Util.parsekv(kvform_string))

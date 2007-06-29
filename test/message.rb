@@ -202,6 +202,13 @@ class EmptyMessageTestCase < Test::Unit::TestCase
     _test_del_arg_ns('urn:xxx')
   end
 
+  def test_isOpenID1
+    assert_equal(false, @m.is_openid1)
+  end
+
+  def test_isOpenID2
+    assert_equal(false, @m.is_openid2)
+  end
 end
 
 class OpenID1MessageTest < Test::Unit::TestCase
@@ -382,6 +389,13 @@ class OpenID1MessageTest < Test::Unit::TestCase
   def test_del_arg_ns2; _test_del_arg_ns(OpenID::OPENID2_NS); end
   def test_del_arg_ns3; _test_del_arg_ns('urn:yyy'); end
 
+  def test_isOpenID1
+    assert_equal(true, @m.is_openid1)
+  end
+
+  def test_isOpenID2
+    assert_equal(false, @m.is_openid2)
+  end
 end
 
 class OpenID1ExplicitMessageTest < OpenID1MessageTest
@@ -592,6 +606,13 @@ class OpenID2MessageTest < Test::Unit::TestCase
   def test_del_arg_ns2; _test_del_arg_ns(OPENID2_NS); end
   def test_del_arg_ns3; _test_del_arg_ns('urn:tofu'); end
 
+  def test_isOpenID1
+    assert_equal(false, @m.is_openid1)
+  end
+
+  def test_isOpenID2
+    assert_equal(true, @m.is_openid2)
+  end
 end
 
 class NamespaceMapTestCase < Test::Unit::TestCase
