@@ -511,7 +511,7 @@ class OpenID2MessageTest < Test::Unit::TestCase
                  @m.get_args(OPENID_NS))
   end
 
-  def test_get_args_openid
+  def test_get_args_bare
     assert_equal({'xey'=>'value'},
                  @m.get_args(BARE_NS))
   end
