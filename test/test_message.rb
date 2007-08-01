@@ -1,3 +1,5 @@
+# last synced with Python openid.test.test_message on 6/29/2007.
+
 require 'test/unit'
 require 'openid/message'
 
@@ -84,6 +86,8 @@ class EmptyMessageTestCase < Test::Unit::TestCase
     }
   end
 
+  # FIXME - test_message.py does something more complicated for
+  # test_getArg*
   def test_get_arg_bare
     assert_equal(nil, @m.get_arg(OpenID::BARE_NS, 'foo'))
   end
@@ -295,6 +299,7 @@ class OpenID1MessageTest < Test::Unit::TestCase
     assert_equal(false, @m.has_key?('urn:xxx', 'mode'))
   end
 
+  # XXX - getArgTest
   def test_get_arg
     assert_equal('error', @m.get_arg(OpenID::OPENID_NS, 'mode'))
   end
@@ -399,6 +404,8 @@ class OpenID1MessageTest < Test::Unit::TestCase
 end
 
 class OpenID1ExplicitMessageTest < OpenID1MessageTest
+  # XXX - check to make sure the test suite will get built the way this
+  # expects.
   def setup
     @m = OpenID::Message.from_post_args({'openid.mode'=>'error',
                                         'openid.error'=>'unit test',
@@ -507,6 +514,7 @@ class OpenID2MessageTest < Test::Unit::TestCase
     assert_equal(false, @m.has_key?('urn:xxx','mode'))
   end
 
+  # XXX - getArgTest
   def test_get_arg_openid
     assert_equal('error', @m.get_arg(OPENID_NS,'mode'))
   end
@@ -597,6 +605,12 @@ class OpenID2MessageTest < Test::Unit::TestCase
   def test_set_arg_ns2; _test_set_arg_ns(OPENID2_NS); end
   def test_set_arg_ns3; _test_set_arg_ns('urn:g'); end
 
+  def test_bad_alias
+    # Make sure dotted aliases and OpenID protocol fields are not allowed
+    # as namespace aliases.
+    # TODO: flunk 'Needs porting from test_message.py'
+  end
+
   def _test_del_arg_ns(ns)
     key = 'no'
     value = 'socks'
@@ -634,6 +648,21 @@ class OpenID2MessageTest < Test::Unit::TestCase
   end
 end
 
+# TODO
+# class MessageTest < Test::Unit::TestCase
+#   def test_to_form_markup
+#     flunk 'port from test_message.py'
+#   end
+
+#   def test_override_method
+#     flunk 'port from test_message.py'
+#   end
+
+#   def test_override_required
+#     flunk 'port from test_message.py'
+#   end
+# end
+
 class NamespaceMapTestCase < Test::Unit::TestCase
   
   def test_onealias
@@ -656,6 +685,10 @@ class NamespaceMapTestCase < Test::Unit::TestCase
       assert_equal(false, nsm.defined?(uripat % i))
       nsm.add(uripat % i)
     }
+
+    # TODO:
+    #flunk 'exercise iterAliases?'
+    #flunk 'exercise iterNamespaceURIs?'
   end
 
 end
