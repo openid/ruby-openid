@@ -685,6 +685,9 @@ class NamespaceMapTestCase < Test::Unit::TestCase
       assert_equal(false, nsm.defined?(uripat % i))
       nsm.add(uripat % i)
     }
+    nsm.each { |uri, _alias|
+      assert_equal(uri[22..-1], _alias[3..-1])
+    }
 
     # TODO:
     #flunk 'exercise iterAliases?'

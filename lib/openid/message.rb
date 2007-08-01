@@ -382,7 +382,7 @@ module OpenID
       # Fall back to generating a numberical alias
       i = 0
       while true
-        _alias = i.to_s
+        _alias = 'ext' + i.to_s
         begin
           self.add_alias(namespace_uri, _alias)
         rescue IndexError
