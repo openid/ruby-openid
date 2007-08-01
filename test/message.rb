@@ -613,6 +613,18 @@ class OpenID2MessageTest < Test::Unit::TestCase
   def test_del_arg_ns2; _test_del_arg_ns(OPENID2_NS); end
   def test_del_arg_ns3; _test_del_arg_ns('urn:tofu'); end
 
+  def test_overwrite_extension_arg
+    ns = 'urn:unittest_extension'
+    key = 'mykey'
+    value_1 = 'value_1'
+    value_2 = 'value_2'
+
+    @m.set_arg(ns, key, value_1)
+    assert_equal(value_1, @m.get_arg(ns, key))
+    @m.set_arg(ns, key, value_2)
+    assert_equal(value_2, @m.get_arg(ns, key))
+  end
+
   def test_isOpenID1
     assert_equal(false, @m.is_openid1)
   end
