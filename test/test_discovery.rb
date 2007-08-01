@@ -36,7 +36,7 @@ class DiscoveryTestCase < Test::Unit::TestCase
     assert_nil(YADIS.discover('foo.com'))
 
     # not a yadis uri
-    assert_nil(YADIS.discover('http://google.com/?q=huh'))
+    assert_nil(YADIS.discover('http://openidenabled.com/resources'))
   end
 
   def test_marshal
