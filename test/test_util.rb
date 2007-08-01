@@ -51,6 +51,14 @@ class UtilTestCase < Test::Unit::TestCase
     assert_equal(max, OpenID::Util.base64_to_num(OpenID::Util.num_to_base64(max)))
   end
 
+  def test_append_args
+    simple = "http://www.example.com/"
+    assert_equal(simple, OpenID::Util.append_args(simple, []))
+    assert_equal(simple, OpenID::Util.append_args(simple, {}))
+    assert_equal(simple + "?a=b",
+                 OpenID::Util.append_args(simple, [["a", "b"]]))
+    assert_equal(simple + "?a=b",
+                 OpenID::Util.append_args(simple, {"a" => "b"}))
+  end
+
 end
-
-
