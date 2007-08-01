@@ -854,7 +854,7 @@ class TestServer < Test::Unit::TestCase
 
   def setup
     @store = OpenID::MemoryStore.new
-    @server = Server.new(@store)
+    @server = Server::Server.new(@store)
   end
 
   def test_associate
