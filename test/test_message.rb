@@ -860,9 +860,14 @@ class NamespaceMapTestCase < Test::Unit::TestCase
       assert_equal(uri[22..-1], _alias[3..-1])
     }
 
-    # TODO:
-    #flunk 'exercise iterAliases?'
-    #flunk 'exercise iterNamespaceURIs?'
+    nsm = NamespaceMap.new
+    alias_ = 'bogus'
+    uri = 'urn:bogus'
+
+    nsm.add_alias(uri, alias_)
+
+    assert_equal(nsm.iter_aliases(), [alias_])
+    assert_equal(nsm.iter_namespace_uris(), [uri])
   end
 
 end
