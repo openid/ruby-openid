@@ -2,7 +2,8 @@
 
 require 'test/unit'
 require 'openid/message'
-require 'openid/assert'
+
+require 'rexml/document'
 
 include OpenID
 
@@ -683,20 +684,155 @@ class OpenID2MessageTest < Test::Unit::TestCase
   end
 end
 
-# TODO
-# class MessageTest < Test::Unit::TestCase
-#   def test_to_form_markup
-#     flunk 'port from test_message.py'
-#   end
+class MessageTest < Test::Unit::TestCase
+  def setup
+    @postargs = {
+      'openid.ns' => OPENID2_NS,
+      'openid.mode' => 'checkid_setup',
+      'openid.identity' => 'http://bogus.example.invalid:port/',
+      'openid.assoc_handle' => 'FLUB',
+      'openid.return_to' => 'Neverland',
+    }
 
-#   def test_override_method
-#     flunk 'port from test_message.py'
-#   end
+    @action_url = 'scheme://host:port/path?query'
 
-#   def test_override_required
-#     flunk 'port from test_message.py'
-#   end
-# end
+    @form_tag_attrs = {
+      'company' => 'janrain',
+      'class' => 'fancyCSS',
+    }
+
+    @submit_text = 'GO!'
+    
+    ### Expected data regardless of input
+
+    @required_form_attrs = {
+      'accept-charset' => 'UTF-8',
+      'enctype' => 'application/x-www-form-urlencoded',
+      'method' => 'post',
+    }
+  end
+
+  def _checkForm(html, message_, action_url,
+                 form_tag_attrs, submit_text)
+    @xml = REXML::Document.new(html)
+
+    # Get root element
+    form = @xml.root
+
+    # Check required form attributes
+    @required_form_attrs.each { |k, v|
+      assert(form.attributes[k] == v,
+             "Expected '#{v}' for required form attribute '#{k}', got '#{form.attributes[k]}'")
+    }
+
+    # Check extra form attributes
+    @form_tag_attrs.each { |k, v|
+      # Skip attributes that already passed the required attribute
+      # check, since they should be ignored by the form generation
+      # code.
+      if @required_form_attrs.include?(k)
+        continue
+      end
+
+      assert(form.attributes[k] == v,
+             "Form attribute '#{k}' should be '#{v}', found '#{form.attributes[k]}'")
+
+      # Check hidden fields against post args
+      hiddens = []
+      form.each { |e|
+        if (e.is_a?(REXML::Element)) and
+            (e.name.upcase() == 'INPUT') and
+            (e.attributes['type'].upcase() == 'HIDDEN')
+          # For each post arg, make sure there is a hidden with that
+          # value.  Make sure there are no other hiddens.
+          hiddens += [e]
+        end
+      }
+
+      message_.to_post_args().each { |name, value|
+        success = false
+
+        hiddens.each { |e|
+          if e.attributes['name'] == name
+            assert(e.attributes['value'] == value,
+                   "Expected value of hidden input '#{e.attributes['name']}' " +
+                   "to be '#{value}', got '#{e.attributes['value']}'")
+            success = true
+            break
+          end
+        }
+
+        if !success
+          flunk "Post arg '#{name}' not found in form"
+        end
+      }
+
+      hiddens.each { |e|
+        assert(message_.to_post_args().keys().include?(e.attributes['name']),
+               "Form element for '#{e.attributes['name']}' not in " +
+               "original message")
+      }
+
+      # Check action URL
+      assert(form.attributes['action'] == action_url,
+             "Expected form 'action' to be '#{action_url}', got '#{form.attributes['action']}'")
+
+      # Check submit text
+      submits = []
+      form.each { |e|
+        if (e.is_a?(REXML::Element)) and
+            (e.name.upcase() == 'INPUT') and
+            e.attributes['type'].upcase() == 'SUBMIT'
+          submits += [e]
+        end
+      }
+
+      assert(submits.length == 1,
+             "Expected only one 'input' with type = 'submit', got #{submits.length}")
+
+      assert(submits[0].attributes['value'] == submit_text,
+             "Expected submit value to be '#{submit_text}', " +
+             "got '#{submits[0].attributes['value']}'")
+    }
+
+  end
+
+  def test_toFormMarkup
+    m = Message.from_post_args(@postargs)
+    html = m.to_form_markup(@action_url, @form_tag_attrs,
+                            @submit_text)
+    _checkForm(html, m, @action_url,
+               @form_tag_attrs, @submit_text)
+  end
+
+  def test_overrideMethod
+    # Be sure that caller cannot change form method to GET.
+    m = Message.from_post_args(@postargs)
+
+    tag_attrs = @form_tag_attrs.clone
+    tag_attrs['method'] = 'GET'
+
+    html = m.to_form_markup(@action_url, @form_tag_attrs,
+                            @submit_text)
+    _checkForm(html, m, @action_url,
+               @form_tag_attrs, @submit_text)
+  end
+
+  def test_overrideRequired
+    # Be sure that caller CANNOT change the form charset for
+    # encoding type.
+    m = Message.from_post_args(@postargs)
+
+    tag_attrs = @form_tag_attrs.clone
+    tag_attrs['accept-charset'] = 'UCS4'
+    tag_attrs['enctype'] = 'invalid/x-broken'
+
+    html = m.to_form_markup(@action_url, tag_attrs,
+                            @submit_text)
+    _checkForm(html, m, @action_url,
+               tag_attrs, @submit_text)
+  end
+end
 
 class NamespaceMapTestCase < Test::Unit::TestCase
   

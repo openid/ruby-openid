@@ -210,9 +210,28 @@ module OpenID
     # Generate HTML form markup that contains the values in this
     # message, to be HTTP POSTed as x-www-form-urlencoded UTF-8.
     def to_form_markup(action_url, form_tag_attrs=nil, submit_text='Continue')
-      markup = "<form action='#{action_url}' method='POST' enctype='application/x-www-form-url-encoded' accept-charset='UTF-8'>\n"
+      form_tag_attr_map = {}
+
+      if form_tag_attrs
+        form_tag_attrs.each { |name, attr|
+          form_tag_attr_map[name] = attr
+        }
+      end
+
+      form_tag_attr_map['action'] = action_url
+      form_tag_attr_map['method'] = 'post'
+      form_tag_attr_map['accept-charset'] = 'UTF-8'
+      form_tag_attr_map['enctype'] = 'application/x-www-form-urlencoded'
+
+      markup = "<form "
+
+      form_tag_attr_map.each { |k, v|
+        markup += " #{k}=\"#{v}\""
+      }
+
+      markup += ">\n"
       
-      self.to_post_args.each { |k,v|
+      to_post_args.each { |k,v|
         markup += "<input type='hidden' name='#{k}' value='#{v}' />\n"
       }
       markup += "<input type='submit' value='#{submit_text}' />\n"
