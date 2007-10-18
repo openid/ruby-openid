@@ -272,9 +272,15 @@ module OpenID
     end
     
     # Get a value for a namespaced key.
-    def get_arg(namespace, key, defualt=nil)
+    def get_arg(namespace, key, default=nil)
       namespace = self.fix_ns(namespace)
-      return @args.fetch([namespace,key], defualt)
+      @args.fetch([namespace, key]) {
+        if default == :no_default
+          raise IndexError
+        else
+          default
+        end
+      }
     end
     
     # Get the arguments that are defined for this namespace URI.

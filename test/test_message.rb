@@ -5,6 +5,22 @@ require 'openid/message'
 
 include OpenID
 
+# Tests a standard set of behaviors of Message.get_arg with variations on
+# handling defaults.
+def get_arg_tests(ns, key, expected=nil)
+  assert_equal(expected, @m.get_arg(ns, key))
+
+  if expected.nil?
+    assert_equal(@m.get_arg(ns, key, :a_default), :a_default)
+    assert_raise(IndexError) { @m.get_arg(ns, key, :no_default) }
+  else
+    assert_equal(@m.get_arg(ns, key, :a_default), expected)
+    assert_equal(@m.get_arg(ns, key, :no_default), expected)
+  end
+end
+
+
+
 class EmptyMessageTestCase < Test::Unit::TestCase
   
   def setup
@@ -86,22 +102,20 @@ class EmptyMessageTestCase < Test::Unit::TestCase
     }
   end
 
-  # FIXME - test_message.py does something more complicated for
-  # test_getArg*
   def test_get_arg_bare
-    assert_equal(nil, @m.get_arg(OpenID::BARE_NS, 'foo'))
+    get_arg_tests(ns=OpenID::BARE_NS, key='foo')
   end
 
   def test_get_arg_ns1
-    assert_equal(nil, @m.get_arg(OpenID::OPENID1_NS, 'foo'))
+    get_arg_tests(ns=OpenID::OPENID1_NS, key='foo')
   end
 
   def test_get_arg_ns2
-    assert_equal(nil, @m.get_arg(OpenID::OPENID2_NS, 'foo'))
+    get_arg_tests(ns=OpenID::OPENID2_NS, key='foo')
   end
 
   def test_get_arg_ns3
-    assert_equal(nil, @m.get_arg('urn:xxx', 'foo'))
+    get_arg_tests(ns='urn:nothing-significant', key='foo')
   end
 
   def test_get_args
@@ -299,21 +313,28 @@ class OpenID1MessageTest < Test::Unit::TestCase
     assert_equal(false, @m.has_key?('urn:xxx', 'mode'))
   end
 
-  # XXX - getArgTest
   def test_get_arg
     assert_equal('error', @m.get_arg(OpenID::OPENID_NS, 'mode'))
   end
+
   def test_get_arg_bare
-    assert_equal(nil, @m.get_arg(OpenID::BARE_NS, 'mode'))
+    get_arg_tests(ns=OpenID::BARE_NS, key='mode')
   end
+
+  def test_get_arg_ns
+    get_arg_tests(ns=OpenID::OPENID_NS, key='mode', expected='error')
+  end
+
   def test_get_arg_ns1
-    assert_equal('error', @m.get_arg(OpenID::OPENID1_NS, 'mode'))
+    get_arg_tests(ns=OpenID::OPENID1_NS, key='mode', expected='error')
   end
+
   def test_get_arg_ns2
-    assert_equal(nil, @m.get_arg(OpenID::OPENID2_NS, 'mode'))
+    get_arg_tests(ns=OpenID::OPENID2_NS, key='mode')
   end
+
   def test_get_arg_ns3
-    assert_equal(nil, @m.get_arg('urn:xxx', 'mode'))
+    get_arg_tests(ns='urn:nothing-significant', key='mode')
   end
 
   def test_get_args
