@@ -84,7 +84,7 @@ class EmptyMessageTestCase < Test::Unit::TestCase
   def test_has_key_bare
     assert_equal(false, @m.has_key?(OpenID::BARE_NS, 'foo'))
   end
-  
+
   def test_has_key_ns1
     assert_equal(false, @m.has_key?(OpenID::OPENID1_NS, 'foo'))
   end
