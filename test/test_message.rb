@@ -54,7 +54,7 @@ class EmptyMessageTestCase < Test::Unit::TestCase
   end
 
   def test_get_key_openid
-    assert_raise(OpenID::UndefinedOpenIDNamespace) { 
+    assert_raise(OpenID::UndefinedOpenIDNamespace) {
       @m.get_key(OpenID::OPENID_NS, nil)
     }
   end
