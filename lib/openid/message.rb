@@ -1,4 +1,5 @@
 require 'openid/util'
+require 'openid/assert'
 
 module OpenID
 
@@ -26,6 +27,18 @@ module OpenID
   # with "openid."
   BARE_NS = :bare_namespace
   
+  # All OpenID protocol fields.  Used to check namespace aliases.
+  OPENID_PROTOCOL_FIELDS = [
+                            'ns', 'mode', 'error', 'return_to',
+                            'contact', 'reference', 'signed',
+                            'assoc_type', 'session_type',
+                            'dh_modulus', 'dh_gen',
+                            'dh_consumer_public', 'claimed_id',
+                            'identity', 'realm', 'invalidate_handle',
+                            'op_endpoint', 'response_nonce', 'sig',
+                            'assoc_handle', 'trust_root', 'openid',
+                           ]
+
   # Raised if the generic OpenID namespace is accessed when there
   # is no OpenID namespace set for this message.
   class UndefinedOpenIDNamespace < Exception; end
@@ -66,7 +79,7 @@ module OpenID
           openid_args[rest] = value
         end
       }
-      
+
       m.from_openid_args(openid_args)
       return m
     end
@@ -347,11 +360,23 @@ module OpenID
     
     # Add an alias from this namespace URI to the alias.
     def add_alias(namespace_uri, desired_alias)
+      # Check that desired_alias is not an openid protocol field as
+      # per the spec.
+      assert(!OPENID_PROTOCOL_FIELDS.include?(desired_alias),
+             "#{desired_alias} is not an allowed namespace alias")
+
       # check that there is not a namespace already defined for the
       # desired alias
       current_namespace_uri = @alias_to_namespace.fetch(desired_alias, nil)
       if current_namespace_uri and current_namespace_uri != namespace_uri
         raise IndexError, "Cannot map #{namespace_uri} to alias #{desired_alias}. #{current_namespace_uri} is already mapped to alias #{desired_alias}"
+      end
+
+      # Check that desired_alias does not contain a period as per the
+      # spec.
+      if desired_alias.is_a?(String)
+          assert(desired_alias.index('.').nil?,
+                 "#{desired_alias} must not contain a dot")
       end
       
       # check that there is not already a (different) alias for this
@@ -409,7 +434,5 @@ module OpenID
     def each
       @namespace_to_alias.each {|k,v| yield k,v}
     end
-
   end
-  
 end

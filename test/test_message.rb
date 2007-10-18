@@ -2,6 +2,7 @@
 
 require 'test/unit'
 require 'openid/message'
+require 'openid/assert'
 
 include OpenID
 
@@ -629,7 +630,20 @@ class OpenID2MessageTest < Test::Unit::TestCase
   def test_bad_alias
     # Make sure dotted aliases and OpenID protocol fields are not allowed
     # as namespace aliases.
-    # TODO: flunk 'Needs porting from test_message.py'
+
+    fields = OPENID_PROTOCOL_FIELDS + ['dotted.alias']
+
+    fields.each { |f|
+      args = {"openid.ns.#{f}" => "blah#{f}",
+        "openid.#{f}.foo" => "test#{f}"}
+
+      # .fromPostArgs covers .fromPostArgs, .fromOpenIDArgs,
+      # ._fromOpenIDArgs, and .fromOpenIDArgs (since it calls
+      # .fromPostArgs).
+      assert_raise(AssertionError) {
+        Message.from_post_args(args)
+      }
+    }
   end
 
   def _test_del_arg_ns(ns)
