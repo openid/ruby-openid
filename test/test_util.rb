@@ -16,7 +16,7 @@ class UtilTestCase < Test::Unit::TestCase
       "foo" => "bar",
       "baz" => "hat:pants"
     }
-    
+
     parsed = OpenID::Util.kvform(kv)
     unparsed = OpenID::Util.parsekv(parsed)
     assert(kv == unparsed)
@@ -41,7 +41,7 @@ class UtilTestCase < Test::Unit::TestCase
       decoded = OpenID::Util.from_base64(encoded)
       assert(c == decoded)
     end
-      
+
   end
 
   def test_shortcuts
