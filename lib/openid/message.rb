@@ -74,7 +74,7 @@ module OpenID
         end
 
         if prefix != 'openid'
-          @args[[BARE_NS,key].freeze] = value
+          m.args[[BARE_NS,key].freeze] = value
         else
           openid_args[rest] = value
         end
