@@ -2,14 +2,4 @@
 
 HERE=$(dirname $(readlink --canonicalize "$0"))
 REPOROOT=$(dirname "$HERE")
-OPENIDLIB="$REPOROOT/lib"
-
-if [ -z "$RUBYLIB" ]
-    then
-    RUBYLIB="$OPENIDLIB"
-else
-    RUBYLIB="$OPENIDLIB":$RUBYLIB
-fi
-
-export RUBYLIB
-ruby "$REPOROOT/admin/runtests.rb"
+RUBYLIB="$REPOROOT/lib" ruby "$REPOROOT/admin/runtests.rb"
