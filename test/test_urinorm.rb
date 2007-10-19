@@ -1,11 +1,12 @@
 require 'test/unit'
 
 require "openid/urinorm"
+require "testutil"
 
 class URINormTestCase < Test::Unit::TestCase
 
   def test_normalize
-    lines = File.readlines('data/urinorm.txt')
+    lines = read_data_file('urinorm.txt')
 
     while lines.length > 0
 
