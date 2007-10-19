@@ -1,2 +1,10 @@
 #!/usr/bin/env bash
-chmod +x admin/prepare-release admin/build-docs admin/fixperms test/runtests.rb  examples/rails_server/script/* examples/consumer.rb
+cat <<EOF | xargs chmod +x
+admin/prepare-release
+admin/build-docs
+admin/fixperms
+admin/runtests
+examples/consumer.rb
+EOF
+
+find "examples/rails_server/script/" -type f | xargs chmod +x
