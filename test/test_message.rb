@@ -235,7 +235,36 @@ class OpenID1MessageTest < Test::Unit::TestCase
 
   def setup
     @m = OpenID::Message.from_post_args({'openid.mode' => 'error',
-                                        'openid.error' => 'unit test'})
+                                          'openid.error' => 'unit test'})
+  end
+
+  def test_has_openid_ns
+    assert_equal(OpenID::OPENID1_NS, @m.get_openid_namespace)
+    assert_equal(OpenID::OPENID1_NS,
+                 @m.namespaces.get_namespace_uri(OpenID::NULL_NAMESPACE))
+  end
+
+  def test_get_aliased_arg
+    assert_equal('error', @m.get_aliased_arg('mode'))
+  end
+
+  def test_get_aliased_arg_ns
+    assert_equal(OpenID::OPENID1_NS, @m.get_aliased_arg('ns'))
+  end
+
+  def test_get_aliased_arg_with_ns
+    @m = OpenID::Message.from_post_args(
+        {'openid.mode' => 'error',
+         'openid.error' => 'unit test',
+         'openid.ns.invalid' => 'http://invalid/'
+        })
+    assert_equal('http://invalid/', @m.get_aliased_arg('ns.invalid'))
+  end
+
+  def test_get_aliased_arg_with_ns_default
+    @m = OpenID::Message.from_post_args({})
+    assert_equal('monkeys!', @m.get_aliased_arg('ns.invalid',
+                                                default="monkeys!"))
   end
 
   def test_to_post_args

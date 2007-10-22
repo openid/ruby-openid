@@ -82,6 +82,7 @@ module OpenID
   end
 
   class Message
+    attr_reader :namespaces
 
     @@allowed_openid_namespaces = [OPENID1_NS, OPENID2_NS]
 
@@ -401,35 +402,31 @@ module OpenID
       return @args == other.args
     end
 
-    def getAliasedArg(aliased_key, default=nil)
+    def get_aliased_arg(aliased_key, default=nil)
       if aliased_key == 'ns'
-        return getOpenIDNamespace()
+        return get_openid_namespace()
       end
 
       if aliased_key.starts_with?('ns.')
-        uri = @namespaces.getNamespaceURI(aliased_key[3..-1])
-        if uri is None:
-            return default
-        else
-            return uri
-        end
+        uri = @namespaces.get_namespace_uri(aliased_key[3..-1])
+        return (uri.nil? ? default : uri)
       end
 
-      begin
-        alias_, key = aliased_key.split('.', 1)
-      rescue ValueError
-        # need more than x values to unpack
-        ns = None
+      alias_, key = aliased_key.split('.', 2)
+      if key.nil?
+        key = aliased_key
+        ns = nil
       else
-        ns = @namespaces.getNamespaceURI(alias_)
+        ns = @namespaces.get_namespace_uri(alias_)
+        p ns, key
       end
 
       if ns.nil?
         key = aliased_key
-        ns = getOpenIDNamespace()
+        ns = get_openid_namespace
       end
 
-      return getArg(ns, key, default)
+      return get_arg(ns, key, default)
     end
   end
 
