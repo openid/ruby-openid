@@ -4,7 +4,6 @@ require "cgi"
 require "uri"
 require "logger"
 
-require "openid/urinorm"
 require "openid/extras"
 
 srand(Time.now.to_f)
