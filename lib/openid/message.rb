@@ -101,10 +101,6 @@ module OpenID
       m = Message.new
       openid_args = {}
       args.each { |key,value|
-        if value.is_a?(Array)
-          raise ArgumentError, 'query hash must have one value for each key, not lists of values.'
-        end
-
         prefix, rest = key.split('.', 2)
         if prefix.nil? or rest.nil?
           prefix = nil
