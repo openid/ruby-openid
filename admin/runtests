@@ -2,4 +2,4 @@
 
 HERE=$(dirname $(readlink --canonicalize "$0"))
 REPOROOT=$(dirname "$HERE")
-RUBYLIB="$REPOROOT/lib" ruby "$REPOROOT/admin/runtests.rb"
+RUBYLIB="$REPOROOT/lib" ruby -w "$REPOROOT/admin/runtests.rb"

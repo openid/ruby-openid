@@ -291,10 +291,6 @@ class OpenID1MessageTest < Test::Unit::TestCase
     assert_equal(nil, @m.get_key(OpenID::OPENID2_NS, 'mode'))
   end
 
-  def test_get_key_ns2
-    assert_equal(nil, @m.get_key(OpenID::OPENID2_NS, 'mode'))
-  end
-
   def test_get_key_ns3
     assert_equal(nil, @m.get_key('urn:xxx', 'mode'))
   end
