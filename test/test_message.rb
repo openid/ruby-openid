@@ -697,6 +697,11 @@ class OpenID2MessageTest < Test::Unit::TestCase
     }
   end
 
+  def test_from_post_args
+    msg = Message.from_post_args({'foos' => 'ball'})
+    assert_equal('ball', msg.get_arg(OpenID::BARE_NS, 'foos'))
+  end
+
   def _test_del_arg_ns(ns)
     key = 'no'
     value = 'socks'

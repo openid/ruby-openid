@@ -100,19 +100,15 @@ module OpenID
     def Message.from_post_args(args)
       m = Message.new
       openid_args = {}
-      args.each { |key,value|
+      args.each do |key,value|
         prefix, rest = key.split('.', 2)
-        if prefix.nil? or rest.nil?
-          prefix = nil
-          rest = nil
-        end
 
-        if prefix != 'openid'
-          m.args[[BARE_NS,key].freeze] = value
+        if prefix != 'openid' or rest.nil?
+          m.set_arg(BARE_NS, key, value)
         else
           openid_args[rest] = value
         end
-      }
+      end
 
       m._from_openid_args(openid_args)
       return m
