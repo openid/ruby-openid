@@ -1,4 +1,6 @@
 require "openid/util"
+require "digest/sha1"
+require "digest/sha2"
 require "hmac/sha1"
 require "hmac/sha2"
 

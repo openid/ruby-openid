@@ -1,5 +1,4 @@
 require "base64"
-require "digest/sha1"
 require "cgi"
 require "uri"
 require "logger"
