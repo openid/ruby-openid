@@ -25,7 +25,7 @@ module OpenID
   # The top-level namespace, excluding all pairs with keys that start
   # with "openid."
   BARE_NS = :bare_namespace
-  
+
   # Limit, in bytes, of identity provider and return_to URLs,
   # including response payload.  See OpenID 1.1 specification,
   # Appendix D.
@@ -46,7 +46,7 @@ module OpenID
   # Raised if the generic OpenID namespace is accessed when there
   # is no OpenID namespace set for this message.
   class UndefinedOpenIDNamespace < Exception; end
-  
+
   # Sentinel used for Message implementation to indicate that getArg
   # should raise an exception instead of returning a default.
   NO_DEFAULT = :no_default
@@ -82,7 +82,7 @@ module OpenID
   end
 
   class Message
-    
+
     @@allowed_openid_namespaces = [OPENID1_NS, OPENID2_NS]
 
     def initialize(openid_namspace=nil)
@@ -103,7 +103,7 @@ module OpenID
         if value.is_a?(Array)
           raise ArgumentError, 'query hash must have one value for each key, not lists of values.'
         end
-        
+
         prefix, rest = key.split('.', 2)
         if prefix.nil? or rest.nil?
           prefix = nil
@@ -130,7 +130,7 @@ module OpenID
 
     def _from_openid_args(openid_args)
       ns_args = []
-      
+
       # resolve namespaces
       openid_args.each { |rest, value|
         ns_alias, ns_key = rest.split('.', 2)
@@ -151,7 +151,7 @@ module OpenID
       # ensure that there is an OpenID namespace definition
       openid_ns_uri = @namespaces.get_namespace_uri(NULL_NAMESPACE)
       openid_ns_uri = OPENID1_NS unless openid_ns_uri
-      
+
       self.set_openid_namespace(openid_ns_uri)
 
       # put the pairs into the appropriate namespaces
@@ -166,7 +166,7 @@ module OpenID
               break
             end
           }
-          
+
           unless ns_uri
             ns_uri = openid_ns_uri
             ns_key = "#{ns_alias}.#{ns_key}"
@@ -210,7 +210,7 @@ module OpenID
     # Return all arguments with "openid." in from of namespaced arguments.
     def to_post_args
       args = {}
-      
+
       # add namespace defs to the output
       @namespaces.each { |ns_uri, ns_alias|
         if ns_alias == NULL_NAMESPACE
@@ -230,7 +230,7 @@ module OpenID
         key = self.get_key(ns_uri, ns_key)
         args[key] = value
       }
-      
+
       return args
     end
 
@@ -248,7 +248,7 @@ module OpenID
       }
       return kvargs
     end
-    
+
     # Generate HTML form markup that contains the values in this
     # message, to be HTTP POSTed as x-www-form-urlencoded UTF-8.
     def to_form_markup(action_url, form_tag_attrs=nil, submit_text='Continue')
@@ -272,7 +272,7 @@ module OpenID
       }
 
       markup += ">\n"
-      
+
       to_post_args.each { |k,v|
         markup += "<input type='hidden' name='#{k}' value='#{v}' />\n"
       }
@@ -286,14 +286,14 @@ module OpenID
     def to_url(base_url)
       return Util.append_args(base_url, self.to_post_args)
     end
-    
+
     # Generate a KVForm string that contains the parameters in this message.
-    # This will fail is the message contains arguments outside of the 
+    # This will fail is the message contains arguments outside of the
     # "openid." prefix.
     def to_kvform
       return Util.kvform(self.to_args)
     end
-    
+
     # Generate an x-www-urlencoded string.
     def to_url_encoded
       args = self.to_post_args.map.sort
@@ -313,7 +313,7 @@ module OpenID
       if namespace != BARE_NS and namespace.class != String
         raise ArgumentError, "Namespace must be BARE_NS, OPENID_NS or a string. Got #{namespace}"
       end
-      
+
       if namespace != BARE_NS and namespace.index(':').nil? and namespace == 'sreg'
         msg = "OpenID 2.0 namespace identifiers SHOULD be URIs. Got #{namespace}"
         warn(msg)
@@ -337,21 +337,21 @@ module OpenID
     def get_key(namespace, ns_key)
       namespace = self._fix_ns(namespace)
       return ns_key if namespace == BARE_NS
-      
+
       ns_alias = @namespaces.get_alias(namespace)
 
       # no alias is defined, so no key can exist
       return nil if ns_alias.nil?
-      
+
       if ns_alias == NULL_NAMESPACE
         tail = ns_key
       else
         tail = "#{ns_alias}.#{ns_key}"
       end
-      
+
       return 'openid.' + tail
     end
-    
+
     # Get a value for a namespaced key.
     def get_arg(namespace, key, default=nil)
       namespace = self._fix_ns(namespace)
@@ -363,7 +363,7 @@ module OpenID
         end
       }
     end
-    
+
     # Get the arguments that are defined for this namespace URI.
     def get_args(namespace)
       namespace = self._fix_ns(namespace)
@@ -374,13 +374,13 @@ module OpenID
       }
       return args
     end
-    
+
     # Set multiple key/value pairs in one call.
     def update_args(namespace, updates)
       namespace = self._fix_ns(namespace)
       updates.each {|k,v| self.set_arg(namespace, k, v)}
     end
-    
+
     # Set a single argument in this namespace
     def set_arg(namespace, key, value)
       namespace = self._fix_ns(namespace)
@@ -389,14 +389,14 @@ module OpenID
         @namespaces.add(namespace)
       end
     end
-    
+
     # Remove a single argument from this namespace.
     def del_arg(namespace, key)
       namespace = self._fix_ns(namespace)
       _key = [namespace, key]
       @args.delete(_key)
     end
-    
+
     def eql?(other)
       return @args == other.args
     end
@@ -430,32 +430,32 @@ module OpenID
       end
 
       return getArg(ns, key, default)
-    end  
+    end
   end
 
-  
+
   # Maintains a bidirectional map between namespace URIs and aliases.
   class NamespaceMap
-    
+
     # Namespaces that should use a certain alias (for backwards-
     # compatability or beauty). If a URI in this hash is added to the
     # namespace map without an explicit desired name,
     # it will default to the value supplied here.
     @@default_aliases = {SREG_URI => 'sreg'}
-    
+
     def initialize
       @alias_to_namespace = {}
       @namespace_to_alias = {}
     end
-    
+
     def get_alias(namespace_uri)
       @namespace_to_alias[namespace_uri]
     end
-    
+
     def get_namespace_uri(namespace_alias)
       @alias_to_namespace[namespace_alias]
     end
-    
+
     # Add an alias from this namespace URI to the alias.
     def add_alias(namespace_uri, desired_alias)
       # Check that desired_alias is not an openid protocol field as
@@ -476,7 +476,7 @@ module OpenID
           assert(desired_alias.index('.').nil?,
                  "#{desired_alias} must not contain a dot")
       end
-      
+
       # check that there is not already a (different) alias for this
       # namespace URI.
       _alias = @namespace_to_alias[namespace_uri]
@@ -488,14 +488,14 @@ module OpenID
       @namespace_to_alias[namespace_uri] = desired_alias
       return desired_alias
     end
-    
+
     # Add this namespace URI to the mapping, without caring what alias
     # it ends up with.
     def add(namespace_uri)
       # see if this namepace is already mapped to an alias
       _alias = @namespace_to_alias[namespace_uri]
       return _alias if _alias
-      
+
       # see if there is a default alias for this namespace
       default_alias = @@default_aliases[namespace_uri]
       if default_alias
@@ -507,7 +507,7 @@ module OpenID
           return default_alias
         end
       end
-      
+
       # Fall back to generating a numberical alias
       i = 0
       while true
@@ -520,15 +520,15 @@ module OpenID
           return _alias
         end
       end
-      
+
       raise StandardError, 'Unreachable'
     end
-    
+
     def defined?(namespace_uri)
       @namespace_to_alias.has_key?(namespace_uri)
     end
     alias :contains? :defined?
-    
+
     def each
       @namespace_to_alias.each {|k,v| yield k,v}
     end

@@ -24,7 +24,7 @@ end
 
 
 class EmptyMessageTestCase < Test::Unit::TestCase
-  
+
   def setup
     @m = OpenID::Message.new
   end
@@ -232,12 +232,12 @@ class EmptyMessageTestCase < Test::Unit::TestCase
 end
 
 class OpenID1MessageTest < Test::Unit::TestCase
-  
+
   def setup
     @m = OpenID::Message.from_post_args({'openid.mode' => 'error',
                                         'openid.error' => 'unit test'})
   end
-  
+
   def test_to_post_args
     assert_equal({'openid.mode' => 'error',
                    'openid.error' => 'unit test'},
@@ -259,7 +259,7 @@ class OpenID1MessageTest < Test::Unit::TestCase
     assert_equal('openid.error=unit+test&openid.mode=error',
                  @m.to_url_encoded)
   end
-  
+
   def test_to_url
     base_url = 'http://base.url/'
     actual = @m.to_url(base_url)
@@ -605,7 +605,7 @@ class OpenID2MessageTest < Test::Unit::TestCase
   def test_update_args_ns1
     _test_update_args_ns(OPENID1_NS)
   end
-  
+
   def test_update_args_ns2
     _test_update_args_ns(OPENID2_NS, {'mode'=>'error','error'=>'unit test'})
   end
@@ -702,7 +702,7 @@ class MessageTest < Test::Unit::TestCase
     }
 
     @submit_text = 'GO!'
-    
+
     ### Expected data regardless of input
 
     @required_form_attrs = {
@@ -835,7 +835,7 @@ class MessageTest < Test::Unit::TestCase
 end
 
 class NamespaceMapTestCase < Test::Unit::TestCase
-  
+
   def test_onealias
     nsm = OpenID::NamespaceMap.new
     uri = 'http://example.com/foo'
@@ -845,7 +845,7 @@ class NamespaceMapTestCase < Test::Unit::TestCase
     assert_equal(_alias, nsm.get_alias(uri))
   end
 
-  
+
   def test_iteration
     nsm = NamespaceMap.new
     uripat = "http://example.com/foo%i"
