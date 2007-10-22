@@ -215,7 +215,7 @@ module OpenID
             args['openid.ns'] = ns_uri
           end
         else
-          if self.getOpenIDNamespace() != OPENID1_NS
+          if get_openid_namespace != OPENID1_NS
             ns_key = 'openid.ns.' + ns_alias
             args[ns_key] = ns_uri
           end

@@ -478,6 +478,19 @@ class OpenID2MessageTest < Test::Unit::TestCase
                  }, @m.to_post_args)
   end
 
+  def test_to_post_args_ns
+    invalid_ns = 'http://invalid/'
+    @m.namespaces.add_alias(invalid_ns, 'foos')
+    @m.set_arg(invalid_ns, 'ball', 'awesome')
+    assert_equal({'openid.mode' => 'error',
+                   'openid.error' => 'unit test',
+                   'openid.ns' => OPENID2_NS,
+                   'openid.ns.foos' => invalid_ns,
+                   'openid.foos.ball' => 'awesome',
+                   'xey' => 'value',
+                 }, @m.to_post_args)
+  end
+
   def test_to_args
     @m.del_arg(BARE_NS, 'xey')
     assert_equal({'mode' => 'error',
