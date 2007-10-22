@@ -224,7 +224,7 @@ module OpenID
 
       @args.each { |k, value|
         ns_uri, ns_key = k
-        key = self.get_key(ns_uri, ns_key)
+        key = get_key(ns_uri, ns_key)
         args[key] = value
       }
 
@@ -288,12 +288,12 @@ module OpenID
     # This will fail is the message contains arguments outside of the
     # "openid." prefix.
     def to_kvform
-      return Util.kvform(self.to_args)
+      return Util.kvform(to_args)
     end
 
     # Generate an x-www-urlencoded string.
     def to_url_encoded
-      args = self.to_post_args.map.sort
+      args = to_post_args.map.sort
       return Util.urlencode(args)
     end
 
@@ -326,13 +326,13 @@ module OpenID
     end
 
     def has_key?(namespace, ns_key)
-      namespace = self._fix_ns(namespace)
+      namespace = _fix_ns(namespace)
       return @args.member?([namespace, ns_key])
     end
 
     # Get the key for a particular namespaced argument
     def get_key(namespace, ns_key)
-      namespace = self._fix_ns(namespace)
+      namespace = _fix_ns(namespace)
       return ns_key if namespace == BARE_NS
 
       ns_alias = @namespaces.get_alias(namespace)
@@ -351,7 +351,7 @@ module OpenID
 
     # Get a value for a namespaced key.
     def get_arg(namespace, key, default=nil)
-      namespace = self._fix_ns(namespace)
+      namespace = _fix_ns(namespace)
       @args.fetch([namespace, key]) {
         if default == NO_DEFAULT
           raise IndexError
@@ -363,7 +363,7 @@ module OpenID
 
     # Get the arguments that are defined for this namespace URI.
     def get_args(namespace)
-      namespace = self._fix_ns(namespace)
+      namespace = _fix_ns(namespace)
       args = {}
       @args.each { |k,v|
         pair_ns, ns_key = k
@@ -374,13 +374,13 @@ module OpenID
 
     # Set multiple key/value pairs in one call.
     def update_args(namespace, updates)
-      namespace = self._fix_ns(namespace)
-      updates.each {|k,v| self.set_arg(namespace, k, v)}
+      namespace = _fix_ns(namespace)
+      updates.each {|k,v| set_arg(namespace, k, v)}
     end
 
     # Set a single argument in this namespace
     def set_arg(namespace, key, value)
-      namespace = self._fix_ns(namespace)
+      namespace = _fix_ns(namespace)
       @args[[namespace, key].freeze] = value
       if namespace != BARE_NS
         @namespaces.add(namespace)
@@ -389,7 +389,7 @@ module OpenID
 
     # Remove a single argument from this namespace.
     def del_arg(namespace, key)
-      namespace = self._fix_ns(namespace)
+      namespace = _fix_ns(namespace)
       _key = [namespace, key]
       @args.delete(_key)
     end
@@ -493,7 +493,7 @@ module OpenID
       default_alias = @@default_aliases[namespace_uri]
       if default_alias
         begin
-          self.add_alias(namespace_uri, default_alias)
+          add_alias(namespace_uri, default_alias)
         rescue IndexError
           nil
         else
@@ -506,7 +506,7 @@ module OpenID
       while true
         _alias = 'ext' + i.to_s
         begin
-          self.add_alias(namespace_uri, _alias)
+          add_alias(namespace_uri, _alias)
         rescue IndexError
           i += 1
         else
