@@ -37,6 +37,15 @@ module OpenID
   # as an identity page.
   PARSE_ERROR = 'parse error'
 
+  class AssertionError < Exception
+  end
+
+  def assert(value, message=nil)
+    if not value
+      raise AssertionError, message or value
+    end
+  end
+
   module Util
 
     HAS_URANDOM = File.chardev? '/dev/urandom'

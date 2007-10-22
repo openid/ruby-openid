@@ -1,5 +1,4 @@
 require 'openid/util'
-require 'openid/assert'
 
 module OpenID
 
