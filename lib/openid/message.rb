@@ -63,7 +63,7 @@ module OpenID
   # namespace URI or alias has already been registered with a
   # different value.  This function is required if you want to use a
   # namespace with an OpenID 1 message.
-  def registerNamespaceAlias(namespace_uri, alias_)
+  def register_namespace_alias(namespace_uri, alias_)
     if REGISTERED_ALIASES.get(alias_) == namespace_uri
         return
     end
