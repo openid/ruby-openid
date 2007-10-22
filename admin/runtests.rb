@@ -12,11 +12,20 @@ def main
 
   # Collect tests from everything named test_*.rb.
   c = Test::Unit::Collector::Dir.new
-  c.base = tests_dir
-  suite = c.collect
 
-    result = Test::Unit::UI::Console::TestRunner.run(suite)
-    result.passed?
+  if c.respond_to?(:base=)
+    # In order to supress warnings from ruby 1.8.6 about accessing
+    # undefined member
+    c.base = tests_dir
+    suite = c.collect
+  else
+    # Because base is not defined in ruby < 1.8.6
+    suite = c.collect(tests_dir)
+  end
+
+
+  result = Test::Unit::UI::Console::TestRunner.run(suite)
+  result.passed?
 end
 
 exit(main)
