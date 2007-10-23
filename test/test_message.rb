@@ -1,6 +1,7 @@
 # last synced with Python openid.test.test_message on 6/29/2007.
 
 require 'test/unit'
+require 'util'
 require 'openid/message'
 
 require 'rexml/document'
@@ -486,6 +487,7 @@ class OpenID1ExplicitMessageTest < OpenID1MessageTest
 end
 
 class OpenID2MessageTest < Test::Unit::TestCase
+  include OpenID::TestUtil
 
   def setup
     @m = Message.from_post_args({'openid.mode'=>'error',
@@ -501,8 +503,16 @@ class OpenID2MessageTest < Test::Unit::TestCase
   end
 
   def test_fix_ns_non_string
+    # Using has_key to invoke _fix_ns since _fix_ns should be private
     assert_raises(ArgumentError) {
       @m.has_key?(:non_string_namespace, "key")
+    }
+  end
+
+  def test_fix_ns_non_uri
+    # Using has_key to invoke _fix_ns since _fix_ns should be private
+    assert_log_matches(/identifiers SHOULD be URIs/) {
+      @m.has_key?("foo", "key")
     }
   end
 

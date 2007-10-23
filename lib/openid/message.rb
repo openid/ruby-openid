@@ -307,13 +307,13 @@ module OpenID
         raise ArgumentError, "Namespace must be BARE_NS, OPENID_NS or a string. Got #{namespace}"
       end
 
-      if namespace != BARE_NS and namespace.index(':').nil? and namespace == 'sreg'
+      if namespace != BARE_NS and namespace.index(':').nil?
         msg = "OpenID 2.0 namespace identifiers SHOULD be URIs. Got #{namespace}"
-        warn(msg)
+        Util.log(msg)
 
         if namespace == 'sreg'
           msg = "Using #{SREG_URI} instead of \"sreg\" as namespace"
-          warn(msg)
+          Util.log(msg)
           return SREG_URI
         end
       end
