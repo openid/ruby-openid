@@ -500,6 +500,12 @@ class OpenID2MessageTest < Test::Unit::TestCase
     }
   end
 
+  def test_fix_ns_non_string
+    assert_raises(ArgumentError) {
+      @m.has_key?(:non_string_namespace, "key")
+    }
+  end
+
   def test_copy
     n = @m.copy
     assert(@m.eql?(n))
