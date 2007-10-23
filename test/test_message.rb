@@ -469,6 +469,10 @@ class OpenID1MessageTest < Test::Unit::TestCase
   def test_isOpenID2
     assert_equal(false, @m.is_openid2)
   end
+
+  def test_equal
+    assert(Message.new.eql?(Message.new))
+  end
 end
 
 class OpenID1ExplicitMessageTest < OpenID1MessageTest
@@ -488,6 +492,11 @@ class OpenID2MessageTest < Test::Unit::TestCase
                                         'openid.error'=>'unit test',
                                         'openid.ns'=>OpenID::OPENID2_NS})
     @m.set_arg(BARE_NS, 'xey', 'value')
+  end
+
+  def test_copy
+    n = @m.copy
+    assert(@m.eql?(n))
   end
 
   def test_to_post_args

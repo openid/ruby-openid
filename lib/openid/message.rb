@@ -391,7 +391,7 @@ module OpenID
     end
 
     def eql?(other)
-      return @args == other.args
+      return @args == other.instance_eval { @args }
     end
 
     def get_aliased_arg(aliased_key, default=nil)
