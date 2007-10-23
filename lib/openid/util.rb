@@ -49,14 +49,6 @@ module OpenID
 
     HAS_URANDOM = File.chardev? '/dev/urandom'
 
-    def Util.get_openid_params(query)
-      params = {}
-      query.each do |k,v|
-        params[k] = v if k.index("openid.") == 0
-      end
-      params
-    end
-
     def Util.to_base64(s)
       Base64.encode64(s).gsub("\n", "")
     end
