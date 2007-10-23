@@ -73,12 +73,12 @@ module OpenID
             !return_realm.nil? and
 
             # Does not have a wildcard
-            not return_realm.wildcard and
+            !return_realm.wildcard and
 
             # Matches the return_to that we passed in with it
             return_realm.validate_url(return_to)
             )
-        return true
+          return true
         end
       }
 
@@ -89,7 +89,7 @@ module OpenID
     def get_allowed_return_urls(relying_party_url)
       # Given a relying party discovery URL return a list of return_to
       # URLs.
-      rp_url_after_redirects, return_to_urls = services.getServiceEndpoints(
+      rp_url_after_redirects, return_to_urls = services.get_service_endpoints(
         relying_party_url, _extract_return_url)
 
       if rp_url_after_redirects != relying_party_url
