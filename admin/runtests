@@ -2,7 +2,7 @@
 
 case "$1" in
     --coverage)
-	RUBY="rcov"
+	RUBY="rcov --exclude=^lib/hmac/,^admin/"
 	;;
     *)
 	RUBY="ruby"
