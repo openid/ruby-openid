@@ -21,7 +21,10 @@ import sys
 parse_require = re.compile(
     '\\\\blib/([^:]+).rb: *require ["\\']([^"\\']+)[\\'"]\$',
     re.MULTILINE)
-matches = parse_require.findall(file('require.txt').read())
+matches = [(file, dep) for (file, dep)
+           in parse_require.findall(file('require.txt').read())
+           if re.match('(yadis|openid)($|/)', dep)
+          ]
 g = pydot.graph_from_edges(matches, directed=True)
 g.write_jpeg('$OUTPUT_FILE')
 EOF
