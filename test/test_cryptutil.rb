@@ -75,4 +75,17 @@ class CryptUtilTestCase < Test::Unit::TestCase
       assert_equal(base64, OpenID::CryptUtil.num_to_base64(num))
     end
   end
+
+  def test_randomstring
+    s1 = OpenID::CryptUtil.random_string(42)
+    assert_equal(42, s1.length)
+    s2 = OpenID::CryptUtil.random_string(42)
+    assert_equal(42, s2.length)
+    assert_not_equal(s1, s2)
+  end
+
+  def test_randomstring_population
+    s1 = OpenID::CryptUtil.random_string(42, "XO")
+    assert_match(/[XO]{42}/, s1)
+  end
 end

@@ -40,9 +40,9 @@ module OpenID
       s = ""
 
       unless chars.nil?
-        length.times { s << chars[Util.rand(chars.length)] }
+        length.times { s << chars[rand(chars.length)] }
       else
-        length.times { s << Util.rand(256).chr }
+        length.times { s << rand(256).chr }
       end
       return s
     end
