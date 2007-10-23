@@ -474,6 +474,20 @@ class OpenID1MessageTest < Test::Unit::TestCase
   def test_equal
     assert(Message.new.eql?(Message.new))
   end
+
+  def test_from_openid_args_undefined_ns
+    expected = 'almost.complete'
+    msg = Message.from_openid_args({'coverage.is' => expected})
+    actual = msg.get_arg(OpenID::OPENID1_NS, 'coverage.is')
+    assert_equal(expected, actual)
+  end
+
+  # XXX: we need to implement the KVForm module before we can fix this
+  def TODOtest_from_kvform
+    kv = 'foos:ball\n'
+    msg = Message.from_kvform(kv)
+    assert_equal(msg.get(OpenID::OPENID1_NS, 'foos'), 'ball')
+  end
 end
 
 class OpenID1ExplicitMessageTest < OpenID1MessageTest
@@ -521,13 +535,6 @@ class OpenID2MessageTest < Test::Unit::TestCase
     assert_log_matches(/identifiers SHOULD be URIs/, /instead of "sreg"/) {
       @m.has_key?("sreg", "key")
     }
-  end
-
-  def test_from_openid_args_undefined_ns
-    expected = 'almost.complete'
-    msg = Message.from_openid_args({'coverage.is' => expected})
-    actual = msg.get_arg(OpenID::OPENID1_NS, 'coverage.is')
-    assert_equal(expected, actual)
   end
 
   def test_copy

@@ -193,6 +193,7 @@ module OpenID
 
     # Create a message from a KVForm string
     def Message.from_kvform(kvform_string)
+      raise Exception, "XXX: KVForm not yet implemented!"
       return Message.from_openid_args(Util.parsekv(kvform_string))
     end
 
