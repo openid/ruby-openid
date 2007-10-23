@@ -1,4 +1,5 @@
 # Utilities that are only used in the testing code
+require 'stringio'
 
 module OpenID
   module TestUtil
