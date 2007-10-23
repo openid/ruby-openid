@@ -410,7 +410,6 @@ module OpenID
         ns = nil
       else
         ns = @namespaces.get_namespace_uri(alias_)
-        p ns, key
       end
 
       if ns.nil?

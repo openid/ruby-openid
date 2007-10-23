@@ -262,9 +262,11 @@ class OpenID1MessageTest < Test::Unit::TestCase
     @m = OpenID::Message.from_post_args(
         {'openid.mode' => 'error',
          'openid.error' => 'unit test',
-         'openid.ns.invalid' => 'http://invalid/'
+         'openid.ns.invalid' => 'http://invalid/',
+         'openid.invalid.stuff' => 'things',
         })
     assert_equal('http://invalid/', @m.get_aliased_arg('ns.invalid'))
+    assert_equal('things', @m.get_aliased_arg('invalid.stuff'))
   end
 
   def test_get_aliased_arg_with_ns_default
