@@ -523,6 +523,13 @@ class OpenID2MessageTest < Test::Unit::TestCase
     }
   end
 
+  def test_from_openid_args_undefined_ns
+    expected = 'almost.complete'
+    msg = Message.from_openid_args({'coverage.is' => expected})
+    actual = msg.get_arg(OpenID::OPENID1_NS, 'coverage.is')
+    assert_equal(expected, actual)
+  end
+
   def test_copy
     n = @m.copy
     assert(@m.eql?(n))
