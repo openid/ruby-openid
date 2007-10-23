@@ -67,4 +67,28 @@ class TrustRootTest < Test::Unit::TestCase
 
     return tests
   end
+
+  def test_return_to_matches
+    data = [
+            [[], nil, false],
+            [[], "", false],
+            [[], "http://bogus/return_to", false],
+            [["http://bogus/"], nil, false],
+            [["://broken/"], nil, false],
+            [["://broken/"], "http://broken/", false],
+            [["http://*.broken/"], "http://foo.broken/", false],
+            [["http://x.broken/"], "http://foo.broken/", false],
+            [["http://first/", "http://second/path/"], "http://second/?query=x", false],
+
+            [["http://broken/"], "http://broken/", true],
+            [["http://first/", "http://second/"], "http://second/?query=x", true],
+           ]
+
+    data.each { |case_|
+      allowed_return_urls, return_to, expected_result = case_
+      actual_result = OpenID::TrustRoot::return_to_matches(allowed_return_urls,
+                                                           return_to)
+      assert(expected_result == actual_result)
+    }
+  end
 end

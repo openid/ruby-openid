@@ -136,6 +136,8 @@ module OpenID
 
     class TrustRoot
 
+      attr_reader :unparsed, :proto, :wildcard, :host, :port, :path
+
       @@empty_re = Regexp.new('^http[s]*:\/\/\*\/$')
 
       def TrustRoot._build_path(path, query=nil, frag=nil)
