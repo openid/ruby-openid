@@ -40,7 +40,7 @@ module OpenID
     # openid.consumer or openid.yadis somewhere)
     RP_RETURN_TO_URL_TYPE = 'http://specs.openid.net/auth/2.0/return_to'
 
-    def _extract_return_url(endpoint)
+    def TrustRoot._extract_return_url(endpoint)
       # If the endpoint is a relying party OpenID return_to endpoint,
       # return the endpoint URL. Otherwise, return None.
       #
@@ -59,7 +59,7 @@ module OpenID
       end
     end
 
-    def return_to_matches(allowed_return_to_urls, return_to)
+    def TrustRoot.return_to_matches(allowed_return_to_urls, return_to)
       # Is the return_to URL under one of the supplied allowed
       # return_to URLs?
       allowed_return_to_urls.each { |allowed_return_to|
@@ -86,7 +86,7 @@ module OpenID
       return false
     end
 
-    def get_allowed_return_urls(relying_party_url)
+    def TrustRoot.get_allowed_return_urls(relying_party_url)
       # Given a relying party discovery URL return a list of return_to
       # URLs.
       rp_url_after_redirects, return_to_urls = services.get_service_endpoints(
@@ -102,7 +102,7 @@ module OpenID
     end
 
     # _vrfy parameter is there to make testing easier
-    def verify_return_to(realm_str, return_to, _vrfy=:get_allowed_return_urls)
+    def TrustRoot.verify_return_to(realm_str, return_to, _vrfy=:get_allowed_return_urls)
       # Verify that a return_to URL is valid for the given realm.
       #
       # This function builds a discovery URL, performs Yadis discovery
