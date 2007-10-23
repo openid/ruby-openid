@@ -15,7 +15,7 @@ module OpenID
       log_output.rewind
       log_lines = log_output.readlines
       assert_equal(regexes.length, log_lines.length)
-      log_output.readlines.zip(regexes) do |line, regex|
+      log_lines.zip(regexes) do |line, regex|
         assert_match(regex, line)
       end
     end
