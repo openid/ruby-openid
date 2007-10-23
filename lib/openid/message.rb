@@ -52,7 +52,7 @@ module OpenID
   NO_DEFAULT = :no_default
 
   # Global namespace / alias registration map.  See
-  # registerNamespaceAlias.
+  # register_namespace_alias.
   REGISTERED_ALIASES = {}
 
   # Raised when an alias or namespace URI has already been registered.
