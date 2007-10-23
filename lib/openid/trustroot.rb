@@ -158,7 +158,8 @@ module OpenID
       def TrustRoot._parse_url(url)
         begin
           url = Util::urinorm(url)
-        rescue URI::InvalidURIError
+        rescue URI::InvalidURIError => err
+          nil
         end
 
         begin
