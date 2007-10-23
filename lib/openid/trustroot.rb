@@ -220,7 +220,7 @@ module OpenID
         return (!tr.nil? and tr.validate_url(url))
       end
 
-      def buildDiscoveryURL
+      def build_discovery_url
         # Return a discovery URL for this realm.
         #
         # This function does not check to make sure that the realm is
@@ -233,9 +233,9 @@ module OpenID
         # run in order to verify the return_to URL
         if self.wildcard
           # Use "www." in place of the star
-          assert(@host.starts_with?('.'), @host)
-          www_domain = 'www' + @host
-          return "#{@proto}://#{www_domain}#{@path}"
+          www_domain = 'www.' + @host
+          port = (!@port.nil? and ![80, 443].member?(@port)) ? (":" + @port.to_s) : ''
+          return "#{@proto}://#{www_domain}#{port}#{@path}"
         else
           return @unparsed
         end

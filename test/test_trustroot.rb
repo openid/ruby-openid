@@ -91,4 +91,20 @@ class TrustRootTest < Test::Unit::TestCase
       assert(expected_result == actual_result)
     }
   end
+
+  def test_build_discovery_url
+    data = [
+            ["http://foo.com/path", "http://foo.com/path"],
+            ["http://foo.com/path?foo=bar", "http://foo.com/path?foo=bar"],
+            ["http://*.bogus.com/path", "http://www.bogus.com/path"],
+            ["http://*.bogus.com:122/path", "http://www.bogus.com:122/path"],
+           ]
+
+    data.each { |case_|
+      trust_root, expected_disco_url = case_
+      tr = OpenID::TrustRoot::TrustRoot.parse(trust_root)
+      actual_disco_url = tr.build_discovery_url()
+      assert(actual_disco_url == expected_disco_url, case_ + [actual_disco_url])
+    }
+  end
 end
