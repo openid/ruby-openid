@@ -17,4 +17,10 @@ class String
     head == other
   end
 
+  def ends_with?(other)
+    other = other.to_str
+    tail = self[-1 * other.length, other.length]
+    tail == other
+  end
+
 end

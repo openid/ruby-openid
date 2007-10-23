@@ -16,4 +16,20 @@ class StartsWithTestCase < Test::Unit::TestCase
          ["xx", "xy"],
         ].each{|str,target| assert(!(str.starts_with? target)) }
     end
+
+    def test_ends_with
+        [["anything", ""],
+         ["something else", " else"],
+         ["", ""],
+         ["foos", "oos"],
+        ].each{|str,target| assert(str.ends_with?(target))}
+    end
+
+    def test_not_ends_with
+        [["x", "y"],
+         ["foos", "ball"],
+         ["xx", "xy"],
+         ["foosball", "foosbal"],
+        ].each{|str,target| assert(!(str.ends_with? target)) }
+    end
 end
