@@ -103,13 +103,17 @@ module OpenID
     @@logger = Logger.new(STDERR)
     @@logger.progname = "OpenID"
 
-    def Util.setLogger(logger)
+    def Util.logger=(logger)
       @@logger = logger
+    end
+
+    def Util.logger
+      @@logger
     end
 
     # change the message below to do whatever you like for logging
     def Util.log(message)
-      @@logger.info(message)
+      logger.info(message)
     end
   end
 
