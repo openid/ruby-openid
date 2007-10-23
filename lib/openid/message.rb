@@ -513,9 +513,5 @@ module OpenID
       # Return an iterator over the aliases
       return @alias_to_namespace.keys()
     end
-
-    def isDefined(namespace_uri)
-      return @namespace_to_alias.member?(namespace_uri)
-    end
   end
 end
