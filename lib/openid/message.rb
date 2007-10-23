@@ -64,7 +64,7 @@ module OpenID
   # different value.  This function is required if you want to use a
   # namespace with an OpenID 1 message.
   def register_namespace_alias(namespace_uri, alias_)
-    if REGISTERED_ALIASES.get(alias_) == namespace_uri
+    if REGISTERED_ALIASES[alias_] == namespace_uri
         return
     end
 

@@ -925,4 +925,26 @@ class NamespaceMapTestCase < Test::Unit::TestCase
     assert_equal(nsm.iter_namespace_uris(), [uri])
   end
 
+  def test_register_default_alias
+    invalid_ns = 'http://invalid/'
+    alias_ = 'invalid'
+    OpenID::register_namespace_alias(invalid_ns, alias_)
+    # Doing it again doesn't raise an exception
+    OpenID::register_namespace_alias(invalid_ns, alias_)
+
+    # Once it's registered, you can't register it again
+    assert_raises(NamespaceAliasRegistrationError) {
+      OpenID::register_namespace_alias(invalid_ns, 'another_alias')
+    }
+
+    # Once it's registered, you can't register another URL with that alias
+    assert_raises(NamespaceAliasRegistrationError) {
+      OpenID::register_namespace_alias('http://janrain.com/', alias_)
+    }
+
+    # It gets used automatically by the Message class:
+    msg = OpenID::Message.from_openid_args({'invalid.stuff' => 'things'})
+    assert_equal(alias_, msg.namespaces.get_alias(invalid_ns))
+    assert_equal(invalid_ns, msg.namespaces.get_namespace_uri(alias_))
+  end
 end
