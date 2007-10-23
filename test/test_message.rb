@@ -1000,4 +1000,14 @@ class NamespaceMapTestCase < Test::Unit::TestCase
     assert_equal(alias_, msg.namespaces.get_alias(invalid_ns))
     assert_equal(invalid_ns, msg.namespaces.get_namespace_uri(alias_))
   end
+
+  def test_alias_defined_twice
+    nsm = NamespaceMap.new
+    uri = 'urn:bogus'
+
+    nsm.add_alias(uri, 'foos')
+    assert_raises(IndexError) {
+      nsm.add_alias(uri, 'ball')
+    }
+  end
 end
