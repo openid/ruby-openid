@@ -494,6 +494,12 @@ class OpenID2MessageTest < Test::Unit::TestCase
     @m.set_arg(BARE_NS, 'xey', 'value')
   end
 
+  def test_to_args_fails
+    assert_raises(ArgumentError) {
+      @m.to_args
+    }
+  end
+
   def test_copy
     n = @m.copy
     assert(@m.eql?(n))
