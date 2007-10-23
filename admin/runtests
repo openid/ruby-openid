@@ -5,7 +5,7 @@ case "$1" in
 	RUBY="rcov"
 	;;
     *)
-	RUBY="ruby -w"
+	RUBY="ruby"
 	;;
 esac
 

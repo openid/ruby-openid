@@ -8,6 +8,9 @@ require 'test/unit/collector/dir'
 require 'test/unit/ui/console/testrunner'
 
 def main
+  old_verbose = $VERBOSE
+  $VERBOSE = true
+
   tests_dir = Pathname.new(__FILE__).dirname.dirname.join('test')
 
   # Collect tests from everything named test_*.rb.
@@ -26,6 +29,8 @@ def main
 
   result = Test::Unit::UI::Console::TestRunner.run(suite)
   result.passed?
+ensure
+  $VERBOSE = old_verbose
 end
 
 exit(main)
