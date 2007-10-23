@@ -18,6 +18,9 @@ module OpenID
       return Kernel.rand(max)
     end
 
+    # These crypto functions are defined here to make using alternate
+    # implementations easier.
+
     def CryptUtil.sha1(text)
       return Digest::SHA1.digest(text)
     end
@@ -27,11 +30,11 @@ module OpenID
     end
 
     def CryptUtil.sha256(text)
-      return Digest::SHA1.digest(text)
+      return Digest::SHA256.digest(text)
     end
 
     def CryptUtil.hmac_sha256(key, text)
-      return HMAC::SHA1.digest(key, text)
+      return HMAC::SHA256.digest(key, text)
     end
 
     # Generate a random string of the given length, composed of the
