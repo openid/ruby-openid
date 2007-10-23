@@ -121,14 +121,14 @@ module OpenID
       begin
         allowable_urls = self.send(_vrfy, realm.build_discovery_url())
       rescue RealmVerificationRedirected => err
-        log(err.to_s)
+        Util.log(err.to_s)
         return false
       end
 
       if return_to_matches(allowable_urls, return_to)
         return true
       else
-        log("Failed to validate return_to #{return_to} for " +
+        Util.log("Failed to validate return_to #{return_to} for " +
             "realm #{realm_str}, was not in #{allowable_urls}")
         return false
       end
