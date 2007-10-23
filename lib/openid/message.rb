@@ -426,12 +426,6 @@ module OpenID
   # Maintains a bidirectional map between namespace URIs and aliases.
   class NamespaceMap
 
-    # Namespaces that should use a certain alias (for backwards-
-    # compatability or beauty). If a URI in this hash is added to the
-    # namespace map without an explicit desired name,
-    # it will default to the value supplied here.
-    @@default_aliases = {SREG_URI => 'sreg'}
-
     def initialize
       @alias_to_namespace = {}
       @namespace_to_alias = {}
@@ -484,18 +478,6 @@ module OpenID
       # see if this namepace is already mapped to an alias
       _alias = @namespace_to_alias[namespace_uri]
       return _alias if _alias
-
-      # see if there is a default alias for this namespace
-      default_alias = @@default_aliases[namespace_uri]
-      if default_alias
-        begin
-          add_alias(namespace_uri, default_alias)
-        rescue IndexError
-          nil
-        else
-          return default_alias
-        end
-      end
 
       # Fall back to generating a numberical alias
       i = 0
