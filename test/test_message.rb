@@ -488,6 +488,11 @@ class OpenID1MessageTest < Test::Unit::TestCase
     msg = Message.from_kvform(kv)
     assert_equal(msg.get(OpenID::OPENID1_NS, 'foos'), 'ball')
   end
+
+  def test_initialize_sets_namespace
+    msg = Message.new(OpenID::OPENID1_NS)
+    assert_equal(OpenID::OPENID1_NS, msg.get_openid_namespace)
+  end
 end
 
 class OpenID1ExplicitMessageTest < OpenID1MessageTest
