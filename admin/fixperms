@@ -4,6 +4,7 @@ admin/prepare-release
 admin/build-docs
 admin/fixperms
 admin/runtests
+admin/graph-require.sh
 examples/consumer.rb
 EOF
 
