@@ -127,7 +127,7 @@ module OpenID
       # resolve namespaces
       openid_args.each { |rest, value|
         ns_alias, ns_key = rest.split('.', 2)
-        if ns_alias.nil? or ns_key.nil?
+        if ns_key.nil?
           ns_alias = NULL_NAMESPACE
           ns_key = rest
         end
