@@ -229,6 +229,12 @@ class EmptyMessageTestCase < Test::Unit::TestCase
   def test_isOpenID2
     assert_equal(false, @m.is_openid2)
   end
+
+  def test_set_openid_namespace
+    assert_raise(ArgumentError) {
+      @m.set_openid_namespace('http://invalid/')
+    }
+  end
 end
 
 class OpenID1MessageTest < Test::Unit::TestCase
