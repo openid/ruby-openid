@@ -516,6 +516,13 @@ class OpenID2MessageTest < Test::Unit::TestCase
     }
   end
 
+  def test_fix_ns_sreg_literal
+    # Using has_key to invoke _fix_ns since _fix_ns should be private
+    assert_log_matches(/identifiers SHOULD be URIs/, /instead of "sreg"/) {
+      @m.has_key?("sreg", "key")
+    }
+  end
+
   def test_copy
     n = @m.copy
     assert(@m.eql?(n))
