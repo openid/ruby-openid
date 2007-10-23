@@ -70,7 +70,7 @@ return_to matching
 ========================================
 
 ----------------------------------------
-41: matches
+44: matches
 ----------------------------------------
 http://*/                             http://cnn.com/
 http://*/                             http://livejournal.com/
@@ -113,12 +113,16 @@ http://foo.com/                       http://foo.com
 http://foo.com/                       http://foo.com:80
 http://foo.com:80/                    http://foo.com:80/stuff
 http://foo.com:80/                    http://foo.com/stuff
+http://foo.com/path                   http://foo.com/path/extra
+http://foo.com/path2                  http://foo.com/path2?extra=query
+http://foo.com/path2                  http://foo.com/path2/?extra=query
 
 ----------------------------------------
-23: does not match
+25: does not match
 ----------------------------------------
 http://*/                             ftp://foo.com/
 http://*/                             xxx
+http://foo.com/                       http://oo.com/
 http://*.x.com/abc                    http://foo.x.com
 http://*.x.com/abc                    http://*.x.com
 http://*.com/                         http://*.com/
@@ -140,3 +144,4 @@ http://*.oo.com/                      http://foo.com/
 http://foo.com/*                      http://foo.com/anything
 http://foo.com                        http://foo.com:443
 https://foo.com                       https://foo.com:80
+http://foo.com/path/xev               http://foo.com/path?extra=more

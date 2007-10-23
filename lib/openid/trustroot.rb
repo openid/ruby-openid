@@ -290,12 +290,21 @@ module OpenID
         return false unless proto == @proto
         return false unless port == @port
         return false unless host.index('*').nil?
-        return false unless path.index(@path) == 0
+
+        if !@wildcard
+          if host != @host
+            return false
+          end
+        elsif ((@host != '') and
+               (!host.ends_with?('.' + @host)) and
+               (host != @host))
+          return false
+        end
 
         if path != @path
           path_len = @path.length
-          trust_prefix = @path[0..path_len]
-          url_prefix = path[0..path_len]
+          trust_prefix = @path[0...path_len]
+          url_prefix = path[0...path_len]
 
           # must be equal up to the length of the path, at least
           if trust_prefix != url_prefix

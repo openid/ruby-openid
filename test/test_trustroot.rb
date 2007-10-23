@@ -8,20 +8,24 @@ class TrustRootTest < Test::Unit::TestCase
     tr = OpenID::TrustRoot::TrustRoot.parse(case_)
     if sanity == 'sane'
       assert(tr.sane?, [case_, desc])
+      assert(OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc])
     elsif sanity == 'insane'
       assert(!tr.sane?, [case_, desc])
+      assert(!OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc])
     else
       assert(tr.nil?, case_)
     end
   end
 
-  def _test_match(trust_root, url, match)
+  def _test_match(trust_root, url, expected_match)
     tr = OpenID::TrustRoot::TrustRoot.parse(trust_root)
-    match = tr.validate_url(url)
-    if match
-      assert(match, [trust_root, url])
+    actual_match = tr.validate_url(url)
+    if expected_match
+      assert(actual_match, [trust_root, url])
+      assert(OpenID::TrustRoot::TrustRoot.check_url(trust_root, url))
     else
-      assert(!match, [trust_root, url])
+      assert(!actual_match, [expected_match, actual_match, trust_root, url])
+      assert(!OpenID::TrustRoot::TrustRoot.check_url(trust_root, url))
     end
   end
 
@@ -37,7 +41,7 @@ class TrustRootTest < Test::Unit::TestCase
       _test_sanity(case_, sanity, desc)
     }
 
-    getTests([1, 0], mh, mdat).each { |tc|
+    getTests([true, false], mh, mdat).each { |tc|
       match, desc, case_ = tc
       trust_root, url = case_.split()
       _test_match(trust_root, url, match)
@@ -54,7 +58,7 @@ class TrustRootTest < Test::Unit::TestCase
     grps.each { |x|
       n, desc = gdat[i].split(': ')
       cases = gdat[i + 1].split("\n")
-      assert(cases.length == n.to_i)
+      assert(cases.length == n.to_i, "Number of cases differs from header count")
       cases.each { |case_|
         tests += [[x, top + ' - ' + desc, case_]]
       }
