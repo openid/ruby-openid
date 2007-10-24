@@ -107,4 +107,8 @@ class UtilTestCase < Test::Unit::TestCase
 
   end
 
+  def test_parse_query
+    assert_equal({'foo'=>'bar'}, OpenID::Util.parse_query('foo=bar'))
+  end
+
 end
