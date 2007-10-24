@@ -2,6 +2,7 @@
 
 case "$1" in
     --coverage)
+        shift
 	RUBY="rcov --exclude=^lib/hmac/,^admin/ --sort=coverage"
 	;;
     *)
@@ -11,4 +12,4 @@ esac
 
 HERE=$(dirname $(readlink --canonicalize "$0"))
 REPOROOT=$(dirname "$HERE")
-RUBYLIB="$REPOROOT/lib" $RUBY "$REPOROOT/admin/runtests.rb"
+RUBYLIB="$REPOROOT/lib" $RUBY "$@" "$REPOROOT/admin/runtests.rb"
