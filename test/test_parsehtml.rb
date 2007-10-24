@@ -12,7 +12,7 @@ class ParseHTMLTestCase < Test::Unit::TestCase
 
     chunks.each{|c|
       expected, html = c.split("\n", 2)
-        found = html_yadis_location(html)
+        found = Yadis::html_yadis_location(html)
 
         assert(!reserved_values.member?(found))
 

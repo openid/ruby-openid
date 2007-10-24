@@ -1,11 +1,12 @@
 require "openid/yadis/htmltokenizer"
 require 'cgi'
 
-def html_yadis_location(html)
-  parser = HTMLTokenizer.new(html)
+module Yadis
+  def Yadis.html_yadis_location(html)
+    parser = HTMLTokenizer.new(html)
 
-  # to keep track of whether or not we are in the head element
-  in_head = false
+    # to keep track of whether or not we are in the head element
+    in_head = false
 
     while el = parser.getTag('head', '/head', 'meta', 'body', '/body', 'html')
       
@@ -28,6 +29,6 @@ def html_yadis_location(html)
       end
       
     end
-
+  end
 end
 
