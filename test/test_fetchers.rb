@@ -18,6 +18,9 @@ end
 class FetcherTestCase < Test::Unit::TestCase
   include HttpResultAssertions
 
+  @@test_header_name = 'X-test-header'
+  @@test_header_value = 'marmoset'
+  
   class ExpectedResponse < Net::HTTPResponse
     attr_reader :final_url
 
@@ -63,6 +66,12 @@ class FetcherTestCase < Test::Unit::TestCase
     }
   end
 
+  def _require_header
+    lambda { |req, resp|
+      assert_equal @@test_header_value, req[@@test_header_name]
+    }
+  end
+  
   def setup
     @fetcher = OpenID::StandardFetcher.new
     @logfile = StringIO.new
@@ -81,6 +90,11 @@ class FetcherTestCase < Test::Unit::TestCase
       @server.mount_proc('/notfound', _respond_with_code(404))
       @server.mount_proc('/error', _respond_with_code(500))
       @server.mount_proc('/server_error', _respond_with_code(503))
+      @server.mount_proc('/require_header', _require_header)
+      @server.mount_proc('/redirect_to_reqheader') { |req, resp|
+        resp.status = 302
+        resp['Location'] = _uri_build('/require_header')
+      }
       @server.start
     }
     @uri = _uri_build
@@ -106,6 +120,28 @@ class FetcherTestCase < Test::Unit::TestCase
     assert result.final_url.path.tainted?
   end
 
+  def test_headers
+    headers = {
+      @@test_header_name => @@test_header_value
+    }
+    uri = _uri_build('/require_header')
+    result = @fetcher.fetch(uri, nil, headers)
+    # The real test runs under the WEBrick handler _require_header,
+    # this just checks the return code from that.
+    assert_equal '200', result.code, @logfile.string
+  end
+
+  def test_headers_after_redirect
+    headers = {
+      @@test_header_name => @@test_header_value
+    }
+    uri = _uri_build('/redirect_to_reqheader')
+    result = @fetcher.fetch(uri, nil, headers)
+    # The real test runs under the WEBrick handler _require_header,
+    # this just checks the return code from that.
+    assert_equal '200', result.code, @logfile.string
+  end
+  
   def test_cases
     for path, expected_code, expected_url in @@cases
       uri = _uri_build(path)

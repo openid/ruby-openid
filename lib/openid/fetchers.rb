@@ -22,7 +22,9 @@ module OpenID
 
   class StandardFetcher
     def fetch(url, body=nil, headers=nil)
-      response = Net::HTTP.get_response(url)
+      headers ||= {}
+      httpthing = Net::HTTP.new(url.host, url.port)
+      response = httpthing.request_get(url.request_uri, headers)
       case response
       when Net::HTTPRedirection
         redirect_url = URI.parse(response["location"])
