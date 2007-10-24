@@ -55,14 +55,6 @@ module OpenID
       Base64.decode64(s)
     end
 
-    def Util.kvform(hash)
-      form = ""
-      hash.each do |k,v|
-        form << "#{k}:#{v}\n"
-      end
-      form
-    end
-
     def Util.urlencode(args)
       a = []
       args.each do |key, val|

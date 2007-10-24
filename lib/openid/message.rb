@@ -193,8 +193,7 @@ module OpenID
 
     # Create a message from a KVForm string
     def Message.from_kvform(kvform_string)
-      raise Exception, "XXX: KVForm not yet implemented!"
-      return Message.from_openid_args(Util.parsekv(kvform_string))
+      return Message.from_openid_args(Util.kv_to_dict(kvform_string))
     end
 
     def copy
@@ -285,7 +284,7 @@ module OpenID
     # This will fail is the message contains arguments outside of the
     # "openid." prefix.
     def to_kvform
-      return Util.kvform(to_args)
+      return Util.dict_to_kv(to_args)
     end
 
     # Generate an x-www-urlencoded string.

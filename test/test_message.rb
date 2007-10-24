@@ -45,6 +45,14 @@ module OpenID
       assert_equal('', @m.to_kvform)
     end
 
+    def test_from_kvform
+      kvform = "foo:bar\none:two\n"
+      args = {'foo' => 'bar', 'one' => 'two'}
+      expected_result = Message.from_openid_args(args)
+
+      assert(expected_result.eql?(Message.from_kvform(kvform)))
+    end
+
     def test_to_url_encoded
       assert_equal('', @m.to_url_encoded)
     end
