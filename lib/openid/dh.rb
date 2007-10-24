@@ -1,4 +1,5 @@
 require "openid/util"
+require "openid/cryptutil"
 
 module OpenID
 
