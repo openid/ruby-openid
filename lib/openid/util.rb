@@ -39,15 +39,13 @@ module OpenID
   class AssertionError < Exception
   end
 
-  def assert(value, message=nil)
-    if not value
-      raise AssertionError, message or value
-    end
-  end
-
   module Util
 
-    HAS_URANDOM = File.chardev? '/dev/urandom'
+    def Util.assert(value, message=nil)
+      if not value
+        raise AssertionError, message or value
+      end
+    end
 
     def Util.to_base64(s)
       Base64.encode64(s).gsub("\n", "")

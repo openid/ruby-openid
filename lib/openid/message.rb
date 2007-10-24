@@ -43,46 +43,46 @@ module OpenID
                             'assoc_handle', 'trust_root', 'openid',
                            ]
 
-  # Raised if the generic OpenID namespace is accessed when there
-  # is no OpenID namespace set for this message.
-  class UndefinedOpenIDNamespace < Exception; end
-
   # Sentinel used for Message implementation to indicate that getArg
   # should raise an exception instead of returning a default.
   NO_DEFAULT = :no_default
 
-  # Global namespace / alias registration map.  See
-  # register_namespace_alias.
-  REGISTERED_ALIASES = {}
+  # Raised if the generic OpenID namespace is accessed when there
+  # is no OpenID namespace set for this message.
+  class UndefinedOpenIDNamespace < Exception; end
 
   # Raised when an alias or namespace URI has already been registered.
   class NamespaceAliasRegistrationError < Exception; end
 
-  # Registers a (namespace URI, alias) mapping in a global namespace
-  # alias map.  Raises NamespaceAliasRegistrationError if either the
-  # namespace URI or alias has already been registered with a
-  # different value.  This function is required if you want to use a
-  # namespace with an OpenID 1 message.
-  def register_namespace_alias(namespace_uri, alias_)
-    if REGISTERED_ALIASES[alias_] == namespace_uri
-        return
-    end
-
-    if REGISTERED_ALIASES.values.include?(namespace_uri)
-      raise NamespaceAliasRegistrationError,
-        'Namespace uri #{namespace_uri} already registered'
-    end
-
-    if REGISTERED_ALIASES.member?(alias_)
-      raise NamespaceAliasRegistrationError,
-        'Alias #{alias_} already registered'
-    end
-
-    REGISTERED_ALIASES[alias_] = namespace_uri
-  end
-
   class Message
     attr_reader :namespaces
+
+    # Namespace / alias registration map.  See
+    # register_namespace_alias.
+    @@registered_aliases = {}
+
+    # Registers a (namespace URI, alias) mapping in a global namespace
+    # alias map.  Raises NamespaceAliasRegistrationError if either the
+    # namespace URI or alias has already been registered with a
+    # different value.  This function is required if you want to use a
+    # namespace with an OpenID 1 message.
+    def Message.register_namespace_alias(namespace_uri, alias_)
+      if @@registered_aliases[alias_] == namespace_uri
+          return
+      end
+
+      if @@registered_aliases.values.include?(namespace_uri)
+        raise NamespaceAliasRegistrationError,
+          'Namespace uri #{namespace_uri} already registered'
+      end
+
+      if @@registered_aliases.member?(alias_)
+        raise NamespaceAliasRegistrationError,
+          'Alias #{alias_} already registered'
+      end
+
+      @@registered_aliases[alias_] = namespace_uri
+    end
 
     @@allowed_openid_namespaces = [OPENID1_NS, OPENID2_NS]
 
@@ -153,7 +153,7 @@ module OpenID
         unless ns_uri
           # only try to map an alias to a default if it's an
           # OpenID 1.x namespace
-          REGISTERED_ALIASES.each { |_alias, _uri|
+          @@registered_aliases.each { |_alias, _uri|
             if _alias == ns_alias
               ns_uri = _uri
               break
@@ -443,7 +443,7 @@ module OpenID
     def add_alias(namespace_uri, desired_alias)
       # Check that desired_alias is not an openid protocol field as
       # per the spec.
-      assert(!OPENID_PROTOCOL_FIELDS.include?(desired_alias),
+      Util.assert(!OPENID_PROTOCOL_FIELDS.include?(desired_alias),
              "#{desired_alias} is not an allowed namespace alias")
 
       # check that there is not a namespace already defined for the
@@ -456,7 +456,7 @@ module OpenID
       # Check that desired_alias does not contain a period as per the
       # spec.
       if desired_alias.is_a?(String)
-          assert(desired_alias.index('.').nil?,
+          Util.assert(desired_alias.index('.').nil?,
                  "#{desired_alias} must not contain a dot")
       end
 
