@@ -29,7 +29,11 @@ module OpenID
       headers ||= {}
       headers['User-agent'] ||= USER_AGENT
       httpthing = Net::HTTP.new(url.host, url.port)
-      response = httpthing.request_get(url.request_uri, headers)
+      if body.nil?
+        response = httpthing.request_get(url.request_uri, headers)
+      else
+        response = httpthing.request_post(url.request_uri, body, headers)
+      end
       case response
       when Net::HTTPRedirection
         redirect_url = URI.parse(response["location"])

@@ -72,6 +72,13 @@ class FetcherTestCase < Test::Unit::TestCase
       assert_match 'ruby-openid', req['User-agent']
     }
   end
+
+  def _require_post
+    lambda { |req, resp|
+      assert_equal 'POST', req.request_method
+      assert_equal "postbody\n", req.body
+    }
+  end
   
   def setup
     @fetcher = OpenID::StandardFetcher.new
@@ -96,6 +103,7 @@ class FetcherTestCase < Test::Unit::TestCase
         resp.status = 302
         resp['Location'] = _uri_build('/require_header')
       }
+      @server.mount_proc('/post', _require_post)
       @server.start
     }
     @uri = _uri_build
@@ -138,6 +146,14 @@ class FetcherTestCase < Test::Unit::TestCase
     }
     uri = _uri_build('/redirect_to_reqheader')
     result = @fetcher.fetch(uri, nil, headers)
+    # The real test runs under the WEBrick handler _require_header,
+    # this just checks the return code from that.
+    assert_equal '200', result.code, @logfile.string
+  end
+
+  def test_post
+    uri = _uri_build('/post')
+    result = @fetcher.fetch(uri, "postbody\n")
     # The real test runs under the WEBrick handler _require_header,
     # this just checks the return code from that.
     assert_equal '200', result.code, @logfile.string
