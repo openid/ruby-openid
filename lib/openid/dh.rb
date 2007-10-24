@@ -31,11 +31,11 @@ module OpenID
       DiffieHellman.powermod(composite, @private, @p)
     end
 
-    def xor_secrect(algorithm, composite, secret)
+    def xor_secret(algorithm, composite, secret)
       dh_shared = get_shared_secret(composite)
-      packed_dh_shared = OpenID::CryptUtil.num_to_str(dh_shared)
+      packed_dh_shared = OpenID::CryptUtil.num_to_binary(dh_shared)
       hashed_dh_shared = algorithm.call(packed_dh_shared)
-      return strxor(secret, hashed_dh_shared)
+      return DiffieHellman.strxor(secret, hashed_dh_shared)
     end
 
     private

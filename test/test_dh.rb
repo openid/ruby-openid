@@ -49,5 +49,13 @@ module OpenID
       assert_equal(secret1, secret2)
     end
 
+    def test_xor_secret
+      dh1 = DiffieHellman.from_defaults()
+      dh2 = DiffieHellman.from_defaults()
+      secret = "Shhhhhh! don't tell!"
+      encrypted = dh1.xor_secret((CryptUtil.method :sha1), dh2.public, secret)
+      decrypted = dh2.xor_secret((CryptUtil.method :sha1), dh1.public, encrypted)
+      assert_equal(secret, decrypted)
+    end
   end
 end
