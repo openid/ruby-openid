@@ -11,7 +11,7 @@ UNRESERVED = [false]*256
 module OpenID
 
   module Util
-    
+
     def Util._remove_dot_segments(path)
       result_segments = []
 
@@ -41,13 +41,13 @@ module OpenID
           path = path[i..-1]
         end
       end
-      
+
       return result_segments.join('')
     end
 
     def Util.urinorm(uri)
       uri = URI.parse(uri)
-      
+
       raise URI::InvalidURIError.new('no scheme') unless uri.scheme
       uri.scheme = uri.scheme.downcase
       unless ['http','https'].member?(uri.scheme)
@@ -59,7 +59,7 @@ module OpenID
 
       uri.path = _remove_dot_segments(uri.path)
       uri.path = '/' if uri.path.length == 0
-      
+
       uri = uri.normalize.to_s
       uri = uri.gsub(/%[0-9a-zA-Z]{2}/) {
         i = $&[1..2].upcase.to_i(16)
