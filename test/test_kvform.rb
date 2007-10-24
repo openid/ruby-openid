@@ -76,6 +76,14 @@ class KVFormTests < Test::Unit::TestCase
       # Convert KVForm to dict
       d = Util.kvToDict(kv)
 
+      # Strict mode should raise ArgumentError instead of logging
+      # messages
+      if warnings > 0
+        assert_raise(ArgumentError) do
+          Util.kvToSeq(kv, true)
+        end
+      end
+
       # make sure it parses to expected dict
       assert_equal(dct, d)
     }
@@ -130,6 +138,14 @@ class KVFormTests < Test::Unit::TestCase
 
       assert_equal(kvform, actual)
       assert actual.is_a?(String)
+
+      # Strict mode should raise ArgumentError instead of logging
+      # messages
+      if warnings > 0
+        assert_raise(ArgumentError) do
+          Util.seqToKV(seq, true)
+        end
+      end
 
       # Parse back to sequence. Expected to be unchanged, except
       # stripping whitespace from start and end of values
