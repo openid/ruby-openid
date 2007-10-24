@@ -1,5 +1,6 @@
 require 'test/unit'
 require 'openid/dh'
+require 'testutil'
 
 module OpenID
   class DiffieHellmanExposed < OpenID::DiffieHellman
@@ -9,6 +10,8 @@ module OpenID
   end
 
   class DiffieHellmanTestCase < Test::Unit::TestCase
+    include OpenID::TestDataMixin
+
     NUL = "\x00"
 
     def test_strxor_success
@@ -56,6 +59,21 @@ module OpenID
       encrypted = dh1.xor_secret((CryptUtil.method :sha1), dh2.public, secret)
       decrypted = dh2.xor_secret((CryptUtil.method :sha1), dh1.public, encrypted)
       assert_equal(secret, decrypted)
+    end
+
+    def test_dh
+      dh = DiffieHellman.from_defaults()
+      class << dh
+        def set_private_test(priv)
+          set_private(priv)
+        end
+      end
+
+      read_data_file('dh.txt', true).each do |line|
+        priv, pub = line.split(' ').map {|x| x.to_i}
+        dh.set_private_test(priv)
+        assert_equal(dh.public, pub)
+      end
     end
   end
 end

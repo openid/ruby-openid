@@ -22,9 +22,7 @@ module OpenID
     def initialize(p=nil, g=nil)
       @p = p.nil? ? @@default_mod : p
       @g = g.nil? ? @@default_gen : g
-
-      @private = OpenID::CryptUtil.rand(@p-2) + 1
-      @public = DiffieHellman.powermod(@g, @private, @p)
+      set_private(OpenID::CryptUtil.rand(@p-2) + 1)
     end
 
     def get_shared_secret(composite)
@@ -39,6 +37,11 @@ module OpenID
     end
 
     private
+    def set_private(priv)
+      @private = priv
+      @public = DiffieHellman.powermod(@g, @private, @p)
+    end
+
     def DiffieHellman.strxor(s, t)
       if s.length != t.length
         raise ArgumentError, "strxor: lengths don't match. " +
