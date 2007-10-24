@@ -179,9 +179,9 @@ module OpenID
       end
 
       def TrustRoot.parse(trust_root)
-        return nil unless trust_root.instance_of?(String)    
+        return nil unless trust_root.instance_of?(String)
 
-        trust_root = trust_root.dup      
+        trust_root = trust_root.dup
         unparsed = trust_root.dup
 
         # look for wildcard
@@ -199,7 +199,7 @@ module OpenID
         return nil if parts.nil?
 
         proto, host, port, path = parts
-      
+
         # check for URI fragment
         if path and !path.index('#').nil?
           return nil
@@ -225,7 +225,7 @@ module OpenID
         #
         # This function does not check to make sure that the realm is
         # valid. Its behaviour on invalid inputs is undefined.
-        # 
+        #
         # return_to: The relying party return URL of the OpenID
         # authentication request
         #
@@ -252,7 +252,7 @@ module OpenID
 
       def sane?
         return true if @host == 'localhost'
-      
+
         host_parts = @host.split('.')
 
         # a note: ruby string split does not put an empty string at
@@ -282,13 +282,13 @@ module OpenID
 
         return true
       end
-    
+
       def validate_url(url)
         parts = TrustRoot._parse_url(url)
         return false if parts.nil?
 
         proto, host, port, path = parts
-      
+
         return false unless proto == @proto
         return false unless port == @port
         return false unless host.index('*').nil?
