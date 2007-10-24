@@ -21,8 +21,13 @@ module OpenID
   end
 
   class StandardFetcher
+
+    # FIXME: Use an OpenID::VERSION constant here.
+    USER_AGENT = "ruby-openid/VERSION (#{PLATFORM})"
+
     def fetch(url, body=nil, headers=nil)
       headers ||= {}
+      headers['User-agent'] ||= USER_AGENT
       httpthing = Net::HTTP.new(url.host, url.port)
       response = httpthing.request_get(url.request_uri, headers)
       case response

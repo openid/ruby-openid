@@ -69,6 +69,7 @@ class FetcherTestCase < Test::Unit::TestCase
   def _require_header
     lambda { |req, resp|
       assert_equal @@test_header_value, req[@@test_header_name]
+      assert_match 'ruby-openid', req['User-agent']
     }
   end
   
