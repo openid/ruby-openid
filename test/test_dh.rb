@@ -40,5 +40,14 @@ module OpenID
         }
       end
     end
+
+    def test_simple_exchange
+      dh1 = DiffieHellman.from_defaults()
+      dh2 = DiffieHellman.from_defaults()
+      secret1 = dh1.get_shared_secret(dh2.public)
+      secret2 = dh2.get_shared_secret(dh1.public)
+      assert_equal(secret1, secret2)
+    end
+
   end
 end

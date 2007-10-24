@@ -10,25 +10,25 @@ module OpenID
 
   class DiffieHellman
 
-    @@DEFAULT_MOD = 155172898181473697471232257763715539915724801966915404479707795314057629378541917580651227423698188993727816152646631438561595825688188889951272158842675419950341258706556549803580104870537681476726513255747040765857479291291572334510643245094715007229621094194349783925984760375594985848253359305585439638443
-    @@DEFAULT_GEN = 2
+    @@default_mod = 155172898181473697471232257763715539915724801966915404479707795314057629378541917580651227423698188993727816152646631438561595825688188889951272158842675419950341258706556549803580104870537681476726513255747040765857479291291572334510643245094715007229621094194349783925984760375594985848253359305585439638443
+    @@default_gen = 2
 
     attr_reader :p, :g, :public
 
     def DiffieHellman.from_defaults
-      DiffieHellman.new(DiffieHellman.DEFAULT_GEN, DiffieHellman.DEFAULT_MOD)
+      DiffieHellman.new(@@default_mod, @@default_gen)
     end
 
     def initialize(p=nil, g=nil)
-      @p = p.nil? ? @@DEFAULT_MOD : p
-      @g = g.nil? ? @@DEFAULT_GEN : g
+      @p = p.nil? ? @@default_mod : p
+      @g = g.nil? ? @@default_gen : g
 
       @private = OpenID::CryptUtil.rand(@p-2) + 1
-      @public = OpenID::CryptUtil.powermod(@g, @private, @p)
+      @public = DiffieHellman.powermod(@g, @private, @p)
     end
 
     def get_shared_secret(composite)
-      OpenID::CryptUtil.powermod(composite, @private, @p)
+      DiffieHellman.powermod(composite, @private, @p)
     end
 
     def xor_secrect(algorithm, composite, secret)
@@ -48,6 +48,24 @@ module OpenID
       indices = 0...(s.length)
       chrs = indices.collect {|i| (s[i]^t[i]).chr}
       chrs.join("")
+    end
+
+    # This code is taken from this post[http://blade.nagaokaut.ac.jp/cgi-bin/scat.\rb/ruby/ruby-talk/19098]
+    # by Eric Lee Green.
+    def DiffieHellman.powermod(x, n, q)
+      counter=0
+      n_p=n
+      y_p=1
+      z_p=x
+      while n_p != 0
+        if n_p[0]==1
+          y_p=(y_p*z_p) % q
+        end
+        n_p = n_p >> 1
+        z_p = (z_p * z_p) % q
+        counter += 1
+      end
+      return y_p
     end
 
   end
