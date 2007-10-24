@@ -2,13 +2,13 @@ require 'uri'
 
 require "openid/extras"
 
-UNRESERVED = [false]*256
-('A'[0]..'Z'[0]).each {|i| UNRESERVED[i] = true}
-('a'[0]..'z'[0]).each {|i| UNRESERVED[i] = true}
-('0'[0]..'9'[0]).each {|i| UNRESERVED[i] = true}
-%W(- . _ ~).each {|i| UNRESERVED[i[0]] = true}
-
 module OpenID
+
+  UNRESERVED = [false]*256
+  ('A'[0]..'Z'[0]).each {|i| UNRESERVED[i] = true}
+  ('a'[0]..'z'[0]).each {|i| UNRESERVED[i] = true}
+  ('0'[0]..'9'[0]).each {|i| UNRESERVED[i] = true}
+  %W(- . _ ~).each {|i| UNRESERVED[i[0]] = true}
 
   module Util
 
