@@ -72,8 +72,4 @@ module OpenID
     end
   end
 
-  module Util
-
-  end
-
 end
