@@ -5,28 +5,6 @@ require 'util'
 
 include OpenID
 
-class KVExcTest
-  def initialize(tc, seq)
-    @tc = tc
-    @seq = seq
-  end
-
-  def runTest
-    @tc.assert_raise ArgumentError do
-      Util.seqToKV(@seq)
-    end
-  end
-end
-
-class GeneralTest
-  kvform = '<None>'
-
-  def initialize(tc)
-    @tc = tc
-  end
-
-end
-
 class KVFormTests < Test::Unit::TestCase
   include OpenID::TestUtil
 
