@@ -50,7 +50,8 @@ module OpenID
       chrs.join("")
     end
 
-    # This code is taken from this post[http://blade.nagaokaut.ac.jp/cgi-bin/scat.\rb/ruby/ruby-talk/19098]
+    # This code is taken from this post:
+    # <http://blade.nagaokaut.ac.jp/cgi-bin/scat.\rb/ruby/ruby-talk/19098>
     # by Eric Lee Green.
     def DiffieHellman.powermod(x, n, q)
       counter=0
