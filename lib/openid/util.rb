@@ -25,7 +25,7 @@ module OpenID
   # Code returned by OpenID::OpenIDConsumer.complete_auth when the
   # OpenIDConsumer instance is in immediate mode and ther server sends back a
   # URL for the user to login with.
-  SETUP_NEEDED = 'setup needed'  
+  SETUP_NEEDED = 'setup needed'
 
   # Code returned by OpenID::OpenIDConsumer.begin_auth when it is unable
   # to fetch the URL given by the user.
@@ -56,7 +56,7 @@ module OpenID
     def Util.from_base64(s)
       Base64.decode64(s)
     end
- 
+
     def Util.kvform(hash)
       form = ""
       hash.each do |k,v|
@@ -73,13 +73,13 @@ module OpenID
       end
       a.join("&")
     end
-    
+
     def Util.parse_query(qs)
       query = {}
       CGI::parse(qs).each {|k,v| query[k] = v[0]}
       return query
     end
-    
+
     def Util.append_args(url, args)
       url = url.dup
       return url if args.length == 0
@@ -91,7 +91,7 @@ module OpenID
       url << (url.include?("?") ? "&" : "?")
       url << Util.urlencode(args)
     end
-    
+
     @@logger = Logger.new(STDERR)
     @@logger.progname = "OpenID"
 
