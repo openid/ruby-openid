@@ -52,13 +52,13 @@ class KVFormTests < Test::Unit::TestCase
     d2 = nil
     assert_log_line_count(warnings) {
       # Convert KVForm to dict
-      d = Util.kvToDict(kv)
+      d = Util.kv_to_dict(kv)
 
       # Strict mode should raise ArgumentError instead of logging
       # messages
       if warnings > 0
         assert_raise(ArgumentError) do
-          Util.kvToSeq(kv, true)
+          Util.kv_to_seq(kv, true)
         end
       end
 
@@ -68,10 +68,10 @@ class KVFormTests < Test::Unit::TestCase
 
     # Convert back to KVForm and round-trip back to dict to make sure
     # that *** dict -> kv -> dict is identity. ***
-    kv = Util.dictToKV(d)
+    kv = Util.dict_to_kv(d)
 
     silence_logging {
-      d2 = Util.kvToDict(kv)
+      d2 = Util.kv_to_dict(kv)
     }
 
     assert_equal(d, d2)
@@ -112,7 +112,7 @@ class KVFormTests < Test::Unit::TestCase
 
     assert_log_line_count(warnings) {
       # seq serializes to expected kvform
-      actual = Util.seqToKV(seq)
+      actual = Util.seq_to_kv(seq)
 
       assert_equal(kvform, actual)
       assert actual.is_a?(String)
@@ -121,14 +121,14 @@ class KVFormTests < Test::Unit::TestCase
       # messages
       if warnings > 0
         assert_raise(ArgumentError) do
-          Util.seqToKV(seq, true)
+          Util.seq_to_kv(seq, true)
         end
       end
 
       # Parse back to sequence. Expected to be unchanged, except
       # stripping whitespace from start and end of values
       # (i. e. ordering, case, and internal whitespace is preserved)
-      seq = Util.kvToSeq(actual)
+      seq = Util.kv_to_seq(actual)
       clean_seq = _cleanSeq(seq)
 
       assert_equal(seq, clean_seq)
@@ -152,13 +152,13 @@ class KVFormTests < Test::Unit::TestCase
     seq = case_
 
     assert_raise(ArgumentError) do
-      Util.seqToKV(seq)
+      Util.seq_to_kv(seq)
     end
   end
 
   def test_convert
     assert_log_line_count(2) {
-      result = Util.seqToKV([[1, 1]])
+      result = Util.seq_to_kv([[1, 1]])
       assert_equal(result, "1:1\n")
     }
   end

@@ -3,7 +3,7 @@ module OpenID
 
   module Util
 
-    def Util.seqToKV(seq, strict=false)
+    def Util.seq_to_kv(seq, strict=false)
       # Represent a sequence of pairs of strings as newline-terminated
       # key:value pairs. The pairs are generated in the order given.
       #
@@ -11,7 +11,7 @@ module OpenID
       #
       # returns a string representation of the sequence
       err = lambda { |msg|
-        msg = "seqToKV warning: #{msg}: #{seq.inspect}"
+        msg = "seq_to_kv warning: #{msg}: #{seq.inspect}"
         if strict
           raise ArgumentError, msg
         else
@@ -27,11 +27,11 @@ module OpenID
         end
 
         if !k.index("\n").nil?
-          raise ArgumentError, "Invalid input for seqToKV: key contains newline: #{k.inspect}"
+          raise ArgumentError, "Invalid input for seq_to_kv: key contains newline: #{k.inspect}"
         end
 
         if !k.index(":").nil?
-          raise ArgumentError, "Invalid input for seqToKV: key contains colon: #{k.inspect}"
+          raise ArgumentError, "Invalid input for seq_to_kv: key contains colon: #{k.inspect}"
         end
 
         if k.strip() != k
@@ -44,7 +44,7 @@ module OpenID
         end
 
         if !v.index("\n").nil?
-          raise ArgumentError, "Invalid input for seqToKV: value contains newline: #{v.inspect}"
+          raise ArgumentError, "Invalid input for seq_to_kv: value contains newline: #{v.inspect}"
         end
 
         if v.strip() != v
@@ -57,14 +57,14 @@ module OpenID
       return lines.join("")
     end
 
-    def Util.kvToSeq(data, strict=false)
-      # After one parse, seqToKV and kvToSeq are inverses, with no
+    def Util.kv_to_seq(data, strict=false)
+      # After one parse, seq_to_kv and kv_to_seq are inverses, with no
       # warnings:
       #
-      # seq = kvToSeq(s)
-      # seqToKV(kvToSeq(seq)) == seq
+      # seq = kv_to_seq(s)
+      # seq_to_kv(kv_to_seq(seq)) == seq
       err = lambda { |msg|
-        msg = "kvToSeq warning: #{msg}: #{data.inspect}"
+        msg = "kv_to_seq warning: #{msg}: #{data.inspect}"
         if strict
           raise ArgumentError, msg
         else
@@ -121,12 +121,12 @@ module OpenID
       return pairs
     end
 
-    def Util.dictToKV(d)
-      return seqToKV(d.entries.sort)
+    def Util.dict_to_kv(d)
+      return seq_to_kv(d.entries.sort)
     end
 
-    def Util.kvToDict(s)
-      seq = kvToSeq(s)
+    def Util.kv_to_dict(s)
+      seq = kv_to_seq(s)
       return Hash[*seq.flatten]
     end
   end
