@@ -4,15 +4,41 @@ require "openid/extras"
 
 module OpenID
 
-  UNRESERVED = [false]*256
-  ('A'[0]..'Z'[0]).each {|i| UNRESERVED[i] = true}
-  ('a'[0]..'z'[0]).each {|i| UNRESERVED[i] = true}
-  ('0'[0]..'9'[0]).each {|i| UNRESERVED[i] = true}
-  %W(- . _ ~).each {|i| UNRESERVED[i[0]] = true}
+  module URINorm
+    public
+    def URINorm.urinorm(uri)
+      uri = URI.parse(uri)
 
-  module Util
+      raise URI::InvalidURIError.new('no scheme') unless uri.scheme
+      uri.scheme = uri.scheme.downcase
+      unless ['http','https'].member?(uri.scheme)
+        raise URI::InvalidURIError.new('Not an HTTP or HTTPS URI')
+      end
 
-    def Util._remove_dot_segments(path)
+      raise URI::InvalidURIError.new('no host') unless uri.host
+      uri.host = uri.host.downcase
+
+      uri.path = remove_dot_segments(uri.path)
+      uri.path = '/' if uri.path.length == 0
+
+      uri = uri.normalize.to_s
+      uri = uri.gsub(PERCENT_ESCAPE_RE) {
+        sub = $&[1..2].to_i(16).chr
+        reserved(sub) ? $&.upcase : sub
+      }
+
+      return uri
+    end
+
+    private
+    RESERVED_RE = /[A-Za-z0-9._~-]/
+    PERCENT_ESCAPE_RE = /%[0-9a-zA-Z]{2}/
+
+    def URINorm.reserved(chr)
+      not RESERVED_RE =~ chr
+    end
+
+    def URINorm.remove_dot_segments(path)
       result_segments = []
 
       while path.length > 0
@@ -44,30 +70,9 @@ module OpenID
 
       return result_segments.join('')
     end
+  end
 
-    def Util.urinorm(uri)
-      uri = URI.parse(uri)
-
-      raise URI::InvalidURIError.new('no scheme') unless uri.scheme
-      uri.scheme = uri.scheme.downcase
-      unless ['http','https'].member?(uri.scheme)
-        raise URI::InvalidURIError.new('Not an HTTP or HTTPS URI')
-      end
-
-      raise URI::InvalidURIError.new('no host') unless uri.host
-      uri.host = uri.host.downcase
-
-      uri.path = _remove_dot_segments(uri.path)
-      uri.path = '/' if uri.path.length == 0
-
-      uri = uri.normalize.to_s
-      uri = uri.gsub(/%[0-9a-zA-Z]{2}/) {
-        i = $&[1..2].upcase.to_i(16)
-        UNRESERVED[i] ? i.chr : $&.upcase
-      }
-
-      return uri
-    end
+  module Util
 
   end
 

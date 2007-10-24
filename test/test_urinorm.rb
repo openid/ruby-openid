@@ -18,14 +18,14 @@ class URINormTestCase < Test::Unit::TestCase
 
       if expected == 'fail'
         begin
-          OpenID::Util::urinorm(actual)
+          OpenID::URINorm.urinorm(actual)
         rescue URI::InvalidURIError
           assert true
         else
           raise 'Should have gotten URI error'
         end
       else
-        normalized = OpenID::Util.urinorm(actual)
+        normalized = OpenID::URINorm.urinorm(actual)
         assert_equal(expected, normalized, case_name)
       end
     end
