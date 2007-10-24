@@ -4,6 +4,7 @@ require "openid/urinorm"
 require "testutil"
 
 class URINormTestCase < Test::Unit::TestCase
+  include OpenID::TestDataMixin
 
   def test_normalize
     lines = read_data_file('urinorm.txt')

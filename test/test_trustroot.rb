@@ -4,6 +4,8 @@ require 'openid/trustroot'
 require "testutil"
 
 class TrustRootTest < Test::Unit::TestCase
+  include OpenID::TestDataMixin
+
   def _test_sanity(case_, sanity, desc)
     tr = OpenID::TrustRoot::TrustRoot.parse(case_)
     if sanity == 'sane'

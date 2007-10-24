@@ -3,6 +3,7 @@ require "openid/yadis/parsehtml"
 require "testutil"
 
 class ParseHTMLTestCase < Test::Unit::TestCase
+  include OpenID::TestDataMixin
 
   def test_parsehtml
     reserved_values = ['None', 'EOF']
