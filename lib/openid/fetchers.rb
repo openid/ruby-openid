@@ -37,6 +37,7 @@ module OpenID
       if body.nil?
         response = httpthing.request_get(url.request_uri, headers)
       else
+        headers["Content-type"] ||= "application/x-www-form-urlencoded"
         response = httpthing.request_post(url.request_uri, body, headers)
       end
       case response
