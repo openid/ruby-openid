@@ -58,5 +58,15 @@ module OpenID
                       lifetime_s.to_i,
                       assoc_type)
     end
+
+    # The number of seconds until this association expires
+    def expires_in(now=nil)
+      if now.nil?
+        now = Time.now
+      elsif now.is_a?(Integer)
+        now = Time.at(now)
+      end
+      (issued + lifetime) - now
+    end
   end
 end
