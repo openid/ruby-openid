@@ -253,7 +253,7 @@ class HTMLTag < HTMLToken
     if !@hashed
       if !@end_tag
         # Get the attributes
-        attr_arr = @raw.scan(/<[\w:-]+\s+(.*)>/m)[0]
+        attr_arr = @raw.scan(/<[\w:-]+\s+(.*?)\/?>/m)[0]
         if attr_arr.kind_of?(Array)
           # Attributes found, parse them
           attrs = attr_arr[0]
