@@ -60,5 +60,22 @@ module OpenID
       assert(assoc.issued >= start_time)
       assert_in_delta(1, assoc.issued.to_f, start_time.to_f)
     end
+
+    def test_sign_sha1
+      pairs = [['key1', 'value1'],
+               ['key2', 'value2']]
+
+      [['HMAC-SHA256', "\xfd\xaa\xfe;\xac\xfc*\x988\xad\x05d6-"\
+                       "\xeaVy\xd5\xa5Z.<\xa9\xed\x18\x82\\$"\
+                       "\x95x\x1c&"],
+       ['HMAC-SHA1', "\xe0\x1bv\x04\xf1G\xc0\xbb\x7f\x9a\x8b"\
+                     "\xe9\xbc\xee}\\\xe5\xbb7*"],
+      ].each do |assoc_type, expected|
+        assoc = Association.from_expires_in(3600, "handle", 'very_secret',
+                                            assoc_type)
+        sig = assoc.sign(pairs)
+        assert_equal(sig, expected)
+      end
+    end
   end
 end

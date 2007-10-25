@@ -74,5 +74,19 @@ module OpenID
       end
       (issued + lifetime) - now
     end
+
+    # Generate a signature for a sequence of [key, value] pairs
+    def sign(pairs)
+      kv = Util.seq_to_kv(pairs)
+      case assoc_type
+      when 'HMAC-SHA1'
+        CryptUtil.hmac_sha1(secret, kv)
+      when 'HMAC-SHA256'
+        CryptUtil.hmac_sha256(secret, kv)
+      else
+        raise StandardError, "Association has unknown type: "\
+          "#{assoc_type.inspect}"
+      end
+    end
   end
 end
