@@ -79,6 +79,16 @@ class FetcherTestCase < Test::Unit::TestCase
       assert_equal "postbody\n", req.body
     }
   end
+
+  def _redirect_loop
+    lambda { |req, resp|
+      @_redirect_counter += 1
+      resp.status = 302
+      resp['Location'] = _uri_build('/redirect_loop')
+      resp.body = "Fetched #{@_redirect_counter} times."
+      assert_block("Fetched too many times.") { @_redirect_counter < 10 }
+    }
+  end
   
   def setup
     @fetcher = OpenID::StandardFetcher.new
@@ -104,6 +114,7 @@ class FetcherTestCase < Test::Unit::TestCase
         resp['Location'] = _uri_build('/require_header')
       }
       @server.mount_proc('/post', _require_post)
+      @server.mount_proc('/redirect_loop', _redirect_loop)
       @server.start
     }
     @uri = _uri_build
@@ -157,6 +168,14 @@ class FetcherTestCase < Test::Unit::TestCase
     # The real test runs under the WEBrick handler _require_header,
     # this just checks the return code from that.
     assert_equal '200', result.code, @logfile.string
+  end
+
+  def test_redirect_limit
+    @_redirect_counter = 0
+    uri = _uri_build('/redirect_loop')
+    assert_raise(OpenID::HTTPRedirectLimitReached) {
+      @fetcher.fetch(uri)
+    }
   end
   
   def test_cases
