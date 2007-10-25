@@ -11,6 +11,12 @@ module OpenID
     FIELD_ORDER =
       [:version, :handle, :secret, :issued, :lifetime, :assoc_type,]
 
+    # Create an Association with an issued time of now
+    def self.from_expires_in(expires_in, handle, secret, assoc_type)
+      issued = Time.now
+      self.new(handle, secret, issued, expires_in, assoc_type)
+    end
+
     def initialize(handle, secret, issued, lifetime, assoc_type)
       @handle = handle
       @secret = secret

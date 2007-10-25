@@ -41,5 +41,24 @@ module OpenID
       assert(@assoc.expires_in.between?(599,600))
       assert(@assoc.expires_in(Time.now.to_i).between?(599,600))
     end
+
+    def test_from_expires_in
+      start_time = Time.now
+      expires_in = @assoc.expires_in
+      assoc = Association.from_expires_in(expires_in,
+                                          @assoc.handle,
+                                          @assoc.secret,
+                                          @assoc.assoc_type)
+
+      # Allow one second of slop here for code execution time
+      assert_in_delta(1, assoc.expires_in, @assoc.expires_in)
+      [:handle, :secret, :assoc_type].each do |attr|
+        assert_equal(@assoc.send(attr), assoc.send(attr))
+      end
+
+      # Make sure the issued time is near the start
+      assert(assoc.issued >= start_time)
+      assert_in_delta(1, assoc.issued.to_f, start_time.to_f)
+    end
   end
 end
