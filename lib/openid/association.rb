@@ -2,8 +2,14 @@ require "openid/kvform"
 require "openid/util"
 
 module OpenID
+
+  # An Association holds the shared secret between a relying party and
+  # an OpenID provider.
   class Association
     attr_reader :handle, :secret, :issued, :lifetime, :assoc_type
+
+    FIELD_ORDER =
+      [:version, :handle, :secret, :issued, :lifetime, :assoc_type,]
 
     def initialize(handle, secret, issued, lifetime, assoc_type)
       @handle = handle
@@ -13,6 +19,8 @@ module OpenID
       @assoc_type = assoc_type
     end
 
+    # Serialize the association to a form that's consistent across
+    # JanRain OpenID libraries.
     def serialize
       data = {
         :version => '2',
@@ -29,6 +37,7 @@ module OpenID
       return Util.seq_to_kv(pairs, strict=true)
     end
 
+    # Load a serialized Association
     def Association.deserialize(serialized)
       parsed = Util.kv_to_seq(serialized)
       parsed_fields = parsed.map{|k, v| k.to_sym}
@@ -49,10 +58,5 @@ module OpenID
                       lifetime_s.to_i,
                       assoc_type)
     end
-
-    private
-    FIELD_ORDER =
-      [:version, :handle, :secret, :issued, :lifetime, :assoc_type,]
-
   end
 end
