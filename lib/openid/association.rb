@@ -95,9 +95,27 @@ module OpenID
     # given message
     def make_pairs(message)
       signed = message.get_arg(OPENID_NS, 'signed')
+      if signed.nil?
+        raise StandardError, 'Missing signed list'
+      end
       signed_fields = signed.split(',', -1)
       data = message.get_args(OPENID_NS)
       signed_fields.map do | field | [field, data[field] || ''] end
+    end
+
+    # Return whether the message's signature passes
+    def check_message_signature(message)
+      message_sig = message.get_arg(OPENID_NS, 'sig')
+      if message_sig.nil?
+        raise StandardError, "#{message} has no sig."
+      end
+      calculated_sig = get_message_signature(message)
+      return calculated_sig == message_sig
+    end
+
+    # Get the signature for this message
+    def get_message_signature(message)
+      sign(make_pairs(message))
     end
   end
 end

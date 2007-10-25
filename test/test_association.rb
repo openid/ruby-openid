@@ -100,5 +100,61 @@ module OpenID
       assert_equal([['identifier', '=example'],
                     ['mode', 'id_res']], pairs)
     end
+
+    def test_check_message_signature_no_signed
+      m = Message.new(OPENID2_NS)
+      m.update_args(OPENID2_NS, {'mode' => 'id_res',
+                      'identifier' => '=example',
+                      'sig' => 'coyote',
+                    })
+      assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
+                                          "HMAC-SHA1")
+      assert_raises(StandardError) {
+        assoc.check_message_signature(m)
+      }
+    end
+
+    def test_check_message_signature_no_sig
+      m = Message.new(OPENID2_NS)
+      m.update_args(OPENID2_NS, {'mode' => 'id_res',
+                      'identifier' => '=example',
+                      'signed' => 'mode',
+                    })
+      assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
+                                          "HMAC-SHA1")
+      assert_raises(StandardError) {
+        assoc.check_message_signature(m)
+      }
+    end
+
+    def test_check_message_signature_bad_sig
+      m = Message.new(OPENID2_NS)
+      m.update_args(OPENID2_NS, {'mode' => 'id_res',
+                      'identifier' => '=example',
+                      'signed' => 'mode',
+                      'sig' => 'coyote',
+                    })
+      assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
+                                          "HMAC-SHA1")
+      assert(!assoc.check_message_signature(m))
+    end
+
+    def test_check_message_signature_good_sig
+      m = Message.new(OPENID2_NS)
+      m.update_args(OPENID2_NS, {'mode' => 'id_res',
+                      'identifier' => '=example',
+                      'signed' => 'mode',
+                      'sig' => 'coyote',
+                    })
+      assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
+                                          "HMAC-SHA1")
+      class << assoc
+        # Override sign, because it's already tested elsewhere
+        def sign(pairs)
+          "coyote"
+        end
+      end
+      assert(assoc.check_message_signature(m))
+    end
   end
 end
