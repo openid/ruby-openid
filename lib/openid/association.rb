@@ -11,6 +11,28 @@ module OpenID
     FIELD_ORDER =
       [:version, :handle, :secret, :issued, :lifetime, :assoc_type,]
 
+    # Load a serialized Association
+    def self.deserialize(serialized)
+      parsed = Util.kv_to_seq(serialized)
+      parsed_fields = parsed.map{|k, v| k.to_sym}
+      if parsed_fields != FIELD_ORDER
+          raise StandardError, 'Unexpected fields in serialized association'\
+          " (Expected #{FIELD_ORDER.inspect}, got #{parsed_fields.inspect})"
+      end
+      version, handle, secret64, issued_s, lifetime_s, assoc_type =
+        parsed.map {|field, value| value}
+      if version != '2'
+        raise StandardError, "Attempted to deserialize unsupported version "\
+                             "(#{parsed[0][1].inspect})"
+      end
+
+      self.new(handle,
+               Util.from_base64(secret64),
+               Time.at(issued_s.to_i),
+               lifetime_s.to_i,
+               assoc_type)
+    end
+
     # Create an Association with an issued time of now
     def self.from_expires_in(expires_in, handle, secret, assoc_type)
       issued = Time.now
@@ -41,28 +63,6 @@ module OpenID
 
       pairs = FIELD_ORDER.map{|field| [field.to_s, data[field]]}
       return Util.seq_to_kv(pairs, strict=true)
-    end
-
-    # Load a serialized Association
-    def Association.deserialize(serialized)
-      parsed = Util.kv_to_seq(serialized)
-      parsed_fields = parsed.map{|k, v| k.to_sym}
-      if parsed_fields != FIELD_ORDER
-          raise StandardError, 'Unexpected fields in serialized association'\
-          " (Expected #{FIELD_ORDER.inspect}, got #{parsed_fields.inspect})"
-      end
-      version, handle, secret64, issued_s, lifetime_s, assoc_type =
-        parsed.map {|field, value| value}
-      if version != '2'
-        raise StandardError, "Attempted to deserialize unsupported version "\
-                             "(#{parsed[0][1].inspect})"
-      end
-
-      Association.new(handle,
-                      Util.from_base64(secret64),
-                      Time.at(issued_s.to_i),
-                      lifetime_s.to_i,
-                      assoc_type)
     end
 
     # The number of seconds until this association expires
