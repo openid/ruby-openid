@@ -3,6 +3,7 @@ require 'testutil'
 require 'openid/consumer/html_parse'
 
 class LinkParseTestCase < Test::Unit::TestCase
+  include OpenID::TestDataMixin
 
   def attr_cmp(expected, found)
     e = expected.to_a
