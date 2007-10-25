@@ -77,5 +77,28 @@ module OpenID
         assert_equal(sig, expected)
       end
     end
+
+    def test_sign_bad_assoc_type
+      @assoc.instance_eval { @assoc_type = 'Cookies' }
+      assert_raises(StandardError) {
+        @assoc.sign([])
+      }
+    end
+
+    def test_make_pairs
+      msg = Message.new(OPENID2_NS)
+      msg.update_args(OPENID2_NS, {
+                        'mode' => 'id_res',
+                        'identifier' => '=example',
+                        'signed' => 'identifier,mode',
+                        'sig' => 'cephalopod',
+                      })
+      msg.update_args(BARE_NS, {'xey' => 'value'})
+      assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
+                                          "HMAC-SHA1")
+      pairs = assoc.make_pairs(msg)
+      assert_equal([['identifier', '=example'],
+                    ['mode', 'id_res']], pairs)
+    end
   end
 end

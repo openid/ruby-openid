@@ -1,5 +1,7 @@
 require "openid/kvform"
 require "openid/util"
+require "openid/cryptutil"
+require "openid/message"
 
 module OpenID
 
@@ -87,6 +89,15 @@ module OpenID
         raise StandardError, "Association has unknown type: "\
           "#{assoc_type.inspect}"
       end
+    end
+
+    # Generate the list of pairs that form the signed elements of the
+    # given message
+    def make_pairs(message)
+      signed = message.get_arg(OPENID_NS, 'signed')
+      signed_fields = signed.split(',', -1)
+      data = message.get_args(OPENID_NS)
+      signed_fields.map do | field | [field, data[field] || ''] end
     end
   end
 end
