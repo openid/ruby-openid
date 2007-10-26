@@ -14,6 +14,13 @@ module HttpResultAssertions
   end
 end
 
+class BogusFetcher
+  RESPONSE = "bogus"
+
+  def fetch(url, body=nil, headers=nil, redirect_limit=5)
+    return BogusFetcher::RESPONSE
+  end
+end
 
 class FetcherTestCase < Test::Unit::TestCase
   include HttpResultAssertions
@@ -209,5 +216,22 @@ EOF
         raise new_err
       end
     end
+  end
+end
+
+class DefaultFetcherTest < Test::Unit::TestCase
+  def test_default_fetcher
+    # The default fetcher should initially be nil
+    assert(OpenID.get_current_fetcher().nil?)
+
+    # A custom fetcher can be set
+    OpenID.set_default_fetcher(BogusFetcher.new)
+
+    # A test fetch should call the new fetcher
+    assert(OpenID.fetch('not-a-url') == BogusFetcher::RESPONSE)
+
+    # Set the fetcher to nil again
+    OpenID.set_default_fetcher(nil)
+    assert(OpenID.get_current_fetcher().nil?)
   end
 end
