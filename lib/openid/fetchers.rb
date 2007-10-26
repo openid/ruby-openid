@@ -38,7 +38,7 @@ module OpenID
   def OpenID.set_default_fetcher(fetcher)
     @@default_fetcher = fetcher
   end
-  
+
   class StandardFetcher
 
     # FIXME: Use an OpenID::VERSION constant here.
