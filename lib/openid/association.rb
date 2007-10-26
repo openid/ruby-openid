@@ -118,4 +118,71 @@ module OpenID
       sign(make_pairs(message))
     end
   end
+
+  class AssociationNegotiator
+    attr_reader :allowed_types
+
+    def self.get_session_types(assoc_type)
+      case assoc_type
+      when 'HMAC-SHA1'
+        ['DH-SHA1', 'no-encryption']
+      when 'HMAC-SHA256'
+        ['DH-SHA256', 'no-encryption']
+      else
+        raise StandardError, "Unknown association type #{assoc_type.inspect}"
+      end
+    end
+
+    def self.check_session_type(assoc_type, session_type)
+      if !get_session_types(assoc_type).include?(session_type)
+        raise StandardError, "Session type #{session_type.inspect} not "\
+                             "valid for association type #{assoc_type.inspect}"
+      end
+    end
+
+    def initialize(allowed_types)
+      self.allowed_types=(allowed_types)
+    end
+
+    def copy
+      Marshal.load(Marshal.dump(self))
+    end
+
+    def allowed_types=(allowed_types)
+      allowed_types.each do |assoc_type, session_type|
+        self.class.check_session_type(assoc_type, session_type)
+      end
+      @allowed_types = allowed_types
+    end
+
+    def add_allowed_type(assoc_type, session_type=nil)
+      if session_type.nil?
+        session_types = self.class.get_session_types(assoc_type)
+      else
+        self.class.check_session_type(assoc_type, session_type)
+        session_types = [session_type]
+      end
+      session_types.each do |session_type|
+        @allowed_types << [assoc_type, session_type]
+      end
+    end
+
+    def allowed?(assoc_type, session_type)
+      @allowed_types.include?([assoc_type, session_type])
+    end
+
+    def get_allowed_type
+      @allowed_types.empty? ? nil : @allowed_types[0]
+    end
+  end
+
+  DefaultNegotiator =
+    AssociationNegotiator.new([['HMAC-SHA1', 'DH-SHA1'],
+                               ['HMAC-SHA1', 'no-encryption'],
+                               ['HMAC-SHA256', 'DH-SHA256'],
+                               ['HMAC-SHA256', 'no-encryption']])
+
+  EncryptedNegotiator =
+    AssociationNegotiator.new([['HMAC-SHA1', 'DH-SHA1'],
+                               ['HMAC-SHA256', 'DH-SHA256']])
 end

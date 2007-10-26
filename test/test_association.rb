@@ -157,4 +157,62 @@ module OpenID
       assert(assoc.check_message_signature(m))
     end
   end
+
+  class AssociationNegotiatorTestCase < Test::Unit::TestCase
+    def assert_equal_under(item1, item2)
+      val1 = yield(item1)
+      val2 = yield(item2)
+      assert_equal(val1, val2)
+    end
+
+    def test_copy
+      neg = AssociationNegotiator.new([['HMAC-SHA1', 'DH-SHA1']])
+      neg2 = neg.copy
+      assert_equal_under(neg, neg2) {|n| n.instance_eval{@allowed_types} }
+      assert(neg.object_id != neg2.object_id)
+    end
+
+    def test_add_allowed
+      neg = AssociationNegotiator.new([])
+      assert(!neg.allowed?('HMAC-SHA1', 'DH-SHA1'))
+      assert(!neg.allowed?('HMAC-SHA1', 'no-encryption'))
+      assert(!neg.allowed?('HMAC-SHA256', 'DH-SHA256'))
+      assert(!neg.allowed?('HMAC-SHA256', 'no-encryption'))
+      neg.add_allowed_type('HMAC-SHA1')
+      assert(neg.allowed?('HMAC-SHA1', 'DH-SHA1'))
+      assert(neg.allowed?('HMAC-SHA1', 'no-encryption'))
+      assert(!neg.allowed?('HMAC-SHA256', 'DH-SHA256'))
+      assert(!neg.allowed?('HMAC-SHA256', 'no-encryption'))
+      neg.add_allowed_type('HMAC-SHA256', 'DH-SHA256')
+      assert(neg.allowed?('HMAC-SHA1', 'DH-SHA1'))
+      assert(neg.allowed?('HMAC-SHA1', 'no-encryption'))
+      assert(neg.allowed?('HMAC-SHA256', 'DH-SHA256'))
+      assert(!neg.allowed?('HMAC-SHA256', 'no-encryption'))
+      assert_equal(neg.get_allowed_type, ['HMAC-SHA1', 'DH-SHA1'])
+    end
+
+    def test_bad_assoc_type
+      assert_raises(StandardError) {
+        AssociationNegotiator.new([['OMG', 'Ponies']])
+      }
+    end
+
+    def test_bad_session_type
+      assert_raises(StandardError) {
+        AssociationNegotiator.new([['HMAC-SHA1', 'OMG-Ponies']])
+      }
+    end
+
+    def test_default_negotiator
+      assert_equal(DefaultNegotiator.get_allowed_type,
+                   ['HMAC-SHA1', 'DH-SHA1'])
+      assert(DefaultNegotiator.allowed?('HMAC-SHA256', 'no-encryption'))
+    end
+
+    def test_encrypted_negotiator
+      assert_equal(EncryptedNegotiator.get_allowed_type,
+                   ['HMAC-SHA1', 'DH-SHA1'])
+      assert(!EncryptedNegotiator.allowed?('HMAC-SHA256', 'no-encryption'))
+    end
+  end
 end
