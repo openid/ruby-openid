@@ -39,6 +39,6 @@ module OpenID
   # a response in KV Form
   def self.make_kv_post(request_message, server_url)
     http_response = self.fetch(server_url, request_message.to_url_encoded)
-    return Message.from_http_response(http_response)
+    return Message.from_http_response(http_response, server_url)
   end
 end
