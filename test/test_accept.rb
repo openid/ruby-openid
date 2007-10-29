@@ -3,7 +3,6 @@ require 'test/unit'
 require 'openid/yadis/accept'
 require 'openid/extras'
 require 'openid/util'
-require 'test/testutil'
 
 module OpenID
 
