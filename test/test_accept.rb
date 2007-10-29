@@ -120,9 +120,48 @@ module OpenID
         descr = sprintf('MatchAcceptTest for lines %s', lnos)
 
         # Test:
-        accepted = Yadis::parse_accept_header(header)
-        actual = Yadis::match_types(accepted, available)
+        accepted = Yadis.parse_accept_header(header)
+        actual = Yadis.match_types(accepted, available)
         assert_equal(expected, actual)
+
+        assert_equal(Yadis.get_acceptable(header, available),
+                     expected.collect { |mtype, _| mtype })
+      }
+    end
+
+    def test_generate_accept_header
+      # TODO: move this into a test case file and write parsing code
+      # for it.
+
+      # Form: [input_array, expected_header_string]
+      cases = [
+               # Empty input list
+               [[], ""],
+               # Content type name only; no q value
+               [["test"], "test"],
+               # q = 1.0 should be omitted from the header
+               [[["test", 1.0]], "test"],
+               # Test conversion of float to string
+               [["test", ["with_q", 0.8]], "with_q; q=0.8, test"],
+               # Allow string q values, too
+               [["test", ["with_q_str", "0.7"]], "with_q_str; q=0.7, test"],
+               # Test q values out of bounds
+               [[["test", -1.0]], nil],
+               [[["test", 1.1]], nil],
+               # Test sorting of types by q value
+               [[["middle", 0.5], ["min", 0.1], "max"],
+                "min; q=0.1, middle; q=0.5, max"],
+
+              ].each { |input, expected_header|
+
+        if expected_header.nil?
+          assert_raise(ArgumentError) {
+            Yadis.generate_accept_header(*input)
+          }
+        else
+          assert_equal(expected_header, Yadis.generate_accept_header(*input),
+                       [input, expected_header].inspect)
+        end
       }
     end
 

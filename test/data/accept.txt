@@ -96,7 +96,13 @@ Available: application/xrds+xml
 Accept: application/xml
 Expected:
 
+Available:
+Accept: not_a_content_type
+Expected:
 
+Available: text/html
+Accept: not_a_content_type, text/html
+Expected: text/html; q=1.0
 
 #################################################
 # The tests below this line are documentation of how this library
