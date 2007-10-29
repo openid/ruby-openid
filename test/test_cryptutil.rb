@@ -70,6 +70,12 @@ class CryptUtilTestCase < Test::Unit::TestCase
     end
   end
 
+  def test_base64_to_num_invalid
+    assert_raises(ArgumentError) {
+      OpenID::CryptUtil.base64_to_num('!@#$')
+    }
+  end
+
   def test_num_to_base64
     with_n2b64 do |base64, num|
       assert_equal(base64, OpenID::CryptUtil.num_to_base64(num))

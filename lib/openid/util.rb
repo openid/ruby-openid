@@ -41,6 +41,15 @@ module OpenID
 
   module Util
 
+    BASE64_CHARS = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
+                    'abcdefghijklmnopqrstuvwxyz0123456789+/')
+    BASE64_RE = Regexp.compile("
+    \\A
+    ([#{BASE64_CHARS}]{4})*
+    ([#{BASE64_CHARS}]{2}==|
+     [#{BASE64_CHARS}]{3}=)?
+    \\Z", Regexp::EXTENDED)
+
     def Util.assert(value, message=nil)
       if not value
         raise AssertionError, message or value
@@ -52,7 +61,11 @@ module OpenID
     end
 
     def Util.from_base64(s)
-      Base64.decode64(s)
+      without_newlines = s.gsub(/[\r\n]+/, '')
+      if !BASE64_RE.match(without_newlines)
+        raise ArgumentError, "Malformed input: #{s.inspect}"
+      end
+      Base64.decode64(without_newlines)
     end
 
     def Util.urlencode(args)
