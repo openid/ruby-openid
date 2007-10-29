@@ -75,5 +75,12 @@ module OpenID
         assert_equal(dh.public, pub)
       end
     end
+
+    def test_using_defaults
+      dh = DiffieHellman.from_defaults()
+      assert(dh.using_default_values?)
+      dh = DiffieHellman.new(3, 2750161)
+      assert(!dh.using_default_values?)
+    end
   end
 end

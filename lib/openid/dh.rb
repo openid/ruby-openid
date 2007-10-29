@@ -40,6 +40,10 @@ module OpenID
       return DiffieHellman.strxor(secret, hashed_dh_shared)
     end
 
+    def using_default_values?
+      @generator == @@default_gen && @modulus == @@default_mod
+    end
+
     private
     def set_private(priv)
       @private = priv
