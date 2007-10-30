@@ -390,7 +390,7 @@ module OpenID
       @args.delete(_key)
     end
 
-    def eql?(other)
+    def ==(other)
       return @args == other.instance_eval { @args }
     end
 

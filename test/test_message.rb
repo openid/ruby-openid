@@ -50,7 +50,7 @@ module OpenID
       args = {'foo' => 'bar', 'one' => 'two'}
       expected_result = Message.from_openid_args(args)
 
-      assert(expected_result.eql?(Message.from_kvform(kvform)))
+      assert_equal(expected_result, Message.from_kvform(kvform))
     end
 
     def test_to_url_encoded
@@ -484,7 +484,7 @@ module OpenID
     end
 
     def test_equal
-      assert(Message.new.eql?(Message.new))
+      assert_equal(Message.new, Message.new)
     end
 
     def test_from_openid_args_undefined_ns
@@ -556,7 +556,7 @@ module OpenID
 
     def test_copy
       n = @m.copy
-      assert(@m.eql?(n))
+      assert_equal(@m, n)
     end
 
     def test_to_post_args
