@@ -74,7 +74,12 @@ module OpenID
       elsif now.is_a?(Integer)
         now = Time.at(now)
       end
-      (issued + lifetime) - now
+      time_diff = (issued + lifetime) - now
+      if time_diff < 0
+        return 0
+      else
+        return time_diff
+      end
     end
 
     # Generate a signature for a sequence of [key, value] pairs

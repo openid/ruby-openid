@@ -40,6 +40,7 @@ module OpenID
       # Allow one second of slop
       assert(@assoc.expires_in.between?(599,600))
       assert(@assoc.expires_in(Time.now.to_i).between?(599,600))
+      assert_equal(0,@assoc.expires_in(Time.now.to_i + 10000),"negative expires_in")
     end
 
     def test_from_expires_in
