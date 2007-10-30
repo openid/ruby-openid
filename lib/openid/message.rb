@@ -391,7 +391,7 @@ module OpenID
     end
 
     def ==(other)
-      return @args == other.instance_eval { @args }
+      other.is_a?(self.class) && @args == other.instance_eval { @args }
     end
 
     def get_aliased_arg(aliased_key, default=nil)

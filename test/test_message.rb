@@ -485,6 +485,7 @@ module OpenID
 
     def test_equal
       assert_equal(Message.new, Message.new)
+      assert_not_equal(Message.new, nil)
     end
 
     def test_from_openid_args_undefined_ns
