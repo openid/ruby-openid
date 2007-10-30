@@ -122,6 +122,20 @@ module OpenID
     def get_message_signature(message)
       sign(make_pairs(message))
     end
+
+    def ==(other)
+      (other.class == self.class and 
+       other.handle == self.handle and
+       other.secret == self.secret and
+
+       # The internals of the time objects seemed to differ
+       # in an opaque way when serializing/unserializing.
+       # I don't think this will be a problem.
+       other.issued.to_i == self.issued.to_i and
+
+       other.lifetime == self.lifetime and
+       other.assoc_type == self.assoc_type)
+    end
   end
 
   class AssociationNegotiator

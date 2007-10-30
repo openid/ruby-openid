@@ -36,6 +36,11 @@ module OpenID
       }
     end
 
+    def test_serialization_identity
+      assoc2 = Association.deserialize(@assoc.serialize)
+      assert_equal(@assoc, assoc2)
+    end
+
     def test_expires_in
       # Allow one second of slop
       assert(@assoc.expires_in.between?(599,600))
