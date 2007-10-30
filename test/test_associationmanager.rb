@@ -143,4 +143,114 @@ module OpenID
       assert_equal(secret, @sess.extract_secret(msg))
     end
   end
+
+  class TestCreateAssociationRequest < Test::Unit::TestCase
+    def setup
+      @server_url = 'http://invalid/'
+      @assoc_manager = Consumer::AssociationManager.new(nil, @server_url)
+      class << @assoc_manager
+        def compatibility_mode=(val)
+            @compatibility_mode = val
+        end
+      end
+      @assoc_type = 'HMAC-SHA1'
+    end
+
+    def test_no_encryption_sends_type
+      session_type = 'no-encryption'
+      session, args = @assoc_manager.send(:create_associate_request,
+                                          @assoc_type,
+                                          session_type)
+
+      assert(session.is_a?(Consumer::NoEncryptionSession))
+      expected = Message.from_openid_args(
+            {'ns' => OPENID2_NS,
+             'session_type' => session_type,
+             'mode' => 'associate',
+             'assoc_type' => @assoc_type,
+             })
+
+      assert_equal(expected, args)
+    end
+
+    def test_no_encryption_compatibility
+      @assoc_manager.compatibility_mode = true
+      session_type = 'no-encryption'
+      session, args = @assoc_manager.send(:create_associate_request,
+                                          @assoc_type,
+                                          session_type)
+
+      assert(session.is_a?(Consumer::NoEncryptionSession))
+      assert_equal(Message.from_openid_args({'mode' => 'associate',
+                                              'assoc_type' => @assoc_type,
+                                            }), args)
+    end
+    def test_dh_sha1_compatibility
+      @assoc_manager.compatibility_mode = true
+      session_type = 'DH-SHA1'
+      session, args = @assoc_manager.send(:create_associate_request,
+                                          @assoc_type,
+                                          session_type)
+
+
+      assert(session.is_a?(Consumer::DiffieHellmanSHA1Session))
+
+      # This is a random base-64 value, so just check that it's
+      # present.
+      assert_not_nil(args.get_arg(OPENID1_NS, 'dh_consumer_public'))
+      args.del_arg(OPENID1_NS, 'dh_consumer_public')
+
+      # OK, session_type is set here and not for no-encryption
+      # compatibility
+      expected = Message.from_openid_args({'mode' => 'associate',
+                                            'session_type' => 'DH-SHA1',
+                                            'assoc_type' => @assoc_type,
+                                          })
+      assert_equal(expected, args)
+    end
+  end
+
+  class TestAssociationManagerExpiresIn < Test::Unit::TestCase
+    def expires_in_msg(val)
+      msg = Message.from_openid_args({'expires_in' => val})
+      Consumer::AssociationManager.extract_expires_in(msg)
+    end
+
+    def test_parse_fail
+      ['',
+       '-2',
+       ' 1',
+       ' ',
+       '0x00',
+       'foosball',
+       '1\n',
+       '100,000,000,000',
+      ].each do |x|
+        assert_raises(ProtocolError) {expires_in_msg(x)}
+      end
+    end
+
+    def test_parse
+      ['0',
+       '1',
+       '1000',
+       '9999999',
+       '01',
+      ].each do |n|
+        assert_equal(n.to_i, expires_in_msg(n))
+      end
+    end
+  end
+
+  class TestAssociationManagerCreateSession < Test::Unit::TestCase
+    def test_invalid
+      assert_raises(ArgumentError) {
+        Consumer::AssociationManager.create_session('monkeys')
+      }
+    end
+    def test_sha256
+      sess = Consumer::AssociationManager.create_session('DH-SHA256')
+      assert(sess.is_a?(Consumer::DiffieHellmanSHA256Session))
+    end
+  end
 end
