@@ -1,0 +1,173 @@
+
+require 'test/unit'
+require 'uri'
+
+require 'openid/yadis/discovery'
+require 'openid/fetchers'
+require 'openid/util'
+require 'test/discoverdata'
+
+module OpenID
+
+  module YadisDiscovery
+
+    include DiscoverData
+
+    STATUS_HEADER_RE = /Status: (\d+) .*?$/m
+
+    four04_pat = "\nContent-Type: text/plain\n\nNo such file %s"
+
+    def self.mkResponse(data)
+      status_mo = data.scan(STATUS_HEADER_RE)
+      headers_str, body = data.split("\n\n", 2)
+      headers = {}
+      headers_str.split("\n", -1).each { |line|
+        k, v = line.split(':', 2)
+        k = k.strip().downcase
+        v = v.strip()
+        headers[k] = v
+      }
+      status = status_mo[0][0].to_i
+      return HTTPResponse._from_raw_data(status, body,
+                                         headers)
+    end
+
+    class TestFetcher
+      include DiscoverData
+
+      def initialize(base_url)
+        @base_url = base_url
+      end
+
+      def fetch(url, headers, body, redirect_limit=nil)
+        current_url = url
+        while true
+          parsed = URI::parse(current_url)
+          # parsed[2][1:]
+          path = parsed.path[1..-1]
+          begin
+            data = generateSample(path, @base_url)
+          rescue ArgumentError
+            return HTTPResponse._from_raw_data(404, '', {},
+                                               current_url)
+          end
+
+          response = YadisDiscovery.mkResponse(data)
+          if [301, 302, 303, 307].member?(response.code)
+            current_url = response['location']
+          else
+            response.final_url = current_url
+            return response
+          end
+        end
+      end
+    end
+
+    class MockFetcher
+      def initialize
+        @count = 0
+      end
+
+      def fetch(uri, headers=nil, body=nil, redirect_limit=nil)
+        @count += 1
+        if @count == 1
+          headers = {
+            'X-XRDS-Location'.downcase => 'http://unittest/404',
+          }
+          return HTTPResponse._from_raw_data(200, '', headers, uri)
+        else
+          return HTTPResponse._from_raw_data(404, '', {}, uri)
+        end
+      end
+    end
+
+    class TestSecondGet < Test::Unit::TestCase
+      def setup
+        @oldfetcher = OpenID.get_current_fetcher
+        OpenID.set_default_fetcher(MockFetcher.new)
+      end
+
+      def teardown
+        OpenID.set_default_fetcher(@oldfetcher)
+      end
+
+      def test_404
+        uri = "http://something.unittest/"
+        assert_raise(Yadis::DiscoveryFailure) {
+          Yadis.discover(uri)
+        }
+      end
+    end
+
+    class DiscoveryTestCase
+      include DiscoverData
+
+      def initialize(testcase, input_name, id_name, result_name, success)
+        @base_url = 'http://invalid.unittest/'
+        @testcase = testcase
+        @input_name = input_name
+        @id_name = id_name
+        @result_name = result_name
+        @success = success
+      end
+
+      def setup
+        OpenID.set_default_fetcher(TestFetcher.new(@base_url))
+
+        @input_url, @expected = generateResult(@base_url,
+                                               @input_name,
+                                               @id_name,
+                                               @result_name,
+                                               @success)
+      end
+
+      def teardown
+        OpenID.set_default_fetcher(nil)
+      end
+
+      def runCustomTest
+        if @expected.respond_to?("ancestors") and @expected.ancestors.member?(Yadis::DiscoveryFailure)
+          @testcase.assert_raise(Yadis::DiscoveryFailure) {
+            Yadis.discover(@input_url)
+          }
+        else
+          result = Yadis.discover(@input_url)
+          @testcase.assert_equal(@input_url, result.request_uri)
+
+          msg = sprintf("Identity URL mismatch: actual = %s, expected = %s",
+                        result.normalized_uri, @expected.normalized_uri)
+          @testcase.assert_equal(@expected.normalized_uri, result.normalized_uri, msg)
+
+          msg = sprintf("Content mismatch: actual = %s, expected = %s",
+                        result.response_text, @expected.response_text)
+          @testcase.assert_equal(@expected.response_text, result.response_text, msg)
+
+          expected_keys = @expected.instance_variables
+          expected_keys.sort!
+
+          actual_keys = result.instance_variables
+          actual_keys.sort!
+
+          @testcase.assert_equal(actual_keys, expected_keys)
+
+          @expected.instance_variables.each { |k|
+            exp_v = @expected.instance_variable_get(k)
+            act_v = result.instance_variable_get(k)
+            @testcase.assert_equal(act_v, exp_v, [k, exp_v, act_v])
+          }
+        end
+      end
+    end
+
+    class TestYadisDiscovery < Test::Unit::TestCase
+      def test_yadis_discovery
+        DiscoverData::TESTLIST.each { |success, input_name, id_name, result_name|
+          test = DiscoveryTestCase.new(self, input_name, id_name, result_name, success)
+          test.setup
+          test.runCustomTest
+          test.teardown
+        }
+      end
+    end
+  end
+end
