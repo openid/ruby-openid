@@ -259,24 +259,16 @@ module OpenID
 
 ###################################33
 
-  # Test the session type negotiation behavior of an OpenID 2
-  # consumer.
-  class TestOpenID2SessionNegotiation < Test::Unit::TestCase
+  module NegotiationTestMixin
     include TestUtil
-
-    def setup
-      @server_url = 'http://invalid/'
-      @openid_ns = OPENID2_NS
-    end
-
-    def openid2_message(args)
-      args['ns'] = OPENID2_NS
+    def mk_message(args)
+      args['ns'] = @openid_ns
       Message.from_openid_args(args)
     end
 
     def call_negotiate(responses, negotiator=nil)
       store = nil
-      compat = false
+      compat = self.class::Compat
       assoc_manager = Consumer::AssociationManager.new(store, @server_url,
                                                        compat, negotiator)
       class << assoc_manager
@@ -294,19 +286,32 @@ module OpenID
       assoc_manager.responses = responses
       assoc_manager.negotiate_association
     end
+  end
+
+  # Test the session type negotiation behavior of an OpenID 2
+  # consumer.
+  class TestOpenID2SessionNegotiation < Test::Unit::TestCase
+    include NegotiationTestMixin
+
+    Compat = false
+
+    def setup
+      @server_url = 'http://invalid/'
+      @openid_ns = OPENID2_NS
+    end
 
     # Test the case where the response to an associate request is a
     # server error or is otherwise undecipherable.
     def test_bad_response
       assert_log_matches('Server error when requesting an association') {
-        assert_equal(call_negotiate([openid2_message({})]), nil)
+        assert_equal(call_negotiate([mk_message({})]), nil)
       }
     end
 
     # Test the case where the association type (assoc_type) returned
     # in an unsupported-type response is absent.
     def test_empty_assoc_type
-      msg = openid2_message({'error' => 'Unsupported type',
+      msg = mk_message({'error' => 'Unsupported type',
                               'error_code' => 'unsupported-type',
                               'session_type' => 'new-session-type',
                             })
@@ -323,7 +328,7 @@ module OpenID
     # Test the case where the session type (session_type) returned
     # in an unsupported-type response is absent.
     def test_empty_session_type
-      msg = openid2_message({'error' => 'Unsupported type',
+      msg = mk_message({'error' => 'Unsupported type',
                               'error_code' => 'unsupported-type',
                               'assoc_type' => 'new-assoc-type',
                             })
@@ -344,7 +349,7 @@ module OpenID
       negotiator.instance_eval{
         @allowed_types = [['assoc_bogus', 'session_bogus']]
       }
-      msg = openid2_message({'error' => 'Unsupported type',
+      msg = mk_message({'error' => 'Unsupported type',
                               'error_code' => 'unsupported-type',
                               'assoc_type' => 'not-allowed',
                               'session_type' => 'not-allowed',
@@ -359,7 +364,7 @@ module OpenID
     # Test the case where an unsupported-type response triggers a
     # retry to get an association with the new preferred type.
     def test_unsupported_with_retry
-      msg = openid2_message({'error' => 'Unsupported type',
+      msg = mk_message({'error' => 'Unsupported type',
                               'error_code' => 'unsupported-type',
                               'assoc_type' => 'HMAC-SHA1',
                               'session_type' => 'DH-SHA1',
@@ -375,7 +380,7 @@ module OpenID
     # Test the case where an unsupported-typ response triggers a
     # retry, but the retry fails and nil is returned instead.
     def test_unsupported_with_retry_and_fail
-      msg = openid2_message({'error' => 'Unsupported type',
+      msg = mk_message({'error' => 'Unsupported type',
                               'error_code' => 'unsupported-type',
                               'assoc_type' => 'HMAC-SHA1',
                               'session_type' => 'DH-SHA1',
@@ -394,6 +399,98 @@ module OpenID
 
       assert_log_matches() {
         assert_equal(call_negotiate([assoc]), assoc)
+      }
+    end
+  end
+
+
+  # Tests for the OpenID 1 consumer association session behavior.  See
+  # the docs for TestOpenID2SessionNegotiation.  Notice that this
+  # class is not a subclass of the OpenID 2 tests.  Instead, it uses
+  # many of the same inputs but inspects the log messages logged with
+  # oidutil.log.  See the calls to self.failUnlessLogMatches.  Some of
+  # these tests pass openid2-style messages to the openid 1
+  # association processing logic to be sure it ignores the extra data.
+  class TestOpenID1SessionNegotiation < Test::Unit::TestCase
+    include NegotiationTestMixin
+
+    Compat = true
+
+    def setup
+      @server_url = 'http://invalid/'
+      @openid_ns = OPENID1_NS
+    end
+
+    def test_bad_response
+      assert_log_matches('Server error when requesting an association') {
+        response = call_negotiate([mk_message({})])
+        assert_equal(nil, response)
+      }
+    end
+
+    def test_empty_assoc_type
+      msg = mk_message({'error' => 'Unsupported type',
+                         'error_code' => 'unsupported-type',
+                         'session_type' => 'new-session-type',
+                       })
+
+      assert_log_matches('Server error when requesting an association') {
+        response = call_negotiate([msg])
+        assert_equal(nil, response)
+      }
+    end
+
+    def test_empty_session_type
+      msg = mk_message({'error' => 'Unsupported type',
+                         'error_code' => 'unsupported-type',
+                         'assoc_type' => 'new-assoc-type',
+                       })
+
+      assert_log_matches('Server error when requesting an association') {
+        response = call_negotiate([msg])
+        assert_equal(nil, response)
+      }
+    end
+
+    def test_not_allowed
+      negotiator = AssociationNegotiator.new([])
+      negotiator.instance_eval{
+        @allowed_types = [['assoc_bogus', 'session_bogus']]
+      }
+
+      msg = mk_message({'error' => 'Unsupported type',
+                         'error_code' => 'unsupported-type',
+                         'assoc_type' => 'not-allowed',
+                         'session_type' => 'not-allowed',
+                       })
+
+      assert_log_matches('Server error when requesting an association') {
+        response = call_negotiate([msg])
+        assert_equal(nil, response)
+      }
+    end
+
+    def test_unsupported_with_retry
+      msg = mk_message({'error' => 'Unsupported type',
+                         'error_code' => 'unsupported-type',
+                         'assoc_type' => 'HMAC-SHA1',
+                         'session_type' => 'DH-SHA1',
+                       })
+
+      assoc = Association.new('handle', 'secret', 'issued', 10000, 'HMAC-SHA1')
+
+
+      assert_log_matches('Server error when requesting an association') {
+        response = call_negotiate([msg, assoc])
+        assert_equal(nil, response)
+      }
+    end
+
+    def test_valid
+      assoc = Association.new('handle', 'secret', 'issued', 10000, 'HMAC-SHA1')
+      assert_log_matches() {
+        response = call_negotiate([assoc])
+        assert_equal(assoc, response)
       }
     end
   end
