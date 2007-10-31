@@ -1,6 +1,7 @@
 require 'test/unit'
 require 'openid/store/interface'
 require 'openid/store/filestore'
+require 'openid/store/memstore'
 require 'openid/util'
 require 'openid/store/nonce'
 require 'openid/association'
@@ -214,6 +215,14 @@ module OpenID
 
     def teardown
       Kernel.system('rm -r filestoretest')
+    end
+  end
+
+  class MemoryStoreTestCase < Test::Unit::TestCase
+    include StoreTestCase
+    
+    def setup
+      @store = MemoryStore.new
     end
   end
 
