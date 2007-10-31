@@ -220,9 +220,12 @@ EOF
 end
 
 class DefaultFetcherTest < Test::Unit::TestCase
+  def setup
+    OpenID.set_default_fetcher(nil)
+  end
+
   def test_default_fetcher
-    # The default fetcher should initially be nil
-    assert(OpenID.get_current_fetcher().nil?)
+    assert(OpenID.get_current_fetcher().is_a?(OpenID::StandardFetcher))
 
     # A custom fetcher can be set
     OpenID.set_default_fetcher(BogusFetcher.new)
@@ -232,6 +235,6 @@ class DefaultFetcherTest < Test::Unit::TestCase
 
     # Set the fetcher to nil again
     OpenID.set_default_fetcher(nil)
-    assert(OpenID.get_current_fetcher().nil?)
+    assert(OpenID.get_current_fetcher().is_a?(OpenID::StandardFetcher))
   end
 end

@@ -15,8 +15,25 @@ module OpenID
       return me
     end
 
+    def self._from_raw_data(status, body="", headers={}, final_url=nil)
+      resp = Net::HTTPResponse.new('1.1', status, 'NONE')
+      me = self._from_net_response(resp, final_url, headers)
+      me.body = body
+      return me
+    end
+
     def method_missing(method, *args)
       @_response.send(method, *args)
+    end
+
+    def body=(s)
+      @_response.instance_variable_set('@body', s)
+      # XXX Hack to work around ruby's HTTP library behavior.  @body
+      # is only returned if it has been read from the response
+      # object's socket, but since we're not using a socket in this
+      # case, we need to set the @read flag to true to avoid a bug in
+      # Net::HTTPResponse.stream_check when @socket is nil.
+      @_response.instance_variable_set('@read', true)
     end
   end
 
@@ -32,6 +49,10 @@ module OpenID
   end
 
   def OpenID.get_current_fetcher
+    if @@default_fetcher.nil?
+      @@default_fetcher = StandardFetcher.new
+    end
+
     return @@default_fetcher
   end
 
