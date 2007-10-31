@@ -257,8 +257,6 @@ module OpenID
     end
   end
 
-###################################33
-
   module NegotiationTestMixin
     include TestUtil
     def mk_message(args)
@@ -494,5 +492,153 @@ module OpenID
       }
     end
   end
+
+
+
+
+##############################################################
+
+
+  module AssocTestMixin
+    def setup
+      @assoc_manager = Consumer::AssociationManager.new(nil,
+                                                        'http://invalid/')
+    end
+
+    Defaults = {
+      'expires_in' => '1000',
+      'assoc_handle' => 'a handle',
+      'assoc_type' => 'a type',
+      'session_type' => 'a session type',
+      'ns' => OPENID2_NS,
+    }
+    Fields = Defaults.keys
+    Fields.delete('ns')
+    Fields.freeze
+
+    # Build an association response message that contains the
+    # specified subset of keys. The values come from
+    # `association_response_values`.
+    #
+    # This is useful for testing for missing keys and other times that
+    # we don't care what the values are.
+    def mk_assoc_response(*keys)
+      args = {}
+      keys.each do |key|
+        args[key] = Defaults[key]
+      end
+      return Message.from_openid_args(args)
+    end
+
+    def assert_protocol_error(str_prefix)
+      begin
+        yield
+      rescue ProtocolError => why
+        message = "Expected prefix #{str_prefix.inspect}, got "\
+                  "#{why.message.inspect}"
+        assert(why.message.starts_with?(str_prefix), message)
+      else
+        fail("Expected ProtocolError. Got #{result.inspect}")
+      end
+    end
+
+    module TestMaker
+      # Factory function for creating test methods for generating
+      # missing field tests.
+      #
+      # Make a test that ensures that an association response that
+      # is missing required fields will short-circuit return None.
+      #
+      # According to 'Association Session Response' subsection 'Common
+      # Response Parameters', the following fields are required for OpenID
+      # 2.0:
+      #
+      #  * ns
+      #  * session_type
+      #  * assoc_handle
+      #  * assoc_type
+      #  * expires_in
+      #
+      # If 'ns' is missing, it will fall back to OpenID 1 checking. In
+      # OpenID 1, everything except 'session_type' and 'ns' are required.
+      def mk_extract_assoc_missing_test(name, keys)
+        test = lambda do
+          msg = mk_assoc_response(*keys)
+          assert_raises(IndexError) do
+            @assoc_manager.send(:extract_association, msg, nil)
+          end
+        end
+        define_method("test_#{name}", test)
+      end
+
+      def mk_session_type_mismatch_test(requested_session_type,
+                                        response_session_type,
+                                        openid1=false)
+        test = lambda do
+          assoc_session_class = Class.new do
+            @requested_session_type = requested_session_type
+            def self.session_type
+              @requested_session_type
+            end
+            def self.allowed_assoc_types
+              []
+            end
+          end
+          assoc_session = assoc_session_class.new
+
+          keys = Defaults.keys
+          if openid1
+            keys.delete('ns')
+          end
+          msg = mk_assoc_response(*keys)
+          msg.set_arg(OPENID_NS, 'session_type', response_session_type)
+          assert_protocol_error('Session type mismatch') {
+            @assoc_manager.send(:extract_association, msg, assoc_session)
+          }
+        end
+        name = "test_mismatch_req_#{requested_session_type}_"\
+               "resp_#{response_session_type}_openid#{openid1 ?1:2}"
+        define_method(name, test)
+      end
+    end
+
+    def self.included(other)
+      other.extend(TestMaker)
+    end
+  end
+
+  # Test for returning an error upon missing fields in association
+  # responses for OpenID 2
+  class TestExtractAssociationMissingFields < Test::Unit::TestCase
+    include AssocTestMixin
+
+    ([["no_fields", []]] +
+     (Fields.map do |f|
+        fields = Fields.dup
+        fields.delete(f)
+        ["missing_#{f}", fields]
+      end)
+     ).each do |name, fields|
+      # OpenID 1 is allowed to be missing session_type
+      if name != 'missing_session_type'
+        mk_extract_assoc_missing_test(name + "_openid1", fields)
+      end
+      mk_extract_assoc_missing_test(name + "_openid2", (fields + ["ns"]))
+    end
+
+    [['no-encryption', '', false],
+     ['DH-SHA1', 'no-encryption', false],
+     ['DH-SHA256', 'no-encryption', false],
+     ['no-encryption', 'DH-SHA1', false],
+     ['DH-SHA1', 'DH-SHA256', true],
+     ['DH-SHA256', 'DH-SHA1', true],
+     ['no-encryption', 'DH-SHA1', true],
+    ].each do |req_type, resp_type, openid1|
+      mk_session_type_mismatch_test(req_type, resp_type, openid1)
+    end
+  end
+
+##########################################################
+
 
 end

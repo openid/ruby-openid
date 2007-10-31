@@ -241,7 +241,7 @@ module OpenID
       def get_openid1_session_type(assoc_response)
         # If it's an OpenID 1 message, allow session_type to default
         # to nil (which signifies "no-encryption")
-        session_type = assoc_response.getArg(OPENID1_NS, 'session_type')
+        session_type = assoc_response.get_arg(OPENID1_NS, 'session_type')
 
         # Handle the differences between no-encryption association
         # respones in OpenID 1 and 2:
@@ -286,7 +286,7 @@ module OpenID
         expires_in = self.class.extract_expires_in(assoc_response)
 
         # OpenID 1 has funny association session behaviour.
-        if assoc_response.isOpenID1():
+        if assoc_response.is_openid1:
             session_type = get_openid1_session_type(assoc_response)
         else
           session_type = assoc_response.get_arg(OPENID2_NS, 'session_type',
@@ -294,7 +294,7 @@ module OpenID
         end
 
         # Session type mismatch
-        if assoc_session.session_type != session_type
+        if assoc_session.class.session_type != session_type
           if (assoc_response.is_openid1 and session_type == 'no-encryption')
             # In OpenID 1, any association request can result in a
             # 'no-encryption' association response. Setting
@@ -307,16 +307,16 @@ module OpenID
             # results in the failure of the association session
             # altogether.
             raise ProtocolError, "Session type mismatch. Expected "\
-                                 "#{assoc_session.session_type}, got "\
+                                 "#{assoc_session.class.session_type}, got "\
                                  "#{session_type}"
           end
         end
 
         # Make sure assoc_type is valid for session_type
-        if !assoc_session.allowed_assoc_types.member?(assoc_type)
+        if !assoc_session.class.allowed_assoc_types.member?(assoc_type)
           raise ProtocolError, "Unsupported assoc_type for session "\
-                               "#{assoc_session.session_type} returned: "\
-                               "#{assoc_type}"
+                               "#{assoc_session.class.session_type} "\
+                               "returned: #{assoc_type}"
         end
 
         # Delegate to the association session to extract the secret
@@ -326,7 +326,8 @@ module OpenID
           secret = assoc_session.extract_secret(assoc_response)
         rescue ValueError, ArgumentError => why
           raise ProtocolError, "Malformed response for "\
-                               "#{assoc_session.session_type} session: #{why}"
+                               "#{assoc_session.class.session_type} "\
+                               "session: #{why.message}"
         end
 
 
