@@ -124,7 +124,7 @@ module OpenID
           return request_association(assoc_type, session_type)
         rescue ServerError => why
           supported_types = extract_supported_association_type(why, assoc_type)
-          if supported_types.nil?
+          if !supported_types.nil?
             # Attempt to create an association from the assoc_type and
             # session_type that the server told us it supported.
             assoc_type, session_type = supported_types
