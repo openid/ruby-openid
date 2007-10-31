@@ -13,6 +13,13 @@ module OpenID
       @error_code = error_code
       @message = message
     end
+
+    def self.from_message(msg)
+      error_text = msg.get_arg(OPENID_NS, 'error',
+                               '<no error message supplied>')
+      error_code = msg.get_arg(OPENID_NS, 'error_code')
+      return self.new(error_text, error_code, msg)
+    end
   end
 
   class Message
@@ -22,10 +29,7 @@ module OpenID
       when 200
         return msg
       when 400
-        error_text = msg.get_arg(OPENID_NS, 'error',
-                                 '<no error message supplied>')
-        error_code = msg.get_arg(OPENID_NS, 'error_code')
-        raise ServerError.new(error_text, error_code, msg)
+        raise ServerError.from_message(msg)
       else
         error_message = "bad status code from server #{server_url}: "\
         "#{response.status}"
