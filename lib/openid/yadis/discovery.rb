@@ -84,11 +84,7 @@ module OpenID
 
       # Attempt to find out where to go to discover the document or if
       # we already have it
-      begin
-        result.content_type = resp['content-type']
-      rescue IndexError
-        result.content_type = nil
-      end
+      result.content_type = resp['content-type']
 
       result.xrds_uri = self.where_is_yadis?(resp)
 
@@ -102,11 +98,7 @@ module OpenID
             raise exc
         end
 
-        begin
-          result.content_type = resp['content-type']
-        rescue IndexError
-          result.content_type = nil
-        end
+        result.content_type = resp['content-type']
       end
 
       result.response_text = resp.body
@@ -126,11 +118,7 @@ module OpenID
 
       # Attempt to find out where to go to discover the document or if
       # we already have it
-      begin
-        content_type = resp['content-type']
-      rescue IndexError
-        content_type = nil
-      end
+      content_type = resp['content-type']
 
       # According to the spec, the content-type header must be an
       # exact match, or else we have to look for an indirection.
@@ -139,11 +127,7 @@ module OpenID
         return resp.final_url
       else
         # Try the header
-        begin
-          yadis_loc = resp[YADIS_HEADER_NAME.downcase]
-        rescue IndexError
-          yadis_loc = nil
-        end
+        yadis_loc = resp[YADIS_HEADER_NAME.downcase]
 
         if yadis_loc.nil?
           # Parse as HTML if the header is missing.

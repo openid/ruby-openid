@@ -159,6 +159,12 @@ module OpenID
       end
     end
 
+    class NoContentTypeFetcher
+      def fetch(url, body=nil, headers=nil, redirect_limit=nil)
+        return OpenID::HTTPResponse._from_raw_data(200, "", {}, nil)
+      end
+    end
+
     class TestYadisDiscovery < Test::Unit::TestCase
       def test_yadis_discovery
         DiscoverData::TESTLIST.each { |success, input_name, id_name, result_name|
@@ -167,6 +173,37 @@ module OpenID
           test.runCustomTest
           test.teardown
         }
+      end
+
+      def test_is_xrds_yadis_location
+        result = Yadis::DiscoveryResult.new('http://request.uri/')
+        result.normalized_uri = "http://normalized/"
+        result.xrds_uri = "http://normalized/xrds"
+
+        assert(result.isXRDS)
+      end
+
+      def test_is_xrds_content_type
+        result = Yadis::DiscoveryResult.new('http://request.uri/')
+        result.normalized_uri = result.xrds_uri = "http://normalized/"
+        result.content_type = Yadis::YADIS_CONTENT_TYPE
+
+        assert(result.isXRDS)
+      end
+
+      def test_is_xrds_neither
+        result = Yadis::DiscoveryResult.new('http://request.uri/')
+        result.normalized_uri = result.xrds_uri = "http://normalized/"
+        result.content_type = "another/content-type"
+
+        assert(!result.isXRDS)
+      end
+
+      def test_no_content_type
+        OpenID.set_default_fetcher(NoContentTypeFetcher.new)
+        result = Yadis.discover("http://bogus")
+        assert_equal(nil, result.content_type)
+        OpenID.set_default_fetcher(nil)
       end
     end
   end
