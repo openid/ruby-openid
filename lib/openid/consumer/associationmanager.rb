@@ -192,7 +192,7 @@ module OpenID
           return nil
 
         rescue ProtocolError => why
-          Util.log("Protocol error parsing response from #{@server_url}: "\
+          Util.log("Protocol error processing response from #{@server_url}: "\
                    "#{why}")
           return nil
         end
