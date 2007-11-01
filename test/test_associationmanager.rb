@@ -855,4 +855,59 @@ module OpenID
     end
   end
 
+  class TestAssocManagerRequestAssociation < Test::Unit::TestCase
+    include FetcherMixin
+    include TestUtil
+
+    def setup
+      @assoc_manager = Consumer::AssociationManager.new(nil, 'http://invalid/')
+      @assoc_type = 'HMAC-SHA1'
+      @session_type = 'no-encryption'
+      @message = Message.new(OPENID2_NS)
+      @message.update_args(OPENID_NS, {
+                             'assoc_type' => @assoc_type,
+                             'session_type' => @session_type,
+                             'assoc_handle' => 'kaboodle',
+                             'expires_in' => '1000',
+                             'mac_key' => 'X' * 20,
+                           })
+    end
+
+    def make_request
+      kv = @message.to_kvform
+      fetcher_class = Class.new do
+        define_method(:fetch) do |*args|
+          MockResponse.new(200, kv)
+        end
+      end
+      with_fetcher(fetcher_class.new) do
+        @assoc_manager.send(:request_association, @assoc_type, @session_type)
+      end
+    end
+
+    # The association we get is from valid processing of our result,
+    # and that no errors are raised
+    def test_success
+      assert_equal('kaboodle', make_request.handle)
+    end
+
+    # A missing parameter gets translated into a log message and
+    # causes the method to return nil
+    def test_missing_fields
+      @message.del_arg(OPENID_NS, 'assoc_type')
+      assert_log_matches('Missing required par') {
+        assert_equal(nil, make_request)
+      }
+    end
+
+    # A bad value results in a log message and causes the method to
+    # return nil
+    def test_protocol_error
+      @message.set_arg(OPENID_NS, 'expires_in', 'goats')
+      assert_log_matches('Protocol error processing') {
+        assert_equal(nil, make_request)
+      }
+    end
+  end
+
 end

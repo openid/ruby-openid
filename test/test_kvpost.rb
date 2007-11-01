@@ -8,15 +8,6 @@ module OpenID
   class KVPostTestCase < Test::Unit::TestCase
     include FetcherMixin
 
-    class MockResponse
-      attr_reader :status, :body
-
-      def initialize(status, body)
-        @status = status
-        @body = body
-      end
-    end
-
     def mk_resp(status, resp_hash)
       return MockResponse.new(status, Util.dict_to_kv(resp_hash))
     end
