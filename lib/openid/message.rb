@@ -9,11 +9,10 @@ module OpenID
   SREG_URI = 'http://openid.net/sreg/1.0'
 
   # The OpenID 1.x namespace URI
-  OPENID1_NS = 'http://openid.net/sso/1.0'
+  OPENID1_NS = 'http://openid.net/signon/1.0'
 
   # The OpenID 2.0 namespace URI
-  # XXX: not yet official
-  OPENID2_NS = 'http://openid.net/specs/2.0/base'
+  OPENID2_NS = 'http://specs.openid.net/auth/2.0'
 
   # The namespace consisting of pairs with keys that are prefixed with
   # "openid." but not in another namespace.
