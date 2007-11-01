@@ -1,3 +1,4 @@
+require "openid/dh"
 require "openid/util"
 require "openid/kvpost"
 require "openid/cryptutil"
