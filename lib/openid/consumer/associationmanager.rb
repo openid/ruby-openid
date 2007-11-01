@@ -2,6 +2,7 @@ require "openid/util"
 require "openid/kvpost"
 require "openid/cryptutil"
 require "openid/protocolerror"
+require "openid/association"
 
 module OpenID
   class Consumer
