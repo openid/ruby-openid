@@ -1,7 +1,8 @@
 require 'openid/store/interface'
 module OpenID
   # An in-memory implementation of Store.  This class is mainly used
-  # for testing, though it may be useful for long-running single process apps.
+  # for testing, though it may be useful for long-running single
+  # process apps.  Note that this store is NOT thread-safe.
   #
   # You should probably be looking at OpenID::FilesystemStore
   class MemoryStore < Store
