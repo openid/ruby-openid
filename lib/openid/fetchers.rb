@@ -41,24 +41,23 @@ module OpenID
   class HTTPRedirectLimitReached < StandardError
   end
 
-  @@default_fetcher = nil
+  @fetcher = nil
 
-  def OpenID.fetch(url, body=nil, headers=nil,
+  def self.fetch(url, body=nil, headers=nil,
                    redirect_limit=StandardFetcher::REDIRECT_LIMIT)
-    fetcher = get_current_fetcher()
     return fetcher.fetch(url, body, headers, redirect_limit)
   end
 
-  def OpenID.get_current_fetcher
-    if @@default_fetcher.nil?
-      @@default_fetcher = StandardFetcher.new
+  def self.fetcher
+    if @fetcher.nil?
+      @fetcher = StandardFetcher.new
     end
 
-    return @@default_fetcher
+    return @fetcher
   end
 
-  def OpenID.set_default_fetcher(fetcher)
-    @@default_fetcher = fetcher
+  def self.fetcher=(fetcher)
+    @fetcher = fetcher
   end
 
   class StandardFetcher

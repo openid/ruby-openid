@@ -813,14 +813,6 @@ module OpenID
     end
   end
 
-  module Const
-    def const(symbol, value)
-      (class << self;self;end).instance_eval do
-        define_method(symbol) { value }
-      end
-    end
-  end
-
   class TestAssocManagerGetAssociation < Test::Unit::TestCase
     attr_reader :negotiate_association
 

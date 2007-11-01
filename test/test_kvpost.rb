@@ -2,9 +2,12 @@ require "openid/kvpost"
 require "openid/kvform"
 require "openid/message"
 require "test/unit"
+require 'testutil'
 
 module OpenID
   class KVPostTestCase < Test::Unit::TestCase
+    include FetcherMixin
+
     class MockResponse
       attr_reader :status, :body
 
@@ -49,23 +52,16 @@ module OpenID
     end
 
     def make_kv_post_with_response(status, args)
+      resp = mk_resp(status, args)
       mock_fetcher = Class.new do
-        attr_accessor :resp
-
-        def fetch(url, body, xxx, yyy)
-          @resp
-          # XXX: check for the args we expect
+        define_method(:fetch) do |url, body, xxx, yyy|
+          resp
         end
       end
       fetcher = mock_fetcher.new
-      fetcher.resp = mk_resp(status, args)
 
-      old_fetcher = OpenID.get_current_fetcher
-      begin
-        OpenID.set_default_fetcher(fetcher)
+      with_fetcher(mock_fetcher.new) do
         OpenID.make_kv_post(Message.from_openid_args(args), 'http://invalid/')
-      ensure
-        OpenID.set_default_fetcher(old_fetcher)
       end
     end
 

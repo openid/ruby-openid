@@ -221,20 +221,20 @@ end
 
 class DefaultFetcherTest < Test::Unit::TestCase
   def setup
-    OpenID.set_default_fetcher(nil)
+    OpenID.fetcher = nil
   end
 
   def test_default_fetcher
-    assert(OpenID.get_current_fetcher().is_a?(OpenID::StandardFetcher))
+    assert(OpenID.fetcher.is_a?(OpenID::StandardFetcher))
 
     # A custom fetcher can be set
-    OpenID.set_default_fetcher(BogusFetcher.new)
+    OpenID.fetcher = BogusFetcher.new
 
     # A test fetch should call the new fetcher
     assert(OpenID.fetch('not-a-url') == BogusFetcher::RESPONSE)
 
     # Set the fetcher to nil again
-    OpenID.set_default_fetcher(nil)
-    assert(OpenID.get_current_fetcher().is_a?(OpenID::StandardFetcher))
+    OpenID.fetcher = nil
+    assert(OpenID.fetcher.is_a?(OpenID::StandardFetcher))
   end
 end

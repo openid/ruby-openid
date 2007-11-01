@@ -15,4 +15,24 @@ module OpenID
       end
     end
   end
+
+  module FetcherMixin
+    def with_fetcher(fetcher)
+      original_fetcher = OpenID.fetcher
+      begin
+        OpenID.fetcher = fetcher
+        return yield
+      ensure
+        OpenID.fetcher = original_fetcher
+      end
+    end
+  end
+
+  module Const
+    def const(symbol, value)
+      (class << self;self;end).instance_eval do
+        define_method(symbol) { value }
+      end
+    end
+  end
 end

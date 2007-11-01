@@ -1,6 +1,7 @@
 
 require 'test/unit'
 require 'uri'
+require 'testutil'
 
 require 'openid/yadis/discovery'
 require 'openid/fetchers'
@@ -10,7 +11,7 @@ require 'test/discoverdata'
 module OpenID
 
   module YadisDiscovery
-
+    include FetcherMixin
     include DiscoverData
 
     STATUS_HEADER_RE = /Status: (\d+) .*?$/m
@@ -82,25 +83,19 @@ module OpenID
     end
 
     class TestSecondGet < Test::Unit::TestCase
-      def setup
-        @oldfetcher = OpenID.get_current_fetcher
-        OpenID.set_default_fetcher(MockFetcher.new)
-      end
-
-      def teardown
-        OpenID.set_default_fetcher(@oldfetcher)
-      end
+      include FetcherMixin
 
       def test_404
         uri = "http://something.unittest/"
         assert_raise(Yadis::DiscoveryFailure) {
-          Yadis.discover(uri)
+          with_fetcher(MockFetcher.new) { Yadis.discover(uri) }
         }
       end
     end
 
     class DiscoveryTestCase
       include DiscoverData
+      include FetcherMixin
 
       def initialize(testcase, input_name, id_name, result_name, success)
         @base_url = 'http://invalid.unittest/'
@@ -112,8 +107,6 @@ module OpenID
       end
 
       def setup
-        OpenID.set_default_fetcher(TestFetcher.new(@base_url))
-
         @input_url, @expected = generateResult(@base_url,
                                                @input_name,
                                                @id_name,
@@ -121,17 +114,21 @@ module OpenID
                                                @success)
       end
 
-      def teardown
-        OpenID.set_default_fetcher(nil)
+      def do_discovery
+        with_fetcher(TestFetcher.new(@base_url)) do
+          Yadis.discover(@input_url)
+        end
       end
 
       def runCustomTest
+        setup
+
         if @expected.respond_to?("ancestors") and @expected.ancestors.member?(Yadis::DiscoveryFailure)
           @testcase.assert_raise(Yadis::DiscoveryFailure) {
-            Yadis.discover(@input_url)
+            do_discovery
           }
         else
-          result = Yadis.discover(@input_url)
+          result = do_discovery
           @testcase.assert_equal(@input_url, result.request_uri)
 
           msg = sprintf("Identity URL mismatch: actual = %s, expected = %s",
@@ -166,12 +163,12 @@ module OpenID
     end
 
     class TestYadisDiscovery < Test::Unit::TestCase
+      include FetcherMixin
+
       def test_yadis_discovery
         DiscoverData::TESTLIST.each { |success, input_name, id_name, result_name|
           test = DiscoveryTestCase.new(self, input_name, id_name, result_name, success)
-          test.setup
           test.runCustomTest
-          test.teardown
         }
       end
 
@@ -200,10 +197,10 @@ module OpenID
       end
 
       def test_no_content_type
-        OpenID.set_default_fetcher(NoContentTypeFetcher.new)
-        result = Yadis.discover("http://bogus")
-        assert_equal(nil, result.content_type)
-        OpenID.set_default_fetcher(nil)
+        with_fetcher(NoContentTypeFetcher.new) do
+          result = Yadis.discover("http://bogus")
+          assert_equal(nil, result.content_type)
+        end
       end
     end
   end
