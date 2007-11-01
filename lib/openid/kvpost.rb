@@ -25,7 +25,7 @@ module OpenID
   class Message
     def self.from_http_response(response, server_url)
       msg = self.from_kvform(response.body)
-      case response.code
+      case response.code.to_i
       when 200
         return msg
       when 400

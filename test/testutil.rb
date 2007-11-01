@@ -40,7 +40,7 @@ module OpenID
     attr_reader :code, :body
 
     def initialize(code, body)
-      @code = code
+      @code = code.to_s
       @body = body
     end
   end
