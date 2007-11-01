@@ -350,7 +350,7 @@ module OpenID
       namespace = _fix_ns(namespace)
       @args.fetch([namespace, key]) {
         if default == NO_DEFAULT
-          raise IndexError
+          raise IndexError, "<#{namespace}>#{key} not in this message"
         else
           default
         end
