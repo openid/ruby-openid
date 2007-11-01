@@ -27,7 +27,7 @@ class FetcherTestCase < Test::Unit::TestCase
 
   @@test_header_name = 'X-test-header'
   @@test_header_value = 'marmoset'
-  
+
   class ExpectedResponse < Net::HTTPResponse
     attr_reader :final_url
 
@@ -184,7 +184,7 @@ class FetcherTestCase < Test::Unit::TestCase
       @fetcher.fetch(uri)
     }
   end
-  
+
   def test_cases
     for path, expected_code, expected_url in @@cases
       uri = _uri_build(path)
