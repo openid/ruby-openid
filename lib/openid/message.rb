@@ -57,6 +57,9 @@ module OpenID
   class Message
     attr_reader :namespaces
 
+    # Raised when key lookup fails
+    class KeyNotFound < IndexError ; end
+
     # Namespace / alias registration map.  See
     # register_namespace_alias.
     @@registered_aliases = {}
@@ -350,7 +353,7 @@ module OpenID
       namespace = _fix_ns(namespace)
       @args.fetch([namespace, key]) {
         if default == NO_DEFAULT
-          raise IndexError, "<#{namespace}>#{key} not in this message"
+          raise KeyNotFound, "<#{namespace}>#{key} not in this message"
         else
           default
         end

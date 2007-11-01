@@ -193,7 +193,7 @@ module OpenID
 
         begin
           return extract_association(response, assoc_session)
-        rescue IndexError => why
+        rescue Message::KeyNotFound => why
           Util.log("Missing required parameter in response from "\
                    "#{@server_url}: #{why}")
           return nil
@@ -325,7 +325,7 @@ module OpenID
         # type.
         begin
           secret = assoc_session.extract_secret(assoc_response)
-        rescue IndexError, ArgumentError => why
+        rescue Message::KeyNotFound, ArgumentError => why
           raise ProtocolError, "Malformed response for "\
                                "#{assoc_session.class.session_type} "\
                                "session: #{why.message}"

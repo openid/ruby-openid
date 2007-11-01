@@ -70,7 +70,7 @@ module OpenID
     def test_absent_serve_public
       @msg.set_arg(OPENID_NS, 'enc_mac_key', @enc_mac_key)
 
-      assert_raises(IndexError) {
+      assert_raises(Message::KeyNotFound) {
         @consumer_session.extract_secret(@msg)
       }
     end
@@ -78,7 +78,7 @@ module OpenID
     def test_absent_mac_key
       @msg.set_arg(OPENID_NS, 'dh_server_public', @dh_server_public)
 
-      assert_raises(IndexError) {
+      assert_raises(Message::KeyNotFound) {
         @consumer_session.extract_secret(@msg)
       }
     end
@@ -528,7 +528,7 @@ module OpenID
     end
 
     # Make tests that ensure that an association response that is
-    # missing required fields will raise an IndexError.
+    # missing required fields will raise an Message::KeyNotFound.
     #
     # According to 'Association Session Response' subsection 'Common
     # Response Parameters', the following fields are required for
@@ -559,7 +559,7 @@ module OpenID
             fields.each do |field|
               msg.set_arg(ns, field, DEFAULTS[field])
             end
-            assert_raises(IndexError) do
+            assert_raises(Message::KeyNotFound) do
               @assoc_manager.send(:extract_association, msg, nil)
             end
           end

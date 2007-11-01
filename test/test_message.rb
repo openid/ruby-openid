@@ -16,7 +16,7 @@ module OpenID
 
       if expected.nil?
         assert_equal(@m.get_arg(ns, key, :a_default), :a_default)
-        assert_raise(IndexError) { @m.get_arg(ns, key, NO_DEFAULT) }
+        assert_raise(Message::KeyNotFound) { @m.get_arg(ns, key, NO_DEFAULT) }
       else
         assert_equal(@m.get_arg(ns, key, :a_default), expected)
         assert_equal(@m.get_arg(ns, key, NO_DEFAULT), expected)
