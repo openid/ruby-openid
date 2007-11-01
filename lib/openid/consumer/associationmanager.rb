@@ -324,7 +324,7 @@ module OpenID
         # type.
         begin
           secret = assoc_session.extract_secret(assoc_response)
-        rescue ValueError, ArgumentError => why
+        rescue IndexError, ArgumentError => why
           raise ProtocolError, "Malformed response for "\
                                "#{assoc_session.class.session_type} "\
                                "session: #{why.message}"

@@ -499,7 +499,23 @@ module OpenID
 ##############################################################
 
 
+  module ProtocolErrorMixin
+    def assert_protocol_error(str_prefix)
+      begin
+        yield
+      rescue ProtocolError => why
+        message = "Expected prefix #{str_prefix.inspect}, got "\
+                  "#{why.message.inspect}"
+        assert(why.message.starts_with?(str_prefix), message)
+      else
+        fail("Expected ProtocolError. Got #{result.inspect}")
+      end
+    end
+  end
+
   module AssocTestMixin
+    include ProtocolErrorMixin
+
     def setup
       @assoc_manager = Consumer::AssociationManager.new(nil,
                                                         'http://invalid/')
@@ -528,18 +544,6 @@ module OpenID
         args[key] = Defaults[key]
       end
       return Message.from_openid_args(args)
-    end
-
-    def assert_protocol_error(str_prefix)
-      begin
-        yield
-      rescue ProtocolError => why
-        message = "Expected prefix #{str_prefix.inspect}, got "\
-                  "#{why.message.inspect}"
-        assert(why.message.starts_with?(str_prefix), message)
-      else
-        fail("Expected ProtocolError. Got #{result.inspect}")
-      end
     end
 
     module TestMaker
@@ -638,8 +642,6 @@ module OpenID
     end
   end
 
-##########################################################
-
   class GetOpenIDSessionTypeTest < Test::Unit::TestCase
     include TestUtil
 
@@ -666,25 +668,98 @@ module OpenID
       assert_equal(expected_session_type, actual_session_type, error_message)
     end
 
-    # Define a test method that will check what session type will be
-    # used if the OpenID 1 response to an associate call sets the
-    # 'session_type' field to `session_type_value`
-    def self.mk_test(name, expected, input)
-      test = lambda {assert_log_matches() { do_test(expected, input) } }
-      define_method("test_#{name}", &test)
-    end
 
     [['nil', 'no-encryption', nil],
      ['empty', 'no-encryption', ''],
      ['dh_sha1', 'DH-SHA1', 'DH-SHA1'],
      ['dh_sha256', 'DH-SHA256', 'DH-SHA256'],
-    ].each {|name, expected, input| mk_test(name, expected, input)}
+    ].each {|name, expected, input|
+      # Define a test method that will check what session type will be
+      # used if the OpenID 1 response to an associate call sets the
+      # 'session_type' field to `session_type_value`
+      test = lambda {assert_log_matches() { do_test(expected, input) } }
+      define_method("test_#{name}", &test)
+    }
 
     # This one's different because it expects log messages
     def test_explicit_no_encryption
       assert_log_matches("WARNING: #{SERVER_URL} sent 'no-encryption'"){
         do_test('no-encryption', 'no-encryption')
       }
+    end
+  end
+
+  class ExtractAssociationTest < Test::Unit::TestCase
+    include ProtocolErrorMixin
+
+    SERVER_URL = 'http://invalid/'
+
+    def setup
+      @session_type = 'testing-session'
+
+      # This must something that works for Association::from_expires_in
+      @assoc_type = 'HMAC-SHA1'
+
+      @assoc_handle = 'testing-assoc-handle'
+
+      # These arguments should all be valid
+      @assoc_response =
+        Message.from_openid_args({
+                                   'expires_in' => '1000',
+                                   'assoc_handle' => @assoc_handle,
+                                   'assoc_type' => @assoc_type,
+                                   'session_type' => @session_type,
+                                   'ns' => OPENID2_NS,
+                                 })
+      assoc_session_cls = Class.new do
+        class << self
+          attr_accessor :allowed_assoc_types, :session_type
+        end
+
+        attr_reader :extract_secret_called, :secret
+        def initialize
+          @extract_secret_called = false
+          @secret = 'shhhhh!'
+        end
+
+        def extract_secret(_)
+          @extract_secret_called = true
+          @secret
+        end
+      end
+      @assoc_session = assoc_session_cls.new
+      @assoc_session.class.allowed_assoc_types = [@assoc_type]
+      @assoc_session.class.session_type = @session_type
+
+      @assoc_manager = Consumer::AssociationManager.new(nil, SERVER_URL)
+    end
+
+    def call_extract
+      @assoc_manager.send(:extract_association,
+                          @assoc_response, @assoc_session)
+    end
+
+    # Handle a full successful association response
+    def test_works_with_good_fields
+      assoc = call_extract
+      assert(@assoc_session.extract_secret_called)
+      assert_equal(@assoc_session.secret, assoc.secret)
+      assert_equal(1000, assoc.lifetime)
+      assert_equal(@assoc_handle, assoc.handle)
+      assert_equal(@assoc_type, assoc.assoc_type)
+    end
+
+    def test_bad_assoc_type
+      # Make sure that the assoc type in the response is not valid
+      # for the given session.
+      @assoc_session.class.allowed_assoc_types = []
+      assert_protocol_error('Unsupported assoc_type for sess') {call_extract}
+    end
+
+    def test_bad_expires_in
+      # Invalid value for expires_in should cause failure
+      @assoc_response.set_arg(OPENID_NS, 'expires_in', 'forever')
+      assert_protocol_error('Invalid expires_in') {call_extract}
     end
   end
 
