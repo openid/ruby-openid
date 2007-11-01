@@ -17,7 +17,7 @@ module OpenID
       assocs = @associations[server_url]
       @associations[server_url] = assocs.merge({assoc.handle => deepcopy(assoc)})
     end
-    
+
     def get_association(server_url, handle=nil)
       assocs = @associations[server_url]
       assoc = nil
@@ -32,7 +32,7 @@ module OpenID
       end
       return assoc
     end
-    
+
     def remove_association(server_url, handle)
       assocs = @associations[server_url]
       if assocs.delete(handle)
@@ -68,7 +68,7 @@ module OpenID
       now = Time.now.to_i
       @nonces.each{|nonce, timestamp|
         if (timestamp - now).abs > Nonce.skew
-          @nonces.delete(nonce) 
+          @nonces.delete(nonce)
           count += 1
         end
       }
