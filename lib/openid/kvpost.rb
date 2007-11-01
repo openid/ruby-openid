@@ -25,14 +25,14 @@ module OpenID
   class Message
     def self.from_http_response(response, server_url)
       msg = self.from_kvform(response.body)
-      case response.status
+      case response.code
       when 200
         return msg
       when 400
         raise ServerError.from_message(msg)
       else
         error_message = "bad status code from server #{server_url}: "\
-        "#{response.status}"
+        "#{response.code}"
         raise StandardError.new(error_message)
       end
     end

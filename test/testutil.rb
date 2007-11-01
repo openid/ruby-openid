@@ -37,10 +37,10 @@ module OpenID
   end
 
   class MockResponse
-    attr_reader :status, :body
+    attr_reader :code, :body
 
-    def initialize(status, body)
-      @status = status
+    def initialize(code, body)
+      @code = code
       @body = body
     end
   end
