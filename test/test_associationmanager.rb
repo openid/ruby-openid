@@ -640,5 +640,52 @@ module OpenID
 
 ##########################################################
 
+  class GetOpenIDSessionTypeTest < Test::Unit::TestCase
+    include TestUtil
+
+    SERVER_URL = 'http://invalid/'
+
+    def do_test(expected_session_type, session_type_value)
+      # Create a Message with just 'session_type' in it, since
+      # that's all this function will use. 'session_type' may be
+      # absent if it's set to None.
+      args = {}
+      if !session_type_value.nil?
+        args['session_type'] = session_type_value
+      end
+      message = Message.from_openid_args(args)
+      assert(message.is_openid1)
+
+      assoc_manager = Consumer::AssociationManager.new(nil, SERVER_URL)
+      actual_session_type = assoc_manager.send(:get_openid1_session_type,
+                                               message)
+      error_message = ("Returned session type parameter #{session_type_value}"\
+                       "was expected to yield session type "\
+                       "#{expected_session_type}, but yielded "\
+                       "#{actual_session_type}")
+      assert_equal(expected_session_type, actual_session_type, error_message)
+    end
+
+    # Define a test method that will check what session type will be
+    # used if the OpenID 1 response to an associate call sets the
+    # 'session_type' field to `session_type_value`
+    def self.mk_test(name, expected, input)
+      test = lambda {assert_log_matches() { do_test(expected, input) } }
+      define_method("test_#{name}", &test)
+    end
+
+    [['nil', 'no-encryption', nil],
+     ['empty', 'no-encryption', ''],
+     ['dh_sha1', 'DH-SHA1', 'DH-SHA1'],
+     ['dh_sha256', 'DH-SHA256', 'DH-SHA256'],
+    ].each {|name, expected, input| mk_test(name, expected, input)}
+
+    # This one's different because it expects log messages
+    def test_explicit_no_encryption
+      assert_log_matches("WARNING: #{SERVER_URL} sent 'no-encryption'"){
+        do_test('no-encryption', 'no-encryption')
+      }
+    end
+  end
 
 end
