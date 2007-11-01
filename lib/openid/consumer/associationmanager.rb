@@ -182,14 +182,7 @@ module OpenID
       def request_association(assoc_type, session_type)
         assoc_session, args = create_associate_request(assoc_type, session_type)
 
-        # XXX: handle exceptions from fetchers here (they have no common
-        # type right now)
-
-        #begin
         response = OpenID.make_kv_post(args, @server_url)
-        #rescue HTTPFetchingError => why
-        #  Util.log("openid.associate request failed: #{why}")
-        #  return nil
 
         begin
           return extract_association(response, assoc_session)
