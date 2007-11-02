@@ -1,4 +1,13 @@
 require 'net/http'
+begin
+  require 'net/https'
+rescue LoadError
+  OpenID::Util.log('WARNING: no SSL support found.  Will not be able to fetch HTTPS URLs!')
+  HAS_OPENSSL = false
+  require 'net/http'
+else
+  HAS_OPENSSL = true
+end
 
 module OpenID
   # Our HTTPResponse class extends Net::HTTPResponse with an additional
@@ -71,6 +80,13 @@ module OpenID
       headers ||= {}
       headers['User-agent'] ||= USER_AGENT
       httpthing = Net::HTTP.new(url.host, url.port)
+      if url.scheme == 'https'
+        if HAS_OPENSSL
+          httpthing.use_ssl = true
+        else
+          raise RuntimeError, "Your Ruby does not have OpenSSL support"
+        end
+      end
       if body.nil?
         response = httpthing.request_get(url.request_uri, headers)
       else
