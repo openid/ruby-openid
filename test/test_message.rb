@@ -816,6 +816,12 @@ module OpenID
       assert_equal(value_2, @m.get_arg(ns, key))
     end
 
+    def test_argList
+      assert_raise(ArgumentError) {
+        Message.from_post_args({'arg' => [1, 2, 3]})
+      }
+    end
+
     def test_isOpenID1
       assert_equal(false, @m.is_openid1)
     end

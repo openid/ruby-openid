@@ -103,6 +103,11 @@ module OpenID
       m = Message.new
       openid_args = {}
       args.each do |key,value|
+        if value.is_a?(Array)
+          raise ArgumentError, "Query dict must have one value for each key, " +
+            "not lists of values.  Query is #{args.inspect}"
+        end
+
         prefix, rest = key.split('.', 2)
 
         if prefix != 'openid' or rest.nil?
