@@ -8,6 +8,6 @@ ARGV.each do |server_url|
   mgr = OpenID::Consumer::AssociationManager.new(store, URI.parse(server_url))
   puts '=' * 50
   puts "Server: #{server_url}"
-  p mgr.get_association
+  puts mgr.get_association.serialize
   puts '-' * 50
 end
