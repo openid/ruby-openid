@@ -33,6 +33,12 @@ module OpenID
       @m = Message.new
     end
 
+    def test_get_aliased_arg_no_default
+      assert_raises(Message::KeyNotFound) do
+        @m.get_aliased_arg('ns.pork', NO_DEFAULT)
+      end
+    end
+
     def test_to_post_args
       assert_equal({}, @m.to_post_args)
     end
@@ -277,9 +283,11 @@ module OpenID
            'openid.error' => 'unit test',
            'openid.ns.invalid' => 'http://invalid/',
            'openid.invalid.stuff' => 'things',
+           'openid.invalid.stuff.blinky' => 'powerplant',
           })
       assert_equal('http://invalid/', @m.get_aliased_arg('ns.invalid'))
       assert_equal('things', @m.get_aliased_arg('invalid.stuff'))
+      assert_equal('powerplant', @m.get_aliased_arg('invalid.stuff.blinky'))
     end
 
     def test_get_aliased_arg_with_ns_default
@@ -985,8 +993,7 @@ module OpenID
       nsm.add(uripat % 0)
 
       (1..23).each { |i|
-        assert_equal(false, nsm.contains?(uripat % i))
-        assert_equal(false, nsm.defined?(uripat % i))
+        assert_equal(false, nsm.member?(uripat % i))
         nsm.add(uripat % i)
       }
       nsm.each { |uri, _alias|

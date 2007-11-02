@@ -401,17 +401,22 @@ module OpenID
         return get_openid_namespace()
       end
 
-      if aliased_key.starts_with?('ns.')
-        uri = @namespaces.get_namespace_uri(aliased_key[3..-1])
-        return (uri.nil? ? default : uri)
+      ns_alias, key = aliased_key.split('.', 2)
+      if ns_alias == 'ns'
+        uri = @namespaces.get_namespace_uri(key)
+        if default == NO_DEFAULT
+          raise KeyNotFound, "Namespace #{key} not defined when looking "\
+                             "for #{aliased_key}"
+        else
+          return (uri.nil? ? default : uri)
+        end
       end
 
-      alias_, key = aliased_key.split('.', 2)
       if key.nil?
         key = aliased_key
         ns = nil
       else
-        ns = @namespaces.get_namespace_uri(alias_)
+        ns = @namespaces.get_namespace_uri(ns_alias)
       end
 
       if ns.nil?
@@ -496,10 +501,9 @@ module OpenID
       raise StandardError, 'Unreachable'
     end
 
-    def defined?(namespace_uri)
+    def member?(namespace_uri)
       @namespace_to_alias.has_key?(namespace_uri)
     end
-    alias :contains? :defined?
 
     def each
       @namespace_to_alias.each {|k,v| yield k,v}
