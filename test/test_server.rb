@@ -574,10 +574,10 @@ class TestEncode < Test::Unit::TestCase
     request = CheckIDRequest.new(
                                  'http://bombom.unittest/',
                                  'http://burr.unittest/999',
+                                 @server.op_endpoint,
                                  'http://burr.unittest/',
                                  false,
-                                 nil, @server.op_endpoint
-                                 )
+                                 nil)
     response = OpenIDResponse.new(request)
     response.fields = Message.from_openid_args({
             'ns' => OPENID2_NS,
@@ -599,9 +599,10 @@ class TestEncode < Test::Unit::TestCase
     request = CheckIDRequest.new(
                                  'http://bombom.unittest/',
                                  'http://burr.unittest/999',
+                                 @server.op_endpoint,
                                  'http://burr.unittest/',
                                  false,
-                                 nil, @server.op_endpoint)
+                                 nil)
     response = OpenIDResponse.new(request)
     response.fields = Message.from_openid_args({
                                                  'ns' => OPENID2_NS,
@@ -626,10 +627,10 @@ class TestEncode < Test::Unit::TestCase
     request = CheckIDRequest.new(
                                  'http://bombom.unittest/',
                                  'http://burr.unittest/999',
+                                 @server.op_endpoint,
                                  'http://burr.unittest/',
                                  false,
-                                 nil,
-                                 @server.op_endpoint)
+                                 nil)
 
     response = OpenIDResponse.new(request)
     response.fields = Message.from_openid_args({
@@ -649,9 +650,9 @@ class TestEncode < Test::Unit::TestCase
     request = CheckIDRequest.new(
                                  'http://bombom.unittest/',
                                  'http://burr.unittest/999',
+                                 @server.op_endpoint,
                                  'http://burr.unittest/',
-                                 false, nil,
-                                 @server.op_endpoint)
+                                 false, nil)
     response = OpenIDResponse.new(request)
     response.fields = Message.from_openid_args({
             'mode' => 'id_res',
@@ -676,9 +677,9 @@ class TestEncode < Test::Unit::TestCase
     request = CheckIDRequest.new(
             'http://bombom.unittest/',
             'http://burr.unittest/999',
+            @server.op_endpoint,
             'http://burr.unittest/',
-            false, nil,
-            @server.op_endpoint)
+            false, nil)
     response = OpenIDResponse.new(request)
     response.fields = Message.from_openid_args({
             'mode' => 'cancel',
@@ -752,9 +753,9 @@ class TestSigningEncode < Test::Unit::TestCase
     @request = CheckIDRequest.new(
             'http://bombom.unittest/',
             'http://burr.unittest/999',
+            @server.op_endpoint,
             'http://burr.unittest/',
-            false, nil,
-            @server.op_endpoint)
+            false, nil)
 
     @response = OpenIDResponse.new(@request)
     @response.fields = Message.from_openid_args({
@@ -808,9 +809,9 @@ class TestSigningEncode < Test::Unit::TestCase
     request = CheckIDRequest.new(
             'http://bombom.unittest/',
             'http://burr.unittest/999',
+            @server.op_endpoint,
             'http://burr.unittest/',
-            false, nil,
-            @server.op_endpoint)
+            false, nil)
     response = OpenIDResponse.new(request)
     response.fields.set_arg(OPENID_NS, 'mode', 'cancel')
     webresponse = @encode.call(response)
