@@ -743,96 +743,106 @@ class TestEncode < Test::Unit::TestCase
   end
 end
 
-=begin
+class TestSigningEncode < Test::Unit::TestCase
+  def setup
+    @_dumb_key = Signatory._dumb_key
+    @_normal_key = Signatory._normal_key
+    @store = MemoryStore.new()
+    @server = Server::Server.new(@store, "http://signing.unittest/enc")
+    @request = CheckIDRequest.new(
+            'http://bombom.unittest/',
+            'http://burr.unittest/999',
+            'http://burr.unittest/',
+            false, nil,
+            @server.op_endpoint)
 
-class TestSigningEncode(unittest.TestCase):
-    def setUp(self):
-        self._dumb_key = server.Signatory._dumb_key
-        self._normal_key = server.Signatory._normal_key
-        self.store = memstore.MemoryStore()
-        self.server = server.Server(self.store, "http://signing.unittest/enc")
-        self.request = server.CheckIDRequest(
-            identity = 'http://bombom.unittest/',
-            trust_root = 'http://burr.unittest/',
-            return_to = 'http://burr.unittest/999',
-            immediate = False,
-            op_endpoint = self.server.op_endpoint,
-            )
-        self.response = server.OpenIDResponse(self.request)
-        self.response.fields = Message.fromOpenIDArgs({
+    @response = OpenIDResponse.new(@request)
+    @response.fields = Message.from_openid_args({
             'mode' => 'id_res',
-            'identity' => self.request.identity,
-            'return_to' => self.request.return_to,
+            'identity' => @request.identity,
+            'return_to' => @request.return_to,
             })
-        self.signatory = server.Signatory(self.store)
-        self.encoder = server.SigningEncoder(self.signatory)
-        self.encode = self.encoder.encode
+    @signatory = Signatory.new(@store)
+    @encoder = SigningEncoder.new(@signatory)
+    @encode = @encoder.method('encode')
+  end
 
-    def test_idres(self):
-        assoc_handle = '{bicycle}{shed}'
-        self.store.storeAssociation(
-            self._normal_key,
-            association.Association.fromExpiresIn(60, assoc_handle,
-                                                  'sekrit', 'HMAC-SHA1'))
-        self.request.assoc_handle = assoc_handle
-        webresponse = self.encode(self.response)
-        assert_equal(webresponse.code, server.HTTP_REDIRECT)
-        assert(webresponse.headers.has_key('location'))
+  def test_idres
+    assoc_handle = '{bicycle}{shed}'
+    @store.store_association(
+                             @_normal_key,
+                             Association.from_expires_in(60, assoc_handle,
+                                                         'sekrit', 'HMAC-SHA1'))
+    @request.assoc_handle = assoc_handle
+    webresponse = @encode.call(@response)
+    assert_equal(webresponse.code, HTTP_REDIRECT)
+    assert(webresponse.headers.member?('location'))
 
-        location = webresponse.headers['location']
-        query = cgi.parse_qs(urlparse(location)[4])
-        assert('openid.sig' in query)
-        assert('openid.assoc_handle' in query)
-        assert('openid.signed' in query)
+    location = webresponse.headers['location']
+    query = Util.parse_query(URI::parse(location).query)
+    assert(query.member?('openid.sig'))
+    assert(query.member?('openid.assoc_handle'))
+    assert(query.member?('openid.signed'))
+  end
 
-    def test_idresDumb(self):
-        webresponse = self.encode(self.response)
-        assert_equal(webresponse.code, server.HTTP_REDIRECT)
-        assert(webresponse.headers.has_key('location'))
+  def test_idresDumb
+    webresponse = @encode.call(@response)
+    assert_equal(webresponse.code, HTTP_REDIRECT)
+    assert(webresponse.headers.has_key?('location'))
 
-        location = webresponse.headers['location']
-        query = cgi.parse_qs(urlparse(location)[4])
-        assert('openid.sig' in query)
-        assert('openid.assoc_handle' in query)
-        assert('openid.signed' in query)
+    location = webresponse.headers['location']
+    query = Util.parse_query(URI::parse(location).query)
+    assert(query.member?('openid.sig'))
+    assert(query.member?('openid.assoc_handle'))
+    assert(query.member?('openid.signed'))
+  end
 
-    def test_forgotStore(self):
-        self.encoder.signatory = None
-        self.failUnlessRaises(ValueError, self.encode, self.response)
+  def test_forgotStore
+    @encoder.signatory = nil
+    assert_raise(ArgumentError) {
+      @encode.call(@response)
+    }
+  end
 
-    def test_cancel(self):
-        request = server.CheckIDRequest(
-            identity = 'http://bombom.unittest/',
-            trust_root = 'http://burr.unittest/',
-            return_to = 'http://burr.unittest/999',
-            immediate = False,
-            op_endpoint = self.server.op_endpoint,
-            )
-        response = server.OpenIDResponse(request)
-        response.fields.setArg(OPENID_NS, 'mode', 'cancel')
-        webresponse = self.encode(response)
-        assert_equal(webresponse.code, server.HTTP_REDIRECT)
-        assert(webresponse.headers.has_key('location'))
-        location = webresponse.headers['location']
-        query = cgi.parse_qs(urlparse(location)[4])
-        self.failIf('openid.sig' in query, response.fields.toPostArgs())
+  def test_cancel
+    request = CheckIDRequest.new(
+            'http://bombom.unittest/',
+            'http://burr.unittest/999',
+            'http://burr.unittest/',
+            false, nil,
+            @server.op_endpoint)
+    response = OpenIDResponse.new(request)
+    response.fields.set_arg(OPENID_NS, 'mode', 'cancel')
+    webresponse = @encode.call(response)
+    assert_equal(webresponse.code, HTTP_REDIRECT)
+    assert(webresponse.headers.has_key?('location'))
+    location = webresponse.headers['location']
+    query = Util.parse_query(URI::parse(location).query)
+    assert(!query.has_key?('openid.sig'), response.fields.to_post_args())
+  end
 
-    def test_assocReply(self):
-        msg = Message(OPENID2_NS)
-        msg.setArg(OPENID2_NS, 'session_type', 'no-encryption')
-        request = server.AssociateRequest.fromMessage(msg)
-        response = server.OpenIDResponse(request)
-        response.fields = Message.fromOpenIDArgs({'assoc_handle' => "every-zig"})
-        webresponse = self.encode(response)
-        body = """assoc_handle:every-zig
-"""
-        assert_equal(webresponse.code, server.HTTP_OK)
-        assert_equal(webresponse.headers, {})
-        assert_equal(webresponse.body, body)
+  def test_assocReply
+    msg = Message.new(OPENID2_NS)
+    msg.set_arg(OPENID2_NS, 'session_type', 'no-encryption')
+    request = AssociateRequest.from_message(msg)
+    response = OpenIDResponse.new(request)
+    response.fields = Message.from_openid_args({'assoc_handle' => "every-zig"})
+    webresponse = @encode.call(response)
+    body = "assoc_handle:every-zig\n"
+    assert_equal(webresponse.code, HTTP_OK)
+    assert_equal(webresponse.headers, {})
+    assert_equal(webresponse.body, body)
+  end
 
-    def test_alreadySigned(self):
-        self.response.fields.setArg(OPENID_NS, 'sig', 'priorSig==')
-        self.failUnlessRaises(server.AlreadySigned, self.encode, self.response)
+  def test_alreadySigned
+    @response.fields.set_arg(OPENID_NS, 'sig', 'priorSig==')
+    assert_raise(AlreadySigned) {
+      @encode.call(@response)
+    }
+  end
+end
+
+=begin
 
 class TestCheckID(unittest.TestCase):
     def setUp(self):

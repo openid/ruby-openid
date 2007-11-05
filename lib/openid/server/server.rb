@@ -394,7 +394,7 @@ module OpenID
         # @returntype: L{OpenIDResponse}
         response = OpenIDResponse.new(self)
         response.fields.update_args(OPENID_NS, {
-            'expires_in' => sprintf('%d', assoc.getExpiresIn()),
+            'expires_in' => sprintf('%d', assoc.expires_in()),
             'assoc_type' => @assoc_type,
             'assoc_handle' => assoc.handle,
             })
@@ -408,8 +408,8 @@ module OpenID
         return response
       end
 
-      def answerUnsupported(message, preferred_association_type=nil,
-                            preferred_session_type=nil)
+      def answer_unsupported(message, preferred_association_type=nil,
+                             preferred_session_type=nil)
         # Respond to this request indicating that the association type
         # or association session type is not supported.
         if @message.is_openid1()
@@ -1075,6 +1075,14 @@ module OpenID
       @@_normal_key = 'http://localhost/|normal'
       @@_dumb_key = 'http://localhost/|dumb'
 
+      def self._normal_key
+        @@_normal_key
+      end
+
+      def self._dumb_key
+        @@_dumb_key
+      end
+
       attr_accessor :store
 
       def initialize(store)
@@ -1140,12 +1148,12 @@ module OpenID
           assoc = get_association(assoc_handle, dumb=false,
                                   checkExpiration=false)
 
-          if !assoc or assoc.expiresIn <= 0
+          if !assoc or assoc.expires_in <= 0
             # fall back to dumb mode
             signed_response.fields.set_arg(
                   OPENID_NS, 'invalidate_handle', assoc_handle)
             assoc_type = assoc ? assoc.assoc_type : 'HMAC-SHA1'
-            if assoc and assoc.expiresIn <= 0
+            if assoc and assoc.expires_in <= 0
               # now do the clean-up that the disabled checkExpiration
               # code didn't get to do.
               invalidate(assoc_handle, dumb=false)
@@ -1173,8 +1181,8 @@ module OpenID
         #
         # @returns: the new association.
         # @returntype: L{openid.association.Association}
-        secret = CryptUtil.get_bytes(get_secret_size(assoc_type))
-        uniq = Util.to_base64(CryptUtil.get_bytes(4))
+        secret = CryptUtil.random_string(OpenID.get_secret_size(assoc_type))
+        uniq = Util.to_base64(CryptUtil.random_string(4))
         handle = sprintf('{%s}{%x}{%s}', assoc_type, Time.now.to_i, uniq)
 
         assoc = Association.from_expires_in(
@@ -1220,10 +1228,10 @@ module OpenID
         end
 
         assoc = @store.get_association(key, assoc_handle)
-        if assoc and assoc.expiresIn <= 0
+        if assoc and assoc.expires_in <= 0
           Util.log(sprintf("requested %sdumb key %r is expired (by %s seconds)",
                            (!dumb) ? 'not-' : '',
-                           assoc_handle, assoc.expiresIn))
+                           assoc_handle, assoc.expires_in))
           if checkExpiration
             @store.remove_association(key, assoc_handle)
             assoc = nil
@@ -1319,12 +1327,12 @@ module OpenID
         # really an adapter to make the interfaces quite match.
         if !response.is_a?(Exception) and response.needs_signing()
           if !@signatory
-            raise ValueError.new(
+            raise ArgumentError.new(
               sprintf("Must have a store to sign this request: %s",
                       response), response)
           end
 
-          if response.fields.has_key(OPENID_NS, 'sig')
+          if response.fields.has_key?(OPENID_NS, 'sig')
             raise AlreadySigned.new(response)
           end
 
