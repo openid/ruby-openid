@@ -27,6 +27,7 @@ module OpenID
 
     class OpenIDRequest
       attr_reader :mode
+      attr_accessor :namespace, :message
 
       # I represent an incoming OpenID request.
       #
@@ -55,8 +56,7 @@ module OpenID
       # @see: U{OpenID Specs, Mode: check_authentication
       # <http://openid.net/specs.bml#mode-check_authentication>}
 
-      attr_accessor :assoc_handle, :signed, :invalidate_handle,
-        :namespace, :message, :sig
+      attr_accessor :assoc_handle, :signed, :invalidate_handle, :sig
 
       def initialize(assoc_handle, signed, invalidate_handle=nil)
         # Construct me.
@@ -309,7 +309,7 @@ module OpenID
       #
       # @see: U{OpenID Specs, Mode: associate
       #   <http://openid.net/specs.bml#mode-associate>}
-      attr_accessor :session, :assoc_type, :namespace, :message
+      attr_accessor :session, :assoc_type
 
       @@session_classes = {
         'no-encryption' => PlainTextServerSession,
@@ -469,11 +469,11 @@ module OpenID
       # mode requests.
       # @type assoc_handle: str
 
-      attr_accessor :namespace, :assoc_handle, :identity, :claimed_id,
-      :return_to, :trust_root, :op_endpoint, :message, :immediate, :mode
+      attr_accessor :assoc_handle, :identity, :claimed_id,
+      :return_to, :trust_root, :op_endpoint, :immediate, :mode
 
-      def initialize(identity, return_to, trust_root=nil, immediate=false,
-                     assoc_handle=nil, op_endpoint=nil)
+      def initialize(identity, return_to, op_endpoint, trust_root=nil,
+                     immediate=false, assoc_handle=nil)
         # Construct me.
         #
         # These parameters are assigned directly as class attributes,
@@ -489,8 +489,6 @@ module OpenID
         @return_to = return_to
         @trust_root = trust_root or return_to
         @op_endpoint = op_endpoint
-
-        Util.assert(@op_endpoint)
 
         if immediate
           @immediate = true
