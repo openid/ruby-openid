@@ -1156,13 +1156,13 @@ module OpenID
             if assoc and assoc.expires_in <= 0
               # now do the clean-up that the disabled checkExpiration
               # code didn't get to do.
-              invalidate(assoc_handle, dumb=false)
-              assoc = create_association(dumb=true, assoc_type=assoc_type)
+              invalidate(assoc_handle, false)
+              assoc = create_association(true, assoc_type)
             end
           end
         else
           # dumb mode.
-          assoc = create_association(dumb=true)
+          assoc = create_association(true)
         end
 
         signed_response.fields = assoc.sign_message(signed_response.fields)
