@@ -81,7 +81,48 @@ module OpenID
                                             assoc_type)
         sig = assoc.sign(pairs)
         assert_equal(sig, expected)
+
+        m = Message.new(OPENID2_NS)
+        pairs.each { |k, v|
+          m.set_arg(OPENID_NS, k, v)
+        }
+        m.set_arg(BARE_NS, "not_an_openid_arg", "bogus")
+
+        signed_m = assoc.sign_message(m)
+        assert(signed_m.has_key?(OPENID_NS, 'sig'))
+        assert_equal(signed_m.get_arg(OPENID_NS, 'signed'),
+                     'assoc_handle,key1,key2,ns,signed')
       end
+    end
+
+    def test_sign_message_with_sig
+      assoc = Association.from_expires_in(3600, "handle", "very_secret",
+                                          "HMAC-SHA1")
+      m = Message.new(OPENID2_NS)
+      m.set_arg(OPENID_NS, 'sig', 'noise')
+      assert_raises(ArgumentError) {
+        assoc.sign_message(m)
+      }
+    end
+
+    def test_sign_message_with_signed
+      assoc = Association.from_expires_in(3600, "handle", "very_secret",
+                                          "HMAC-SHA1")
+      m = Message.new(OPENID2_NS)
+      m.set_arg(OPENID_NS, 'signed', 'fields')
+      assert_raises(ArgumentError) {
+        assoc.sign_message(m)
+      }
+    end
+
+    def test_sign_different_assoc_handle
+      assoc = Association.from_expires_in(3600, "handle", "very_secret",
+                                          "HMAC-SHA1")
+      m = Message.new(OPENID2_NS)
+      m.set_arg(OPENID_NS, 'assoc_handle', 'different')
+      assert_raises(ArgumentError) {
+        assoc.sign_message(m)
+      }
     end
 
     def test_sign_bad_assoc_type

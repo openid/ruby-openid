@@ -136,6 +136,38 @@ module OpenID
        other.lifetime == self.lifetime and
        other.assoc_type == self.assoc_type)
     end
+
+    # Add a signature (and a signed list) to a message.
+    def sign_message(message)
+      if (message.has_key?(OPENID_NS, 'sig') or
+          message.has_key?(OPENID_NS, 'signed'))
+        raise ArgumentError, 'Message already has signed list or signature'
+      end
+
+      extant_handle = message.get_arg(OPENID_NS, 'assoc_handle')
+      if extant_handle and extant_handle != self.handle
+        raise ArgumentError, "Message has a different association handle"
+      end
+
+      signed_message = message.copy()
+      signed_message.set_arg(OPENID_NS, 'assoc_handle', self.handle)
+      message_keys = signed_message.to_post_args.keys()
+
+      signed_list = []
+      message_keys.each { |k|
+        if k.starts_with?('openid.')
+          signed_list << k[7..-1]
+        end
+      }
+
+      signed_list << 'signed'
+      signed_list.sort!
+
+      signed_message.set_arg(OPENID_NS, 'signed', signed_list.join(','))
+      sig = get_message_signature(signed_message)
+      signed_message.set_arg(OPENID_NS, 'sig', sig)
+      return signed_message
+    end
   end
 
   class AssociationNegotiator
