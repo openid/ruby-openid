@@ -1145,8 +1145,7 @@ module OpenID
           # association is expired, we still need to know some
           # properties of the association so that we may preserve
           # those properties when creating the fallback association.
-          assoc = get_association(assoc_handle, dumb=false,
-                                  checkExpiration=false)
+          assoc = get_association(assoc_handle, false, false)
 
           if !assoc or assoc.expires_in <= 0
             # fall back to dumb mode
