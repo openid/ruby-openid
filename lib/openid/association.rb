@@ -5,6 +5,16 @@ require "openid/message"
 
 module OpenID
 
+  def self.get_secret_size(assoc_type)
+    if assoc_type == 'HMAC-SHA1'
+      return 20
+    elsif assoc_type == 'HMAC-SHA256'
+      return 32
+    else
+      raise ArgumentError("Unsupported association type: #{assoc_type}")
+    end
+  end
+
   # An Association holds the shared secret between a relying party and
   # an OpenID provider.
   class Association
