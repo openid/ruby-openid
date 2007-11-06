@@ -843,42 +843,44 @@ class TestSigningEncode < Test::Unit::TestCase
   end
 end
 
+class TestCheckID < Test::Unit::TestCase
+  def setup
+    @op_endpoint = 'http://endpoint.unittest/'
+    @store = MemoryStore.new()
+    @server = Server.new(@store, @op_endpoint)
+    @request = CheckIDRequest.new(
+            'http://bambam.unittest/',
+            'http://bar.unittest/999',
+            @server.op_endpoint,
+            'http://bar.unittest/',
+            false)
+  end
+
+  def test_trustRootInvalid
+    @request.trust_root = "http://foo.unittest/17"
+    @request.return_to = "http://foo.unittest/39"
+    assert(!@request.trust_root_valid())
+  end
+
+  def test_trustRootValid
+    @request.trust_root = "http://foo.unittest/"
+    @request.return_to = "http://foo.unittest/39"
+    assert(@request.trust_root_valid())
+  end
+
+  def test_trustRootValidNoReturnTo
+    request = CheckIDRequest.new(
+            'http://bambam.unittest/',
+            nil,
+            @server.op_endpoint,
+            'http://bar.unittest/',
+            false)
+
+    assert(request.trust_root_valid())
+  end
+end
+
 =begin
-
-class TestCheckID(unittest.TestCase):
-    def setUp(self):
-        self.op_endpoint = 'http://endpoint.unittest/'
-        self.store = memstore.MemoryStore()
-        self.server = server.Server(self.store, self.op_endpoint)
-        self.request = server.CheckIDRequest(
-            identity = 'http://bambam.unittest/',
-            trust_root = 'http://bar.unittest/',
-            return_to = 'http://bar.unittest/999',
-            immediate = False,
-            op_endpoint = self.server.op_endpoint,
-            )
-
-    def test_trustRootInvalid(self):
-        self.request.trust_root = "http://foo.unittest/17"
-        self.request.return_to = "http://foo.unittest/39"
-        self.failIf(self.request.trustRootValid())
-
-    def test_trustRootValid(self):
-        self.request.trust_root = "http://foo.unittest/"
-        self.request.return_to = "http://foo.unittest/39"
-        assert(self.request.trustRootValid())
-
-    def test_trustRootValidNoReturnTo(self):
-        request = server.CheckIDRequest(
-            identity = 'http://bambam.unittest/',
-            trust_root = 'http://bar.unittest/',
-            return_to = None,
-            immediate = False,
-            op_endpoint = self.server.op_endpoint,
-            )
-
-        assert(request.trustRootValid())
-
     def test_returnToVerified_callsVerify(self):
         """Make sure that verifyReturnTo is calling the trustroot
         function verifyReturnTo
