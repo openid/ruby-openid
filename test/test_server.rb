@@ -1388,150 +1388,153 @@ module OpenID
         }
       }
     end
+
+    def test_protoError
+      s1_session = Consumer::DiffieHellmanSHA1Session.new()
+
+      invalid_s1 = {'openid.assoc_type' => 'HMAC-SHA256',
+        'openid.session_type' => 'DH-SHA1',}
+      invalid_s1.merge!(s1_session.get_request())
+
+      invalid_s1_2 = {'openid.assoc_type' => 'ROBOT-NINJA',
+        'openid.session_type' => 'DH-SHA1',}
+      invalid_s1_2.merge!(s1_session.get_request())
+
+      bad_request_argss = [
+                           {'openid.assoc_type' => 'Wha?'},
+                           invalid_s1,
+                           invalid_s1_2,
+                          ]
+            
+      bad_request_argss.each { |request_args|
+        message = Message.from_post_args(request_args)
+        assert_raise(Server::ProtocolError) {
+          Server::AssociateRequest.from_message(message)
+        }
+      }
+    end
+
+    def test_protoErrorFields
+
+      contact = 'user@example.invalid'
+      reference = 'Trac ticket number MAX_INT'
+      error = 'poltergeist'
+
+      openid1_args = {
+        'openid.identitiy' => 'invalid',
+        'openid.mode' => 'checkid_setup',
+      }
+
+      openid2_args = openid1_args.dup
+      openid2_args.merge!({'openid.ns' => OPENID2_NS})
+
+      # Check presence of optional fields in both protocol versions
+
+      openid1_msg = Message.from_post_args(openid1_args)
+      p = Server::ProtocolError.new(openid1_msg, error,
+                                    reference, contact)
+      reply = p.to_message()
+
+      assert_equal(reply.get_arg(OPENID_NS, 'reference'), reference)
+      assert_equal(reply.get_arg(OPENID_NS, 'contact'), contact)
+
+      openid2_msg = Message.from_post_args(openid2_args)
+      p = Server::ProtocolError.new(openid2_msg, error,
+                                    reference, contact)
+      reply = p.to_message()
+
+      assert_equal(reply.get_arg(OPENID_NS, 'reference'), reference)
+      assert_equal(reply.get_arg(OPENID_NS, 'contact'), contact)
+    end
+
+    def failUnlessExpiresInMatches(msg, expected_expires_in)
+      expires_in_str = msg.get_arg(OPENID_NS, 'expires_in', NO_DEFAULT)
+      expires_in = expires_in_str.to_i
+
+      # Slop is necessary because the tests can sometimes get run
+      # right on a second boundary
+      slop = 1 # second
+      difference = expected_expires_in - expires_in
+
+      error_message = sprintf('"expires_in" value not within %s of expected: ' +
+                              'expected=%s, actual=%s', slop, expected_expires_in,
+                              expires_in)
+      assert((0 <= difference and difference <= slop), error_message)
+    end
+
+    def test_plaintext
+      @assoc = @signatory.create_association(false, 'HMAC-SHA1')
+      response = @request.answer(@assoc)
+      rfg = lambda { |f| response.fields.get_arg(OPENID_NS, f) }
+
+      assert_equal(rfg.call("assoc_type"), "HMAC-SHA1")
+      assert_equal(rfg.call("assoc_handle"), @assoc.handle)
+
+      failUnlessExpiresInMatches(response.fields,
+                                 @signatory.class::SECRET_LIFETIME)
+
+      assert_equal(
+                   rfg.call("mac_key"), Util.to_base64(@assoc.secret))
+      assert(!rfg.call("session_type"))
+      assert(!rfg.call("enc_mac_key"))
+      assert(!rfg.call("dh_server_public"))
+    end
+
+    def test_plaintext256
+      @assoc = @signatory.create_association(false, 'HMAC-SHA256')
+      response = @request.answer(@assoc)
+      rfg = lambda { |f| response.fields.get_arg(OPENID_NS, f) }
+
+      assert_equal(rfg.call("assoc_type"), "HMAC-SHA1")
+      assert_equal(rfg.call("assoc_handle"), @assoc.handle)
+
+      failUnlessExpiresInMatches(
+                                 response.fields, @signatory.class::SECRET_LIFETIME)
+
+      assert_equal(
+                   rfg.call("mac_key"), Util.to_base64(@assoc.secret))
+      assert(!rfg.call("session_type"))
+      assert(!rfg.call("enc_mac_key"))
+      assert(!rfg.call("dh_server_public"))
+    end
+
+    def test_unsupportedPrefer
+      allowed_assoc = 'COLD-PET-RAT'
+      allowed_sess = 'FROG-BONES'
+      message = 'This is a unit test'
+
+      # Set an OpenID 2 message so answerUnsupported doesn't raise
+      # ProtocolError.
+      @request.message = Message.new(OPENID2_NS)
+
+      response = @request.answer_unsupported(message,
+                                             allowed_assoc,
+                                             allowed_sess)
+      rfg = lambda { |f| response.fields.get_arg(OPENID_NS, f) }
+      assert_equal(rfg.call('error_code'), 'unsupported-type')
+      assert_equal(rfg.call('assoc_type'), allowed_assoc)
+      assert_equal(rfg.call('error'), message)
+      assert_equal(rfg.call('session_type'), allowed_sess)
+    end
+
+    def test_unsupported
+      message = 'This is a unit test'
+
+      # Set an OpenID 2 message so answerUnsupported doesn't raise
+      # ProtocolError.
+      @request.message = Message.new(OPENID2_NS)
+
+      response = @request.answer_unsupported(message)
+      rfg = lambda { |f| response.fields.get_arg(OPENID_NS, f) }
+      assert_equal(rfg.call('error_code'), 'unsupported-type')
+      assert_equal(rfg.call('assoc_type'), nil)
+      assert_equal(rfg.call('error'), message)
+      assert_equal(rfg.call('session_type'), nil)
+    end
   end
 end
 
 =begin
-
-    def test_protoError(self):
-        from openid.consumer.consumer import DiffieHellmanSHA1ConsumerSession
-            
-        s1_session = DiffieHellmanSHA1ConsumerSession()
-
-        invalid_s1 = {'openid.assoc_type':'HMAC-SHA256',
-                      'openid.session_type':'DH-SHA1',}
-        invalid_s1.update(s1_session.getRequest())
-
-        invalid_s1_2 = {'openid.assoc_type':'ROBOT-NINJA',
-                      'openid.session_type':'DH-SHA1',}
-        invalid_s1_2.update(s1_session.getRequest())
-
-        bad_request_argss = [
-            {'openid.assoc_type':'Wha?'},
-            invalid_s1,
-            invalid_s1_2,
-            ]
-            
-        for request_args in bad_request_argss:
-            message = Message.fromPostArgs(request_args)
-            @failUnlessRaises(server.ProtocolError,
-                                  server.AssociateRequest.fromMessage,
-                                  message)
-
-    def test_protoErrorFields(self):
-
-        contact = 'user@example.invalid'
-        reference = 'Trac ticket number MAX_INT'
-        error = 'poltergeist'
-
-        openid1_args = {
-            'openid.identitiy' => 'invalid',
-            'openid.mode' => 'checkid_setup',
-            }
-
-        openid2_args = dict(openid1_args)
-        openid2_args.update({'openid.ns' => OPENID2_NS})
-
-        # Check presence of optional fields in both protocol versions
-
-        openid1_msg = Message.fromPostArgs(openid1_args)
-        p = server.ProtocolError(openid1_msg, error,
-                                 contact=contact, reference=reference)
-        reply = p.toMessage()
-
-        assert_equal(reply.getArg(OPENID_NS, 'reference'), reference)
-        assert_equal(reply.getArg(OPENID_NS, 'contact'), contact)
-
-        openid2_msg = Message.fromPostArgs(openid2_args)
-        p = server.ProtocolError(openid2_msg, error,
-                                 contact=contact, reference=reference)
-        reply = p.toMessage()
-
-        assert_equal(reply.getArg(OPENID_NS, 'reference'), reference)
-        assert_equal(reply.getArg(OPENID_NS, 'contact'), contact)
-
-    def failUnlessExpiresInMatches(self, msg, expected_expires_in):
-        expires_in_str = msg.getArg(OPENID_NS, 'expires_in', no_default)
-        expires_in = int(expires_in_str)
-
-        # Slop is necessary because the tests can sometimes get run
-        # right on a second boundary
-        slop = 1 # second
-        difference = expected_expires_in - expires_in
-
-        error_message = ('"expires_in" value not within %s of expected: '
-                         'expected=%s, actual=%s' %
-                         (slop, expected_expires_in, expires_in))
-        assert(0 <= difference <= slop, error_message)
-
-    def test_plaintext(self):
-        @assoc = @signatory.createAssociation(dumb=False, assoc_type='HMAC-SHA1')
-        response = @request.answer(@assoc)
-        rfg = lambda f: response.fields.getArg(OPENID_NS, f)
-
-        assert_equal(rfg("assoc_type"), "HMAC-SHA1")
-        assert_equal(rfg("assoc_handle"), @assoc.handle)
-
-        @failUnlessExpiresInMatches(
-            response.fields, @signatory.SECRET_LIFETIME)
-
-        assert_equal(
-            rfg("mac_key"), oidutil.toBase64(@assoc.secret))
-        @failIf(rfg("session_type"))
-        @failIf(rfg("enc_mac_key"))
-        @failIf(rfg("dh_server_public"))
-
-    def test_plaintext256(self):
-        @assoc = @signatory.createAssociation(dumb=False, assoc_type='HMAC-SHA256')
-        response = @request.answer(@assoc)
-        rfg = lambda f: response.fields.getArg(OPENID_NS, f)
-
-        assert_equal(rfg("assoc_type"), "HMAC-SHA1")
-        assert_equal(rfg("assoc_handle"), @assoc.handle)
-
-        @failUnlessExpiresInMatches(
-            response.fields, @signatory.SECRET_LIFETIME)
-
-        assert_equal(
-            rfg("mac_key"), oidutil.toBase64(@assoc.secret))
-        @failIf(rfg("session_type"))
-        @failIf(rfg("enc_mac_key"))
-        @failIf(rfg("dh_server_public"))
-
-    def test_unsupportedPrefer(self):
-        allowed_assoc = 'COLD-PET-RAT'
-        allowed_sess = 'FROG-BONES'
-        message = 'This is a unit test'
-
-        # Set an OpenID 2 message so answerUnsupported doesn't raise
-        # ProtocolError.
-        @request.message = Message(OPENID2_NS)
-
-        response = @request.answerUnsupported(
-            message=message,
-            preferred_session_type=allowed_sess,
-            preferred_association_type=allowed_assoc,
-            )
-        rfg = lambda f: response.fields.getArg(OPENID_NS, f)
-        assert_equal(rfg('error_code'), 'unsupported-type')
-        assert_equal(rfg('assoc_type'), allowed_assoc)
-        assert_equal(rfg('error'), message)
-        assert_equal(rfg('session_type'), allowed_sess)
-
-    def test_unsupported(self):
-        message = 'This is a unit test'
-
-        # Set an OpenID 2 message so answerUnsupported doesn't raise
-        # ProtocolError.
-        @request.message = Message(OPENID2_NS)
-
-        response = @request.answerUnsupported(message)
-        rfg = lambda f: response.fields.getArg(OPENID_NS, f)
-        assert_equal(rfg('error_code'), 'unsupported-type')
-        assert_equal(rfg('assoc_type'), None)
-        assert_equal(rfg('error'), message)
-        assert_equal(rfg('session_type'), None)
-end
 
 class Counter(object):
     def __init__(self):
