@@ -1,7 +1,6 @@
 require 'openid/extensions/sreg'
 require 'openid/message'
-
-# require 'openid/server' # OpenIDRequest, OpenIDResponse
+require 'openid/server/server'
 
 module OpenID
 
@@ -173,7 +172,7 @@ module OpenID
 
     def test_from_openid_request_message_copied
       message = Message.from_openid_args({"sreg.required" => "nickname"})
-      openid_req = OpenIDRequest.new
+      openid_req = Server::OpenIDRequest.new
       openid_req.message = message
       sreg_req = SRegRequest.from_openid_request(openid_req)
       # check that the message is copied by looking at sreg namespace
@@ -186,7 +185,7 @@ module OpenID
     def test_from_openid_request_ns_1_0
       message = Message.from_openid_args({'ns.sreg' => SREG_NS_URI_1_0, 
                                          "sreg.required" => "nickname"})
-      openid_req = OpenIDRequest.new
+      openid_req = Server::OpenIDRequest.new
       openid_req.message = message
       sreg_req = SRegRequest.from_openid_request(openid_req)
       assert_equal(SREG_NS_URI_1_0, sreg_req.ns_uri)
@@ -444,7 +443,7 @@ module OpenID
       sreg_req = SRegRequest.new(['nickname', 'email'], ['fullname'])
       req_msg = Message.new
       req_msg.update_args(SREG_NS_URI, sreg_req.get_extension_args)
-      req = OpenIDRequest.new
+      req = Server::OpenIDRequest.new
       req.message = req_msg
       req.namespace = req_msg.get_openid_namespace
 
@@ -452,7 +451,7 @@ module OpenID
 
       # create a response
       resp_msg = Message.new
-      resp = OpenIDResponse.new(req)
+      resp = Server::OpenIDResponse.new(req)
       resp.fields = resp_msg
       sreg_resp = SRegResponse.extract_response(sreg_req, SOME_SREG_DATA)
       resp.add_extension(sreg_resp)
