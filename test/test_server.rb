@@ -878,13 +878,11 @@ class TestCheckID < Test::Unit::TestCase
 
     assert(request.trust_root_valid())
   end
-end
 
 =begin
-    def test_returnToVerified_callsVerify(self):
-        """Make sure that verifyReturnTo is calling the trustroot
-        function verifyReturnTo
-        """
+  def test_returnToVerified_callsVerify
+    # Make sure that verifyReturnTo is calling the trustroot function
+    # verifyReturnTo
         def withVerifyReturnTo(new_verify, callable):
             old_verify = server.verifyReturnTo
             try:
@@ -918,347 +916,398 @@ end
                 val,
                 withVerifyReturnTo(constVerify(val),
                                    self.request.returnToVerified))
+=end
 
-    def _expectAnswer(self, answer, identity=None, claimed_id=None):
-        expected_list = [
-            ('mode', 'id_res'),
-            ('return_to', self.request.return_to),
-            ('op_endpoint', self.op_endpoint),
-            ]
-        if identity:
-            expected_list.append(('identity', identity))
-            if claimed_id:
-                expected_list.append(('claimed_id', claimed_id))
-            else:
-                expected_list.append(('claimed_id', identity))
+  def _expectAnswer(answer, identity=nil, claimed_id=nil)
+    expected_list = [
+                     ['mode', 'id_res'],
+                     ['return_to', @request.return_to],
+                     ['op_endpoint', @op_endpoint],
+                    ]
+    if identity
+      expected_list << ['identity', identity]
+      if claimed_id
+        expected_list << ['claimed_id', claimed_id]
+      else
+        expected_list << ['claimed_id', identity]
+      end
+    end
 
-        for k, expected in expected_list:
-            actual = answer.fields.getArg(OPENID_NS, k)
-            assert_equal(actual, expected, "%s: expected %s, got %s" % (k, expected, actual))
+    expected_list.each { |k, expected|
+      actual = answer.fields.get_arg(OPENID_NS, k)
+      assert_equal(expected, actual,
+                   sprintf("%s: expected %s, got %s",
+                           k, expected, actual))
+    }
 
-        assert(answer.fields.hasKey(OPENID_NS, 'response_nonce'))
-        assert(answer.fields.getOpenIDNamespace() == OPENID2_NS)
+    assert(answer.fields.has_key?(OPENID_NS, 'response_nonce'))
+    assert(answer.fields.get_openid_namespace() == OPENID2_NS)
 
-        # One for nonce, one for ns
-        assert_equal(len(answer.fields.toPostArgs()),
-                             len(expected_list) + 2,
-                             answer.fields.toPostArgs())
+    # One for nonce, one for ns
+    assert_equal(answer.fields.to_post_args.length,
+                 expected_list.length + 2,
+                 answer.fields.to_post_args.inspect)
+  end
 
+  def test_answerAllow
+    # Check the fields specified by "Positive Assertions"
+    #
+    # including mode=id_res, identity, claimed_id, op_endpoint,
+    # return_to
+    answer = @request.answer(true)
+    assert_equal(answer.request, @request)
+    _expectAnswer(answer, @request.identity)
+  end
 
-    def test_answerAllow(self):
-        """Check the fields specified by "Positive Assertions"
+  def test_answerAllowDelegatedIdentity
+    @request.claimed_id = 'http://delegating.unittest/'
+    answer = @request.answer(true)
+    _expectAnswer(answer, @request.identity,
+                       @request.claimed_id)
+  end
 
-        including mode=id_res, identity, claimed_id, op_endpoint, return_to
-        """
-        answer = self.request.answer(True)
-        assert_equal(answer.request, self.request)
-        self._expectAnswer(answer, self.request.identity)
+  def test_answerAllowWithoutIdentityReally
+    @request.identity = nil
+    answer = @request.answer(true)
+    assert_equal(answer.request, @request)
+    _expectAnswer(answer)
+  end
 
-    def test_answerAllowDelegatedIdentity(self):
-        self.request.claimed_id = 'http://delegating.unittest/'
-        answer = self.request.answer(True)
-        self._expectAnswer(answer, self.request.identity,
-                           self.request.claimed_id)
+  def test_answerAllowAnonymousFail
+    @request.identity = nil
+    # XXX - Check on this, I think this behavior is legal in OpenID
+    # 2.0?
+    assert_raise(ArgumentError) {
+      @request.answer(true, nil, "=V")
+    }
+  end
 
-    def test_answerAllowWithoutIdentityReally(self):
-        self.request.identity = None
-        answer = self.request.answer(True)
-        assert_equal(answer.request, self.request)
-        self._expectAnswer(answer)
+  def test_answerAllowWithIdentity
+    @request.identity = IDENTIFIER_SELECT
+    selected_id = 'http://anon.unittest/9861'
+    answer = @request.answer(true, nil, selected_id)
+    _expectAnswer(answer, selected_id)
+  end
 
-    def test_answerAllowAnonymousFail(self):
-        self.request.identity = None
-        # XXX - Check on this, I think this behavior is legal in OpenID 2.0?
-        self.failUnlessRaises(
-            ValueError, self.request.answer, True, identity="=V")
+  def test_answerAllowWithDelegatedIdentityOpenID2
+    # Answer an IDENTIFIER_SELECT case with a delegated identifier.
 
-    def test_answerAllowWithIdentity(self):
-        self.request.identity = IDENTIFIER_SELECT
-        selected_id = 'http://anon.unittest/9861'
-        answer = self.request.answer(True, identity=selected_id)
-        self._expectAnswer(answer, selected_id)
+    # claimed_id delegates to selected_id here.
+    @request.identity = IDENTIFIER_SELECT
+    selected_id = 'http://anon.unittest/9861'
+    claimed_id = 'http://monkeyhat.unittest/'
+    answer = @request.answer(true, nil, selected_id, claimed_id)
+    _expectAnswer(answer, selected_id, claimed_id)
+  end
 
-    def test_answerAllowWithDelegatedIdentityOpenID2(self):
-        """Answer an IDENTIFIER_SELECT case with a delegated identifier.
-        """
-        # claimed_id delegates to selected_id here.
-        self.request.identity = IDENTIFIER_SELECT
-        selected_id = 'http://anon.unittest/9861'
-        claimed_id = 'http://monkeyhat.unittest/'
-        answer = self.request.answer(True, identity=selected_id,
-                                     claimed_id=claimed_id)
-        self._expectAnswer(answer, selected_id, claimed_id)
+  def test_answerAllowWithDelegatedIdentityOpenID1
+    # claimed_id parameter doesn't exist in OpenID 1.
+    @request.namespace = OPENID1_NS
+    # claimed_id delegates to selected_id here.
+    @request.identity = IDENTIFIER_SELECT
+    selected_id = 'http://anon.unittest/9861'
+    claimed_id = 'http://monkeyhat.unittest/'
+    assert_raise(VersionError) {
+      @request.answer(true, nil, selected_id, claimed_id)
+    }
+  end
 
-    def test_answerAllowWithDelegatedIdentityOpenID1(self):
-        """claimed_id parameter doesn't exist in OpenID 1.
-        """
-        self.request.namespace = OPENID1_NS
-        # claimed_id delegates to selected_id here.
-        self.request.identity = IDENTIFIER_SELECT
-        selected_id = 'http://anon.unittest/9861'
-        claimed_id = 'http://monkeyhat.unittest/'
-        self.failUnlessRaises(server.VersionError,
-                              self.request.answer, True,
-                              identity=selected_id,
-                              claimed_id=claimed_id)
+  def test_answerAllowWithAnotherIdentity
+    # XXX - Check on this, I think this behavior is legal in OpenID
+    # 2.0?
+    assert_raise(ArgumentError){
+      @request.answer(true, nil, "http://pebbles.unittest/")
+    }
+  end
 
-    def test_answerAllowWithAnotherIdentity(self):
-        # XXX - Check on this, I think this behavior is legal in OpenID 2.0?
-        self.failUnlessRaises(ValueError, self.request.answer, True,
-                              identity="http://pebbles.unittest/")
+  def test_answerAllowNoIdentityOpenID1
+    @request.namespace = OPENID1_NS
+    @request.identity = nil
+    assert_raise(ArgumentError) {
+      @request.answer(true, nil, nil)
+    }
+  end
 
-    def test_answerAllowNoIdentityOpenID1(self):
-        self.request.namespace = OPENID1_NS
-        self.request.identity = None
-        self.failUnlessRaises(ValueError, self.request.answer, True,
-                              identity=None)
+  def test_answerAllowForgotEndpoint
+    @request.op_endpoint = nil
+    assert_raise(RuntimeError) {
+      @request.answer(true)
+    }
+  end
 
-    def test_answerAllowForgotEndpoint(self):
-        self.request.op_endpoint = None
-        self.failUnlessRaises(RuntimeError, self.request.answer, True)
+  def test_checkIDWithNoIdentityOpenID1
+    msg = Message.new(OPENID1_NS)
+    msg.set_arg(OPENID_NS, 'return_to', 'bogus')
+    msg.set_arg(OPENID_NS, 'trust_root', 'bogus')
+    msg.set_arg(OPENID_NS, 'mode', 'checkid_setup')
+    msg.set_arg(OPENID_NS, 'assoc_handle', 'bogus')
 
-    def test_checkIDWithNoIdentityOpenID1(self):
-        msg = Message(OPENID1_NS)
-        msg.setArg(OPENID_NS, 'return_to', 'bogus')
-        msg.setArg(OPENID_NS, 'trust_root', 'bogus')
-        msg.setArg(OPENID_NS, 'mode', 'checkid_setup')
-        msg.setArg(OPENID_NS, 'assoc_handle', 'bogus')
+    assert_raise(ProtocolError) {
+      CheckIDRequest.from_message(msg, @server)
+    }
+  end
 
-        self.failUnlessRaises(server.ProtocolError,
-                              server.CheckIDRequest.fromMessage,
-                              msg, self.server)
+  def test_trustRootOpenID1
+    # Ignore openid.realm in OpenID 1
+    msg = Message.new(OPENID1_NS)
+    msg.set_arg(OPENID_NS, 'mode', 'checkid_setup')
+    msg.set_arg(OPENID_NS, 'trust_root', 'http://trustroot.com/')
+    msg.set_arg(OPENID_NS, 'realm', 'http://fake_trust_root/')
+    msg.set_arg(OPENID_NS, 'return_to', 'http://trustroot.com/foo')
+    msg.set_arg(OPENID_NS, 'assoc_handle', 'bogus')
+    msg.set_arg(OPENID_NS, 'identity', 'george')
 
-    def test_trustRootOpenID1(self):
-        """Ignore openid.realm in OpenID 1"""
-        msg = Message(OPENID1_NS)
-        msg.setArg(OPENID_NS, 'mode', 'checkid_setup')
-        msg.setArg(OPENID_NS, 'trust_root', 'http://real_trust_root/')
-        msg.setArg(OPENID_NS, 'realm', 'http://fake_trust_root/')
-        msg.setArg(OPENID_NS, 'return_to', 'http://real_trust_root/foo')
-        msg.setArg(OPENID_NS, 'assoc_handle', 'bogus')
-        msg.setArg(OPENID_NS, 'identity', 'george')
+    result = CheckIDRequest.from_message(msg, @server.op_endpoint)
 
-        result = server.CheckIDRequest.fromMessage(msg, self.server.op_endpoint)
+    assert(result.trust_root == 'http://trustroot.com/')
+  end
 
-        assert(result.trust_root == 'http://real_trust_root/')
+  def test_trustRootOpenID2
+    # Ignore openid.trust_root in OpenID 2
+    msg = Message.new(OPENID2_NS)
+    msg.set_arg(OPENID_NS, 'mode', 'checkid_setup')
+    msg.set_arg(OPENID_NS, 'realm', 'http://trustroot.com/')
+    msg.set_arg(OPENID_NS, 'trust_root', 'http://fake_trust_root/')
+    msg.set_arg(OPENID_NS, 'return_to', 'http://trustroot.com/foo')
+    msg.set_arg(OPENID_NS, 'assoc_handle', 'bogus')
+    msg.set_arg(OPENID_NS, 'identity', 'george')
+    msg.set_arg(OPENID_NS, 'claimed_id', 'george')
 
-    def test_trustRootOpenID2(self):
-        """Ignore openid.trust_root in OpenID 2"""
-        msg = Message(OPENID2_NS)
-        msg.setArg(OPENID_NS, 'mode', 'checkid_setup')
-        msg.setArg(OPENID_NS, 'realm', 'http://real_trust_root/')
-        msg.setArg(OPENID_NS, 'trust_root', 'http://fake_trust_root/')
-        msg.setArg(OPENID_NS, 'return_to', 'http://real_trust_root/foo')
-        msg.setArg(OPENID_NS, 'assoc_handle', 'bogus')
-        msg.setArg(OPENID_NS, 'identity', 'george')
-        msg.setArg(OPENID_NS, 'claimed_id', 'george')
+    result = CheckIDRequest.from_message(msg, @server.op_endpoint)
 
-        result = server.CheckIDRequest.fromMessage(msg, self.server.op_endpoint)
+    assert(result.trust_root == 'http://trustroot.com/')
+  end
 
-        assert(result.trust_root == 'http://real_trust_root/')
+  def test_answerAllowNoTrustRoot
+    @request.trust_root = nil
+    answer = @request.answer(true)
+    assert_equal(answer.request, @request)
+    _expectAnswer(answer, @request.identity)
+  end
 
-    def test_answerAllowNoTrustRoot(self):
-        self.request.trust_root = None
-        answer = self.request.answer(True)
-        assert_equal(answer.request, self.request)
-        self._expectAnswer(answer, self.request.identity)
+  def test_answerImmediateDenyOpenID2
+    # Look for mode=setup_needed in checkid_immediate negative
+    # response in OpenID 2 case.
+    #
+    # See specification Responding to Authentication Requests /
+    # Negative Assertions / In Response to Immediate Requests.
+    @request.mode = 'checkid_immediate'
+    @request.immediate = true
 
-    def test_answerImmediateDenyOpenID2(self):
-        """Look for mode=setup_needed in checkid_immediate negative
-        response in OpenID 2 case.
+    server_url = "http://setup-url.unittest/"
+    # crappiting setup_url, you dirty my interface with your presence!
+    answer = @request.answer(false, server_url)
+    assert_equal(answer.request, @request)
+    assert_equal(answer.fields.to_post_args.length, 3, answer.fields)
+    assert_equal(answer.fields.get_openid_namespace, OPENID2_NS)
+    assert_equal(answer.fields.get_arg(OPENID_NS, 'mode'),
+                 'setup_needed')
+    # user_setup_url no longer required.
+  end
 
-        See specification Responding to Authentication Requests /
-        Negative Assertions / In Response to Immediate Requests.
-        """
-        self.request.mode = 'checkid_immediate'
-        self.request.immediate = True
-        server_url = "http://setup-url.unittest/"
-        # crappiting setup_url, you dirty my interface with your presence!
-        answer = self.request.answer(False, server_url=server_url)
-        assert_equal(answer.request, self.request)
-        assert_equal(len(answer.fields.toPostArgs()), 3, answer.fields)
-        assert_equal(answer.fields.getOpenIDNamespace(), OPENID2_NS)
-        assert_equal(answer.fields.getArg(OPENID_NS, 'mode'),
-                             'setup_needed')
-        # user_setup_url no longer required.
+  def test_answerImmediateDenyOpenID1
+    # Look for user_setup_url in checkid_immediate negative response
+    # in OpenID 1 case.
+    @request.namespace = OPENID1_NS
+    @request.mode = 'checkid_immediate'
+    @request.immediate = true
+    server_url = "http://setup-url.unittest/"
+    # crappiting setup_url, you dirty my interface with your presence!
+    answer = @request.answer(false, server_url)
+    assert_equal(answer.request, @request)
+    assert_equal(answer.fields.to_post_args.length, 2, answer.fields)
+    assert_equal(answer.fields.get_openid_namespace, OPENID1_NS)
+    assert_equal(answer.fields.get_arg(OPENID_NS, 'mode'), 'id_res')
+    assert(answer.fields.get_arg(
+             OPENID_NS, 'user_setup_url', '').starts_with?(server_url))
+  end
 
-    def test_answerImmediateDenyOpenID1(self):
-        """Look for user_setup_url in checkid_immediate negative
-        response in OpenID 1 case."""
-        self.request.namespace = OPENID1_NS
-        self.request.mode = 'checkid_immediate'
-        self.request.immediate = True
-        server_url = "http://setup-url.unittest/"
-        # crappiting setup_url, you dirty my interface with your presence!
-        answer = self.request.answer(False, server_url=server_url)
-        assert_equal(answer.request, self.request)
-        assert_equal(len(answer.fields.toPostArgs()), 2, answer.fields)
-        assert_equal(answer.fields.getOpenIDNamespace(), OPENID1_NS)
-        assert_equal(answer.fields.getArg(OPENID_NS, 'mode'), 'id_res')
-        assert(answer.fields.getArg(
-            OPENID_NS, 'user_setup_url', '').startswith(server_url))
+  def test_answerSetupDeny
+    answer = @request.answer(false)
+    assert_equal(answer.fields.get_args(OPENID_NS), {
+                   'mode' => 'cancel',
+                 })
+  end
 
-    def test_answerSetupDeny(self):
-        answer = self.request.answer(False)
-        assert_equal(answer.fields.getArgs(OPENID_NS), {
-            'mode' => 'cancel',
-            })
+  def test_encodeToURL
+    server_url = 'http://openid-server.unittest/'
+    result = @request.encode_to_url(server_url)
 
-    def test_encodeToURL(self):
-        server_url = 'http://openid-server.unittest/'
-        result = self.request.encodeToURL(server_url)
+    # How to check?  How about a round-trip test.
+    base, result_args = result.split('?', 2)
+    result_args = Util.parse_query(result_args)
+    message = Message.from_post_args(result_args)
+    rebuilt_request = CheckIDRequest.from_message(message,
+                                                  @server.op_endpoint)
 
-        # How to check?  How about a round-trip test.
-        base, result_args = result.split('?', 1)
-        result_args = dict(cgi.parse_qsl(result_args))
-        message = Message.fromPostArgs(result_args)
-        rebuilt_request = server.CheckIDRequest.fromMessage(message,
-                                                            self.server.op_endpoint)
-        # argh, lousy hack
-        self.request.message = message
-        assert_equal(rebuilt_request.__dict__, self.request.__dict__)
+    @request.message = message
 
-    def test_getCancelURL(self):
-        url = self.request.getCancelURL()
-        rt, query_string = url.split('?')
-        assert_equal(self.request.return_to, rt)
-        query = dict(cgi.parse_qsl(query_string))
-        assert_equal(query, {'openid.mode':'cancel',
-                                     'openid.ns':OPENID2_NS})
+    @request.instance_variables.each { |var|
+      assert_equal(@request.instance_variable_get(var),
+                   rebuilt_request.instance_variable_get(var), var)
+    }
+  end
 
-    def test_getCancelURLimmed(self):
-        self.request.mode = 'checkid_immediate'
-        self.request.immediate = True
-        self.failUnlessRaises(ValueError, self.request.getCancelURL)
+  def test_getCancelURL
+    url = @request.get_cancel_url
+    rt, query_string = url.split('?', -1)
+    assert_equal(@request.return_to, rt)
+    query = Util.parse_query(query_string)
+    assert_equal(query, {'openid.mode' => 'cancel',
+                   'openid.ns' => OPENID2_NS})
+  end
 
+  def test_getCancelURLimmed
+    @request.mode = 'checkid_immediate'
+    @request.immediate = true
+    assert_raise(ArgumentError) {
+      @request.get_cancel_url
+    }
+  end
+end
 
+class TestCheckIDExtension < Test::Unit::TestCase
 
-class TestCheckIDExtension(unittest.TestCase):
+  def setup
+    @op_endpoint = 'http://endpoint.unittest/ext'
+    @store = MemoryStore.new()
+    @server = Server::Server.new(@store, @op_endpoint)
+    @request = CheckIDRequest.new(
+                                  'http://bambam.unittest/',
+                                  'http://bar.unittest/999',
+                                  @server.op_endpoint,
+                                  'http://bar.unittest/',
+                                  false)
+    @response = OpenIDResponse.new(@request)
+    @response.fields.set_arg(OPENID_NS, 'mode', 'id_res')
+    @response.fields.set_arg(OPENID_NS, 'blue', 'star')
+  end
 
-    def setUp(self):
-        self.op_endpoint = 'http://endpoint.unittest/ext'
-        self.store = memstore.MemoryStore()
-        self.server = server.Server(self.store, self.op_endpoint)
-        self.request = server.CheckIDRequest(
-            identity = 'http://bambam.unittest/',
-            trust_root = 'http://bar.unittest/',
-            return_to = 'http://bar.unittest/999',
-            immediate = False,
-            op_endpoint = self.server.op_endpoint,
-            )
-        self.response = server.OpenIDResponse(self.request)
-        self.response.fields.setArg(OPENID_NS, 'mode', 'id_res')
-        self.response.fields.setArg(OPENID_NS, 'blue', 'star')
-
-
-    def test_addField(self):
-        namespace = 'something:'
-        self.response.fields.setArg(namespace, 'bright', 'potato')
-        assert_equal(self.response.fields.getArgs(OPENID_NS),
-                             {'blue' => 'star',
-                              'mode' => 'id_res',
-                              })
+  def test_addField
+    namespace = 'something:'
+    @response.fields.set_arg(namespace, 'bright', 'potato')
+    assert_equal(@response.fields.get_args(OPENID_NS),
+                 {'blue' => 'star',
+                   'mode' => 'id_res',
+                 })
         
-        assert_equal(self.response.fields.getArgs(namespace),
-                             {'bright':'potato'})
+    assert_equal(@response.fields.get_args(namespace),
+                 {'bright' => 'potato'})
+  end
 
+  def test_addFields
+    namespace = 'mi5:'
+    args =  {'tangy' => 'suspenders',
+      'bravo' => 'inclusion'}
+    @response.fields.update_args(namespace, args)
+    assert_equal(@response.fields.get_args(OPENID_NS),
+                 {'blue' => 'star',
+                   'mode' => 'id_res',
+                 })
+    assert_equal(@response.fields.get_args(namespace), args)
+  end
+end
 
-    def test_addFields(self):
-        namespace = 'mi5:'
-        args =  {'tangy' => 'suspenders',
-                 'bravo' => 'inclusion'}
-        self.response.fields.updateArgs(namespace, args)
-        assert_equal(self.response.fields.getArgs(OPENID_NS),
-                             {'blue' => 'star',
-                              'mode' => 'id_res',
-                              })
-        assert_equal(self.response.fields.getArgs(namespace), args)
+class MockSignatory
+  attr_accessor :isValid, :assocs
 
+  def initialize(assoc)
+    @isValid = true
+    @assocs = [assoc]
+  end
 
+  def verify(assoc_handle, message)
+    Util.assert(message.has_key?(OPENID_NS, "sig"))
+    if self.assocs.member?([true, assoc_handle])
+      return @isValid
+    else
+      return false
+    end
+  end
 
-class MockSignatory(object):
-    isValid = True
+  def get_association(assoc_handle, dumb)
+    if self.assocs.member?([dumb, assoc_handle])
+      # This isn't a valid implementation for many uses of this
+      # function, mind you.
+      return true
+    else
+      return nil
+    end
+  end
 
-    def __init__(self, assoc):
-        self.assocs = [assoc]
+  def invalidate(assoc_handle, dumb)
+    if self.assocs.member?([dumb, assoc_handle])
+      @assocs.delete([dumb, assoc_handle])
+    end
+  end
+end
 
-    def verify(self, assoc_handle, message):
-        assert message.hasKey(OPENID_NS, "sig")
-        if (True, assoc_handle) in self.assocs:
-            return self.isValid
-        else:
-            return False
-
-    def getAssociation(self, assoc_handle, dumb):
-        if (dumb, assoc_handle) in self.assocs:
-            # This isn't a valid implementation for many uses of this
-            # function, mind you.
-            return True
-        else:
-            return None
-
-    def invalidate(self, assoc_handle, dumb):
-        if (dumb, assoc_handle) in self.assocs:
-            self.assocs.remove((dumb, assoc_handle))
-
-
-class TestCheckAuth(unittest.TestCase):
-    def setUp(self):
-        self.assoc_handle = 'mooooooooo'
-        self.message = Message.fromPostArgs({
+class TestCheckAuth < Test::Unit::TestCase
+  def setup
+    @assoc_handle = 'mooooooooo'
+    @message = Message.from_post_args({
             'openid.sig' => 'signarture',
             'one' => 'alpha',
             'two' => 'beta',
             })
-        self.request = server.CheckAuthRequest(
-            self.assoc_handle, self.message)
+    @request = CheckAuthRequest.new(
+            @assoc_handle, @message)
 
-        self.signatory = MockSignatory((True, self.assoc_handle))
+    @signatory = MockSignatory.new([true, @assoc_handle])
+  end
 
-    def test_valid(self):
-        r = self.request.answer(self.signatory)
-        assert_equal(r.fields.getArgs(OPENID_NS), {'is_valid' => 'true'})
-        assert_equal(r.request, self.request)
+  def test_valid
+    r = @request.answer(@signatory)
+    assert_equal({'is_valid' => 'true'},
+                 r.fields.get_args(OPENID_NS))
+    assert_equal(r.request, @request)
+  end
 
-    def test_invalid(self):
-        self.signatory.isValid = False
-        r = self.request.answer(self.signatory)
-        assert_equal(r.fields.getArgs(OPENID_NS),
-                             {'is_valid' => 'false'})
+  def test_invalid
+    @signatory.isValid = false
+    r = @request.answer(@signatory)
+    assert_equal({'is_valid' => 'false'},
+                 r.fields.get_args(OPENID_NS))
+                 
+  end
 
-    def test_replay(self):
-        """Don't validate the same response twice.
+  def test_replay
+    # Don't validate the same response twice.
+    #
+    # From "Checking the Nonce"::
+    #
+    #   When using "check_authentication", the OP MUST ensure that an
+    #   assertion has not yet been accepted with the same value for
+    #   "openid.response_nonce".
+    #
+    # In this implementation, the assoc_handle is only valid once.
+    # And nonces are a signed component of the message, so they can't
+    # be used with another handle without breaking the sig.
+    r = @request.answer(@signatory)
+    r = @request.answer(@signatory)
+    assert_equal({'is_valid' => 'false'},
+                 r.fields.get_args(OPENID_NS))
+  end
 
-        From "Checking the Nonce"::
-        
-            When using "check_authentication", the OP MUST ensure that an
-            assertion has not yet been accepted with the same value for
-            "openid.response_nonce".
+  def test_invalidatehandle
+    @request.invalidate_handle = "bogusHandle"
+    r = @request.answer(@signatory)
+    assert_equal(r.fields.get_args(OPENID_NS),
+                 {'is_valid' => 'true',
+                   'invalidate_handle' => "bogusHandle"})
+    assert_equal(r.request, @request)
+  end
 
-        In this implementation, the assoc_handle is only valid once.  And
-        nonces are a signed component of the message, so they can't be used
-        with another handle without breaking the sig.
-        """
-        r = self.request.answer(self.signatory)
-        r = self.request.answer(self.signatory)
-        assert_equal(r.fields.getArgs(OPENID_NS),
-                             {'is_valid' => 'false'})
+  def test_invalidatehandleNo
+    assoc_handle = 'goodhandle'
+    @signatory.assocs << [false, 'goodhandle']
+    @request.invalidate_handle = assoc_handle
+    r = @request.answer(@signatory)
+    assert_equal(r.fields.get_args(OPENID_NS), {'is_valid' => 'true'})
+  end
+end
 
-    def test_invalidatehandle(self):
-        self.request.invalidate_handle = "bogusHandle"
-        r = self.request.answer(self.signatory)
-        assert_equal(r.fields.getArgs(OPENID_NS),
-                             {'is_valid' => 'true',
-                              'invalidate_handle' => "bogusHandle"})
-        assert_equal(r.request, self.request)
-
-    def test_invalidatehandleNo(self):
-        assoc_handle = 'goodhandle'
-        self.signatory.assocs.append((False, 'goodhandle'))
-        self.request.invalidate_handle = assoc_handle
-        r = self.request.answer(self.signatory)
-        assert_equal(r.fields.getArgs(OPENID_NS), {'is_valid' => 'true'})
-
+=begin
 
 class TestAssociate(unittest.TestCase):
     # TODO: test DH with non-default values for modulus and gen.

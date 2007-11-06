@@ -134,7 +134,7 @@ module OpenID
         response.fields.set_arg(OPENID_NS, 'is_valid', valid_str)
 
         if @invalidate_handle
-          assoc = signatory.get_association(@invalidate_handle, dumb=false)
+          assoc = signatory.get_association(@invalidate_handle, false)
           if !assoc
             response.fields.set_arg(
                     OPENID_NS, 'invalidate_handle', @invalidate_handle)
@@ -710,7 +710,7 @@ module OpenID
           raise NoReturnToError
         end
 
-        if server_url
+        if !server_url
           if @namespace != OPENID1_NS and !@op_endpoint
             # In other words, that warning I raised in
             # Server.__init__?  You should pay attention to it now.
@@ -752,7 +752,7 @@ module OpenID
         if allow
           if @identity == IDENTIFIER_SELECT
             if !identity
-              raise ValueError.new(
+              raise ArgumentError.new(
                       "This request uses IdP-driven identifier selection." +
                       "You must supply an identifier in the response.")
             end
@@ -762,7 +762,7 @@ module OpenID
 
           elsif @identity
             if identity and (@identity != identity)
-              raise ValueError.new(
+              raise ArgumentError.new(
                 sprintf("Request was for identity %s, cannot reply " +
                         "with identity %s", @identity, identity))
             end
@@ -771,7 +771,7 @@ module OpenID
             response_claimed_id = @claimed_id
           else
             if identity
-              raise ValueError.new(
+              raise ArgumentError.new(
                 sprintf("This request specified no identity and you " +
                         "supplied %s", identity))
             end
@@ -779,7 +779,7 @@ module OpenID
           end
 
           if @namespace == OPENID1_NS and !response_identity
-            raise ValueError.new(
+            raise ArgumentError.new(
                     "Request was an OpenID 1 request, so response must " +
                     "include an identifier.")
           end
@@ -788,7 +788,7 @@ module OpenID
                 'mode' => mode,
                 'op_endpoint' => server_url,
                 'return_to' => @return_to,
-                'response_nonce' => mkNonce(),
+                'response_nonce' => Nonce.mk_nonce(),
                 })
 
           if response_identity
@@ -803,17 +803,16 @@ module OpenID
           response.fields.set_arg(OPENID_NS, 'mode', mode)
           if @immediate
             if @namespace == OPENID1_NS and !server_url
-              raise ValueError.new("setup_url is required for allow=false " +
-                                   "in OpenID 1.x immediate mode.")
+              raise ArgumentError.new("setup_url is required for allow=false " +
+                                      "in OpenID 1.x immediate mode.")
             end
 
             # Make a new request just like me, but with
             # immediate=False.
-            setup_request = self.new(
-                                     @identity, @return_to, @trust_root,
-                                     immediate=false, assoc_handle=self.assoc_handle,
-                                     op_endpoint=@op_endpoint)
-            setup_url = setup_request.encodeToURL(server_url)
+            setup_request = self.class.new(
+                                     @identity, @return_to, @op_endpoint, @trust_root,
+                                     false, @assoc_handle)
+            setup_url = setup_request.encode_to_url(server_url)
             response.fields.set_arg(OPENID_NS, 'user_setup_url', setup_url)
           end
         end
@@ -879,8 +878,8 @@ module OpenID
         end
 
         if @immediate
-          raise ValueError.new("Cancel is not an appropriate response to " +
-                               "immediate mode requests.")
+          raise ArgumentError.new("Cancel is not an appropriate response to " +
+                                  "immediate mode requests.")
         end
 
         response = Message.new(@namespace)
@@ -889,7 +888,7 @@ module OpenID
       end
 
       def to_s
-        return sprintf('<%s id:%r im:%s tr:%r ah:%r>', self.class,
+        return sprintf('<%s id:%s im:%s tr:%s ah:%s>', self.class,
                        @identity,
                        @immediate,
                        @trust_root,
@@ -1217,7 +1216,7 @@ module OpenID
         # secret.
 
         if !assoc_handle
-          raise ValueError.new("assoc_handle must not be None")
+          raise ArgumentError.new("assoc_handle must not be None")
         end
 
         if dumb
@@ -1228,7 +1227,7 @@ module OpenID
 
         assoc = @store.get_association(key, assoc_handle)
         if assoc and assoc.expires_in <= 0
-          Util.log(sprintf("requested %sdumb key %r is expired (by %s seconds)",
+          Util.log(sprintf("requested %sdumb key %s is expired (by %s seconds)",
                            (!dumb) ? 'not-' : '',
                            assoc_handle, assoc.expires_in))
           if checkExpiration
