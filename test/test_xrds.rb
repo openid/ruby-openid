@@ -101,8 +101,9 @@ module OpenID
 <Service>
 <Type>urn://foo</Type>
 <Type>urn://bar</Type>
-<URI>http://1.invalid/</URI>
-<URI>http://2.invalid/</URI>
+<URI priority='2'>http://2.invalid/</URI>
+<URI>http://0.invalid/</URI>
+<URI priority='1'>http://1.invalid/</URI>
 </Service>
 END
 
@@ -110,13 +111,37 @@ END
     def test_expand_service
       service_element = REXML::Document.new(@@service_xml).root
       result = Yadis::expand_service(service_element)
-      assert_equal 2, result.length
+      assert_equal 3, result.length
       types, uri, result_element = result[0]
       assert_same service_element, result_element
-      assert_equal 'http://1.invalid/', uri.to_s
+      assert_equal 'http://0.invalid/', uri
       assert_equal ['urn://foo', 'urn://bar'], types
       types, uri, result_element = result[1]
+      assert_equal 'http://1.invalid/', uri
+      types, uri, result_element = result[2]
       assert_equal 'http://2.invalid/', uri
+    end
+  end
+
+  class PrioSortTestCase < Test::Unit::TestCase
+    def new_uri(priority)
+      e = REXML::Element.new("URI")
+      e.add_attribute("priority", priority.to_s) unless e.nil?
+      return e
+    end
+
+    def test_sorting
+      l = [
+           e7 = new_uri(7),
+           e1 = new_uri(1),
+           e0 = new_uri(nil),
+           e2 = new_uri(2),
+          ]
+      sorted = Yadis::prio_sort(l)
+      assert_same e0, sorted[0]
+      assert_same e1, sorted[1]
+      assert_same e2, sorted[2]
+      assert_same e7, sorted[3]
     end
   end
 end

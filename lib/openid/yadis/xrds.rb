@@ -49,11 +49,19 @@ module OpenID
 
     def Yadis::expand_service(service_element)
       es = service_element.elements
-      uris = es.each('URI/text()')
+      uris = es.each('URI') { |u| }
+      uris = prio_sort(uris)
       types = es.each('Type/text()')
       # REXML::Text objects are not strings.
       types = types.collect { |t| t.to_s }
-      uris.collect { |uri| [types, uri.to_s, service_element] }
+      uris.collect { |uri| [types, uri.text, service_element] }
+    end
+
+    # Sort a list of elements that have priority attributes.
+    def Yadis::prio_sort(elements)
+      elements.sort { |a,b|
+        a.attribute('priority').to_s.to_i <=> b.attribute('priority').to_s.to_i
+      }
     end
   end
 end
