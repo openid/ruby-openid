@@ -26,8 +26,7 @@ module OpenID
     UNUSED = nil
 
     class OpenIDRequest
-      attr_reader :mode
-      attr_accessor :namespace, :message
+      attr_accessor :namespace, :message, :mode
 
       # I represent an incoming OpenID request.
       #
@@ -1105,7 +1104,7 @@ module OpenID
         #
         # @returns: C{True} if the signature is valid, C{False} if not.
         # @returntype: bool
-        assoc = get_association(assoc_handle, dumb=true)
+        assoc = get_association(assoc_handle, true)
         if !assoc
           Util.log(sprintf("failed to get assoc with handle %s to verify " +
                            "message %s", assoc_handle, message))
@@ -1114,8 +1113,7 @@ module OpenID
 
         begin
           valid = assoc.check_message_signature(message)
-        rescue ValueError => ex
-          # XXX
+        rescue StandardError => ex
           Util.log(sprintf("Error in verifying %s with %s: %s",
                            message, assoc, ex))
           return false
@@ -1155,8 +1153,8 @@ module OpenID
               # now do the clean-up that the disabled checkExpiration
               # code didn't get to do.
               invalidate(assoc_handle, false)
-              assoc = create_association(true, assoc_type)
             end
+            assoc = create_association(true, assoc_type)
           end
         else
           # dumb mode.
@@ -1512,9 +1510,9 @@ module OpenID
         # XXX: TESTME
         assoc_type = request.assoc_type
         session_type = request.session.session_type
-        if @negotiator.is_allowed(assoc_type, session_type)
-          assoc = @signatory.createAssociation(dumb=false,
-                                               assoc_type=assoc_type)
+        if @negotiator.allowed?(assoc_type, session_type)
+          assoc = @signatory.create_association(false,
+                                                assoc_type)
           return request.answer(assoc)
         else
           message = sprintf('Association type %s is not supported with ' +

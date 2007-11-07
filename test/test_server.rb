@@ -24,7 +24,7 @@ module OpenID
   ALT_GEN = 5
 
   class CatchLogs
-    def setup
+    def catchlogs_setup
       @old_logger = Util.logger
       Util.logger = self.method('got_log_message')
       @messages = []
@@ -1532,281 +1532,308 @@ module OpenID
       assert_equal(rfg.call('session_type'), nil)
     end
   end
+
+  class Counter
+    def initialize
+      @count = 0
+    end
+
+    def inc
+      @count += 1
+    end
+  end
+
+  class UnhandledError < Exception
+  end
+
+  class TestServer < Test::Unit::TestCase
+    def setup
+      @store = MemoryStore.new()
+      @server = Server::Server.new(@store, "http://server.unittest/endpt")
+      # catchlogs_setup()
+    end
+
+    def test_dispatch
+      monkeycalled = Counter.new()
+
+      @server.instance_eval <<EOF
+      def openid_monkeymode(request)
+        raise UnhandledError
+      end
+EOF
+      request = Server::OpenIDRequest.new()
+      request.mode = "monkeymode"
+      request.namespace = OPENID1_NS
+      assert_raise(UnhandledError) {
+        webresult = @server.handle_request(request)
+      }
+    end
+
+    def test_associate
+      request = Server::AssociateRequest.from_message(Message.from_post_args({}))
+      response = @server.openid_associate(request)
+      assert(response.fields.has_key?(OPENID_NS, "assoc_handle"),
+             sprintf("No assoc_handle here: %s", response.fields.inspect))
+    end
+
+    def test_associate2
+      # Associate when the server has no allowed association types
+      #
+      # Gives back an error with error_code and no fallback session or
+      # assoc types.
+      @server.negotiator.allowed_types = []
+
+      # Set an OpenID 2 message so answerUnsupported doesn't raise
+      # ProtocolError.
+      msg = Message.from_post_args({
+                                     'openid.ns' => OPENID2_NS,
+                                     'openid.session_type' => 'no-encryption',
+                                   })
+
+      request = Server::AssociateRequest.from_message(msg)
+
+      response = @server.openid_associate(request)
+      assert(response.fields.has_key?(OPENID_NS, "error"))
+      assert(response.fields.has_key?(OPENID_NS, "error_code"))
+      assert(!response.fields.has_key?(OPENID_NS, "assoc_handle"))
+      assert(!response.fields.has_key?(OPENID_NS, "assoc_type"))
+      assert(!response.fields.has_key?(OPENID_NS, "session_type"))
+    end
+
+    def test_associate3
+      # Request an assoc type that is not supported when there are
+      # supported types.
+      #
+      # Should give back an error message with a fallback type.
+      @server.negotiator.allowed_types = [['HMAC-SHA256', 'DH-SHA256']]
+
+      msg = Message.from_post_args({
+                                     'openid.ns' => OPENID2_NS,
+                                     'openid.session_type' => 'no-encryption',
+                                   })
+
+      request = Server::AssociateRequest.from_message(msg)
+      response = @server.openid_associate(request)
+
+      assert(response.fields.has_key?(OPENID_NS, "error"))
+      assert(response.fields.has_key?(OPENID_NS, "error_code"))
+      assert(!response.fields.has_key?(OPENID_NS, "assoc_handle"))
+
+      assert_equal(response.fields.get_arg(OPENID_NS, "assoc_type"),
+                   'HMAC-SHA256')
+      assert_equal(response.fields.get_arg(OPENID_NS, "session_type"),
+                   'DH-SHA256')
+    end
+
+    def test_associate4
+      # DH-SHA256 association session
+      @server.negotiator.allowed_types = [['HMAC-SHA256', 'DH-SHA256']]
+
+      query = {
+        'openid.dh_consumer_public' =>
+        'ALZgnx8N5Lgd7pCj8K86T/DDMFjJXSss1SKoLmxE72kJTzOtG6I2PaYrHX' +
+        'xku4jMQWSsGfLJxwCZ6280uYjUST/9NWmuAfcrBfmDHIBc3H8xh6RBnlXJ' +
+        '1WxJY3jHd5k1/ZReyRZOxZTKdF/dnIqwF8ZXUwI6peV0TyS/K1fOfF/s',
+
+        'openid.assoc_type' => 'HMAC-SHA256',
+        'openid.session_type' => 'DH-SHA256',
+      }
+
+      message = Message.from_post_args(query)
+      request = Server::AssociateRequest.from_message(message)
+      response = @server.openid_associate(request)
+      assert(response.fields.has_key?(OPENID_NS, "assoc_handle"))
+    end
+
+    def test_missingSessionTypeOpenID2
+      # Make sure session_type is required in OpenID 2
+      msg = Message.from_post_args({
+                                     'openid.ns' => OPENID2_NS,
+                                   })
+
+      assert_raises(Server::ProtocolError) {
+        Server::AssociateRequest.from_message(msg)
+      }
+    end
+
+    def test_checkAuth
+      request = Server::CheckAuthRequest.new('arrrrrf', '0x3999', [])
+      response = @server.openid_check_authentication(request)
+      assert(response.fields.has_key?(OPENID_NS, "is_valid"))
+    end
+  end
+
+  class TestingRequest < Server::OpenIDRequest
+    attr_accessor :assoc_handle, :namespace
+  end
+
+  class TestSignatory < Test::Unit::TestCase
+    def setup
+      @store = MemoryStore.new()
+      @signatory = Server::Signatory.new(@store)
+      @_dumb_key = @signatory.class._dumb_key
+      @_normal_key = @signatory.class._normal_key
+      # CatchLogs.setUp(self)
+    end
+
+    def test_sign
+      request = TestingRequest.new()
+      assoc_handle = '{assoc}{lookatme}'
+      @store.store_association(
+                               @_normal_key,
+                               Association.from_expires_in(60, assoc_handle,
+                                                           'sekrit', 'HMAC-SHA1'))
+      request.assoc_handle = assoc_handle
+      request.namespace = OPENID1_NS
+      response = Server::OpenIDResponse.new(request)
+      response.fields = Message.from_openid_args({
+                                                   'foo' => 'amsigned',
+                                                   'bar' => 'notsigned',
+                                                   'azu' => 'alsosigned',
+                                                 })
+      sresponse = @signatory.sign(response)
+      assert_equal(
+            sresponse.fields.get_arg(OPENID_NS, 'assoc_handle'),
+            assoc_handle)
+      assert_equal(sresponse.fields.get_arg(OPENID_NS, 'signed'),
+                   'assoc_handle,azu,bar,foo,signed')
+      assert(sresponse.fields.get_arg(OPENID_NS, 'sig'))
+      # assert(!@messages, @messages)
+    end
+
+    def test_signDumb
+      request = TestingRequest.new()
+      request.assoc_handle = nil
+      request.namespace = OPENID2_NS
+      response = Server::OpenIDResponse.new(request)
+      response.fields = Message.from_openid_args({
+                                                   'foo' => 'amsigned',
+                                                   'bar' => 'notsigned',
+                                                   'azu' => 'alsosigned',
+                                                   'ns' => OPENID2_NS,
+                                                 })
+      sresponse = @signatory.sign(response)
+      assoc_handle = sresponse.fields.get_arg(OPENID_NS, 'assoc_handle')
+      assert(assoc_handle)
+      assoc = @signatory.get_association(assoc_handle, true)
+      assert(assoc)
+      assert_equal(sresponse.fields.get_arg(OPENID_NS, 'signed'),
+                   'assoc_handle,azu,bar,foo,ns,signed')
+      assert(sresponse.fields.get_arg(OPENID_NS, 'sig'))
+      # assert(!@messages, @messages)
+    end
+
+    def test_signExpired
+      # Sign a response to a message with an expired handle (using
+      # invalidate_handle).
+      #
+      # From "Verifying with an Association":
+      #
+      #   If an authentication request included an association handle
+      #   for an association between the OP and the Relying party, and
+      #   the OP no longer wishes to use that handle (because it has
+      #   expired or the secret has been compromised, for instance),
+      #   the OP will send a response that must be verified directly
+      #   with the OP, as specified in Section 11.3.2. In that
+      #   instance, the OP will include the field
+      #   "openid.invalidate_handle" set to the association handle
+      #   that the Relying Party included with the original request.
+      request = TestingRequest.new()
+      request.namespace = OPENID2_NS
+      assoc_handle = '{assoc}{lookatme}'
+      @store.store_association(
+                               @_normal_key,
+                               Association.from_expires_in(-10, assoc_handle,
+                                                           'sekrit', 'HMAC-SHA1'))
+      assert(@store.get_association(@_normal_key, assoc_handle))
+
+      request.assoc_handle = assoc_handle
+      response = Server::OpenIDResponse.new(request)
+      response.fields = Message.from_openid_args({
+                                                   'foo' => 'amsigned',
+                                                   'bar' => 'notsigned',
+                                                   'azu' => 'alsosigned',
+                                                 })
+      sresponse = @signatory.sign(response)
+
+      new_assoc_handle = sresponse.fields.get_arg(OPENID_NS, 'assoc_handle')
+      assert(new_assoc_handle)
+      assert(new_assoc_handle != assoc_handle)
+
+      assert_equal(
+            sresponse.fields.get_arg(OPENID_NS, 'invalidate_handle'),
+            assoc_handle)
+
+      assert_equal(sresponse.fields.get_arg(OPENID_NS, 'signed'),
+                   'assoc_handle,azu,bar,foo,invalidate_handle,signed')
+      assert(sresponse.fields.get_arg(OPENID_NS, 'sig'))
+
+      # make sure the expired association is gone
+      assert(!@store.get_association(@_normal_key, assoc_handle),
+             "expired association is still retrievable.")
+
+      # make sure the new key is a dumb mode association
+      assert(@store.get_association(@_dumb_key, new_assoc_handle))
+      assert(!@store.get_association(@_normal_key, new_assoc_handle))
+      # assert(@messages)
+    end
+
+    def test_signInvalidHandle
+      request = TestingRequest.new()
+      request.namespace = OPENID2_NS
+      assoc_handle = '{bogus-assoc}{notvalid}'
+
+      request.assoc_handle = assoc_handle
+      response = Server::OpenIDResponse.new(request)
+      response.fields = Message.from_openid_args({
+                                                   'foo' => 'amsigned',
+                                                   'bar' => 'notsigned',
+                                                   'azu' => 'alsosigned',
+                                                 })
+      sresponse = @signatory.sign(response)
+
+      new_assoc_handle = sresponse.fields.get_arg(OPENID_NS, 'assoc_handle')
+      assert(new_assoc_handle)
+      assert(new_assoc_handle != assoc_handle)
+
+      assert_equal(
+            sresponse.fields.get_arg(OPENID_NS, 'invalidate_handle'),
+            assoc_handle)
+
+      assert_equal(
+            sresponse.fields.get_arg(OPENID_NS, 'signed'),
+                   'assoc_handle,azu,bar,foo,invalidate_handle,signed')
+      assert(sresponse.fields.get_arg(OPENID_NS, 'sig'))
+
+      # make sure the new key is a dumb mode association
+      assert(@store.get_association(@_dumb_key, new_assoc_handle))
+      assert(!@store.get_association(@_normal_key, new_assoc_handle))
+      # @failIf(@messages, @messages)
+    end
+
+    def test_verify
+      assoc_handle = '{vroom}{zoom}'
+      assoc = Association.from_expires_in(
+            60, assoc_handle, 'sekrit', 'HMAC-SHA1')
+
+      @store.store_association(@_dumb_key, assoc)
+
+      signed = Message.from_post_args({
+                                        'openid.foo' => 'bar',
+                                        'openid.apple' => 'orange',
+                                        'openid.assoc_handle' => assoc_handle,
+                                        'openid.signed' => 'apple,assoc_handle,foo,signed',
+                                        'openid.sig' => 'uXoT1qm62/BB09Xbj98TQ8mlBco=',
+                                      })
+
+      verified = @signatory.verify(assoc_handle, signed)
+      assert(verified)
+      # assert(!@messages, @messages)
+    end
+  end
 end
 
 =begin
-
-class Counter(object):
-    def __init__(self):
-        @count = 0
-
-    def inc(self):
-        @count += 1
-
-class TestServer(unittest.TestCase, CatchLogs):
-    def setUp(self):
-        @store = memstore.MemoryStore()
-        @server = server.Server(@store, "http://server.unittest/endpt")
-        CatchLogs.setUp(self)
-
-    def test_dispatch(self):
-        monkeycalled = Counter()
-        def monkeyDo(request):
-            monkeycalled.inc()
-            r = server.OpenIDResponse(request)
-            return r
-        @server.openid_monkeymode = monkeyDo
-        request = server.OpenIDRequest()
-        request.mode = "monkeymode"
-        request.namespace = OPENID1_NS
-        webresult = @server.handleRequest(request)
-        assert_equal(monkeycalled.count, 1)
-
-    def test_associate(self):
-        request = server.AssociateRequest.fromMessage(Message.fromPostArgs({}))
-        response = @server.openid_associate(request)
-        assert(response.fields.hasKey(OPENID_NS, "assoc_handle"),
-                        "No assoc_handle here: %s" % (response.fields,))
-
-    def test_associate2(self):
-        """Associate when the server has no allowed association types
-
-        Gives back an error with error_code and no fallback session or
-        assoc types."""
-        @server.negotiator.setAllowedTypes([])
-
-        # Set an OpenID 2 message so answerUnsupported doesn't raise
-        # ProtocolError.
-        msg = Message.fromPostArgs({
-            'openid.ns' => OPENID2_NS,
-            'openid.session_type' => 'no-encryption',
-            })
-
-        request = server.AssociateRequest.fromMessage(msg)
-
-        response = @server.openid_associate(request)
-        assert(response.fields.hasKey(OPENID_NS, "error"))
-        assert(response.fields.hasKey(OPENID_NS, "error_code"))
-        @failIf(response.fields.hasKey(OPENID_NS, "assoc_handle"))
-        @failIf(response.fields.hasKey(OPENID_NS, "assoc_type"))
-        @failIf(response.fields.hasKey(OPENID_NS, "session_type"))
-
-    def test_associate3(self):
-        """Request an assoc type that is not supported when there are
-        supported types.
-
-        Should give back an error message with a fallback type.
-        """
-        @server.negotiator.setAllowedTypes([('HMAC-SHA256', 'DH-SHA256')])
-
-        msg = Message.fromPostArgs({
-            'openid.ns' => OPENID2_NS,
-            'openid.session_type' => 'no-encryption',
-            })
-
-        request = server.AssociateRequest.fromMessage(msg)
-        response = @server.openid_associate(request)
-
-        assert(response.fields.hasKey(OPENID_NS, "error"))
-        assert(response.fields.hasKey(OPENID_NS, "error_code"))
-        @failIf(response.fields.hasKey(OPENID_NS, "assoc_handle"))
-        assert_equal(response.fields.getArg(OPENID_NS, "assoc_type"),
-                             'HMAC-SHA256')
-        assert_equal(response.fields.getArg(OPENID_NS, "session_type"),
-                             'DH-SHA256')
-
-    if not cryptutil.SHA256_AVAILABLE:
-        warnings.warn("Not running SHA256 tests.")
-    else:
-        def test_associate4(self):
-            """DH-SHA256 association session"""
-            @server.negotiator.setAllowedTypes(
-                [('HMAC-SHA256', 'DH-SHA256')])
-            query = {
-                'openid.dh_consumer_public':
-                'ALZgnx8N5Lgd7pCj8K86T/DDMFjJXSss1SKoLmxE72kJTzOtG6I2PaYrHX'
-                'xku4jMQWSsGfLJxwCZ6280uYjUST/9NWmuAfcrBfmDHIBc3H8xh6RBnlXJ'
-                '1WxJY3jHd5k1/ZReyRZOxZTKdF/dnIqwF8ZXUwI6peV0TyS/K1fOfF/s',
-                'openid.assoc_type' => 'HMAC-SHA256',
-                'openid.session_type' => 'DH-SHA256',
-                }
-            message = Message.fromPostArgs(query)
-            request = server.AssociateRequest.fromMessage(message)
-            response = @server.openid_associate(request)
-            assert(response.fields.hasKey(OPENID_NS, "assoc_handle"))
-
-    def test_missingSessionTypeOpenID2(self):
-        """Make sure session_type is required in OpenID 2"""
-        msg = Message.fromPostArgs({
-            'openid.ns' => OPENID2_NS,
-            })
-
-        @assertRaises(server.ProtocolError,
-                          server.AssociateRequest.fromMessage, msg)
-
-    def test_checkAuth(self):
-        request = server.CheckAuthRequest('arrrrrf', '0x3999', [])
-        response = @server.openid_check_authentication(request)
-        assert(response.fields.hasKey(OPENID_NS, "is_valid"))
-
-class TestSignatory(unittest.TestCase, CatchLogs):
-    def setUp(self):
-        @store = memstore.MemoryStore()
-        @signatory = server.Signatory(@store)
-        @_dumb_key = @signatory._dumb_key
-        @_normal_key = @signatory._normal_key
-        CatchLogs.setUp(self)
-
-    def test_sign(self):
-        request = server.OpenIDRequest()
-        assoc_handle = '{assoc}{lookatme}'
-        @store.storeAssociation(
-            @_normal_key,
-            association.Association.fromExpiresIn(60, assoc_handle,
-                                                  'sekrit', 'HMAC-SHA1'))
-        request.assoc_handle = assoc_handle
-        request.namespace = OPENID1_NS
-        response = server.OpenIDResponse(request)
-        response.fields = Message.fromOpenIDArgs({
-            'foo' => 'amsigned',
-            'bar' => 'notsigned',
-            'azu' => 'alsosigned',
-            })
-        sresponse = @signatory.sign(response)
-        assert_equal(
-            sresponse.fields.getArg(OPENID_NS, 'assoc_handle'),
-            assoc_handle)
-        assert_equal(sresponse.fields.getArg(OPENID_NS, 'signed'),
-                             'assoc_handle,azu,bar,foo,signed')
-        assert(sresponse.fields.getArg(OPENID_NS, 'sig'))
-        @failIf(@messages, @messages)
-
-    def test_signDumb(self):
-        request = server.OpenIDRequest()
-        request.assoc_handle = None
-        request.namespace = OPENID2_NS
-        response = server.OpenIDResponse(request)
-        response.fields = Message.fromOpenIDArgs({
-            'foo' => 'amsigned',
-            'bar' => 'notsigned',
-            'azu' => 'alsosigned',
-            'ns':OPENID2_NS,
-            })
-        sresponse = @signatory.sign(response)
-        assoc_handle = sresponse.fields.getArg(OPENID_NS, 'assoc_handle')
-        assert(assoc_handle)
-        assoc = @signatory.getAssociation(assoc_handle, dumb=True)
-        assert(assoc)
-        assert_equal(sresponse.fields.getArg(OPENID_NS, 'signed'),
-                             'assoc_handle,azu,bar,foo,ns,signed')
-        assert(sresponse.fields.getArg(OPENID_NS, 'sig'))
-        @failIf(@messages, @messages)
-
-    def test_signExpired(self):
-        """Sign a response to a message with an expired handle (using invalidate_handle).
-
-        From "Verifying with an Association"::
-
-            If an authentication request included an association handle for an
-            association between the OP and the Relying party, and the OP no
-            longer wishes to use that handle (because it has expired or the
-            secret has been compromised, for instance), the OP will send a
-            response that must be verified directly with the OP, as specified
-            in Section 11.3.2. In that instance, the OP will include the field
-            "openid.invalidate_handle" set to the association handle that the
-            Relying Party included with the original request.
-        """
-        request = server.OpenIDRequest()
-        request.namespace = OPENID2_NS
-        assoc_handle = '{assoc}{lookatme}'
-        @store.storeAssociation(
-            @_normal_key,
-            association.Association.fromExpiresIn(-10, assoc_handle,
-                                                  'sekrit', 'HMAC-SHA1'))
-        assert(@store.getAssociation(@_normal_key, assoc_handle))
-
-        request.assoc_handle = assoc_handle
-        response = server.OpenIDResponse(request)
-        response.fields = Message.fromOpenIDArgs({
-            'foo' => 'amsigned',
-            'bar' => 'notsigned',
-            'azu' => 'alsosigned',
-            })
-        sresponse = @signatory.sign(response)
-
-        new_assoc_handle = sresponse.fields.getArg(OPENID_NS, 'assoc_handle')
-        assert(new_assoc_handle)
-        @failIfEqual(new_assoc_handle, assoc_handle)
-
-        assert_equal(
-            sresponse.fields.getArg(OPENID_NS, 'invalidate_handle'),
-            assoc_handle)
-
-        assert_equal(sresponse.fields.getArg(OPENID_NS, 'signed'),
-                             'assoc_handle,azu,bar,foo,invalidate_handle,signed')
-        assert(sresponse.fields.getArg(OPENID_NS, 'sig'))
-
-        # make sure the expired association is gone
-        @failIf(@store.getAssociation(@_normal_key, assoc_handle),
-                    "expired association is still retrievable.")
-
-        # make sure the new key is a dumb mode association
-        assert(@store.getAssociation(@_dumb_key, new_assoc_handle))
-        @failIf(@store.getAssociation(@_normal_key, new_assoc_handle))
-        assert(@messages)
-
-
-    def test_signInvalidHandle(self):
-        request = server.OpenIDRequest()
-        request.namespace = OPENID2_NS
-        assoc_handle = '{bogus-assoc}{notvalid}'
-
-        request.assoc_handle = assoc_handle
-        response = server.OpenIDResponse(request)
-        response.fields = Message.fromOpenIDArgs({
-            'foo' => 'amsigned',
-            'bar' => 'notsigned',
-            'azu' => 'alsosigned',
-            })
-        sresponse = @signatory.sign(response)
-
-        new_assoc_handle = sresponse.fields.getArg(OPENID_NS, 'assoc_handle')
-        assert(new_assoc_handle)
-        @failIfEqual(new_assoc_handle, assoc_handle)
-
-        assert_equal(
-            sresponse.fields.getArg(OPENID_NS, 'invalidate_handle'),
-            assoc_handle)
-
-        assert_equal(
-            sresponse.fields.getArg(OPENID_NS, 'signed'), 'assoc_handle,azu,bar,foo,invalidate_handle,signed')
-        assert(sresponse.fields.getArg(OPENID_NS, 'sig'))
-
-        # make sure the new key is a dumb mode association
-        assert(@store.getAssociation(@_dumb_key, new_assoc_handle))
-        @failIf(@store.getAssociation(@_normal_key, new_assoc_handle))
-        @failIf(@messages, @messages)
-
-
-    def test_verify(self):
-        assoc_handle = '{vroom}{zoom}'
-        assoc = association.Association.fromExpiresIn(
-            60, assoc_handle, 'sekrit', 'HMAC-SHA1')
-
-        @store.storeAssociation(@_dumb_key, assoc)
-
-        signed = Message.fromPostArgs({
-            'openid.foo' => 'bar',
-            'openid.apple' => 'orange',
-            'openid.assoc_handle' => assoc_handle,
-            'openid.signed' => 'apple,assoc_handle,foo,signed',
-            'openid.sig' => 'uXoT1qm62/BB09Xbj98TQ8mlBco=',
-            })
-
-        verified = @signatory.verify(assoc_handle, signed)
-        @failIf(@messages, @messages)
-        assert(verified)
-
 
     def test_verifyBadSig(self):
         assoc_handle = '{vroom}{zoom}'
