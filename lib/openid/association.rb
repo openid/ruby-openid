@@ -97,9 +97,9 @@ module OpenID
       kv = Util.seq_to_kv(pairs)
       case assoc_type
       when 'HMAC-SHA1'
-        CryptUtil.hmac_sha1(secret, kv)
+        CryptUtil.hmac_sha1(@secret, kv)
       when 'HMAC-SHA256'
-        CryptUtil.hmac_sha256(secret, kv)
+        CryptUtil.hmac_sha256(@secret, kv)
       else
         raise StandardError, "Association has unknown type: "\
           "#{assoc_type.inspect}"
@@ -130,7 +130,7 @@ module OpenID
 
     # Get the signature for this message
     def get_message_signature(message)
-      sign(make_pairs(message))
+      Util.to_base64(sign(make_pairs(message)))
     end
 
     def ==(other)

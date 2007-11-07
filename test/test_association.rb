@@ -179,7 +179,7 @@ module OpenID
       m.update_args(OPENID2_NS, {'mode' => 'id_res',
                       'identifier' => '=example',
                       'signed' => 'mode',
-                      'sig' => 'coyote',
+                      'sig' => Util.to_base64('coyote'),
                     })
       assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
                                           "HMAC-SHA1")
@@ -191,7 +191,7 @@ module OpenID
       m.update_args(OPENID2_NS, {'mode' => 'id_res',
                       'identifier' => '=example',
                       'signed' => 'mode',
-                      'sig' => 'coyote',
+                      'sig' => Util.to_base64('coyote'),
                     })
       assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
                                           "HMAC-SHA1")
@@ -201,6 +201,7 @@ module OpenID
           "coyote"
         end
       end
+
       assert(assoc.check_message_signature(m))
     end
   end
