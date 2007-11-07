@@ -1734,6 +1734,12 @@ module OpenID
       # catchlogs_setup()
     end
 
+    def test_construct_no_endpoint_url
+      assert_log_matches(/constructor requires op_endpoint parameter/) {
+        Server::Server.new(@store, nil)
+      }
+    end
+
     def test_dispatch
       monkeycalled = Counter.new()
 
