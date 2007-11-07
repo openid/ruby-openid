@@ -44,4 +44,32 @@ module OpenID
       @body = body
     end
   end
+
+  module ProtocolErrorMixin
+    def assert_protocol_error(str_prefix)
+      begin
+        result = yield
+      rescue ProtocolError => why
+        message = "Expected prefix #{str_prefix.inspect}, got "\
+                  "#{why.message.inspect}"
+        assert(why.message.starts_with?(str_prefix), message)
+      else
+        fail("Expected ProtocolError. Got #{result.inspect}")
+      end
+    end
+  end
+
+  module OverrideMethodMixin
+    def with_method_overridden(method_name, proc)
+      original = method(method_name)
+      begin
+        define_method(method_name, proc)
+        module_function(method_name)
+        yield
+      ensure
+        define_method(method_name, original)
+        module_function(method_name)
+      end
+    end
+  end
 end
