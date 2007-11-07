@@ -502,14 +502,24 @@ module OpenID
       }
     end
 
-    def test_associateDHMissingModGen
-      # test dh with non-default but valid values for dh_modulus and
-      # dh_gen
+    def test_associateDHMissingGen
       args = {
         'openid.mode' => 'associate',
         'openid.session_type' => 'DH-SHA1',
         'openid.dh_consumer_public' => "Rzup9265tw==",
         'openid.dh_modulus' => 'pizza',
+      }
+      assert_raise(Server::ProtocolError) {
+        @decode.call(args)
+      }
+    end
+
+    def test_associateDHMissingMod
+      args = {
+        'openid.mode' => 'associate',
+        'openid.session_type' => 'DH-SHA1',
+        'openid.dh_consumer_public' => "Rzup9265tw==",
+        'openid.dh_gen' => 'pizza',
       }
       assert_raise(Server::ProtocolError) {
         @decode.call(args)

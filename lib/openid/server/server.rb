@@ -238,8 +238,8 @@ module OpenID
         #   session are missing.
         dh_modulus = message.get_arg(OPENID_NS, 'dh_modulus')
         dh_gen = message.get_arg(OPENID_NS, 'dh_gen')
-        if (!dh_modulus and dh_gen or
-            !dh_gen and dh_modulus)
+        if ((!dh_modulus and dh_gen) or
+            (!dh_gen and dh_modulus))
 
           if !dh_modulus
             missing = 'modulus'
