@@ -951,6 +951,18 @@ module OpenID
       assert(!@request.trust_root_valid())
     end
 
+    def test_trustRootInvalid_modified
+      @request.trust_root = "does://not.parse/"
+      assert_raise(Server::MalformedTrustRoot) {
+        @request.trust_root_valid()
+      }
+    end
+
+    def test_trustRootvalid_absent_trust_root
+      @request.trust_root = nil
+      assert(@request.trust_root_valid())
+    end
+
     def test_trustRootValid
       @request.trust_root = "http://foo.unittest/"
       @request.return_to = "http://foo.unittest/39"
