@@ -83,6 +83,8 @@ module OpenID
     attr_reader :optional, :required, :ns_uri
     attr_accessor :policy_url
     def initialize(required = nil, optional = nil, policy_url = nil, ns_uri = SREG_NS_URI)
+      super()
+
       @policy_url = policy_url
       @ns_uri = ns_uri
       @ns_alias = 'sreg'
@@ -227,6 +229,8 @@ module OpenID
     attr_reader :ns_uri, :data
 
     def initialize(data = {}, ns_uri=SREG_NS_URI)
+      super()
+
       @data = data
       @ns_uri = ns_uri
     end
