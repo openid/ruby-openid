@@ -498,20 +498,6 @@ module OpenID
   end
 
 
-  module ProtocolErrorMixin
-    def assert_protocol_error(str_prefix)
-      begin
-        yield
-      rescue ProtocolError => why
-        message = "Expected prefix #{str_prefix.inspect}, got "\
-                  "#{why.message.inspect}"
-        assert(why.message.starts_with?(str_prefix), message)
-      else
-        fail("Expected ProtocolError. Got #{result.inspect}")
-      end
-    end
-  end
-
   class TestExtractAssociation < Test::Unit::TestCase
     include ProtocolErrorMixin
 
