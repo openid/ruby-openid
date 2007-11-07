@@ -72,4 +72,21 @@ module OpenID
       end
     end
   end
+
+  # To use:
+  # > x = Object.new
+  # > x.extend(InstanceDefExtension)
+  # > x.instance_def(:monkeys) do
+  # >   "bananas"
+  # > end
+  # > x.monkeys
+  #
+  module InstanceDefExtension
+    def instance_def(method_name, &proc)
+      (class << self;self;end).instance_eval do
+        define_method(method_name, proc)
+      end
+    end
+  end
+
 end

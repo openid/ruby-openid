@@ -1,5 +1,6 @@
 require "openid/message"
 require "openid/protocolerror"
+require "openid/kvpost"
 
 module OpenID
   class Consumer

@@ -2,6 +2,7 @@ require "testutil"
 require "test/unit"
 require "openid/consumer/idres"
 require "openid/protocolerror"
+require "openid/store/memstore"
 
 module OpenID
   class Consumer
@@ -198,8 +199,68 @@ module OpenID
             }
           end
         end
-
       end
+
+      class CheckSigTest < Test::Unit::TestCase
+        GOODSIG = '[A Good Signature]'
+
+        class GoodAssoc
+          attr_accessor :handle
+
+          def initialize(handle='-blah-')
+            @handle = handle
+          end
+
+          def expires_in
+            3600
+          end
+
+          def check_message_signature(msg)
+            msg.get_arg(OPENID_NS, 'sig') == GOODSIG
+          end
+        end
+
+        class DummyEndpoint
+          attr_accessor :server_url
+          def initialize(server_url)
+            @server_url = server_url
+          end
+        end
+
+        def setup
+          @assoc = GoodAssoc.new('{not_dumb}')
+          @store = MemoryStore.new
+          @server_url = 'http://server.url/'
+          @endpoint = DummyEndpoint.new(@server_url)
+          @store.store_association(@server_url, @assoc)
+
+          @message = Message.from_post_args({
+              'openid.mode' => 'id_res',
+              'openid.identity' => '=example',
+              'openid.sig' => GOODSIG,
+              'openid.assoc_handle' => @assoc.handle,
+              'openid.signed' => 'mode,identity,assoc_handle,signed',
+              'frobboz' => 'banzit',
+              })
+        end
+
+        def call_check_sig
+          idres = IdResHandler.new(@message, @store, @endpoint)
+          idres.extend(InstanceDefExtension)
+
+          # Raise an exception if check_auth is called
+          idres.instance_def(:check_auth) do
+            fail("Should not call check_auth")
+          end
+
+          idres.send(:check_signature)
+        end
+
+        def test_sign_good
+          assert_nothing_raised { call_check_sig }
+        end
+      end
+
     end
   end
 end
