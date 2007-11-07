@@ -1547,6 +1547,8 @@ module OpenID
   end
 
   class TestServer < Test::Unit::TestCase
+    include TestUtil
+
     def setup
       @store = MemoryStore.new()
       @server = Server::Server.new(@store, "http://server.unittest/endpt")
@@ -1658,7 +1660,10 @@ EOF
 
     def test_checkAuth
       request = Server::CheckAuthRequest.new('arrrrrf', '0x3999', [])
-      response = @server.openid_check_authentication(request)
+      response = nil
+      silence_logging {
+        response = @server.openid_check_authentication(request)
+      }
       assert(response.fields.has_key?(OPENID_NS, "is_valid"))
     end
   end
@@ -1668,6 +1673,8 @@ EOF
   end
 
   class TestSignatory < Test::Unit::TestCase
+    include TestUtil
+
     def setup
       @store = MemoryStore.new()
       @signatory = Server::Signatory.new(@store)
@@ -1754,7 +1761,10 @@ EOF
                                                    'bar' => 'notsigned',
                                                    'azu' => 'alsosigned',
                                                  })
-      sresponse = @signatory.sign(response)
+      sresponse = nil
+      silence_logging {
+        sresponse = @signatory.sign(response)
+      }
 
       new_assoc_handle = sresponse.fields.get_arg(OPENID_NS, 'assoc_handle')
       assert(new_assoc_handle)
