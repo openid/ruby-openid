@@ -244,6 +244,45 @@ module OpenID
       }
     end
 
+    def test_checkid_id_select
+      args = {
+        'openid.ns' => OPENID2_NS,
+        'openid.mode' => 'checkid_setup',
+        'openid.identity' => IDENTIFIER_SELECT,
+        'openid.claimed_id' => IDENTIFIER_SELECT,
+        'openid.assoc_handle' => @assoc_handle,
+        'openid.return_to' => @rt_url,
+        'openid.realm' => @tr_url,
+      }
+      m = Message.from_post_args(args)
+      req = Server::CheckIDRequest.from_message(m, @op_endpoint)
+      assert(req.id_select)
+    end
+
+    def test_checkid_not_id_select
+      args = {
+        'openid.ns' => OPENID2_NS,
+        'openid.mode' => 'checkid_setup',
+        'openid.assoc_handle' => @assoc_handle,
+        'openid.return_to' => @rt_url,
+        'openid.realm' => @tr_url,
+      }
+
+      id_args = [
+                 {'openid.claimed_id' => IDENTIFIER_SELECT,
+                   'openid.identity' => 'http://bogus.com/'},
+
+                 {'openid.claimed_id' => 'http://bogus.com/',
+                   'openid.identity' => 'http://bogus.com/'},
+                ]
+
+      id_args.each { |id|
+        m = Message.from_post_args(args.merge(id))
+        req = Server::CheckIDRequest.from_message(m, @op_endpoint)
+        assert(!req.id_select)
+      }
+    end
+
     def test_checkidSetup
       args = {
         'openid.mode' => 'checkid_setup',
