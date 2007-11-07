@@ -249,22 +249,47 @@ module OpenID
         def call_check_sig
           idres = IdResHandler.new(@message, @store, @endpoint)
           idres.extend(InstanceDefExtension)
-
-          # Raise an exception if check_auth is called
-          idres.instance_def(:check_auth) do
-            fail("Should not call check_auth")
-          end
-
+          yield idres
           idres.send(:check_signature)
         end
 
+        def no_check_auth(idres)
+          idres.instance_def(:check_auth) { fail "Called check_auth" }
+        end
+
         def test_sign_good
-          assert_nothing_raised { call_check_sig }
+          assert_nothing_raised {
+            call_check_sig(&method(:no_check_auth))
+          }
         end
 
         def test_bad_sig
           @message.set_arg(OPENID_NS, 'sig', 'bad sig!')
-          assert_protocol_error('Bad signature') { call_check_sig }
+          assert_protocol_error('Bad signature') {
+            call_check_sig(&method(:no_check_auth))
+          }
+        end
+
+        def test_check_auth_ok
+          @message.set_arg(OPENID_NS, 'assoc_handle', 'dumb-handle')
+          check_auth_called = false
+          call_check_sig do |idres|
+            idres.instance_def(:check_auth) do
+              check_auth_called = true
+            end
+          end
+          assert(check_auth_called)
+        end
+
+        def test_check_auth_ok_no_store
+          @store = nil
+          check_auth_called = false
+          call_check_sig do |idres|
+            idres.instance_def(:check_auth) do
+              check_auth_called = true
+            end
+          end
+          assert(check_auth_called)
         end
       end
 
