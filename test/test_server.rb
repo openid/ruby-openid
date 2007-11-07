@@ -1097,6 +1097,30 @@ module OpenID
       _expectAnswer(answer, selected_id)
     end
 
+    def test_answerAllowWithNoIdentity
+      @request.identity = IDENTIFIER_SELECT
+      selected_id = 'http://anon.unittest/9861'
+      assert_raise(ArgumentError) {
+        answer = @request.answer(true, nil, nil)
+      }
+    end
+
+    def test_immediate_openid1_no_identity
+      @request.namespace = OPENID1_NS
+      @request.immediate = true
+      @request.mode = 'checkid_immediate'
+      resp = @request.answer(false)
+      assert(resp.fields.get_arg(OPENID_NS, 'mode') == 'id_res')
+    end
+
+    def test_checkid_setup_openid1_no_identity
+      @request.namespace = OPENID1_NS
+      @request.immediate = false
+      @request.mode = 'checkid_setup'
+      resp = @request.answer(false)
+      assert(resp.fields.get_arg(OPENID_NS, 'mode') == 'cancel')
+    end
+
     def test_answerAllowWithDelegatedIdentityOpenID2
       # Answer an IDENTIFIER_SELECT case with a delegated identifier.
 
