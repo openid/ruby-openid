@@ -1669,6 +1669,18 @@ EOF
       assert(response.fields.has_key?(OPENID_NS, "assoc_handle"))
     end
 
+    def test_no_encryption_openid1
+      # Make sure no-encryption associate requests for OpenID 1 are
+      # logged.
+      assert_log_matches(/Continuing anyway./) {
+        m = Message.from_openid_args({
+                                       'session_type' => 'no-encryption',
+                                     })
+
+        req = Server::AssociateRequest.from_message(m)
+      }
+    end
+
     def test_missingSessionTypeOpenID2
       # Make sure session_type is required in OpenID 2
       msg = Message.from_post_args({
