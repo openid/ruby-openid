@@ -7,7 +7,7 @@ require 'openid/message'
 require 'openid/store/memstore'
 require 'openid/dh'
 require 'openid/consumer/associationmanager'
-#require 'test/testutil'
+require 'util'
 
 require 'test/unit'
 require 'uri'
