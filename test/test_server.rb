@@ -1740,14 +1740,23 @@ module OpenID
       }
     end
 
+    def test_failed_dispatch
+      request = Server::OpenIDRequest.new()
+      request.mode = "monkeymode"
+      request.namespace = OPENID1_NS
+      assert_raise(RuntimeError) {
+        webresult = @server.handle_request(request)
+      }
+    end
+
     def test_dispatch
       monkeycalled = Counter.new()
 
-      @server.instance_eval <<EOF
-      def openid_monkeymode(request)
+      @server.extend(InstanceDefExtension)
+      @server.instance_def(:openid_monkeymode) do
         raise UnhandledError
       end
-EOF
+
       request = Server::OpenIDRequest.new()
       request.mode = "monkeymode"
       request.namespace = OPENID1_NS
