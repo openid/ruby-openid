@@ -202,6 +202,8 @@ module OpenID
       end
 
       class CheckSigTest < Test::Unit::TestCase
+        include ProtocolErrorMixin
+
         GOODSIG = '[A Good Signature]'
 
         class GoodAssoc
@@ -258,6 +260,11 @@ module OpenID
 
         def test_sign_good
           assert_nothing_raised { call_check_sig }
+        end
+
+        def test_bad_sig
+          @message.set_arg(OPENID_NS, 'sig', 'bad sig!')
+          assert_protocol_error('Bad signature') { call_check_sig }
         end
       end
 
