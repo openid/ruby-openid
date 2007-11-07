@@ -1874,6 +1874,12 @@ EOF
       # CatchLogs.setUp(self)
     end
 
+    def test_get_association_nil
+      assert_raises(ArgumentError) {
+        @signatory.get_association(nil, false)
+      }
+    end
+
     def test_sign
       request = TestingRequest.new()
       assoc_handle = '{assoc}{lookatme}'
