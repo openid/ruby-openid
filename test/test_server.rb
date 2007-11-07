@@ -223,6 +223,13 @@ module OpenID
       assert_equal(r.assoc_handle, @assoc_handle)
     end
 
+    def test_checkidImmediate_constructor
+      r = Server::CheckIDRequest.new(@id_url, @rt_url, nil,
+                                     @rt_url, true, @assoc_handle)
+      assert(r.mode == 'checkid_immediate')
+      assert(r.immediate)
+    end
+
     def test_checkidSetup
       args = {
         'openid.mode' => 'checkid_setup',
@@ -380,6 +387,22 @@ module OpenID
       else
         flunk("Expected UntrustedReturnURL, instead returned with #{result}")
       end
+    end
+
+    def test_checkidSetupUntrustedReturn_Constructor
+      assert_raise(Server::UntrustedReturnURL) {
+        Server::CheckIDRequest.new(@id_url, @rt_url, nil,
+                                   'http://not-the-return-place.unittest/',
+                                   false, @assoc_handle)
+      }
+    end
+
+    def test_checkidSetupMalformedReturnURL_Constructor
+      assert_raise(Server::MalformedReturnURL) {
+        Server::CheckIDRequest.new(@id_url, 'bogus://return.url', nil,
+                                   'http://trustroot.com/',
+                                   false, @assoc_handle)
+      }
     end
 
     def test_checkAuth
