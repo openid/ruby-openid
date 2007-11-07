@@ -19,8 +19,12 @@ module OpenID
   SREG_NS_URI_1_1 = 'http://openid.net/extensions/sreg/1.1'
   SREG_NS_URI = SREG_NS_URI_1_1
 
-  # XXX stuff not yet ported due to not knowing where to put it
-  # registerNamespaceAlias() #where defined?
+  begin
+    Message.register_namespace_alias(SREG_NS_URI_1_1, 'sreg')
+  rescue NamespaceAliasRegistrationError => e
+    Util.log(e)
+  end
+
   # getSRegNS(message)
     ## Assign getSRegNS to a static method so that it can be
     ## overridden for testing.
