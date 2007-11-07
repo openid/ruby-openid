@@ -3,17 +3,6 @@ require 'test/unit'
 require 'openid/yadis/filters'
 
 module OpenID
-  @@expand_service_data = nil
-
-  # Override expand_service() for tests
-  def self.expand_service(element)
-    return @@expand_service_data
-  end
-
-  def self.set_expand_service_data(data)
-    @@expand_service_data = data
-  end
-
   class BasicServiceEndpointTest < Test::Unit::TestCase
     def test_match_types
       # Make sure the match_types operation returns the expected
@@ -50,21 +39,28 @@ module OpenID
   end
 
   class TransformFilterMakerTest < Test::Unit::TestCase
+    def make_service_element(types, uris)
+      service = REXML::Element.new('Service')
+      types.each { |type_text|
+        service.add_element('Type').text = type_text
+      }
+      uris.each { |uri_text|
+        service.add_element('URI').text = uri_text
+      }
+      return service
+    end
     def test_get_service_endpoints
       yadis_url = "http://yad.is/"
       uri = "http://uri/"
       type_uris = ["urn:type1", "urn:type2"]
-      element_str = "unused"
-      element = element_str
+      element = make_service_element(type_uris, [uri])
 
       data = [
               [type_uris, uri, element],
              ]
 
-      OpenID.set_expand_service_data(data)
-
       filters = [Proc.new { |endpoint|
-                   if endpoint.service_element == element_str
+                   if endpoint.service_element == element
                      endpoint
                    else
                      nil

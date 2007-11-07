@@ -93,7 +93,7 @@ module OpenID
 
         # Do an expansion of the service element by xrd:Type and
         # xrd:URI
-        OpenID.expand_service(service_element).each { |type_uris, uri, _|
+        Yadis::expand_service(service_element).each { |type_uris, uri, _|
           # Create a basic endpoint object to represent this
           # yadis_url, Service, Type, URI combination
           endpoint = BasicServiceEndpoint.new(
