@@ -1553,6 +1553,16 @@ module OpenID
       assert_equal(rfg.call('error'), message)
       assert_equal(rfg.call('session_type'), nil)
     end
+
+    def test_openid1_unsupported_explode
+      # answer_unsupported on an associate request should explode if
+      # the request was an OpenID 1 request.
+      m = Message.new(OPENID1_NS)
+
+      assert_raise(Server::ProtocolError) {
+        @request.answer_unsupported(m)
+      }
+    end
   end
 
   class Counter
