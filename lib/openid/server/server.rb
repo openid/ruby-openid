@@ -657,7 +657,7 @@ module OpenID
         #
         # @returns: True if the realm publishes a document with the
         #     return_to URL listed
-        return verify_return_to(@trust_root, @return_to)
+        return TrustRoot.verify_return_to(@trust_root, @return_to)
       end
 
       def answer(allow, server_url=nil, identity=nil, claimed_id=nil)

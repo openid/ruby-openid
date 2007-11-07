@@ -7,6 +7,7 @@ require 'openid/message'
 require 'openid/store/memstore'
 require 'openid/dh'
 require 'openid/consumer/associationmanager'
+#require 'test/testutil'
 
 require 'test/unit'
 require 'uri'
@@ -881,44 +882,51 @@ module OpenID
       assert(request.trust_root_valid())
     end
 
-=begin
-       def test_returnToVerified_callsVerify
-         # Make sure that verifyReturnTo is calling the trustroot function
-         # verifyReturnTo
-         def withVerifyReturnTo(new_verify, callable):
-             old_verify = server.verifyReturnTo
-           try:
-             server.verifyReturnTo = new_verify
-           return callable()
-           finally:
-             server.verifyReturnTo = old_verify
+    def test_returnToVerified_callsVerify
+      # Make sure that verifyReturnTo is calling the trustroot
+      # function verifyReturnTo
+      # Ensure that exceptions are passed through
+      sentinel = Exception.new()
 
-           # Ensure that exceptions are passed through
-           sentinel = Exception()
-           def vrfyExc(trust_root, return_to):
-               assert_equal(self.request.trust_root, trust_root)
-             assert_equal(self.request.return_to, return_to)
-             raise sentinel
+      __req = @request
+      tc = self
 
-             try:
-               withVerifyReturnTo(vrfyExc, self.request.returnToVerified)
-             except Exception, e:
-               assert(e is sentinel, e)
+      vrfyExc = Proc.new { |trust_root, return_to|
+        tc.assert_equal(__req.trust_root, trust_root)
+        tc.assert_equal(__req.return_to, return_to)
+        raise sentinel
+      }
 
-             # Ensure that True and False are passed through unchanged
-             def constVerify(val):
-                 def verify(trust_root, return_to):
-                     assert_equal(self.request.trust_root, trust_root)
-                   assert_equal(self.request.return_to, return_to)
-                   return val
-                   return verify
+      TrustRoot.extend(OverrideMethodMixin)
 
-                   for val in [True, False]:
-                       assert_equal(
-                                    val,
-                                    withVerifyReturnTo(constVerify(val),
-                                                       self.request.returnToVerified))
-=end
+      TrustRoot.with_method_overridden(:verify_return_to, vrfyExc) do
+        begin
+          @request.return_to_verified()
+          flunk("Expected sentinel to be raised, got success")
+        rescue Exception => e
+          assert(e.equal?(sentinel), [e, sentinel].inspect)
+        end
+      end
+
+      # Ensure that True and False are passed through unchanged
+      constVerify = Proc.new { |val|
+        verify = Proc.new { |trust_root, return_to|
+          tc.assert_equal(__req.trust_root, trust_root)
+          tc.assert_equal(__req.request.return_to, return_to)
+          return val
+        }
+
+        return verify
+      }
+
+      [true, false].each { |val|
+        verifier = constVerify.call(val)
+
+        TrustRoot.with_method_overridden(:verify_return_to, verifier) do
+          assert_equal(val, @request.return_to_verified())
+        end
+      }
+    end
 
     def _expectAnswer(answer, identity=nil, claimed_id=nil)
       expected_list = [
@@ -1840,126 +1848,155 @@ EOF
       assert(verified)
       # assert(!@messages, @messages)
     end
-  end
-end
 
-=begin
-
-    def test_verifyBadSig(self):
-        assoc_handle = '{vroom}{zoom}'
-        assoc = association.Association.fromExpiresIn(
+    def test_verifyBadSig
+      assoc_handle = '{vroom}{zoom}'
+      assoc = Association.from_expires_in(
             60, assoc_handle, 'sekrit', 'HMAC-SHA1')
 
-        @store.storeAssociation(@_dumb_key, assoc)
+      @store.store_association(@_dumb_key, assoc)
 
-        signed = Message.fromPostArgs({
+      signed = Message.from_post_args({
             'openid.foo' => 'bar',
             'openid.apple' => 'orange',
             'openid.assoc_handle' => assoc_handle,
             'openid.signed' => 'apple,assoc_handle,foo,signed',
-            'openid.sig' => 'uXoT1qm62/BB09Xbj98TQ8mlBco='.encode('rot13'),
+            'openid.sig' => 'uXoT1qm62/BB09Xbj98TQ8mlBco=BOGUS'
             })
 
-        verified = @signatory.verify(assoc_handle, signed)
-        @failIf(@messages, @messages)
-        @failIf(verified)
+      verified = @signatory.verify(assoc_handle, signed)
+      # @failIf(@messages, @messages)
+      assert(!verified)
+    end
 
-    def test_verifyBadHandle(self):
-        assoc_handle = '{vroom}{zoom}'
-        signed = Message.fromPostArgs({
+    def test_verifyBadHandle
+      assoc_handle = '{vroom}{zoom}'
+      signed = Message.from_post_args({
             'foo' => 'bar',
             'apple' => 'orange',
             'openid.sig' => "Ylu0KcIR7PvNegB/K41KpnRgJl0=",
             })
 
+      verified = nil
+      silence_logging {
         verified = @signatory.verify(assoc_handle, signed)
-        @failIf(verified)
-        assert(@messages)
+      }
 
+      assert(!verified)
+      #assert(@messages)
+    end
 
-    def test_verifyAssocMismatch(self):
-        """Attempt to validate sign-all message with a signed-list assoc."""
-        assoc_handle = '{vroom}{zoom}'
-        assoc = association.Association.fromExpiresIn(
+    def test_verifyAssocMismatch
+      # Attempt to validate sign-all message with a signed-list assoc.
+      assoc_handle = '{vroom}{zoom}'
+      assoc = Association.from_expires_in(
             60, assoc_handle, 'sekrit', 'HMAC-SHA1')
 
-        @store.storeAssociation(@_dumb_key, assoc)
+      @store.store_association(@_dumb_key, assoc)
 
-        signed = Message.fromPostArgs({
+      signed = Message.from_post_args({
             'foo' => 'bar',
             'apple' => 'orange',
             'openid.sig' => "d71xlHtqnq98DonoSgoK/nD+QRM=",
             })
 
+      verified = nil
+      silence_logging {
         verified = @signatory.verify(assoc_handle, signed)
-        @failIf(verified)
-        assert(@messages)
+      }
 
-    def test_getAssoc(self):
-        assoc_handle = @makeAssoc(dumb=True)
-        assoc = @signatory.getAssociation(assoc_handle, True)
-        assert(assoc)
-        assert_equal(assoc.handle, assoc_handle)
-        @failIf(@messages, @messages)
+      assert(!verified)
+      #assert(@messages)
+    end
 
-    def test_getAssocExpired(self):
-        assoc_handle = @makeAssoc(dumb=True, lifetime=-10)
-        assoc = @signatory.getAssociation(assoc_handle, True)
-        @failIf(assoc, assoc)
-        assert(@messages)
+    def test_getAssoc
+      assoc_handle = makeAssoc(true)
+      assoc = @signatory.get_association(assoc_handle, true)
+      assert(assoc)
+      assert_equal(assoc.handle, assoc_handle)
+      # @failIf(@messages, @messages)
+    end
 
-    def test_getAssocInvalid(self):
-        ah = 'no-such-handle'
+    def test_getAssocExpired
+      assoc_handle = makeAssoc(true, -10)
+      assoc = nil
+      silence_logging {
+        assoc = @signatory.get_association(assoc_handle, true)
+      }
+      assert(!assoc, assoc)
+      # assert(@messages)
+    end
+
+    def test_getAssocInvalid
+      ah = 'no-such-handle'
+      silence_logging {
         assert_equal(
-            @signatory.getAssociation(ah, dumb=False), None)
-        @failIf(@messages, @messages)
+                     @signatory.get_association(ah, false), nil)
+      }
+      # assert(!@messages, @messages)
+    end
 
-    def test_getAssocDumbVsNormal(self):
-        """getAssociation(dumb=False) cannot get a dumb assoc"""
-        assoc_handle = @makeAssoc(dumb=True)
+    def test_getAssocDumbVsNormal
+      # getAssociation(dumb=False) cannot get a dumb assoc
+      assoc_handle = makeAssoc(true)
+      silence_logging {
         assert_equal(
-            @signatory.getAssociation(assoc_handle, dumb=False), None)
-        @failIf(@messages, @messages)
+                     @signatory.get_association(assoc_handle, false), nil)
+      }
+      # @failIf(@messages, @messages)
+    end
 
-    def test_getAssocNormalVsDumb(self):
-        """getAssociation(dumb=True) cannot get a shared assoc
-
-        From "Verifying Directly with the OpenID Provider"::
-
-            An OP MUST NOT verify signatures for associations that have shared
-            MAC keys.
-        """
-        assoc_handle = @makeAssoc(dumb=False)
+    def test_getAssocNormalVsDumb
+      # getAssociation(dumb=True) cannot get a shared assoc
+      #
+      # From "Verifying Directly with the OpenID Provider"::
+      #
+      #   An OP MUST NOT verify signatures for associations that have shared
+      #   MAC keys.
+      assoc_handle = makeAssoc(false)
+      silence_logging {
         assert_equal(
-            @signatory.getAssociation(assoc_handle, dumb=True), None)
-        @failIf(@messages, @messages)
+                     @signatory.get_association(assoc_handle, true), nil)
+      }
+      # @failIf(@messages, @messages)
+    end
 
-    def test_createAssociation(self):
-        assoc = @signatory.createAssociation(dumb=False)
-        assert(@signatory.getAssociation(assoc.handle, dumb=False))
-        @failIf(@messages, @messages)
+    def test_createAssociation
+      assoc = @signatory.create_association(false)
+      silence_logging {
+        assert(@signatory.get_association(assoc.handle, false))
+      }
+      # @failIf(@messages, @messages)
+    end
 
-    def makeAssoc(self, dumb, lifetime=60):
-        assoc_handle = '{bling}'
-        assoc = association.Association.fromExpiresIn(lifetime, assoc_handle,
-                                                      'sekrit', 'HMAC-SHA1')
+    def makeAssoc(dumb, lifetime=60)
+      assoc_handle = '{bling}'
+      assoc = Association.from_expires_in(lifetime, assoc_handle,
+                                          'sekrit', 'HMAC-SHA1')
 
-        @store.storeAssociation((dumb and @_dumb_key) or @_normal_key, assoc)
-        return assoc_handle
+      silence_logging {
+        @store.store_association(((dumb and @_dumb_key) or @_normal_key), assoc)
+      }
 
-    def test_invalidate(self):
-        assoc_handle = '-squash-'
-        assoc = association.Association.fromExpiresIn(60, assoc_handle,
-                                                      'sekrit', 'HMAC-SHA1')
+      return assoc_handle
+    end
 
-        @store.storeAssociation(@_dumb_key, assoc)
-        assoc = @signatory.getAssociation(assoc_handle, dumb=True)
+    def test_invalidate
+      assoc_handle = '-squash-'
+      assoc = Association.from_expires_in(60, assoc_handle,
+                                          'sekrit', 'HMAC-SHA1')
+
+      silence_logging {
+        @store.store_association(@_dumb_key, assoc)
+        assoc = @signatory.get_association(assoc_handle, true)
         assert(assoc)
-        assoc = @signatory.getAssociation(assoc_handle, dumb=True)
+        assoc = @signatory.get_association(assoc_handle, true)
         assert(assoc)
-        @signatory.invalidate(assoc_handle, dumb=True)
-        assoc = @signatory.getAssociation(assoc_handle, dumb=True)
-        @failIf(assoc)
-        @failIf(@messages, @messages)
-
-=end
+        @signatory.invalidate(assoc_handle, true)
+        assoc = @signatory.get_association(assoc_handle, true)
+        assert(!assoc)
+      }
+      # @failIf(@messages, @messages)
+    end
+  end
+end

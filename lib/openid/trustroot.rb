@@ -102,7 +102,7 @@ module OpenID
     end
 
     # _vrfy parameter is there to make testing easier
-    def TrustRoot.verify_return_to(realm_str, return_to, _vrfy=:get_allowed_return_urls)
+    def TrustRoot.verify_return_to(realm_str, return_to, _vrfy=nil)
       # Verify that a return_to URL is valid for the given realm.
       #
       # This function builds a discovery URL, performs Yadis discovery
@@ -112,6 +112,14 @@ module OpenID
       #
       # raises DiscoveryFailure: When Yadis discovery fails returns
       # true if the return_to URL is valid for the realm
+      if _vrfy.nil?
+        _vrfy = self.method('get_allowed_return_urls')
+      end
+
+      if !(_vrfy.is_a?(Proc) or _vrfy.is_a?(Method))
+        raise ArgumentError, "_vrfy must be a Proc or Method"
+      end
+
       realm = TrustRoot.parse(realm_str)
       if realm.nil?
         # The realm does not parse as a URL pattern
@@ -119,7 +127,7 @@ module OpenID
       end
 
       begin
-        allowable_urls = self.send(_vrfy, realm.build_discovery_url())
+        allowable_urls = _vrfy.call(realm.build_discovery_url())
       rescue RealmVerificationRedirected => err
         Util.log(err.to_s)
         return false
