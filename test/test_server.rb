@@ -1121,6 +1121,17 @@ module OpenID
       assert(resp.fields.get_arg(OPENID_NS, 'mode') == 'cancel')
     end
 
+    def test_immediate_openid1_no_server_url
+      @request.namespace = OPENID1_NS
+      @request.immediate = true
+      @request.mode = 'checkid_immediate'
+      @request.op_endpoint = nil
+
+      assert_raise(ArgumentError) {
+        resp = @request.answer(false)
+      }
+    end
+
     def test_answerAllowWithDelegatedIdentityOpenID2
       # Answer an IDENTIFIER_SELECT case with a delegated identifier.
 
