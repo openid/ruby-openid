@@ -1276,6 +1276,10 @@ module OpenID
       @signatory = MockSignatory.new([true, @assoc_handle])
     end
 
+    def test_to_s
+      @request.to_s
+    end
+
     def test_valid
       r = @request.answer(@signatory)
       assert_equal({'is_valid' => 'true'},

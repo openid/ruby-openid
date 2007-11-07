@@ -72,6 +72,7 @@ module OpenID
         @mode = "check_authentication"
         @required_fields = ["identity", "return_to", "response_nonce"].freeze
 
+        @sig = nil
         @assoc_handle = assoc_handle
         @signed = signed
         @invalidate_handle = invalidate_handle
@@ -152,7 +153,7 @@ module OpenID
           ih = ""
         end
 
-        s = sprintf("<%s handle: %r sig: %r: signed: %r%s>",
+        s = sprintf("<%s handle: %s sig: %s: signed: %s%s>",
                     self.class, @assoc_handle,
                     @sig, @signed, ih)
         return s
