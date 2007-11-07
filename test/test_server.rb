@@ -1132,6 +1132,30 @@ module OpenID
       }
     end
 
+    def test_immediate_encode_to_url
+      @request.namespace = OPENID1_NS
+      @request.immediate = true
+      @request.mode = 'checkid_immediate'
+      @request.trust_root = "BOGUS"
+      @request.assoc_handle = "ASSOC"
+
+      server_url = "http://server.com/server"
+
+      url = @request.encode_to_url(server_url)
+      assert(url.starts_with?(server_url))
+
+      unused, query = url.split("?", 2)
+      args = Util.parse_query(query)
+
+      m = Message.from_post_args(args)
+      assert(m.get_arg(OPENID_NS, 'trust_root') == "BOGUS")
+      assert(m.get_arg(OPENID_NS, 'assoc_handle') == "ASSOC")
+      assert(m.get_arg(OPENID_NS, 'mode'), "checkid_immediate")
+      assert(m.get_arg(OPENID_NS, 'identity') == @request.identity)
+      assert(m.get_arg(OPENID_NS, 'claimed_id') == @request.claimed_id)
+      assert(m.get_arg(OPENID_NS, 'return_to') == @request.return_to)
+    end
+
     def test_answerAllowWithDelegatedIdentityOpenID2
       # Answer an IDENTIFIER_SELECT case with a delegated identifier.
 
