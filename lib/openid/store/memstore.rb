@@ -26,10 +26,7 @@ module OpenID
       else
         assoc = assocs.values.sort{|a,b| a.issued <=> b.issued}[-1]
       end
-      if assoc and assoc.expires_in == 0
-        assocs.delete(assoc.handle)
-        assoc = nil
-      end
+      
       return assoc
     end
 
