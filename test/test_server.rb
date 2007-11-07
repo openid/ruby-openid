@@ -230,6 +230,20 @@ module OpenID
       assert(r.immediate)
     end
 
+    def test_checkid_missing_return_to_and_trust_root
+      args = {
+        'openid.ns' => OPENID2_NS,
+        'openid.mode' => 'checkid_setup',
+        'openid.identity' => @id_url,
+        'openid.claimed_id' => @id_url,
+        'openid.assoc_handle' => @assoc_handle,
+      }
+      assert_raise(Server::ProtocolError) {
+        m = Message.from_post_args(args)
+        Server::CheckIDRequest.from_message(m, @op_endpoint)
+      }
+    end
+
     def test_checkidSetup
       args = {
         'openid.mode' => 'checkid_setup',
