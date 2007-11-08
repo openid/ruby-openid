@@ -92,7 +92,9 @@ module OpenID
       def verify_return_to
         msg_return_to = URI.parse(fetch('return_to'))
         verify_return_to_args(msg_return_to)
-        verify_return_to_base(msg_return_to)
+        if !@return_to.nil?
+          verify_return_to_base(msg_return_to)
+        end
       end
 
       def verify_return_to_args(msg_return_to)
