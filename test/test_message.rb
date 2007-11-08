@@ -1012,8 +1012,8 @@ module OpenID
 
       nsm.add_alias(uri, alias_)
 
-      assert_equal(nsm.iter_aliases(), [alias_])
-      assert_equal(nsm.iter_namespace_uris(), [uri])
+      assert_equal(nsm.aliases(), [alias_])
+      assert_equal(nsm.namespace_uris(), [uri])
     end
 
     def test_register_default_alias

@@ -515,12 +515,12 @@ module OpenID
       @namespace_to_alias.each {|k,v| yield k,v}
     end
 
-    def iter_namespace_uris
+    def namespace_uris
       # Return an iterator over the namespace URIs
       return @namespace_to_alias.keys()
     end
 
-    def iter_aliases
+    def aliases
       # Return an iterator over the aliases
       return @alias_to_namespace.keys()
     end
