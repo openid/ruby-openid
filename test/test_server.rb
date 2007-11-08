@@ -446,7 +446,7 @@ module OpenID
       begin
         result = @decode.call(args)
       rescue Server::UntrustedReturnURL => err
-        assert(err.openid_message)
+        assert(err.openid_message, err.to_s)
       else
         flunk("Expected UntrustedReturnURL, instead returned with #{result}")
       end
