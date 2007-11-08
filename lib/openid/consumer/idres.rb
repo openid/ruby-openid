@@ -54,11 +54,10 @@ module OpenID
       end
 
       def check_for_fields
-        # XXX: this should be handled by the code that processes the
-        # response (that is, if a field is missing, we should not have
-        # to explicitly check that it's present, just make sure that
-        # the fields are actually being used by the rest of the code
-        # in tests). Although, which fields are signed does need to be
+        # XXX: if a field is missing, we should not have to explicitly
+        # check that it's present, just make sure that the fields are
+        # actually being used by the rest of the code in
+        # tests. Although, which fields are signed does need to be
         # checked somewhere.
         basic_fields = ['return_to', 'assoc_handle', 'sig', 'signed']
         basic_sig_fields = ['return_to', 'identity']
