@@ -79,5 +79,58 @@ module OpenID
     end
     return links
   end
+
+  def OpenID.rel_matches(rel_attr, target_rel)
+    # Does this target_rel appear in the rel_str?
+    # XXX: TESTME
+    rels = rel_attr.strip().split()
+    rels.each { |rel|
+      rel = rel.downcase
+      if rel == target_rel
+        return 1
+      end
+    }
+
+    return 0
+  end
+
+  def OpenID.link_has_rel(link_attrs, target_rel)
+    # Does this link have target_rel as a relationship?
+
+    # XXX: TESTME
+    rel_attr = link_attrs['rel']
+    return (rel_attr and rel_matches(rel_attr, target_rel))
+  end
+
+  def OpenID.find_links_rel(link_attrs_list, target_rel)
+    # Filter the list of link attributes on whether it has target_rel
+    # as a relationship.
+
+    # XXX: TESTME
+    matchesTarget = lambda { |attrs| link_has_rel(attrs, target_rel) }
+    result = []
+
+    link_attrs_list.each { |item|
+      if matchesTarget(item)
+        result << item
+      end
+    }
+
+    return result
+  end
+
+  def OpenID.find_first_href(link_attrs_list, target_rel)
+    # Return the value of the href attribute for the first link tag in
+    # the list that has target_rel as a relationship.
+
+    # XXX: TESTME
+    matches = find_links_rel(link_attrs_list, target_rel)
+    if !matches
+      return nil
+    end
+
+    first = matches[0]
+    return first['href']
+  end
 end
 
