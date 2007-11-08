@@ -1,4 +1,5 @@
 require "testutil"
+require "util"
 require "test/unit"
 require "openid/consumer/idres"
 require "openid/protocolerror"
@@ -201,33 +202,31 @@ module OpenID
         end
       end
 
+      GOODSIG = '[A Good Signature]'
+
+      class GoodAssoc
+        attr_accessor :handle, :expires_in
+
+        def initialize(handle='-blah-')
+          @handle = handle
+          @expires_in = 3600
+        end
+
+        def check_message_signature(msg)
+          msg.get_arg(OPENID_NS, 'sig') == GOODSIG
+        end
+      end
+
+      class DummyEndpoint
+        attr_accessor :server_url
+        def initialize(server_url)
+          @server_url = server_url
+        end
+      end
+
       class CheckSigTest < Test::Unit::TestCase
         include ProtocolErrorMixin
-
-        GOODSIG = '[A Good Signature]'
-
-        class GoodAssoc
-          attr_accessor :handle
-
-          def initialize(handle='-blah-')
-            @handle = handle
-          end
-
-          def expires_in
-            3600
-          end
-
-          def check_message_signature(msg)
-            msg.get_arg(OPENID_NS, 'sig') == GOODSIG
-          end
-        end
-
-        class DummyEndpoint
-          attr_accessor :server_url
-          def initialize(server_url)
-            @server_url = server_url
-          end
-        end
+        include TestUtil
 
         def setup
           @assoc = GoodAssoc.new('{not_dumb}')
@@ -246,11 +245,15 @@ module OpenID
               })
         end
 
-        def call_check_sig
+        def call_idres_method(method_name)
           idres = IdResHandler.new(@message, @store, @endpoint)
           idres.extend(InstanceDefExtension)
           yield idres
-          idres.send(:check_signature)
+          idres.send(method_name)
+        end
+
+        def call_check_sig(&proc)
+          call_idres_method(:check_signature, &proc)
         end
 
         def no_check_auth(idres)
@@ -291,8 +294,177 @@ module OpenID
           end
           assert(check_auth_called)
         end
+
+        def test_expired_assoc
+          @assoc.expires_in = -1
+          @store.store_association(@server_url, @assoc)
+          assert_protocol_error('Association with') {
+            call_check_sig(&method(:no_check_auth))
+          }
+        end
+
+        def call_check_auth(&proc)
+          assert_log_matches("Using 'check_authentication'") {
+            call_idres_method(:check_auth, &proc)
+          }
+        end
+
+        def test_check_auth_create_fail
+          assert_protocol_error("Could not generate") {
+            call_check_auth do |idres|
+              idres.instance_def(:create_check_auth_request) do
+                raise Message::KeyNotFound, "Testing"
+              end
+            end
+          }
+        end
+
+        def test_kv_server_error
+          OpenID.extend(OverrideMethodMixin)
+          send_error = lambda do |req, server_url|
+            msg = Message.new(OPENID2_NS)
+            raise ServerError.from_message(msg), 'For you!'
+          end
+            
+          OpenID.with_method_overridden(:make_kv_post, send_error) do
+            assert_protocol_error("Error from") {
+              call_check_auth do |idres|
+                idres.instance_def(:create_check_auth_request) { nil }
+              end
+            }
+          end
+        end
+
+        def test_check_auth_okay
+          OpenID.extend(OverrideMethodMixin)
+          me = self
+          send_resp = Proc.new do |req, server_url|
+            me.assert_equal(:req, req)
+            :expected_response
+          end
+            
+          OpenID.with_method_overridden(:make_kv_post, send_resp) do
+            final_resp = call_check_auth do |idres|
+              idres.instance_def(:create_check_auth_request) {
+                :req
+              }
+              idres.instance_def(:process_check_auth_response) do |resp|
+                me.assert_equal(:expected_response, resp)
+              end
+            end
+          end
+        end
+
+        def test_check_auth_process_fail
+          OpenID.extend(OverrideMethodMixin)
+          me = self
+          send_resp = Proc.new do |req, server_url|
+            me.assert_equal(:req, req)
+            :expected_response
+          end
+
+          OpenID.with_method_overridden(:make_kv_post, send_resp) do
+            assert_protocol_error("Testing") do
+              final_resp = call_check_auth do |idres|
+                idres.instance_def(:create_check_auth_request) { :req }
+                idres.instance_def(:process_check_auth_response) do |resp|
+                  me.assert_equal(:expected_response, resp)
+                  raise ProtocolError, "Testing"
+                end
+              end
+            end
+          end
+        end
+
+        1.times do
+          # Fields from the signed list
+          ['mode', 'identity', 'assoc_handle'
+          ].each do |field|
+            test = lambda do
+              @message.del_arg(OPENID_NS, field)
+              assert_raises(Message::KeyNotFound) {
+                call_idres_method(:create_check_auth_request) {}
+              }
+            end
+            define_method("test_create_check_auth_missing_#{field}", test)
+          end
+        end
+
+        def test_create_check_auth_request_success
+          msg = call_idres_method(:create_check_auth_request) {}
+          openid_args = @message.get_args(OPENID_NS)
+          openid_args['mode'] = 'check_authentication'
+          assert_equal(openid_args, msg.to_args)
+        end
+
+        def test_create_check_auth_request_success_extra
+          @message.set_arg(OPENID_NS, 'cookies', 'chocolate_chip')
+          msg = call_idres_method(:create_check_auth_request) {}
+          openid_args = @message.get_args(OPENID_NS)
+          openid_args['mode'] = 'check_authentication'
+          openid_args.delete('cookies')
+          assert_equal(openid_args, msg.to_args)
+        end
       end
 
+      class CheckAuthResponseTest < Test::Unit::TestCase
+        include TestUtil
+        include ProtocolErrorMixin
+
+        def setup
+          @message = Message.from_openid_args({
+            'is_valid' => 'true',
+            })
+          @assoc = GoodAssoc.new
+          @store = MemoryStore.new
+          @server_url = 'http://invalid/'
+          @endpoint =  DummyEndpoint.new(@server_url)
+          @idres = IdResHandler.new(nil, @store, @endpoint)
+        end
+
+        def call_process
+          @idres.send(:process_check_auth_response, @message)
+        end
+
+        def test_valid
+          assert_log_matches() { call_process }
+        end
+
+        def test_invalid
+          for is_valid in ['false', 'monkeys']
+            @message.set_arg(OPENID_NS, 'is_valid', 'false')
+            assert_protocol_error("Server #{@server_url} responds") {
+              assert_log_matches() { call_process }
+            }
+          end
+        end
+
+        def test_valid_invalidate
+          @message.set_arg(OPENID_NS, 'invalidate_handle', 'cheese')
+          assert_log_matches("Received 'invalidate_handle'") { call_process }
+        end
+
+        def test_invalid_invalidate
+          @message.set_arg(OPENID_NS, 'invalidate_handle', 'cheese')
+          for is_valid in ['false', 'monkeys']
+            @message.set_arg(OPENID_NS, 'is_valid', 'false')
+            assert_protocol_error("Server #{@server_url} responds") {
+              assert_log_matches("Received 'invalidate_handle'") {
+                call_process
+              }
+            }
+          end
+        end
+
+        def test_invalidate_no_store
+          @idres.instance_variable_set(:@store, nil)
+          @message.set_arg(OPENID_NS, 'invalidate_handle', 'cheese')
+          assert_log_matches("Received 'invalidate_handle'",
+                             'Unexpectedly got "invalidate_handle"') {
+            call_process
+          }
+        end
+      end
     end
   end
 end

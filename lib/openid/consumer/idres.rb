@@ -194,11 +194,11 @@ module OpenID
 
       # Process the response message from a check_authentication
       # request, invalidating associations if requested.
-      def process_check_auth_response(response, server_url)
+      def process_check_auth_response(response)
         is_valid = response.get_arg(OPENID_NS, 'is_valid', 'false')
 
         invalidate_handle = response.get_arg(OPENID_NS, 'invalidate_handle')
-        if invalidate_handle.nil?:
+        if !invalidate_handle.nil?
           Util.log("Received 'invalidate_handle' from server #{server_url}")
           if @store.nil?
             Util.log('Unexpectedly got "invalidate_handle" without a store!')
