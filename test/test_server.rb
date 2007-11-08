@@ -145,6 +145,16 @@ module OpenID
       expected = "error:waffles\nmode:error\n"
       assert_equal(e.encode_to_kvform, expected)
     end
+
+    def test_no_message
+      e = Server::ProtocolError.new(nil, "no message")
+      assert(e.get_return_to.nil?)
+    end
+
+    def test_which_encoding_no_message
+      e = Server::ProtocolError.new(nil, "no message")
+      assert(e.which_encoding.nil?)
+    end
   end
 
   class TestDecode < Test::Unit::TestCase

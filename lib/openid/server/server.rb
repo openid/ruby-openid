@@ -1590,7 +1590,7 @@ module OpenID
         #
         # @returntype: str
         if @openid_message.nil?
-          return false
+          return nil
         else
           return @openid_message.get_arg(OPENID_NS, 'return_to')
         end
