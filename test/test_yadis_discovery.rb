@@ -177,7 +177,7 @@ module OpenID
         result.normalized_uri = "http://normalized/"
         result.xrds_uri = "http://normalized/xrds"
 
-        assert(result.isXRDS)
+        assert(result.is_xrds)
       end
 
       def test_is_xrds_content_type
@@ -185,7 +185,7 @@ module OpenID
         result.normalized_uri = result.xrds_uri = "http://normalized/"
         result.content_type = Yadis::YADIS_CONTENT_TYPE
 
-        assert(result.isXRDS)
+        assert(result.is_xrds)
       end
 
       def test_is_xrds_neither
@@ -193,7 +193,7 @@ module OpenID
         result.normalized_uri = result.xrds_uri = "http://normalized/"
         result.content_type = "another/content-type"
 
-        assert(!result.isXRDS)
+        assert(!result.is_xrds)
       end
 
       def test_no_content_type

@@ -49,7 +49,7 @@ module OpenID
         return @normalized_uri != @xrds_uri
       end
 
-      def isXRDS
+      def is_xrds
         # Is the response text supposed to be an XRDS document?
         return (used_yadis_location?() or
                 @content_type == YADIS_CONTENT_TYPE)
