@@ -648,6 +648,18 @@ module OpenID
     end
   end
 
+  class BogusEncoder < Server::Encoder
+    def encode(response)
+      return "BOGUS"
+    end
+  end
+
+  class BogusDecoder < Server::Decoder
+    def decode(query)
+      return "BOGUS"
+    end
+  end
+
   class TestEncode < Test::Unit::TestCase
     def setup
       @encoder = Server::Encoder.new
@@ -1747,6 +1759,16 @@ module OpenID
       assert_raise(RuntimeError) {
         webresult = @server.handle_request(request)
       }
+    end
+
+    def test_decode_request
+      @server.decoder = BogusDecoder.new(@server)
+      assert(@server.decode_request({}) == "BOGUS")
+    end
+
+    def test_encode_response
+      @server.encoder = BogusEncoder.new
+      assert(@server.encode_response(nil) == "BOGUS")
     end
 
     def test_dispatch
