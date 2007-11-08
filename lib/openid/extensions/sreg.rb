@@ -225,12 +225,10 @@ module OpenID
   # created by the OpenID server, added to the id_res response
   # object, and then extracted from the id_res message by the Consumer.
   class SRegResponse < Extension
-    @ns_alias = 'sreg'
     attr_reader :ns_uri, :data
 
     def initialize(data = {}, ns_uri=SREG_NS_URI)
-      super()
-
+      @ns_alias = 'sreg'
       @data = data
       @ns_uri = ns_uri
     end
