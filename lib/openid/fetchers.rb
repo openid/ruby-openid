@@ -1,4 +1,5 @@
 require 'net/http'
+require 'openid/util'
 begin
   require 'net/https'
 rescue LoadError
