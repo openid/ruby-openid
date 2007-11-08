@@ -1,5 +1,6 @@
 require 'openid/cryptutil'
 require 'date'
+require 'time'
 
 module OpenID
   module Nonce
