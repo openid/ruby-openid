@@ -6,7 +6,7 @@ require 'testutil'
 require 'openid/yadis/discovery'
 require 'openid/fetchers'
 require 'openid/util'
-require 'test/discoverdata'
+require 'discoverdata'
 
 module OpenID
 
