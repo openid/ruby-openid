@@ -5,12 +5,15 @@ require "openid/kvpost"
 module OpenID
   class Consumer
     class IdResHandler
+      attr_accessor :openid1_nonce_query_arg_name
+
       def initialize(message, store=nil, endpoint=nil, return_to=nil)
         @store = store # Fer the nonce and invalidate_handle
         @message = message
         @endpoint = endpoint
         @return_to = return_to
         @signed_list = nil
+        @openid1_nonce_query_arg_name = 'rp_nonce'
       end
 
       def id_res
@@ -210,6 +213,37 @@ module OpenID
         if is_valid != 'true'
           raise ProtocolError, ("Server #{server_url} responds that the "\
                                 "'check_authentication' call is not valid")
+        end
+      end
+
+      def check_nonce
+        case openid_namespace
+        when OPENID1_NS
+          nonce = @message.get_arg(BARE_NS, openid1_nonce_query_arg_name)
+
+          # We generated the nonce, so it uses the empty string as the
+          # server URL
+          server_url = ''
+        when OPENID2_NS
+          nonce = @message.get_arg(OPENID2_NS, 'response_nonce')
+          server_url = self.server_url
+        else
+          raise StandardError, 'Not reached'
+        end
+
+        if nonce.nil?
+          raise ProtocolError, 'Nonce missing from response'
+        end
+
+        begin
+          time, extra = Nonce.split_nonce(nonce)
+        rescue ArgumentError => why
+          raise ProtocolError, "Malformed nonce: #{nonce.inspect}"
+        end
+
+        if !@store.nil? && !@store.use_nonce(server_url, time, extra)
+          raise ProtocolError, ("Nonce already used or out of range: "\
+                               "#{nonce.inspect}")
         end
       end
     end

@@ -4,6 +4,7 @@ require "test/unit"
 require "openid/consumer/idres"
 require "openid/protocolerror"
 require "openid/store/memstore"
+require "openid/store/nonce"
 
 module OpenID
   class Consumer
@@ -462,6 +463,82 @@ module OpenID
           assert_log_matches("Received 'invalidate_handle'",
                              'Unexpectedly got "invalidate_handle"') {
             call_process
+          }
+        end
+      end
+
+      class NonceTest < Test::Unit::TestCase
+        include TestUtil
+        include ProtocolErrorMixin
+
+        def setup
+          @store = Object.new
+          class << @store
+            attr_accessor :nonces, :succeed
+            def use_nonce(server_url, time, extra)
+              @nonces << [server_url, time, extra]
+              @succeed
+            end
+          end
+          @store.nonces = []
+          @nonce = Nonce.mk_nonce
+        end
+
+        def call_check_nonce(post_args, succeed=false)
+          response = Message.from_post_args(post_args)
+          if !@store.nil?
+            @store.succeed = succeed
+          end
+          idres = IdResHandler.new(response, @store, nil, nil)
+          idres.send(:check_nonce)
+        end
+
+        def test_openid1_success
+          assert_nothing_raised {
+            call_check_nonce({'rp_nonce' => @nonce}, true)
+          }
+        end
+
+        def test_openid1_missing
+          assert_protocol_error('Nonce missing') { call_check_nonce({}) }
+        end
+
+        def test_openid2_ignore_rp_nonce
+          assert_protocol_error('Nonce missing') {
+            call_check_nonce({'rp_nonce' => @nonce,
+                               'openid.ns' => OPENID2_NS})
+          }
+        end
+
+        def test_openid2_success
+          assert_nothing_raised {
+            call_check_nonce({'openid.response_nonce' => @nonce,
+                               'openid.ns' => OPENID2_NS}, true)
+          }
+        end
+
+        def test_openid1_ignore_response_nonce
+          assert_protocol_error('Nonce missing') {
+            call_check_nonce({'openid.response_nonce' => @nonce})
+          }
+        end
+
+        def test_no_store
+          @store = nil
+          assert_nothing_raised {
+            call_check_nonce({'rp_nonce' => @nonce})
+          }
+        end
+
+        def test_already_used
+          assert_protocol_error('Nonce already used') {
+            call_check_nonce({'rp_nonce' => @nonce}, false)
+          }
+        end
+
+        def test_malformed_nonce
+          assert_protocol_error('Malformed nonce') {
+            call_check_nonce({'rp_nonce' => 'whee!'})
           }
         end
       end
