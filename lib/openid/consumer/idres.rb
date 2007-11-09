@@ -7,7 +7,7 @@ module OpenID
     class IdResHandler
       attr_accessor :openid1_nonce_query_arg_name
 
-      def initialize(message, store=nil, endpoint=nil, return_to=nil)
+      def initialize(message, return_to, store=nil, endpoint=nil)
         @store = store # Fer the nonce and invalidate_handle
         @message = message
         @endpoint = endpoint

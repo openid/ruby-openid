@@ -39,7 +39,7 @@ module OpenID
           ].each do |signed_fields|
             test = lambda do
               msg = mkMsg(OPENID2_NS, OPENID2_FIELDS, signed_fields)
-              idres = IdResHandler.new(msg)
+              idres = IdResHandler.new(msg, nil)
               assert_equal(signed_fields, idres.send(:signed_list))
               # Do it again to make sure logic for caching is correct
               assert_equal(signed_fields, idres.send(:signed_list))
@@ -58,7 +58,7 @@ module OpenID
                 fields = all_fields.dup
                 fields.delete(field)
                 msg = mkMsg(ns, fields, [])
-                idres = IdResHandler.new(msg)
+                idres = IdResHandler.new(msg, nil)
                 assert_protocol_error("Missing required field #{field}") {
                   idres.send(:check_for_fields)
                 }
@@ -80,7 +80,7 @@ module OpenID
                 msg = mkMsg(ns, all_fields, fields)
                 # Make sure the signed field is actually in the request
                 msg.set_arg(OPENID_NS, signed_field, "don't care")
-                idres = IdResHandler.new(msg)
+                idres = IdResHandler.new(msg, nil)
                 assert_protocol_error("#{signed_field.inspect} not signed") {
                   idres.send(:check_for_fields)
                 }
@@ -92,7 +92,7 @@ module OpenID
 
         def test_no_signed_list
           msg = Message.new(OPENID2_NS)
-          idres = IdResHandler.new(msg)
+          idres = IdResHandler.new(msg, nil)
           assert_protocol_error("Response missing signed") {
             idres.send(:signed_list)
           }
@@ -100,7 +100,7 @@ module OpenID
 
         def test_success_openid1
           msg = mkMsg(OPENID1_NS, OPENID1_FIELDS, OPENID1_SIGNED)
-          idres = IdResHandler.new(msg)
+          idres = IdResHandler.new(msg, nil)
           assert_nothing_raised {
             idres.send(:check_for_fields)
           }
@@ -111,7 +111,7 @@ module OpenID
         include OpenID::ProtocolErrorMixin
 
         def check_return_to_args(query)
-          idres = IdResHandler.new(Message.from_post_args(query))
+          idres = IdResHandler.new(Message.from_post_args(query), nil)
           class << idres
             def verify_return_to_base(unused)
             end
@@ -160,11 +160,11 @@ module OpenID
       class ReturnToVerifyTest < Test::Unit::TestCase
         def test_bad_return_to
           return_to = "http://some.url/path?foo=bar"
-          
+
           m = Message.new(OPENID1_NS)
           m.set_arg(OPENID_NS, 'mode', 'cancel')
           m.set_arg(BARE_NS, 'foo', 'bar')
-          
+
           # Scheme, authority, and path differences are checked by
           # IdResHandler.verify_return_to_base.  Query args checked by
           # IdResHandler.verify_return_to_args.
@@ -180,7 +180,7 @@ module OpenID
             "http://some.url/path?foo2=bar",
             ].each do |bad|
               m.set_arg(OPENID_NS, 'return_to', bad)
-              idres = IdResHandler.new(m, nil, nil, return_to)
+              idres = IdResHandler.new(m, return_to)
               assert_raises(ProtocolError) {
                 idres.send(:verify_return_to)
               }
@@ -195,7 +195,7 @@ module OpenID
           ].each do |return_to, args|
             args['openid.return_to'] = return_to
             msg = Message.from_post_args(args)
-            idres = IdResHandler.new(msg, nil, nil, base)
+            idres = IdResHandler.new(msg, base)
             assert_nothing_raised {
               idres.send(:verify_return_to)
             }
@@ -247,7 +247,7 @@ module OpenID
         end
 
         def call_idres_method(method_name)
-          idres = IdResHandler.new(@message, @store, @endpoint)
+          idres = IdResHandler.new(@message, nil, @store, @endpoint)
           idres.extend(InstanceDefExtension)
           yield idres
           idres.send(method_name)
@@ -420,7 +420,7 @@ module OpenID
           @store = MemoryStore.new
           @server_url = 'http://invalid/'
           @endpoint =  DummyEndpoint.new(@server_url)
-          @idres = IdResHandler.new(nil, @store, @endpoint)
+          @idres = IdResHandler.new(nil, nil, @store, @endpoint)
         end
 
         def call_process
@@ -489,7 +489,7 @@ module OpenID
           if !@store.nil?
             @store.succeed = succeed
           end
-          idres = IdResHandler.new(response, @store, nil, nil)
+          idres = IdResHandler.new(response, nil, @store, nil)
           idres.send(:check_nonce)
         end
 
