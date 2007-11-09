@@ -63,6 +63,6 @@ module OpenID
       time_str = t.strftime(TIME_FMT)
       return time_str + salt
     end
-    
+
   end
 end
