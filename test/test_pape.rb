@@ -182,12 +182,12 @@ module OpenID
       
       def test_parse_extension_args_strict_good
         args = {'auth_policies' => 'http://foo http://bar',
-                'auth_age' => '63',
-                'nist_auth_level' => '2'}
+                'auth_age' => '0',
+                'nist_auth_level' => '0'}
         @req.parse_extension_args(args, true)
         assert_equal(['http://foo','http://bar'], @req.auth_policies)
-        assert_equal(63, @req.auth_age)
-        assert_equal(2, @req.nist_auth_level)
+        assert_equal(0, @req.auth_age)
+        assert_equal(0, @req.nist_auth_level)
       end
 
       def test_parse_extension_args_nostrict_bogus
