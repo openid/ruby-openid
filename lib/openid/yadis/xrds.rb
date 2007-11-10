@@ -19,6 +19,10 @@ module OpenID
     end
 
     def Yadis::parseXRDS(text)
+      if text.nil?
+        raise XRDSError.new("Not an XRDS document.")
+      end
+
       d = REXML::Document.new(text)
       if is_xrds?(d)
         return d

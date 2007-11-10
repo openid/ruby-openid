@@ -5,7 +5,7 @@ require 'openid/yadis/xrds'
 
 module OpenID
   module Yadis
-    def Yadis.getServiceEndpoints(input_url, flt=nil)
+    def Yadis.get_service_endpoints(input_url, flt=nil)
       # Perform the Yadis protocol on the input URL and return an
       # iterable of resulting endpoint objects.
       #
@@ -15,8 +15,8 @@ module OpenID
       # BasicEndpoint objects.
       result = Yadis.discover(input_url)
       begin
-        endpoints = apply_filter(result.normalized_uri,
-                                 result.response_text, flt)
+        endpoints = Yadis.apply_filter(result.normalized_uri,
+                                       result.response_text, flt)
       rescue XRDSError => err
         raise DiscoveryFailure.new(err.to_s, nil)
       end
@@ -28,11 +28,11 @@ module OpenID
       # Generate an iterable of endpoint objects given this input data,
       # presumably from the result of performing the Yadis protocol.
 
-      flt = mk_filter(flt)
-      et = parse_xrds(xrd_data)
+      flt = Yadis.make_filter(flt)
+      et = Yadis.parseXRDS(xrd_data)
 
       endpoints = []
-      iter_services(et).each { |service_element|
+      each_service(et) { |service_element|
         endpoints += flt.get_service_endpoints(normalized_uri, service_element)
       }
 

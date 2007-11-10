@@ -22,11 +22,11 @@ module OpenID
 
   ', REFLAGS, 'u')
 
-  def openid_unescape(s)
+  def OpenID.openid_unescape(s)
     s.gsub('&amp;','&').gsub('&lt;','<').gsub('&gt;','>').gsub('&quot;','"')
   end
 
-  def unescape_hash(h)
+  def OpenID.unescape_hash(h)
     newh = {}
     h.map{|k,v|
       newh[k]=openid_unescape(v)
@@ -87,11 +87,11 @@ module OpenID
     rels.each { |rel|
       rel = rel.downcase
       if rel == target_rel
-        return 1
+        return true
       end
     }
 
-    return 0
+    return false
   end
 
   def OpenID.link_has_rel(link_attrs, target_rel)
@@ -111,7 +111,7 @@ module OpenID
     result = []
 
     link_attrs_list.each { |item|
-      if matchesTarget(item)
+      if matchesTarget.call(item)
         result << item
       end
     }
@@ -125,7 +125,7 @@ module OpenID
 
     # XXX: TESTME
     matches = find_links_rel(link_attrs_list, target_rel)
-    if !matches
+    if !matches or matches.empty?
       return nil
     end
 

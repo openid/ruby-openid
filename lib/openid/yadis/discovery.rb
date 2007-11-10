@@ -8,7 +8,7 @@ module OpenID
   module Yadis
 
     class DiscoveryFailure < StandardError
-      attr_accessor :identity_url
+      attr_accessor :identity_url, :http_response
 
       # Raised when a YADIS protocol error occurs in the discovery
       # process
@@ -72,7 +72,7 @@ module OpenID
       # @raises DiscoveryFailure: When the HTTP response does not have
       # a 200 code.
       result = DiscoveryResult.new(uri)
-      resp = OpenID.fetch(uri, {'Accept' => YADIS_ACCEPT_HEADER})
+      resp = OpenID.fetch(uri, nil, {'Accept' => YADIS_ACCEPT_HEADER})
       if resp.code != 200
         raise DiscoveryFailure.new(
                 "HTTP Response status from identity URL host is not 200. " +
