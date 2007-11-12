@@ -553,82 +553,101 @@ module OpenID
       assert_equal(endpoint.get_local_id, Yadis::XRI.make_xri("=!1000"))
     end
   end
+
+  class TestXRIDiscoveryIDP < BaseTestDiscovery
+    include TestDataMixin
+
+    def initialize(*args)
+      super(*args)
+
+      @fetcher_class = MockFetcherForXRIProxy
+
+      @documents = {'=smoker' => ['application/xrds+xml',
+                                  read_data_file('test_discover/yadis_2entries_idp.xml', false)] }
+    end
+
+    def test_xri
+      user_xri, services = OpenID.discover_xri('=smoker')
+      assert(!services.empty?, "Expected services, got zero")
+      assert_equal(services[0].server_url,
+                   "http://www.livejournal.com/openid/server.bml")
+    end
+  end
+
+  class TestPreferredNamespace < Test::Unit::TestCase
+    def initialize(*args)
+      super(*args)
+
+      @cases = [
+               [OPENID1_NS, []],
+               [OPENID1_NS, ['http://jyte.com/']],
+               [OPENID1_NS, [OPENID_1_0_TYPE]],
+               [OPENID1_NS, [OPENID_1_1_TYPE]],
+               [OPENID2_NS, [OPENID_2_0_TYPE]],
+               [OPENID2_NS, [OPENID_IDP_2_0_TYPE]],
+               [OPENID2_NS, [OPENID_2_0_TYPE,
+                             OPENID_1_0_TYPE]],
+               [OPENID2_NS, [OPENID_1_0_TYPE,
+                             OPENID_2_0_TYPE]],
+              ]
+    end
+
+    def test_preferred_namespace
+
+      @cases.each { |expected_ns, type_uris|
+        endpoint = OpenIDServiceEndpoint.new()
+        endpoint.type_uris = type_uris
+        actual_ns = endpoint.preferred_namespace()
+        assert_equal(actual_ns, expected_ns)
+      }
+    end
+  end
+
+  class TestIsOPIdentifier < Test::Unit::TestCase
+    def setup
+      @endpoint = OpenIDServiceEndpoint.new()
+    end
+
+    def test_none
+      assert(!@endpoint.is_op_identifier())
+    end
+
+    def test_openid1_0
+      @endpoint.type_uris = [OPENID_1_0_TYPE]
+      assert(!@endpoint.is_op_identifier())
+    end
+
+    def test_openid1_1
+      @endpoint.type_uris = [OPENID_1_1_TYPE]
+      assert(!@endpoint.is_op_identifier())
+    end
+
+    def test_openid2
+      @endpoint.type_uris = [OPENID_2_0_TYPE]
+      assert(!@endpoint.is_op_identifier())
+    end
+
+    def test_openid2OP
+      @endpoint.type_uris = [OPENID_IDP_2_0_TYPE]
+      assert(@endpoint.is_op_identifier())
+    end
+
+    def test_multipleMissing
+      @endpoint.type_uris = [OPENID_2_0_TYPE,
+                             OPENID_1_0_TYPE]
+      assert(!@endpoint.is_op_identifier())
+    end
+
+    def test_multiplePresent
+      @endpoint.type_uris = [OPENID_2_0_TYPE,
+                             OPENID_1_0_TYPE,
+                             OPENID_IDP_2_0_TYPE]
+      assert(@endpoint.is_op_identifier())
+    end
+  end
 end
 
 =begin
-
-class TestXRIDiscoveryIDP(BaseTestDiscovery):
-    fetcherClass = MockFetcherForXRIProxy
-
-    documents = {'=smoker': ('application/xrds+xml',
-                             readDataFile('yadis_2entries_idp.xml')) }
-
-    def test_xri(self):
-        user_xri, services = discover.discoverXRI('=smoker')
-        assert(services, "Expected services, got zero")
-        assert_equal(services[0].server_url,
-                             "http://www.livejournal.com/openid/server.bml")
-
-
-class TestPreferredNamespace(datadriven.DataDrivenTestCase):
-    def __init__(self, expected_ns, type_uris):
-        datadriven.DataDrivenTestCase.__init__(
-            self, 'Expecting %s from %s' % (expected_ns, type_uris))
-        self.expected_ns = expected_ns
-        self.type_uris = type_uris
-
-    def runOneTest(self):
-        endpoint = discover.OpenIDServiceEndpoint()
-        endpoint.type_uris = self.type_uris
-        actual_ns = endpoint.preferredNamespace()
-        assert_equal(actual_ns, self.expected_ns)
-
-    cases = [
-        (message.OPENID1_NS, []),
-        (message.OPENID1_NS, ['http://jyte.com/']),
-        (message.OPENID1_NS, [discover.OPENID_1_0_TYPE]),
-        (message.OPENID1_NS, [discover.OPENID_1_1_TYPE]),
-        (message.OPENID2_NS, [discover.OPENID_2_0_TYPE]),
-        (message.OPENID2_NS, [discover.OPENID_IDP_2_0_TYPE]),
-        (message.OPENID2_NS, [discover.OPENID_2_0_TYPE,
-                              discover.OPENID_1_0_TYPE]),
-        (message.OPENID2_NS, [discover.OPENID_1_0_TYPE,
-                              discover.OPENID_2_0_TYPE]),
-        ]
-
-class TestIsOPIdentifier(unittest.TestCase):
-    def setUp(self):
-        self.endpoint = discover.OpenIDServiceEndpoint()
-
-    def test_none(self):
-        assert(!self.endpoint.isOPIdentifier())
-
-    def test_openid1_0(self):
-        self.endpoint.type_uris = [discover.OPENID_1_0_TYPE]
-        assert(!self.endpoint.isOPIdentifier())
-
-    def test_openid1_1(self):
-        self.endpoint.type_uris = [discover.OPENID_1_1_TYPE]
-        assert(!self.endpoint.isOPIdentifier())
-
-    def test_openid2(self):
-        self.endpoint.type_uris = [discover.OPENID_2_0_TYPE]
-        assert(!self.endpoint.isOPIdentifier())
-
-    def test_openid2OP(self):
-        self.endpoint.type_uris = [discover.OPENID_IDP_2_0_TYPE]
-        assert(self.endpoint.isOPIdentifier())
-
-    def test_multipleMissing(self):
-        self.endpoint.type_uris = [discover.OPENID_2_0_TYPE,
-                                   discover.OPENID_1_0_TYPE]
-        assert(!self.endpoint.isOPIdentifier())
-
-    def test_multiplePresent(self):
-        self.endpoint.type_uris = [discover.OPENID_2_0_TYPE,
-                                   discover.OPENID_1_0_TYPE,
-                                   discover.OPENID_IDP_2_0_TYPE]
-        assert(self.endpoint.isOPIdentifier())
 
 class TestFromOPEndpointURL(unittest.TestCase):
     def setUp(self):
