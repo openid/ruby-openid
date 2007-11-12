@@ -7,6 +7,71 @@ module OpenID
     XRD_NS_2_0 = 'xri://$xrd*($v*2.0)'
     XRDS_NS = 'xri://$xrds'
 
+    class XRDSError < StandardError; end
+
+    # Raised when there's an assertion in the XRDS that it does not
+    # have the authority to make.
+    class XRDSFraud < XRDSError
+    end
+
+    def Yadis::get_canonical_id(iname, xrd_tree)
+      # Return the CanonicalID from this XRDS document.
+      #
+      # @param iname: the XRI being resolved.
+      # @type iname: unicode
+      #
+      # @param xrd_tree: The XRDS output from the resolver.
+      #
+      # @returns: The XRI CanonicalID or None.
+      # @returntype: unicode or None
+
+      xrd_list = []
+      xrd_tree.root.each_element('/#{ROOT_TAG.name}/XRD') { |el|
+        xrd_list << el
+      }
+
+      xrd_list.reverse!
+
+      cid_elements = []
+      xrd_list[0].each_element() { |e|
+        if e.name == CANONICALID_TAG.name and e.namespace == CANONICALID_TAG.namespace
+          cid_elements << e
+        end
+      }
+      cid_element = cid_elements[-1]
+
+      if !cid_element
+        return nil
+      end
+
+      canonicalID = XRI.make_xri(cid_element.text)
+
+      childID = canonicalID
+
+      xrd_list[1..-1].each { |xrd|
+        parent_sought = childID[0...childID.rindex('!')]
+
+        parent_list = []
+        xrd.elements.each_element(CANONICALID_TAG) { |c|
+          XRI.make_xri(c.text)
+        }
+
+        if !parent_list.member?(parent_sought)
+          raise XRDSFraud.new(sprintf("%s can not come from any of %s", parent_sought,
+                                      parent_list))
+        end
+
+        childID = parent_sought
+      }
+
+      root = XRI.root_authority(iname)
+      if not XRI.provider_is_authoritative(root, childID)
+        raise XRDSFraud.new(sprintf("%s can not come from root %s", childID, root))
+      end
+
+      return canonicalID
+    end
+
     def Yadis::mkXRDSTag(name)
       e = REXML::Element.new('xrds:' + name)
       e.add_namespace('xrds', XRDS_NS)
