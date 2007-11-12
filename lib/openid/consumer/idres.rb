@@ -5,7 +5,8 @@ require "openid/kvpost"
 module OpenID
   class Consumer
     class IdResHandler
-      attr_accessor :openid1_nonce_query_arg_name
+      attr_accessor(:openid1_nonce_query_arg_name,
+                    :openid1_return_to_identifier_name)
 
       def initialize(message, return_to, store=nil, endpoint=nil)
         @store = store # Fer the nonce and invalidate_handle
@@ -14,6 +15,7 @@ module OpenID
         @return_to = return_to
         @signed_list = nil
         @openid1_nonce_query_arg_name = 'rp_nonce'
+        @openid1_return_to_identifier_name = 'openid1_claimed_id'
       end
 
       def id_res
@@ -246,6 +248,205 @@ module OpenID
           raise ProtocolError, ("Nonce already used or out of range: "\
                                "#{nonce.inspect}")
         end
+      end
+
+      def verify_discovery_results
+        case openid_namespace
+        when OPENID1_NS
+          verify_discovery_results_openid1
+        when OPENID2_NS
+          verify_discovery_results_openid2
+        else
+          raise StandardError, "Not reached: #{openid_namespace}"
+        end
+      end
+
+      def verify_discovery_results_openid2
+        to_match = XXXOpenIDServiceEndpoint.new
+        to_match.type_uris = [OPENID_2_0_TYPE]
+        to_match.claimed_id = fetch('claimed_id', nil)
+        to_match.local_id = fetch('identity', nil)
+        to_match.server_url = fetch('op_endpoint')
+
+        if to_match.claimed_id.nil? && !to_match.local_id.nil?
+          raise ProtocoError, ('openid.identity is present without '\
+                               'openid.claimed_id')
+        elsif !to_match.claimed_id.nil? && to_match.local_id.nil?
+          raise ProtocoError, ('openid.claimed_id is present without '\
+                               'openid.identity')
+
+        # This is a response without identifiers, so there's really no
+        # checking that we can do, so return an endpoint that's for
+        # the specified `openid.op_endpoint'
+        elsif to_match.claimed_id.nil?
+          @endpoint =
+            OpenIDServiceEndpoint.from_op_endpoint_url(to_match.server_url)
+        end
+
+        if @endpoint.nil?
+          Util.log('No pre-discovered information supplied')
+          discover_and_verify(to_match)
+        else
+          begin
+            verify_discovery_single(@endpoint)
+          rescue ProtocolError => why
+            Util.log("Error attempting to use stored discovery "\
+                     "information: #{why.message}")
+            Util.log("Attempting discovery to verify endpoint")
+            discover_and_verify(to_match)
+          end
+        end
+
+        if @endpoint.claimed_id != to_match.claimed_id
+          @endpoint = @endpoint.dup
+          @endpoint.claimed_id = to_match.claimed_id
+        end
+      end
+
+      def verify_discovery_results_openid1
+        claimed_id = @message.get_arg(BARE_NS,
+                                      openid1_return_to_identifier_name)
+
+        if claimed_id.nil?
+          if @endpoint.nil?
+            raise StandardError, ("When using OpenID 1, the claimed ID must "\
+                                  "be supplied, either by passing it through "\
+                                  "as a return_to parameter or by using a "\
+                                  "session, and supplied to the IdResHandler "\
+                                  "when it is constructed.")
+          else
+            claimed_id = @endpoint.claimed_id
+          end
+        end
+
+        to_match = OpenIDServiceEndpoint.new
+        to_match.type_uris = [OPENID_1_1_TYPE]
+        to_match.local_id = fetch('identity')
+        # Restore delegate information from the initiation phase
+        to_match.claimed_id = claimed_id
+
+        if to_match.local_id.nil?
+            raise ProtocolError, 'Missing required field "openid.identity"'
+        end
+
+        to_match_1_0 = to_match.dup
+        to_match_1_0.type_uris = [OPENID_1_0_TYPE]
+
+        if !@endpoint.nil?
+          begin
+            begin
+              verify_discovery_single(to_match)
+            rescue TypeURIMismatch
+              verify_discovery_single(to_match_1_0)
+            end
+          rescue ProtocolError => why
+            Util.log('Error attempting to use stored discovery information: ' +
+                     why.message)
+            Util.log('Attempting discovery to verify endpoint')
+          else
+            return @endpoint
+          end
+        end
+
+        # Either no endpoint was supplied or OpenID 1.x verification
+        # of the information that's in the message failed on that
+        # endpoint.
+        begin
+          discover_and_verify(to_match)
+        rescue TypeURIMismatch
+          discover_and_verify(to_match_1_0)
+        end
+      end
+
+      def verify_discovery_single(to_match)
+        # Every type URI that's in the to_match endpoint has to be
+        # present in the discovered endpoint.
+        for type_uri in to_match.type_uris
+          if !@endpoint.uses_extension(type_uri)
+            raise TypeURIMismatch(type_uri, @endpoint)
+          end
+        end
+
+        # Fragments do not influence discovery, so we can't compare a
+        # claimed identifier with a fragment to discovered information.
+        defragged_claimed_id = claimed_id.dup
+        defragged_claimed_id.fragment = nil
+
+        if defragged_claimed_id != endpoint.claimed_id
+          raise ProtocolError, ("Claimed ID does not match (different "\
+                                "subjects!), Expected "\
+                                "#{defragged_claimed_id}, got "\
+                                "#{@endpoint.claimed_id}")
+        end
+
+        if to_match.get_local_id != endpoint.get_local_id
+          raise ProtocolError, ("local_id mismatch. Expected "\
+                                "#{to_match.get_local_id}, got "\
+                                "#{@endpoint.get_local_id}")
+        end
+
+        # If the server URL is nil, this must be an OpenID 1
+        # response, because op_endpoint is a required parameter in
+        # OpenID 2. In that case, we don't actually care what the
+        # discovered server_url is, because signature checking or
+        # check_auth should take care of that check for us.
+        if to_match.server_url.nil?
+          if to_match.preferred_namespace == OPENID1_NS
+            raise StandardError,
+            "The code calling this must ensure that OpenID 2"\
+            "responses have a non-none `openid.op_endpoint' and"\
+            "that it is set as the `server_url' attribute of the"\
+            "`to_match' endpoint."
+          end
+        elsif to_match.server_url != @endpoint.server_url
+          raise ProtocolError, ("OP Endpoint mismatch. Expected"\
+                                "#{to_match.server_url}, got "\
+                                "#{@endpoint.server_url}")
+        end
+      end
+
+      # Given an endpoint object created from the information in an
+      # OpenID response, perform discovery and verify the discovery
+      # results, returning the matching endpoint that is the result of
+      # doing that discovery.
+      def discover_and_verify(to_match)
+        Util.log("Performing discovery on #{to_match.claimed_id}")
+        _, services = discover(to_match.claimed_id)
+        if services.length == 0
+          # XXX: this might want to be something other than
+          # ProtcolError. In Python, it's DiscoveryFailure
+          raise ProtcolError("No OpenID information found at "\
+                             "#{to_match.claimed_id}")
+        end
+        verify_discovered_services(services, to_match)
+      end
+
+
+      def verify_discovered_services(services, to_match)
+        # Search the services resulting from discovery to find one
+        # that matches the information from the assertion
+        failure_messages = []
+        for endpoint in services
+          begin
+            verify_discovery_single(endpoint, to_match)
+          rescue ProtocolError => why
+            failure_messages << why.message
+          else
+            # It matches, so discover verification has
+            # succeeded. Return this endpoint.
+            @endpoint = endpoint
+            return
+          end
+        end
+
+        Util.log("Discovery verification failure for #{to_match.claimed_id}")
+        failure_messages.each do |failure_message|
+          Util.log(" * Endpoint mismatch: " + failure_message)
+        end
+
+        # XXX: is DiscoveryFailure in Python OpenID
+        raise ProtocolError("No matching endpoint found after "\
+                            "discovering #{to_match.claimed_id}")
       end
     end
   end
