@@ -699,70 +699,67 @@ module OpenID
       end
     end
   end
+
+  class TestEndpointSupportsType < Test::Unit::TestCase
+    def setup
+      @endpoint = OpenIDServiceEndpoint.new()
+    end
+
+    def failUnlessSupportsOnly(*types)
+      ['foo',
+       OPENID_1_1_TYPE,
+       OPENID_1_0_TYPE,
+       OPENID_2_0_TYPE,
+       OPENID_IDP_2_0_TYPE].each { |t|
+        if types.member?(t)
+          assert(@endpoint.supports_type(t),
+                 sprintf("Must support %s", t))
+        else
+          assert(!@endpoint.supports_type(t),
+                 sprintf("Shouldn't support %s", t))
+        end
+      }
+    end
+
+    def test_supportsNothing
+      failUnlessSupportsOnly()
+    end
+
+    def test_openid2
+      @endpoint.type_uris = [OPENID_2_0_TYPE]
+      failUnlessSupportsOnly(OPENID_2_0_TYPE)
+    end
+
+    def test_openid2provider
+      @endpoint.type_uris = [OPENID_IDP_2_0_TYPE]
+      failUnlessSupportsOnly(OPENID_IDP_2_0_TYPE,
+                             OPENID_2_0_TYPE)
+    end
+
+    def test_openid1_0
+      @endpoint.type_uris = [OPENID_1_0_TYPE]
+      failUnlessSupportsOnly(OPENID_1_0_TYPE)
+    end
+
+    def test_openid1_1
+      @endpoint.type_uris = [OPENID_1_1_TYPE]
+      failUnlessSupportsOnly(OPENID_1_1_TYPE)
+    end
+
+    def test_multiple
+      @endpoint.type_uris = [OPENID_1_1_TYPE,
+                             OPENID_2_0_TYPE]
+      failUnlessSupportsOnly(OPENID_1_1_TYPE,
+                             OPENID_2_0_TYPE)
+    end
+
+    def test_multipleWithProvider
+      @endpoint.type_uris = [OPENID_1_1_TYPE,
+                             OPENID_2_0_TYPE,
+                             OPENID_IDP_2_0_TYPE]
+      failUnlessSupportsOnly(OPENID_1_1_TYPE,
+                             OPENID_2_0_TYPE,
+                             OPENID_IDP_2_0_TYPE)
+    end
+  end
 end
-
-=begin
-
-class TestEndpointSupportsType(unittest.TestCase):
-    def setUp(self):
-        self.endpoint = discover.OpenIDServiceEndpoint()
-
-    def failUnlessSupportsOnly(self, *types):
-        for t in [
-            'foo',
-            discover.OPENID_1_1_TYPE,
-            discover.OPENID_1_0_TYPE,
-            discover.OPENID_2_0_TYPE,
-            discover.OPENID_IDP_2_0_TYPE,
-            ]:
-            if t in types:
-                assert(self.endpoint.supportsType(t),
-                                "Must support %r" % (t,))
-            else:
-                assert(!self.endpoint.supportsType(t),
-                            "Shouldn't support %r" % (t,))
-
-    def test_supportsNothing(self):
-        self.failUnlessSupportsOnly()
-
-    def test_openid2(self):
-        self.endpoint.type_uris = [discover.OPENID_2_0_TYPE]
-        self.failUnlessSupportsOnly(discover.OPENID_2_0_TYPE)
-
-    def test_openid2provider(self):
-        self.endpoint.type_uris = [discover.OPENID_IDP_2_0_TYPE]
-        self.failUnlessSupportsOnly(discover.OPENID_IDP_2_0_TYPE,
-                                    discover.OPENID_2_0_TYPE)
-
-    def test_openid1_0(self):
-        self.endpoint.type_uris = [discover.OPENID_1_0_TYPE]
-        self.failUnlessSupportsOnly(discover.OPENID_1_0_TYPE)
-
-    def test_openid1_1(self):
-        self.endpoint.type_uris = [discover.OPENID_1_1_TYPE]
-        self.failUnlessSupportsOnly(discover.OPENID_1_1_TYPE)
-
-    def test_multiple(self):
-        self.endpoint.type_uris = [discover.OPENID_1_1_TYPE,
-                                   discover.OPENID_2_0_TYPE]
-        self.failUnlessSupportsOnly(discover.OPENID_1_1_TYPE,
-                                    discover.OPENID_2_0_TYPE)
-
-    def test_multipleWithProvider(self):
-        self.endpoint.type_uris = [discover.OPENID_1_1_TYPE,
-                                   discover.OPENID_2_0_TYPE,
-                                   discover.OPENID_IDP_2_0_TYPE]
-        self.failUnlessSupportsOnly(discover.OPENID_1_1_TYPE,
-                                    discover.OPENID_2_0_TYPE,
-                                    discover.OPENID_IDP_2_0_TYPE,
-                                    )
-
-def pyUnitTests():
-    return datadriven.loadTests(__name__)
-
-if __name__ == '__main__':
-    suite = pyUnitTests()
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
-
-=end
