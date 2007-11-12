@@ -457,75 +457,84 @@ module OpenID
       }
     end
   end
+
+  class MockFetcherForXRIProxy
+
+    def initialize(documents, proxy_url=Yadis::XRI::ProxyResolver::DEFAULT_PROXY)
+      @documents = documents
+      @fetchlog = []
+      @proxy_url = nil
+    end
+
+    def fetch(url, body=nil, headers=nil, limit=nil)
+      @fetchlog << [url, body, headers]
+
+      u = URI::parse(url)
+      proxy_host = u.host
+      xri = u.path
+      query = u.query
+
+      if !headers and !query
+        raise ArgumentError.new("No headers or query; you probably didn't " +
+                                "mean to do that.")
+      end
+
+      if xri.starts_with?('/')
+        xri = xri[1..-1]
+      end
+
+      begin
+        ctype, body = @documents.fetch(xri)
+      rescue IndexError
+        status = 404
+        ctype = 'text/plain'
+        body = ''
+      else
+        status = 200
+      end
+
+      return HTTPResponse._from_raw_data(status, body,
+                                         {'content-type' => ctype}, url)
+    end
+  end
 end
 
 =begin
 
-class MockFetcherForXRIProxy(object):
+  class TestXRIDiscovery < BaseTestDiscovery
 
-    def __init__(self, documents, proxy_url=xrires.DEFAULT_PROXY):
-        self.documents = documents
-        self.fetchlog = []
-        self.proxy_url = nil
+    include TestDataMixin
 
+    def initialize(*args)
+      super(*args)
 
-    def fetch(self, url, body=nil, headers=nil):
-        self.fetchlog.append((url, body, headers))
+      @fetcher_class = MockFetcherForXRIProxy
 
-        u = urlsplit(url)
-        proxy_host = u[1]
-        xri = u[2]
-        query = u[3]
+      @documents = {'=smoker' => ['application/xrds+xml',
+                                  read_data_file('test_discover/yadis_2entries_delegate.xml', false)],
+        '=smoker*bad' => ['application/xrds+xml',
+                          read_data_file('test_discover/yadis_another_delegate.xml', false)]}
+    end
 
-        if not headers and not query:
-            raise ValueError("No headers or query; you probably didn't "
-                             "mean to do that.")
+    def test_xri
+      user_xri, services = OpenID.discover_xri('=smoker')
 
-        if xri.startswith('/'):
-            xri = xri[1:]
+      _checkService(services[0],
+                    "http://www.myopenid.com/server",
+                    Yadis::XRI.make_xri("=!1000"),
+                    'http://smoker.myopenid.com/',
+                    Yadis::XRI.make_xri("=!1000"),
+                    ['1.0'],
+                    true)
 
-        try:
-            ctype, body = self.documents[xri]
-        except KeyError:
-            status = 404
-            ctype = 'text/plain'
-            body = ''
-        else:
-            status = 200
-
-        return HTTPResponse(url, status, {'content-type': ctype}, body)
-
-
-class TestXRIDiscovery(BaseTestDiscovery):
-    fetcherClass = MockFetcherForXRIProxy
-
-    documents = {'=smoker': ('application/xrds+xml',
-                             readDataFile('yadis_2entries_delegate.xml')),
-                 '=smoker*bad': ('application/xrds+xml',
-                                 readDataFile('yadis_another_delegate.xml')) }
-
-    def test_xri(self):
-        user_xri, services = discover.discoverXRI('=smoker')
-
-        self._checkService(
-            services[0],
-            used_yadis=True,
-            types=['1.0'],
-            server_url="http://www.myopenid.com/server",
-            claimed_id=XRI("=!1000"),
-            canonical_id=XRI("=!1000"),
-            local_id='http://smoker.myopenid.com/',
-            )
-
-        self._checkService(
-            services[1],
-            used_yadis=True,
-            types=['1.0'],
-            server_url="http://www.livejournal.com/openid/server.bml",
-            claimed_id=XRI("=!1000"),
-            canonical_id=XRI("=!1000"),
-            local_id='http://frank.livejournal.com/',
-            )
+      _checkService(services[1],
+                    "http://www.livejournal.com/openid/server.bml",
+                    Yadis::XRI.make_xri("=!1000"),
+                    'http://frank.livejournal.com/',
+                    Yadis::XRI.make_xri("=!1000"),
+                    ['1.0'],
+                    true)
+    end
 
     def test_xriNoCanonicalID(self):
         user_xri, services = discover.discoverXRI('=smoker*bad')
