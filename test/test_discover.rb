@@ -645,61 +645,63 @@ module OpenID
       assert(@endpoint.is_op_identifier())
     end
   end
+
+  class TestFromOPEndpointURL < Test::Unit::TestCase
+    def setup
+      @op_endpoint_url = 'http://example.com/op/endpoint'
+      @endpoint = OpenIDServiceEndpoint.from_op_endpoint_url(@op_endpoint_url)
+    end
+
+    def test_isOPEndpoint
+      assert(@endpoint.is_op_identifier())
+    end
+
+    def test_noIdentifiers
+      assert_equal(@endpoint.get_local_id, nil)
+      assert_equal(@endpoint.claimed_id, nil)
+    end
+
+    def test_compatibility
+      assert(!@endpoint.compatibility_mode())
+    end
+
+    def test_canonicalID
+      assert_equal(@endpoint.canonicalID, nil)
+    end
+
+    def test_serverURL
+      assert_equal(@endpoint.server_url, @op_endpoint_url)
+    end
+  end
+
+  class TestDiscoverFunction < Test::Unit::TestCase
+    def test_discover_function
+      # XXX these were all different tests in python, but they're
+      # combined here so I only have to use with_method_overridden
+      # once.
+      discoverXRI = Proc.new { |identifier|
+        return 'XRI'
+      }
+
+      discoverURI = Proc.new { |identifier|
+        return 'URI'
+      }
+
+      OpenID.extend(OverrideMethodMixin)
+
+      OpenID.with_method_overridden(:discover_uri, discoverURI) do
+        OpenID.with_method_overridden(:discover_xri, discoverXRI) do
+          assert_equal('URI', OpenID.discover('http://woo!'))
+          assert_equal('URI', OpenID.discover('not a URL or XRI'))
+          assert_equal('XRI', OpenID.discover('xri://=something'))
+          assert_equal('XRI', OpenID.discover('=something'))
+        end
+      end
+    end
+  end
 end
 
 =begin
-
-class TestFromOPEndpointURL(unittest.TestCase):
-    def setUp(self):
-        self.op_endpoint_url = 'http://example.com/op/endpoint'
-        self.endpoint = discover.OpenIDServiceEndpoint.fromOPEndpointURL(
-            self.op_endpoint_url)
-
-    def test_isOPEndpoint(self):
-        assert(self.endpoint.isOPIdentifier())
-
-    def test_noIdentifiers(self):
-        assert_equal(self.endpoint.getLocalID(), nil)
-        assert_equal(self.endpoint.claimed_id, nil)
-
-    def test_compatibility(self):
-        assert(!self.endpoint.compatibilityMode())
-
-    def test_canonicalID(self):
-        assert_equal(self.endpoint.canonicalID, nil)
-
-    def test_serverURL(self):
-        assert_equal(self.endpoint.server_url, self.op_endpoint_url)
-
-class TestDiscoverFunction(unittest.TestCase):
-    def setUp(self):
-        self._old_discoverURI = discover.discoverURI
-        self._old_discoverXRI = discover.discoverXRI
-
-        discover.discoverXRI = self.discoverXRI
-        discover.discoverURI = self.discoverURI
-
-    def tearDown(self):
-        discover.discoverURI = self._old_discoverURI
-        discover.discoverXRI = self._old_discoverXRI
-
-    def discoverXRI(self, identifier):
-        return 'XRI'
-
-    def discoverURI(self, identifier):
-        return 'URI'
-
-    def test_uri(self):
-        assert_equal('URI', discover.discover('http://woo!'))
-
-    def test_uriForBogus(self):
-        assert_equal('URI', discover.discover('not a URL or XRI'))
-
-    def test_xri(self):
-        assert_equal('XRI', discover.discover('xri://=something'))
-
-    def test_xriChar(self):
-        assert_equal('XRI', discover.discover('=something'))
 
 class TestEndpointSupportsType(unittest.TestCase):
     def setUp(self):
