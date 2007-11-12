@@ -391,15 +391,16 @@ module OpenID
     endpoints = []
 
     begin
-      canonicalID, services = ProxyResolver.new().query(
+      canonicalID, services = Yadis::XRI::ProxyResolver.new().query(
             iname, OpenIDServiceEndpoint::OPENID_TYPE_URIS)
 
       if canonicalID.nil?
-        raise XRDSError.new(sprintf('No CanonicalID found for XRI %s', iname))
+        raise Yadis::XRDSError.new(sprintf('No CanonicalID found for XRI %s', iname))
       end
 
-      flt = Yadis.mk_filter(OpenIDServiceEndpoint)
-      services.seach { |service_element|
+      flt = Yadis.make_filter(OpenIDServiceEndpoint)
+
+      services.each { |service_element|
         endpoints.extend(flt.get_service_endpoints(iname, service_element))
       }
     rescue Yadis::XRDSError

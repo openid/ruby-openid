@@ -54,7 +54,7 @@ module OpenID
   @fetcher = nil
 
   def self.fetch(url, body=nil, headers=nil,
-                   redirect_limit=StandardFetcher::REDIRECT_LIMIT)
+                 redirect_limit=StandardFetcher::REDIRECT_LIMIT)
     return fetcher.fetch(url, body, headers, redirect_limit)
   end
 

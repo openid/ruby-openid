@@ -13,7 +13,14 @@ module OpenID
       return e
     end
 
+    def Yadis::mkXRDTag(name)
+      e = REXML::Element.new('xrd:' + name)
+      e.add_namespace('xrd', XRD_NS_2_0)
+      return e
+    end
+
     ROOT_TAG = Yadis::mkXRDSTag('XRDS')
+    CANONICALID_TAG = mkXRDTag('CanonicalID')
 
     class XRDSError < StandardError
     end
@@ -49,6 +56,14 @@ module OpenID
     def Yadis::each_service(xrds_tree, &block)
       xrd = get_yadis_xrd(xrds_tree)
       xrd.each_element('Service', &block)
+    end
+
+    def Yadis::services(xrds_tree)
+      s = []
+      each_service(xrds_tree) { |service|
+        s << service
+      }
+      return s
     end
 
     def Yadis::expand_service(service_element)

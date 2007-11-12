@@ -46,12 +46,17 @@ module OpenID
         def query(xri, service_types)
           # these can be query args or http headers, needn't be both.
           # headers = {'Accept' => 'application/xrds+xml;sep=true'}
+          canonicalID = nil
+
           services = service_types.collect { |service_type|
             url = self.query_url(xri, service_type)
             response = OpenID.fetch(url)
             raise XRIHTTPError, "Could not fetch #{xri}" if response.nil?
-            xrds = XRDS.new(response[1].body)
-            return xrds.services unless xrds.nil?
+
+            xrds = Yadis::parseXRDS(response.body)
+            canonicalID = Yadis::get_canonical_id(xri, xrds)
+
+            Yadis::services(xrds) unless xrds.nil?
           }
           # TODO:
           #  * If we do get hits for multiple service_types, we're almost 
@@ -60,6 +65,8 @@ module OpenID
           services = services.inject([]) { |flatter, some_services|
             flatter << some_services unless some_services.nil?
           }
+
+          return canonicalID, services
         end
       end
 
