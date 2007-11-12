@@ -497,9 +497,6 @@ module OpenID
                                          {'content-type' => ctype}, url)
     end
   end
-end
-
-=begin
 
   class TestXRIDiscovery < BaseTestDiscovery
 
@@ -535,6 +532,10 @@ end
                     ['1.0'],
                     true)
     end
+  end
+end
+
+=begin
 
     def test_xriNoCanonicalID(self):
         user_xri, services = discover.discoverXRI('=smoker*bad')

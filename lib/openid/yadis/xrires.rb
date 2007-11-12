@@ -63,7 +63,7 @@ module OpenID
           #    certainly going to have duplicated service entries and 
           #    broken priority ordering.
           services = services.inject([]) { |flatter, some_services|
-            flatter << some_services unless some_services.nil?
+            flatter += some_services unless some_services.nil?
           }
 
           return canonicalID, services

@@ -1,11 +1,17 @@
 require 'rexml/document'
 require 'rexml/element'
+require 'rexml/xpath'
 
 module OpenID
   module Yadis
 
     XRD_NS_2_0 = 'xri://$xrd*($v*2.0)'
     XRDS_NS = 'xri://$xrds'
+
+    XRDS_NAMESPACES = {
+      'xrds' => XRDS_NS,
+      'xrd' => XRD_NS_2_0,
+    }
 
     class XRDSError < StandardError; end
 
@@ -26,18 +32,25 @@ module OpenID
       # @returntype: unicode or None
 
       xrd_list = []
-      xrd_tree.root.each_element('/#{ROOT_TAG.name}/XRD') { |el|
+      REXML::XPath::match(xrd_tree.root, '/xrds:XRDS/xrd:XRD', XRDS_NAMESPACES).each { |el|
         xrd_list << el
       }
 
       xrd_list.reverse!
 
       cid_elements = []
-      xrd_list[0].each_element() { |e|
-        if e.name == CANONICALID_TAG.name and e.namespace == CANONICALID_TAG.namespace
-          cid_elements << e
-        end
-      }
+
+      if !xrd_list.empty?
+        xrd_list[0].elements.each { |e|
+          if !e.respond_to?('name')
+            next
+          end
+          if e.name == 'CanonicalID'
+            cid_elements << e
+          end
+        }
+      end
+
       cid_element = cid_elements[-1]
 
       if !cid_element

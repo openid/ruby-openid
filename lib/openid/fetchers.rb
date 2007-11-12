@@ -78,6 +78,9 @@ module OpenID
     REDIRECT_LIMIT = 5
 
     def fetch(url, body=nil, headers=nil, redirect_limit=REDIRECT_LIMIT)
+      unparsed_url = url.dup
+      url = URI::parse(url)
+
       headers ||= {}
       headers['User-agent'] ||= USER_AGENT
       httpthing = Net::HTTP.new(url.host, url.port)
@@ -96,14 +99,13 @@ module OpenID
       end
       case response
       when Net::HTTPRedirection
-        redirect_url = URI.parse(response["location"])
         if redirect_limit <= 0
           raise HTTPRedirectLimitReached.new(
-            "Too many redirects, not fetching #{redirect_url}")
+            "Too many redirects, not fetching #{response['location']}")
         end
-        return fetch(redirect_url, body, headers, redirect_limit - 1)
+        return fetch(response['location'], body, headers, redirect_limit - 1)
       else
-        return HTTPResponse._from_net_response(response, url)
+        return HTTPResponse._from_net_response(response, unparsed_url)
       end
     end
   end
