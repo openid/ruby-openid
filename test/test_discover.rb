@@ -1,4 +1,7 @@
 
+require 'testutil'
+require 'util'
+
 require 'test/unit'
 require 'openid/fetchers'
 require 'openid/yadis/discovery'
@@ -501,6 +504,7 @@ module OpenID
   class TestXRIDiscovery < BaseTestDiscovery
 
     include TestDataMixin
+    include TestUtil
 
     def initialize(*args)
       super(*args)
@@ -532,23 +536,26 @@ module OpenID
                     ['1.0'],
                     true)
     end
+
+    def test_xriNoCanonicalID
+      silence_logging {
+        user_xri, services = OpenID.discover_xri('=smoker*bad')
+        assert(services.empty?)
+      }
+    end
+
+    def test_useCanonicalID
+      # When there is no delegate, the CanonicalID should be used with
+      # XRI.
+      endpoint = OpenIDServiceEndpoint.new()
+      endpoint.claimed_id = Yadis::XRI.make_xri("=!1000")
+      endpoint.canonicalID = Yadis::XRI.make_xri("=!1000")
+      assert_equal(endpoint.get_local_id, Yadis::XRI.make_xri("=!1000"))
+    end
   end
 end
 
 =begin
-
-    def test_xriNoCanonicalID(self):
-        user_xri, services = discover.discoverXRI('=smoker*bad')
-        assert(!services)
-
-    def test_useCanonicalID(self):
-        """When there is no delegate, the CanonicalID should be used with XRI.
-        """
-        endpoint = discover.OpenIDServiceEndpoint()
-        endpoint.claimed_id = XRI("=!1000")
-        endpoint.canonicalID = XRI("=!1000")
-        assert_equal(endpoint.getLocalID(), XRI("=!1000"))
-
 
 class TestXRIDiscoveryIDP(BaseTestDiscovery):
     fetcherClass = MockFetcherForXRIProxy
