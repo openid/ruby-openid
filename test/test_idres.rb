@@ -212,21 +212,6 @@ module OpenID
         end
       end
 
-      GOODSIG = '[A Good Signature]'
-
-      class GoodAssoc
-        attr_accessor :handle, :expires_in
-
-        def initialize(handle='-blah-')
-          @handle = handle
-          @expires_in = 3600
-        end
-
-        def check_message_signature(msg)
-          msg.get_arg(OPENID_NS, 'sig') == GOODSIG
-        end
-      end
-
       class DummyEndpoint
         attr_accessor :server_url
         def initialize(server_url)

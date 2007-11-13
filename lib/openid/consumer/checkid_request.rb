@@ -22,7 +22,7 @@ module OpenID
         @endpoint = endpoint
         @return_to_args = {}
         @message = Message.new(endpoint.preferred_namespace)
-        @anonymous = False
+        @anonymous = false
       end
 
       attr_reader :anonymous
