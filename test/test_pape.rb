@@ -3,6 +3,7 @@ require 'openid/message'
 require 'openid/server/server'
 
 module OpenID
+  module PAPETest
     class PapeRequestTestCase < Test::Unit::TestCase
       def setup
         @req = PAPE::Request.new
@@ -72,13 +73,13 @@ module OpenID
       def test_preferred_types
         @req.add_policy_uri(PAPE::AUTH_PHISHING_RESISTANT)
         @req.add_policy_uri(PAPE::AUTH_MULTI_FACTOR)
-        pt = @req.preferred_types([PAPE::AUTH_MULTI_FACTOR, 
+        pt = @req.preferred_types([PAPE::AUTH_MULTI_FACTOR,
                                    PAPE::AUTH_MULTI_FACTOR_PHYSICAL])
         assert_equal([PAPE::AUTH_MULTI_FACTOR], pt)
       end
     end
 
-    class DummySuccessResponse < Object
+    class DummySuccessResponse
       attr_accessor :message
 
       def initialize(message, signed_stuff)
@@ -219,6 +220,6 @@ module OpenID
         assert_equal([PAPE::AUTH_MULTI_FACTOR, PAPE::AUTH_PHISHING_RESISTANT], req.auth_policies)
         assert_equal(5476, req.auth_age)
       end
-
     end
+  end
 end
