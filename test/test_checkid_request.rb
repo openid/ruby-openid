@@ -254,20 +254,26 @@ module OpenID
                        msg.get_arg(OPENID1_NS, 'identity'))
         end
       end
+
+      class TestCheckIDRequestOpenID1Immediate < TestCheckIDRequestOpenID1
+        def immediate
+          true
+        end
+
+        def expected_mode
+          'checkid_immediate'
+        end
+      end
+
+      class TestCheckid_RequestOpenID2Immediate < TestCheckIDRequestOpenID2
+        def immediate
+          true
+        end
+
+        def expected_mode
+          'checkid_immediate'
+        end
+      end
     end
   end
 end
-
-
-
-
-# class TestCheckid_RequestOpenID1Immediate(TestCheckid_RequestOpenID1):
-#     immediate = True
-#     expected_mode = 'checkid_immediate'
-
-# class TestCheckid_RequestOpenID2Immediate(TestCheckid_RequestOpenID2):
-#     immediate = True
-#     expected_mode = 'checkid_immediate'
-
-# if __name__ == '__main__':
-#     unittest.main()
