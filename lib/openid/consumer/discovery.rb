@@ -88,7 +88,7 @@ module OpenID
       @type_uris = type_uris
       @server_url = uri
       @used_yadis = true
-      
+
       if !is_op_identifier()
         # XXX: This has crappy implications for Service elements that
         # contain both 'server' and 'signon' Types.  But that's a
