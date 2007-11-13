@@ -9,6 +9,7 @@ include WEBrick
 # load the openid library, first trying rubygems
 begin
   require "openid"
+  require "openid/fetchers"
 rescue LoadError
   require "rubygems"
   require_gem "ruby-openid"
@@ -76,7 +77,13 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     end    
 
     # Then ask the openid library to begin the authorization
-    request = $consumer.begin(openid_url)
+    begin
+      request = $consumer.begin(openid_url)
+    rescue OpenID::SSLFetchingError => why
+      self.render("Unable to fetch <q>#{openid_url}</q> due to an SSL error: #{why}",
+                  css_class="error", form_contents=openid_url)
+      return HTTPStatus::Success
+    end
    
     # If the URL was unusable (either because of network conditions,
     # a server error, or that the response returned was not an OpenID
