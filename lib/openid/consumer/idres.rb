@@ -1,12 +1,24 @@
 require "openid/message"
 require "openid/protocolerror"
 require "openid/kvpost"
+require "openid/consumer/discovery"
 
 module OpenID
+  class TypeURIMismatch < ProtocolError
+    attr_reader :type_uri, :endpoint
+
+    def initialize(type_uri, endpoint)
+      @type_uri = type_uri
+      @endpoint = endpoint
+    end
+  end
+
   class Consumer
     class IdResHandler
-      attr_accessor(:openid1_nonce_query_arg_name,
-                    :openid1_return_to_identifier_name)
+      attr_accessor :openid1_nonce_query_arg_name,
+                    :openid1_return_to_identifier_name
+
+      attr_reader :endpoint, :message
 
       def initialize(message, return_to, store=nil, endpoint=nil)
         @store = store # Fer the nonce and invalidate_handle
@@ -16,20 +28,28 @@ module OpenID
         @signed_list = nil
         @openid1_nonce_query_arg_name = 'rp_nonce'
         @openid1_return_to_identifier_name = 'openid1_claimed_id'
+
+        # Start the verification process
+        id_res
       end
 
+      def signed_fields
+        signed_list.map {|x| 'openid.' + x}
+      end
+
+      protected
+
+      # This method will raise ProtocolError unless the request is a
+      # valid id_res response. Once it has been verified, the methods
+      # 'endpoint', 'message', and 'signed_fields' contain the
+      # verified information.
       def id_res
         check_for_fields
         verify_return_to
         verify_discovery_results
         check_signature
         check_nonce
-
-        signed_fields = signed_list.map {|x| 'openid.' + x}
-        SuccessResponse(@endpoint, @message, signed_fields)
       end
-
-      protected
 
       def server_url
         @endpoint.nil? ? nil : @endpoint.server_url
@@ -251,29 +271,33 @@ module OpenID
       end
 
       def verify_discovery_results
-        case openid_namespace
-        when OPENID1_NS
-          verify_discovery_results_openid1
-        when OPENID2_NS
-          verify_discovery_results_openid2
-        else
-          raise StandardError, "Not reached: #{openid_namespace}"
+        begin
+          case openid_namespace
+          when OPENID1_NS
+            verify_discovery_results_openid1
+          when OPENID2_NS
+            verify_discovery_results_openid2
+          else
+            raise StandardError, "Not reached: #{openid_namespace}"
+          end
+        rescue Message::KeyNotFound => why
+          raise ProtocolError, "Missing required field: #{why.message}"
         end
       end
 
       def verify_discovery_results_openid2
-        to_match = XXXOpenIDServiceEndpoint.new
+        to_match = OpenIDServiceEndpoint.new
         to_match.type_uris = [OPENID_2_0_TYPE]
         to_match.claimed_id = fetch('claimed_id', nil)
         to_match.local_id = fetch('identity', nil)
         to_match.server_url = fetch('op_endpoint')
 
         if to_match.claimed_id.nil? && !to_match.local_id.nil?
-          raise ProtocoError, ('openid.identity is present without '\
-                               'openid.claimed_id')
+          raise ProtocolError, ('openid.identity is present without '\
+                                'openid.claimed_id')
         elsif !to_match.claimed_id.nil? && to_match.local_id.nil?
-          raise ProtocoError, ('openid.claimed_id is present without '\
-                               'openid.identity')
+          raise ProtocolError, ('openid.claimed_id is present without '\
+                                'openid.identity')
 
         # This is a response without identifiers, so there's really no
         # checking that we can do, so return an endpoint that's for
@@ -281,6 +305,7 @@ module OpenID
         elsif to_match.claimed_id.nil?
           @endpoint =
             OpenIDServiceEndpoint.from_op_endpoint_url(to_match.server_url)
+          return
         end
 
         if @endpoint.nil?
@@ -288,7 +313,7 @@ module OpenID
           discover_and_verify(to_match)
         else
           begin
-            verify_discovery_single(@endpoint)
+            verify_discovery_single(@endpoint, to_match)
           rescue ProtocolError => why
             Util.log("Error attempting to use stored discovery "\
                      "information: #{why.message}")
@@ -325,19 +350,15 @@ module OpenID
         # Restore delegate information from the initiation phase
         to_match.claimed_id = claimed_id
 
-        if to_match.local_id.nil?
-            raise ProtocolError, 'Missing required field "openid.identity"'
-        end
-
         to_match_1_0 = to_match.dup
         to_match_1_0.type_uris = [OPENID_1_0_TYPE]
 
         if !@endpoint.nil?
           begin
             begin
-              verify_discovery_single(to_match)
+              verify_discovery_single(@endpoint, to_match)
             rescue TypeURIMismatch
-              verify_discovery_single(to_match_1_0)
+              verify_discovery_single(@endpoint, to_match_1_0)
             end
           rescue ProtocolError => why
             Util.log('Error attempting to use stored discovery information: ' +
@@ -358,64 +379,17 @@ module OpenID
         end
       end
 
-      def verify_discovery_single(to_match)
-        # Every type URI that's in the to_match endpoint has to be
-        # present in the discovered endpoint.
-        for type_uri in to_match.type_uris
-          if !@endpoint.uses_extension(type_uri)
-            raise TypeURIMismatch(type_uri, @endpoint)
-          end
-        end
-
-        # Fragments do not influence discovery, so we can't compare a
-        # claimed identifier with a fragment to discovered information.
-        defragged_claimed_id = claimed_id.dup
-        defragged_claimed_id.fragment = nil
-
-        if defragged_claimed_id != endpoint.claimed_id
-          raise ProtocolError, ("Claimed ID does not match (different "\
-                                "subjects!), Expected "\
-                                "#{defragged_claimed_id}, got "\
-                                "#{@endpoint.claimed_id}")
-        end
-
-        if to_match.get_local_id != endpoint.get_local_id
-          raise ProtocolError, ("local_id mismatch. Expected "\
-                                "#{to_match.get_local_id}, got "\
-                                "#{@endpoint.get_local_id}")
-        end
-
-        # If the server URL is nil, this must be an OpenID 1
-        # response, because op_endpoint is a required parameter in
-        # OpenID 2. In that case, we don't actually care what the
-        # discovered server_url is, because signature checking or
-        # check_auth should take care of that check for us.
-        if to_match.server_url.nil?
-          if to_match.preferred_namespace == OPENID1_NS
-            raise StandardError,
-            "The code calling this must ensure that OpenID 2"\
-            "responses have a non-none `openid.op_endpoint' and"\
-            "that it is set as the `server_url' attribute of the"\
-            "`to_match' endpoint."
-          end
-        elsif to_match.server_url != @endpoint.server_url
-          raise ProtocolError, ("OP Endpoint mismatch. Expected"\
-                                "#{to_match.server_url}, got "\
-                                "#{@endpoint.server_url}")
-        end
-      end
-
       # Given an endpoint object created from the information in an
       # OpenID response, perform discovery and verify the discovery
       # results, returning the matching endpoint that is the result of
       # doing that discovery.
       def discover_and_verify(to_match)
         Util.log("Performing discovery on #{to_match.claimed_id}")
-        _, services = discover(to_match.claimed_id)
+        _, services = OpenID.discover(to_match.claimed_id)
         if services.length == 0
           # XXX: this might want to be something other than
-          # ProtcolError. In Python, it's DiscoveryFailure
-          raise ProtcolError("No OpenID information found at "\
+          # ProtocolError. In Python, it's DiscoveryFailure
+          raise ProtocolError("No OpenID information found at "\
                              "#{to_match.claimed_id}")
         end
         verify_discovered_services(services, to_match)
@@ -448,6 +422,63 @@ module OpenID
         raise ProtocolError("No matching endpoint found after "\
                             "discovering #{to_match.claimed_id}")
       end
+
+      def verify_discovery_single(endpoint, to_match)
+        # Every type URI that's in the to_match endpoint has to be
+        # present in the discovered endpoint.
+        for type_uri in to_match.type_uris
+          if !endpoint.uses_extension(type_uri)
+            raise TypeURIMismatch.new(type_uri, endpoint)
+          end
+        end
+
+        # Fragments do not influence discovery, so we can't compare a
+        # claimed identifier with a fragment to discovered information.
+        defragged_claimed_id =
+          case Yadis::XRI.identifier_scheme(endpoint.claimed_id)
+          when :xri
+            endpoint.claimed_id
+          when :uri
+            parsed = URI.parse(endpoint.claimed_id)
+            parsed.fragment = nil
+            parsed.to_s
+          else
+            raise StandardError, 'Not reached'
+          end
+
+        if defragged_claimed_id != endpoint.claimed_id
+          raise ProtocolError, ("Claimed ID does not match (different "\
+                                "subjects!), Expected "\
+                                "#{defragged_claimed_id}, got "\
+                                "#{endpoint.claimed_id}")
+        end
+
+        if to_match.get_local_id != endpoint.get_local_id
+          raise ProtocolError, ("local_id mismatch. Expected "\
+                                "#{to_match.get_local_id}, got "\
+                                "#{endpoint.get_local_id}")
+        end
+
+        # If the server URL is nil, this must be an OpenID 1
+        # response, because op_endpoint is a required parameter in
+        # OpenID 2. In that case, we don't actually care what the
+        # discovered server_url is, because signature checking or
+        # check_auth should take care of that check for us.
+        if to_match.server_url.nil?
+          if to_match.preferred_namespace != OPENID1_NS
+            raise StandardError,
+            "The code calling this must ensure that OpenID 2 "\
+            "responses have a non-none `openid.op_endpoint' and "\
+            "that it is set as the `server_url' attribute of the "\
+            "`to_match' endpoint."
+          end
+        elsif to_match.server_url != endpoint.server_url
+          raise ProtocolError, ("OP Endpoint mismatch. Expected"\
+                                "#{to_match.server_url}, got "\
+                                "#{endpoint.server_url}")
+        end
+      end
+
     end
   end
 end

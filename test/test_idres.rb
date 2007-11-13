@@ -9,6 +9,15 @@ require "openid/store/nonce"
 module OpenID
   class Consumer
     class IdResHandler
+
+      # Subclass of IdResHandler that doesn't do verification upon
+      # construction. All of the tests call this, except for the ones
+      # explicitly for id_res.
+      class IdResHandler < OpenID::Consumer::IdResHandler
+        def id_res
+        end
+      end
+
       class CheckForFieldsTest < Test::Unit::TestCase
         include ProtocolErrorMixin
 
@@ -540,6 +549,281 @@ module OpenID
           assert_protocol_error('Malformed nonce') {
             call_check_nonce({'rp_nonce' => 'whee!'})
           }
+        end
+      end
+
+      class DiscoveryVerificationTest < Test::Unit::TestCase
+        include ProtocolErrorMixin
+        include TestUtil
+
+        def setup
+          @endpoint = OpenIDServiceEndpoint.new
+        end
+
+        def call_verify(msg_args)
+          call_verify_modify(msg_args){}
+        end
+
+        def call_verify_modify(msg_args)
+          msg = Message.from_openid_args(msg_args)
+          idres = IdResHandler.new(msg, nil, nil, @endpoint)
+          idres.extend(InstanceDefExtension)
+          yield idres
+          idres.send(:verify_discovery_results)
+          idres.instance_variable_get(:@endpoint)
+        end
+
+        def assert_verify_protocol_error(error_prefix, openid_args)
+          assert_protocol_error(error_prefix) {call_verify(openid_args)}
+        end
+
+        def test_openid1_no_local_id
+          @endpoint.claimed_id = 'http://invalid/'
+          assert_verify_protocol_error("Missing required field: "\
+                                       "<#{OPENID1_NS}>identity", {})
+        end
+
+        def test_openid1_no_endpoint
+          @endpoint = nil
+          assert_raises(StandardError) {
+            call_verify({'identity' => 'snakes on a plane'})
+          }
+        end
+
+        def test_openid2_no_op_endpoint
+          assert_protocol_error("Missing required field: "\
+                                "<#{OPENID2_NS}>op_endpoint") {
+            call_verify({'ns'=>OPENID2_NS})
+          }
+        end
+
+        def test_openid2_local_id_no_claimed
+          assert_verify_protocol_error('openid.identity is present without',
+                                       {'ns' => OPENID2_NS,
+                                         'op_endpoint' => 'Phone Home',
+                                         'identity' => 'Jorge Lius Borges'})
+        end
+
+        def test_openid2_no_local_id_claimed
+          assert_log_matches() {
+            assert_protocol_error('openid.claimed_id is present without') {
+              call_verify({'ns' => OPENID2_NS,
+                            'op_endpoint' => 'Phone Home',
+                            'claimed_id' => 'Manuel Noriega'})
+            }
+          }
+        end
+
+        def test_openid2_no_identifiers
+          op_endpoint = 'Phone Home'
+          result_endpoint = assert_log_matches() {
+            call_verify({'ns' => OPENID2_NS,
+                          'op_endpoint' => op_endpoint})
+          }
+          assert(result_endpoint.is_op_identifier)
+          assert_equal(op_endpoint, result_endpoint.server_url)
+          assert(result_endpoint.claimed_id.nil?)
+        end
+
+        def test_openid2_no_endpoint_does_disco
+          endpoint = OpenIDServiceEndpoint.new
+          endpoint.claimed_id = 'monkeysoft'
+          @endpoint = nil
+          result = assert_log_matches('No pre-discovered') {
+            call_verify_modify({'ns' => OPENID2_NS,
+                                 'identity' => 'sour grapes',
+                                 'claimed_id' => 'monkeysoft',
+                                 'op_endpoint' => 'Phone Home'}) do |idres|
+              idres.instance_def(:discover_and_verify) {@endpoint = endpoint}
+            end
+          }
+          assert(endpoint.equal?(result))
+        end
+
+
+        def test_openid2_mismatched_does_disco
+          @endpoint.claimed_id = 'nothing special, but different'
+          @endpoint.local_id = 'green cheese'
+
+          endpoint = OpenIDServiceEndpoint.new
+          endpoint.claimed_id = 'monkeysoft'
+
+          result = assert_log_matches('Error attempting to use stored',
+                             'Attempting discovery') {
+            call_verify_modify({'ns' => OPENID2_NS,
+                                 'identity' => 'sour grapes',
+                                 'claimed_id' => 'monkeysoft',
+                                 'op_endpoint' => 'Green Cheese'}) do |idres|
+                        idres.extend(InstanceDefExtension)
+              idres.instance_def(:discover_and_verify) {@endpoint = endpoint}
+            end
+          }
+          assert(endpoint.equal?(result))
+        end
+
+        def test_openid2_use_pre_discovered
+          @endpoint.local_id = 'my identity'
+          @endpoint.claimed_id = 'http://i-am-sam/'
+          @endpoint.server_url = 'Phone Home'
+          @endpoint.type_uris = [OPENID_2_0_TYPE]
+
+          result = assert_log_matches() {
+            call_verify({'ns' => OPENID2_NS,
+                          'identity' => @endpoint.local_id,
+                          'claimed_id' => @endpoint.claimed_id,
+                          'op_endpoint' => @endpoint.server_url
+                        })
+          }
+          assert(result.equal?(@endpoint))
+        end
+
+        def test_openid2_use_pre_discovered_wrong_type
+          text = "verify failed"
+          me = self
+
+          @endpoint.local_id = 'my identity'
+          @endpoint.claimed_id = 'i am sam'
+          @endpoint.server_url = 'Phone Home'
+          @endpoint.type_uris = [OPENID_1_1_TYPE]
+          endpoint = @endpoint
+
+          msg = Message.from_openid_args({'ns' => OPENID2_NS,
+                                           'identity' => @endpoint.local_id,
+                                           'claimed_id' =>
+                                           @endpoint.claimed_id,
+                                           'op_endpoint' =>
+                                           @endpoint.server_url})
+
+          idres = IdResHandler.new(msg, nil, nil, @endpoint)
+          idres.extend(InstanceDefExtension)
+          idres.instance_def(:discover_and_verify) { |to_match|
+            me.assert_equal(endpoint.claimed_id, to_match.claimed_id)
+            raise ProtocolError, text
+          }
+          assert_log_matches('Error attempting to use stored',
+                             'Attempting discovery') {
+            assert_protocol_error(text) {
+              idres.send(:verify_discovery_results)
+            }
+          }
+        end
+
+
+        def test_openid1_use_pre_discovered
+          @endpoint.local_id = 'my identity'
+          @endpoint.claimed_id = 'http://i-am-sam/'
+          @endpoint.server_url = 'Phone Home'
+          @endpoint.type_uris = [OPENID_1_1_TYPE]
+
+          result = assert_log_matches() {
+            call_verify({'ns' => OPENID1_NS,
+                          'identity' => @endpoint.local_id})
+          }
+          assert(result.equal?(@endpoint))
+        end
+
+
+        def test_openid1_use_pre_discovered_wrong_type
+          verified_error = Class.new(Exception)
+
+          @endpoint.local_id = 'my identity'
+          @endpoint.claimed_id = 'i am sam'
+          @endpoint.server_url = 'Phone Home'
+          @endpoint.type_uris = [OPENID_2_0_TYPE]
+
+          assert_log_matches('Error attempting to use stored',
+                             'Attempting discovery') {
+            assert_raises(verified_error) {
+              call_verify_modify({'ns' => OPENID1_NS,
+                                   'identity' => @endpoint.local_id}) { |idres|
+                idres.instance_def(:discover_and_verify) do
+                  raise verified_error
+                end
+              }
+            }
+          }
+        end
+
+        def test_openid2_fragment
+          claimed_id = "http://unittest.invalid/"
+          claimed_id_frag = claimed_id + "#fragment"
+
+          @endpoint.local_id = 'my identity'
+          @endpoint.claimed_id = claimed_id
+          @endpoint.server_url = 'Phone Home'
+          @endpoint.type_uris = [OPENID_2_0_TYPE]
+
+          result = assert_log_matches() {
+            call_verify({'ns' => OPENID2_NS,
+                          'identity' => @endpoint.local_id,
+                          'claimed_id' => claimed_id_frag,
+                          'op_endpoint' => @endpoint.server_url})
+          }
+
+          [:local_id, :server_url, :type_uris].each do |sym|
+            assert_equal(@endpoint.send(sym), result.send(sym))
+          end
+          assert_equal(claimed_id_frag, result.claimed_id)
+        end
+
+        def test_endpoint_without_local_id
+          # An endpoint like this with no local_id is generated as a result of
+          # e.g. Yadis discovery with no LocalID tag.
+          @endpoint.server_url = "http://localhost:8000/openidserver"
+          @endpoint.claimed_id = "http://localhost:8000/id/id-jo"
+
+          to_match = OpenIDServiceEndpoint.new
+          to_match.server_url = "http://localhost:8000/openidserver"
+          to_match.claimed_id = "http://localhost:8000/id/id-jo"
+          to_match.local_id = "http://localhost:8000/id/id-jo"
+
+          idres = IdResHandler.new(nil, nil)
+          assert_log_matches() {
+            result = idres.send(:verify_discovery_single, @endpoint, to_match)
+          }
+        end
+      end
+
+      class IdResTopLevelTest < Test::Unit::TestCase
+        def test_id_res
+          endpoint = OpenIDServiceEndpoint.new
+          endpoint.server_url = 'http://invalid/server'
+          endpoint.claimed_id = 'http://my.url/'
+          endpoint.local_id = 'http://invalid/username'
+          endpoint.type_uris = [OPENID_2_0_TYPE]
+
+          assoc = GoodAssoc.new
+          store = MemoryStore.new
+          store.store_association(endpoint.server_url, assoc)
+
+          signed_fields =
+            [
+             'response_nonce',
+             'op_endpoint',
+             'assoc_handle',
+             'identity',
+             'claimed_id',
+             'ns',
+             'return_to',
+            ]
+
+          return_to = 'http://return.to/'
+          args = {
+            'ns' => OPENID2_NS,
+            'return_to' => return_to,
+            'claimed_id' => endpoint.claimed_id,
+            'identity' => endpoint.local_id,
+            'assoc_handle' => assoc.handle,
+            'op_endpoint' => endpoint.server_url,
+            'response_nonce' => Nonce.mk_nonce,
+            'signed' => signed_fields.join(','),
+            'sig' => GOODSIG,
+          }
+          msg = Message.from_openid_args(args)
+          idres = OpenID::Consumer::IdResHandler.new(msg, return_to,
+                                                     store, endpoint)
+          assert_equal(idres.signed_fields,
+                       signed_fields.map {|f|'openid.' + f})
         end
       end
     end
