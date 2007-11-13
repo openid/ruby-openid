@@ -27,7 +27,7 @@ module OpenID
         iri.insert(0, 'xri://') if not iri.match('^xri://')
         return escape_for_iri(iri)
       end
-      
+
       # Note this is not not idempotent, so do not apply this more than
       # once.  XRI Syntax section 2.3.2
       def self.escape_for_iri(xri)
@@ -48,7 +48,7 @@ module OpenID
       def self.to_uri_normal(xri)
         return iri_to_uri(to_iri_normal(xri))
       end
-      
+
       # RFC 3987 section 3.1
       def self.iri_to_uri(iri)
         uri = iri.dup
@@ -74,7 +74,7 @@ module OpenID
         else
           root = authority.split(/[!*]/)[0]
         end
-        
+
         self.make_xri(root)
       end
 
