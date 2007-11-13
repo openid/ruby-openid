@@ -1,11 +1,44 @@
 require 'net/http'
 require 'openid'
 require 'openid/util'
+
 begin
   require 'net/https'
 rescue LoadError
-  OpenID::Util.log('WARNING: no SSL support found.  Will not be able to fetch HTTPS URLs!')
+  OpenID::Util.log('WARNING: no SSL support found.  Will not be able ' +
+                   'to fetch HTTPS URLs!')
   require 'net/http'
+end
+
+module Net
+  class HTTP
+    def post_connection_check(hostname)
+      check_common_name = true
+      cert = @socket.io.peer_cert
+      cert.extensions.each { |ext|
+        next if ext.oid != "subjectAltName"
+        ext.value.split(/,\s+/).each{ |general_name|
+          if /\ADNS:(.*)/ =~ general_name
+            check_common_name = false
+            reg = Regexp.escape($1).gsub(/\\\*/, "[^.]+")
+            return true if /\A#{reg}\z/i =~ hostname
+          elsif /\AIP Address:(.*)/ =~ general_name
+            check_common_name = false
+            return true if $1 == hostname
+          end
+        }
+      }
+      if check_common_name
+        cert.subject.to_a.each{ |oid, value|
+          if oid == "CN"
+            reg = Regexp.escape(value).gsub(/\\\*/, "[^.]+")
+            return true if /\A#{reg}\z/i =~ hostname
+          end
+        }
+      end
+      raise OpenSSL::SSL::SSLError, "hostname does not match"
+    end
+  end
 end
 
 module OpenID
@@ -46,7 +79,13 @@ module OpenID
     end
   end
 
-  class HTTPRedirectLimitReached < StandardError
+  class FetchingError < StandardError
+  end
+
+  class HTTPRedirectLimitReached < FetchingError
+  end
+
+  class SSLFetchingError < FetchingError
   end
 
   @fetcher = nil
@@ -75,26 +114,77 @@ module OpenID
 
     REDIRECT_LIMIT = 5
 
+    attr_accessor :ca_file
+
+    def initialize
+      @ca_file = nil
+    end
+
+    def supports_ssl?(conn)
+      return conn.respond_to?(:use_ssl=)
+    end
+
+    def make_http(uri)
+      Net::HTTP.new(uri.host, uri.port)
+    end
+
+    def make_connection(uri)
+      conn = make_http(uri)
+
+      if !conn.is_a?(Net::HTTP)
+        raise RuntimeError, sprintf("Expected Net::HTTP object from make_http; got %s",
+                                    conn.class)
+      end
+
+      if uri.scheme == 'https'
+        if supports_ssl?(conn)
+
+          conn.use_ssl = true
+
+          if @ca_file
+            conn.verify_mode = OpenSSL::SSL::VERIFY_PEER
+            conn.ca_file = @ca_file
+          else
+            Util.log("WARNING: making https request to #{uri} without verifying " +
+                     "server certificate; no CA path was specified.")
+            conn.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          end
+        else
+          raise RuntimeError, "SSL support not found; cannot fetch #{uri}"
+        end
+      end
+
+      return conn
+    end
+
     def fetch(url, body=nil, headers=nil, redirect_limit=REDIRECT_LIMIT)
       unparsed_url = url.dup
       url = URI::parse(url)
 
       headers ||= {}
       headers['User-agent'] ||= USER_AGENT
-      httpthing = Net::HTTP.new(url.host, url.port)
-      if url.scheme == 'https'
-        if httpthing.respond_to?(:use_ssl=)
-          httpthing.use_ssl = true
-        else
-          raise RuntimeError, "Your Ruby does not have OpenSSL support"
-        end
+
+      conn = make_connection(url)
+      response = nil
+
+      begin
+        response = conn.start {
+          # Check the certificate against the URL's hostname
+          if supports_ssl?(conn) and conn.use_ssl?
+            conn.post_connection_check(url.host)
+          end
+
+          if body.nil?
+            conn.request_get(url.request_uri, headers)
+          else
+            headers["Content-type"] ||= "application/x-www-form-urlencoded"
+            conn.request_post(url.request_uri, body, headers)
+          end
+        }
+      rescue OpenSSL::SSL::SSLError => why
+        raise SSLFetchingError, "Error connecting to SSL URL #{url}: #{why}"
       end
-      if body.nil?
-        response = httpthing.request_get(url.request_uri, headers)
-      else
-        headers["Content-type"] ||= "application/x-www-form-urlencoded"
-        response = httpthing.request_post(url.request_uri, body, headers)
-      end
+
       case response
       when Net::HTTPRedirection
         if redirect_limit <= 0

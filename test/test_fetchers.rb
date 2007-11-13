@@ -2,9 +2,24 @@ require 'test/unit'
 require 'net/http'
 require 'webrick'
 
+require 'testutil'
+require 'util'
+
 require 'openid/fetchers'
 
 require 'stringio'
+
+begin
+  require 'net/https'
+rescue LoadError
+  # We need these names for testing.
+
+  module OpenSSL
+    module SSL
+      class SSLError < StandardError; end
+    end
+  end
+end
 
 module HttpResultAssertions
   def assert_http_result_is(expected, result)
@@ -24,6 +39,7 @@ end
 
 class FetcherTestCase < Test::Unit::TestCase
   include HttpResultAssertions
+  include OpenID::TestUtil
 
   @@test_header_name = 'X-test-header'
   @@test_header_value = 'marmoset'
@@ -138,6 +154,8 @@ class FetcherTestCase < Test::Unit::TestCase
 
   def teardown
     @server.shutdown
+    # Sleep a little because sometimes this blocks forever.
+    sleep 0.2
     @server_thread.join
   end
 
@@ -224,6 +242,188 @@ EOF
         raise new_err
       end
     end
+  end
+
+  def test_https_no_openssl
+    # Override supports_ssl? to always claim that connections don't
+    # support SSL.  Test the behavior of fetch() for HTTPS URLs in
+    # that case.
+    f = OpenID::StandardFetcher.new
+    f.extend(OpenID::InstanceDefExtension)
+
+    f.instance_def(:supports_ssl?) do |conn|
+      false
+    end
+
+    begin
+      f.fetch("https://someurl.com/")
+      flunk("Expected RuntimeError")
+    rescue RuntimeError => why
+      assert_equal(why.to_s, "SSL support not found; cannot fetch https://someurl.com/")
+    end
+  end
+
+  def test_ssl_with_ca_file
+    f = OpenID::StandardFetcher.new
+    ca_file = "BOGUS"
+    f.ca_file = ca_file
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:supports_ssl?) do |conn|
+      true
+    end
+
+    conn = f.make_connection(URI::parse("https://someurl.com"))
+    assert_equal(conn.ca_file, ca_file)
+  end
+
+  def test_ssl_without_ca_file
+    f = OpenID::StandardFetcher.new
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:supports_ssl?) do |conn|
+      true
+    end
+
+    conn = nil
+    assert_log_matches(/making https request to https:\/\/someurl.com without verifying/) {
+      conn = f.make_connection(URI::parse("https://someurl.com"))
+    }
+
+    assert(conn.ca_file.nil?)
+  end
+
+  def test_make_http_nil
+    f = OpenID::StandardFetcher.new
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:make_http) do |uri|
+      nil
+    end
+
+    assert_raise(RuntimeError) {
+      f.make_connection(URI::parse("http://example.com/"))
+    }
+  end
+
+  def test_make_http_invalid
+    f = OpenID::StandardFetcher.new
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:make_http) do |uri|
+      "not a Net::HTTP object"
+    end
+
+    assert_raise(RuntimeError) {
+      f.make_connection(URI::parse("http://example.com/"))
+    }
+  end
+
+  class BrokenSSLConnection
+    def start(&block)
+      raise OpenSSL::SSL::SSLError
+    end
+  end
+
+  def test_sslfetchingerror
+    f = OpenID::StandardFetcher.new
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:make_connection) do |uri|
+      BrokenSSLConnection.new
+    end
+
+    assert_raise(OpenID::SSLFetchingError) {
+      f.fetch("https://bogus.com/")
+    }
+  end
+
+  class TestingException < Exception; end
+
+  class NoSSLSupportConnection
+    def supports_ssl?
+      false
+    end
+
+    def start
+      yield
+    end
+
+    def request_get(*args)
+      raise TestingException
+    end
+
+    def post_connection_check(hostname)
+      raise RuntimeError
+    end
+
+    def use_ssl?
+      true
+    end
+  end
+
+  class NoUseSSLConnection < NoSSLSupportConnection
+    def use_ssl?
+      false
+    end
+  end
+
+  def test_post_connection_check_no_support_ssl
+    f = OpenID::StandardFetcher.new
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:make_connection) do |uri|
+      NoSSLSupportConnection.new
+    end
+
+    # post_connection_check should not be called.
+    assert_raise(TestingException) {
+      f.fetch("https://bogus.com/")
+    }
+  end
+
+  def test_post_connection_check_no_use_ssl
+    f = OpenID::StandardFetcher.new
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:make_connection) do |uri|
+      NoUseSSLConnection.new
+    end
+
+    # post_connection_check should not be called.
+    assert_raise(TestingException) {
+      f.fetch("https://bogus.com/")
+    }
+  end
+
+  class PostConnectionCheckException < Exception; end
+
+  class UseSSLConnection < NoSSLSupportConnection
+    def use_ssl?
+      true
+    end
+
+    def post_connection_check(hostname)
+      raise PostConnectionCheckException
+    end
+  end
+
+  def test_post_connection_check
+    f = OpenID::StandardFetcher.new
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:make_connection) do |uri|
+      UseSSLConnection.new
+    end
+
+    f.instance_def(:supports_ssl?) do |conn|
+      true
+    end
+
+    # post_connection_check should be called.
+    assert_raise(PostConnectionCheckException) {
+      f.fetch("https://bogus.com/")
+    }
   end
 end
 
