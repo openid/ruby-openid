@@ -47,7 +47,7 @@ module OpenID
   # Extract the simple registration namespace URI from the given
   # OpenID message. Handles OpenID 1 and 2, as well as both sreg
   # namespace URIs found in the wild, as well as missing namespace
-  # definitions (for OpenID 1)  
+  # definitions (for OpenID 1)
   def get_sreg_ns(message)
     [SREG_NS_URI_1_1, SREG_NS_URI_1_0].each{|ns|
       if message.namespaces.get_alias(ns)
