@@ -9,7 +9,7 @@ module OpenID
       def initialize(starting_url, yadis_url, services, session_key)
         @starting_url = starting_url
         @yadis_url = yadis_url
-        @services = services
+        @services = services.dup
         @session_key = session_key
         @current = nil
       end
@@ -33,7 +33,7 @@ module OpenID
 
     # Manages calling discovery and tracking which endpoints have
     # already been attempted.
-    class SessionDiscoveryManager
+    class DiscoveryManager
       def initialize(session, url, session_key_suffix=nil)
         @url = url
 
@@ -110,7 +110,7 @@ module OpenID
       end
 
       def store(manager)
-        @session[session_key] = self
+        @session[session_key] = manager
       end
 
       def load

@@ -32,7 +32,7 @@ module OpenID
 
       def endpoint=(endpoint)
         @endpoint = endpoint
-        if !endpoint.nil?
+        if endpoint.nil?
           @identity_url = nil
         else
           @identity_url = endpoint.claimed_id
@@ -128,7 +128,7 @@ module OpenID
       STATUS = FAILURE
 
       attr_reader :message, :contact, :reference
-      def initialize(endpoint, message, contact, reference)
+      def initialize(endpoint, message, contact=nil, reference=nil)
         self.endpoint=(endpoint)
         @message = message
         @contact = contact

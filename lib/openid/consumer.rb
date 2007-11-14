@@ -1,11 +1,12 @@
 require "openid/consumer/idres.rb"
-require "openid/consumer/checkid_response.rb"
+require "openid/consumer/checkid_request.rb"
 require "openid/consumer/associationmanager.rb"
 require "openid/consumer/responses.rb"
 require "openid/consumer/discovery_manager"
 require "openid/consumer/discovery"
 require "openid/message"
 require "openid/yadis/discovery"
+require "openid/store/nonce"
 
 module OpenID
   class Consumer
@@ -14,7 +15,7 @@ module OpenID
     def initialize(session, store)
       @session = session
       @store = store
-      @session_key_prefix = '_openid_consumer_'
+      @session_key_prefix = 'OpenID::Consumer::'
     end
 
     def begin(openid_identifier, anonymous=false)
@@ -38,17 +39,23 @@ module OpenID
       if service.compatibility_mode
         rt_args = checkid_request.return_to_args
         rt_args[Consumer.openid1_return_to_nonce_name] = Nonce.mk_nonce
-        rt_args[Consumer.openid1_claimed_id_name] = service.claimed_id
+        rt_args[Consumer.openid1_return_to_claimed_id_name] =
+          service.claimed_id
       end
 
-      last_requested_endpoint = service
+      self.last_requested_endpoint = service
       return checkid_request
     end
 
     def complete(query, return_to)
       message = Message.from_post_args(query)
-      mode = message.get_arg(OPENID_NS, 'mode', 'no_mode')
-      response = send('complete_' + mode, message)
+      mode = message.get_arg(OPENID_NS, 'mode', 'invalid')
+      begin
+        meth = method('complete_' + mode)
+      rescue NameError
+        meth = method(:complete_invalid)
+      end
+      response = meth.call(message, return_to)
       cleanup_last_requested_endpoint
       if [SUCCESS, CANCEL].member?(response.status)
         cleanup_session
@@ -89,7 +96,7 @@ module OpenID
     end
 
     def cleanup_session
-      discovery_manager(nil).destroy(true)
+      discovery_manager(nil).cleanup(true)
     end
 
 
@@ -106,12 +113,16 @@ module OpenID
                              service.compatibility_mode, negotiator)
     end
 
+    def handle_idres(message, return_to)
+      IdResHandler.new(message, return_to, @store, last_requested_endpoint)
+    end
+
     # complete() mode handlers
 
-    def complete_no_mode(message, unused_return_to)
+    def complete_invalid(message, unused_return_to)
       mode = message.get_arg(OPENID_NS, 'mode', '<No mode set>')
       return FailureResponse.new(last_requested_endpoint,
-                                 'Invalid openid.mode: %r' % (mode,))
+                                 "Invalid openid.mode: #{mode}")
     end
 
     def complete_cancel(unused_message, unused_return_to)
@@ -131,23 +142,25 @@ module OpenID
       if message.is_openid1
         return complete_invalid(message, nil)
       else
-        return SetupNeededResponse.new(last_requested_endpoint)
+        return SetupNeededResponse.new(last_requested_endpoint, nil)
       end
     end
 
     def complete_id_res(message, return_to)
-      if setup_needed?(message)
-        return SetupNeededResponse.new(last_requested_endpoint)
-      else
-        begin
-          idres = IdResHandler.new(message, return_to, @store,
-                                   last_requested_endpoint)
-        rescue DiscoveryFailure, ProtocolError => why
-          return FailureResponse.new(last_requested_endpoint, why.message)
-        else
-          return SuccessResponse.new(idres.endpoint, message,
-                                     idres.signed_fields)
+      if message.is_openid1
+        setup_url = message.get_arg(OPENID1_NS, 'user_setup_url')
+        if !setup_url.nil?
+          return SetupNeededResponse.new(last_requested_endpoint, setup_url)
         end
+      end
+
+      begin
+        idres = handle_idres(message, return_to)
+      rescue Yadis::DiscoveryFailure, ProtocolError => why
+        return FailureResponse.new(last_requested_endpoint, why.message)
+      else
+        return SuccessResponse.new(idres.endpoint, message,
+                                     idres.signed_fields)
       end
     end
   end
