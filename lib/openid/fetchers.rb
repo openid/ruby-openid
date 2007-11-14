@@ -52,7 +52,6 @@ module OpenID
     def self._from_net_response(response, final_url, headers=nil)
       me = self.new
       me._response = response
-      me.initialize_http_header headers
       me.final_url = final_url
       return me
     end
