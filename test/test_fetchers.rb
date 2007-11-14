@@ -285,7 +285,10 @@ EOF
       FakeConnection.new(uri.host, uri.port)
     end
 
+    testcase = self
+
     f.instance_def(:set_verified) do |conn, verified|
+      testcase.assert(verified)
     end
 
     conn = f.make_connection(URI::parse("https://someurl.com"))
@@ -300,7 +303,10 @@ EOF
       FakeConnection.new(uri.host, uri.port)
     end
 
+    testcase = self
+
     f.instance_def(:set_verified) do |conn, verified|
+      testcase.assert(!verified)
     end
 
     conn = nil
