@@ -25,13 +25,6 @@ module OpenID
     Util.log(e)
   end
 
-  # getSRegNS(message)
-    ## Assign getSRegNS to a static method so that it can be
-    ## overridden for testing.
-    #_getSRegNS = staticmethod(getSRegNS)
-
-  # __contains__ --> member?
-
   # raise ArgumentError if fieldname is not in the defined sreg fields
   def OpenID.check_sreg_field_name(fieldname)
     unless SREG_DATA_FIELDS.member? fieldname
