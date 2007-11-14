@@ -114,8 +114,8 @@ module OpenID
         raise StandardError, 'Missing signed list'
       end
       signed_fields = signed.split(',', -1)
-      data = message.get_args(OPENID_NS)
-      signed_fields.map do | field | [field, data[field] || ''] end
+      data = message.to_post_args
+      signed_fields.map {|field| [field, data.fetch('openid.'+field,'')] }
     end
 
     # Return whether the message's signature passes
