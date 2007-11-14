@@ -1,19 +1,19 @@
 require 'uri'
 require 'openid/urinorm'
 
-TOP_LEVEL_DOMAINS = [
-  'com|edu|gov|int|mil|net|org|biz|info|name|museum|coop|aero|ac|ad|ae|',
-  'af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|bj|',
-  'bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|',
-  'cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|',
-  'fr|ga|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|',
-  'ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|',
-  'kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|',
-  'mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|',
-  'nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|',
-  'sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|sv|sy|sz|tc|td|tf|tg|th|',
-  'tj|tk|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|',
-  'vn|vu|wf|ws|ye|yt|yu|za|zm|zw'].join('').split('|')
+TOP_LEVEL_DOMAINS = %w'
+  com edu gov int mil net org biz info name museum coop aero ac ad ae
+  af ag ai al am an ao aq ar as at au aw az ba bb bd be bf bg bh bi bj
+  bm bn bo br bs bt bv bw by bz ca cc cd cf cg ch ci ck cl cm cn co cr
+  cu cv cx cy cz de dj dk dm do dz ec ee eg eh er es et eu fi fj fk fm
+  fo fr ga gd ge gf gg gh gi gl gm gn gp gq gr gs gt gu gw gy hk hm hn
+  hr ht hu id ie il im in io iq ir is it je jm jo jp ke kg kh ki km kn
+  kp kr kw ky kz la lb lc li lk lr ls lt lu lv ly ma mc md mg mh mk ml
+  mm mn mo mp mq mr ms mt mu mv mw mx my mz na nc ne nf ng ni nl no np
+  nr nu nz om pa pe pf pg ph pk pl pm pn pr ps pt pw py qa re ro ru rw
+  sa sb sc sd se sg sh si sj sk sl sm sn so sr st sv sy sz tc td tf tg
+  th tj tk tm tn to tp tr tt tv tw tz ua ug uk um us uy uz va vc ve vg
+  vi vn vu wf ws ye yt yu za zm zw'
 
 ALLOWED_PROTOCOLS = ['http', 'https']
 
@@ -37,21 +37,21 @@ module OpenID
     # The URI for relying party discovery, used in realm verification.
     #
     # XXX: This should probably live somewhere else (like in
-    # openid.consumer or openid.yadis somewhere)
+    # OpenID or OpenID::Yadis somewhere)
     RP_RETURN_TO_URL_TYPE = 'http://specs.openid.net/auth/2.0/return_to'
 
+    # If the endpoint is a relying party OpenID return_to endpoint,
+    # return the endpoint URL. Otherwise, return None.
+    #
+    # This function is intended to be used as a filter for the Yadis
+    # filtering interface.
+    #
+    # endpoint: An XRDS BasicServiceEndpoint, as returned by
+    # performing Yadis dicovery.
+    #
+    # returns the endpoint URL or None if the endpoint is not a
+    # relying party endpoint.
     def TrustRoot._extract_return_url(endpoint)
-      # If the endpoint is a relying party OpenID return_to endpoint,
-      # return the endpoint URL. Otherwise, return None.
-      #
-      # This function is intended to be used as a filter for the Yadis
-      # filtering interface.
-      #
-      # endpoint: An XRDS BasicServiceEndpoint, as returned by
-      # performing Yadis dicovery.
-      #
-      # returns the endpoint URL or None if the endpoint is not a
-      # relying party endpoint.
       if endpoint.matchTypes([RP_RETURN_TO_URL_TYPE])
         return endpoint.uri
       else
@@ -159,7 +159,7 @@ module OpenID
         end
 
         if frag
-          s << "#" + frag
+          s << "#" << frag
         end
 
         return s
