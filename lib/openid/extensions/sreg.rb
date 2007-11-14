@@ -33,14 +33,14 @@ module OpenID
   # __contains__ --> member?
 
   # raise ArgumentError if fieldname is not in the defined sreg fields
-  def check_sreg_field_name(fieldname)
+  def OpenID.check_sreg_field_name(fieldname)
     unless SREG_DATA_FIELDS.member? fieldname
       raise ArgumentError, "#{fieldname} is not a defined simple registration field"
     end
   end
 
   # Does the given endpoint advertise support for simple registration?
-  def supports_sreg?(endpoint)
+  def OpenID.supports_sreg?(endpoint)
     endpoint.uses_extension(SREG_NS_URI_1_1) || endpoint.uses_extension(SREG_NS_URI_1_0)
   end
 
@@ -48,7 +48,7 @@ module OpenID
   # OpenID message. Handles OpenID 1 and 2, as well as both sreg
   # namespace URIs found in the wild, as well as missing namespace
   # definitions (for OpenID 1)
-  def get_sreg_ns(message)
+  def OpenID.get_sreg_ns(message)
     [SREG_NS_URI_1_1, SREG_NS_URI_1_0].each{|ns|
       if message.namespaces.get_alias(ns)
         return ns
@@ -107,7 +107,7 @@ module OpenID
       # Since we're going to mess with namespace URI mapping, don't
       # mutate the object that was passed in.
       message = request.message.copy
-      ns_uri = get_sreg_ns(message)
+      ns_uri = OpenID::get_sreg_ns(message)
       args = message.get_args(ns_uri)
       req = new(nil,nil,nil,ns_uri)
       req.parse_extension_args(args)
@@ -173,7 +173,7 @@ module OpenID
     # Raises ArgumentError if the field_name is not a simple registration
     # field, or if strict is set and a field is added more than once
     def request_field(field_name, required=false, strict=false)
-      check_sreg_field_name(field_name)
+      OpenID::check_sreg_field_name(field_name)
 
       if strict
         if (@required + @optional).member? field_name
@@ -246,7 +246,7 @@ module OpenID
     # If you set the signed_only parameter to false, unsigned data from
     # the id_res message from the server will be processed.
     def self.from_success_response(success_response, signed_only = true)
-      ns_uri = get_sreg_ns(success_response.message)
+      ns_uri = OpenID::get_sreg_ns(success_response.message)
       if signed_only
         args = success_response.get_signed_ns(ns_uri)
       else

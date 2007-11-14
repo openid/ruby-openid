@@ -23,27 +23,27 @@ module OpenID
 
       def test_check_field_name
         SREG_DATA_FIELDS.keys.each{|field_name|
-          check_sreg_field_name(field_name)
+          OpenID::check_sreg_field_name(field_name)
         }
-        assert_raises(ArgumentError) { check_sreg_field_name('invalid') }
-        assert_raises(ArgumentError) { check_sreg_field_name(nil) }
+        assert_raises(ArgumentError) { OpenID::check_sreg_field_name('invalid') }
+        assert_raises(ArgumentError) { OpenID::check_sreg_field_name(nil) }
       end
 
       def test_unsupported
         endpoint = FakeEndpoint.new([])
-        assert(!supports_sreg?(endpoint))
+        assert(!OpenID::supports_sreg?(endpoint))
         assert_equal([SREG_NS_URI_1_1,SREG_NS_URI_1_0], endpoint.checked_uris)
       end
 
       def test_supported_1_1
         endpoint = FakeEndpoint.new([SREG_NS_URI_1_1])
-        assert(supports_sreg?(endpoint))
+        assert(OpenID::supports_sreg?(endpoint))
         assert_equal([SREG_NS_URI_1_1], endpoint.checked_uris)
       end
 
       def test_supported_1_0
         endpoint = FakeEndpoint.new([SREG_NS_URI_1_0])
-        assert(supports_sreg?(endpoint))
+        assert(OpenID::supports_sreg?(endpoint))
         assert_equal([SREG_NS_URI_1_1,SREG_NS_URI_1_0], endpoint.checked_uris)
       end
 
@@ -82,14 +82,14 @@ module OpenID
       end
 
       def test_openid2_empty
-        ns_uri = get_sreg_ns(@msg)
+        ns_uri = OpenID::get_sreg_ns(@msg)
         assert_equal('sreg', @msg.namespaces.get_alias(ns_uri))
         assert_equal(SREG_NS_URI, ns_uri)
       end
 
       def test_openid1_empty
         @msg.openid1 = true
-        ns_uri = get_sreg_ns(@msg)
+        ns_uri = OpenID::get_sreg_ns(@msg)
         assert_equal('sreg', @msg.namespaces.get_alias(ns_uri))
         assert_equal(SREG_NS_URI, ns_uri)
       end
@@ -97,7 +97,7 @@ module OpenID
       def test_openid1defined_1_0
         @msg.openid1 = true
         @msg.namespaces.add(SREG_NS_URI_1_0)
-        ns_uri = get_sreg_ns(@msg)
+        ns_uri = OpenID::get_sreg_ns(@msg)
         assert_equal(SREG_NS_URI_1_0, ns_uri)
       end
 
@@ -108,7 +108,7 @@ module OpenID
               setup
               @msg.openid1 = openid_version
               @msg.namespaces.add_alias(sreg_version, name)
-              ns_uri = get_sreg_ns(@msg)
+              ns_uri = OpenID::get_sreg_ns(@msg)
               assert_equal(name, @msg.namespaces.get_alias(ns_uri))
               assert_equal(sreg_version, ns_uri)
             }
@@ -119,17 +119,17 @@ module OpenID
       def test_openid1_defined_badly
         @msg.openid1 = true
         @msg.namespaces.add_alias('http://invalid/', 'sreg')
-        assert_raises(SRegNamespaceError) { get_sreg_ns(@msg) }
+        assert_raises(SRegNamespaceError) { OpenID::get_sreg_ns(@msg) }
       end
 
       def test_openid2_defined_badly
         @msg.namespaces.add_alias('http://invalid/', 'sreg')
-        assert_raises(SRegNamespaceError) { get_sreg_ns(@msg) }
+        assert_raises(SRegNamespaceError) { OpenID::get_sreg_ns(@msg) }
       end
 
       def test_openid2_defined_1_0
         @msg.namespaces.add(SREG_NS_URI_1_0)
-        ns_uri = get_sreg_ns(@msg)
+        ns_uri = OpenID::get_sreg_ns(@msg)
         assert_equal(SREG_NS_URI_1_0, ns_uri)
       end
 
