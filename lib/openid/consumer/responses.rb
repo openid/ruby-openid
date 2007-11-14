@@ -26,10 +26,6 @@ module OpenID
         self.class::STATUS
       end
 
-      def self.status
-        self::STATUS
-      end
-
       def endpoint=(endpoint)
         @endpoint = endpoint
         if endpoint.nil?
