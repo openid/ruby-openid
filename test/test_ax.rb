@@ -360,6 +360,14 @@ module OpenID
       assert_equal(norm_args, @msg.get_extension_args)
     end 
 
+    def test_from_openid_request_no_ax
+      message = Message.new
+      openid_req = Server::OpenIDRequest.new
+      openid_req.message = message
+      ax_req = FetchRequest.from_openid_request(openid_req)
+      assert(ax_req.nil?)
+    end
+
     def test_openid_update_url_verification_error
       openid_req_msg = Message.from_openid_args({
           'mode' => 'checkid_setup',
@@ -369,8 +377,10 @@ module OpenID
           'ax.update_url' => 'http://different.site/path',
           'ax.mode' => 'fetch_request',
           })
+      openid_req = Server::OpenIDRequest.new
+      openid_req.message = openid_req_msg
       assert_raises(AXError) { 
-        FetchRequest.from_openid_request(openid_req_msg)
+        FetchRequest.from_openid_request(openid_req)
       }
     end
 
@@ -382,8 +392,10 @@ module OpenID
           'ax.update_url' => 'http://different.site/path',
           'ax.mode' => 'fetch_request',
           })
+      openid_req = Server::OpenIDRequest.new
+      openid_req.message = openid_req_msg
       assert_raises(AXError) { 
-        FetchRequest.from_openid_request(openid_req_msg)
+        FetchRequest.from_openid_request(openid_req)
       }
     end
 
@@ -396,7 +408,9 @@ module OpenID
           'ax.update_url' => 'http://example.com/realm/update_path',
           'ax.mode' => 'fetch_request',
           })
-      fr = FetchRequest.from_openid_request(openid_req_msg)
+      openid_req = Server::OpenIDRequest.new
+      openid_req.message = openid_req_msg
+      fr = FetchRequest.from_openid_request(openid_req)
       assert(fr.is_a?(FetchRequest))
     end
 
@@ -409,7 +423,9 @@ module OpenID
           'ax.update_url' => 'http://example.com/realm/update_path',
           'ax.mode' => 'fetch_request',
           })
-      fr = FetchRequest.from_openid_request(openid_req_msg)
+      openid_req = Server::OpenIDRequest.new
+      openid_req.message = openid_req_msg
+      fr = FetchRequest.from_openid_request(openid_req)
       assert(fr.is_a?(FetchRequest))
     end
 

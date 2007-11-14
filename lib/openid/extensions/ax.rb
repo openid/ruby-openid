@@ -171,8 +171,11 @@ module OpenID
 
     # Extract a FetchRequest from an OpenID message
     # message: OpenID::Message
-    def self.from_openid_request(message)
+    # return a FetchRequest or nil if AX arguments are not present
+    def self.from_openid_request(oidreq)
+      message = oidreq.message
       ax_args = message.get_args(NS_URI)
+      return nil if ax_args == {}
       req = new
       req.parse_extension_args(ax_args)
 
