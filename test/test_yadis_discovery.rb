@@ -54,7 +54,7 @@ module OpenID
           end
 
           response = YadisDiscovery.mkResponse(data)
-          if [301, 302, 303, 307].member?(response.code)
+          if ["301", "302", "303", "307"].member?(response.code)
             current_url = response['location']
           else
             response.final_url = current_url

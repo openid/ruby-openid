@@ -73,10 +73,10 @@ module OpenID
       # a 200 code.
       result = DiscoveryResult.new(uri)
       resp = OpenID.fetch(uri, nil, {'Accept' => YADIS_ACCEPT_HEADER})
-      if resp.code != 200
+      if resp.code != "200"
         raise DiscoveryFailure.new(
-                "HTTP Response status from identity URL host is not 200. " +
-                "Got status #{resp.code}", resp)
+                "HTTP Response status from identity URL host is not \"200\""\
+                ". Got status #{resp.code.inspect}", resp)
       end
 
       # Note the URL after following redirects
@@ -90,10 +90,10 @@ module OpenID
 
       if result.xrds_uri and result.used_yadis_location?
         resp = OpenID.fetch(result.xrds_uri)
-        if resp.code != 200
+        if resp.code != "200"
             exc = DiscoveryFailure.new(
-                    "HTTP Response status from Yadis host is not 200. " +
-                    "Got status #{resp.code}", resp)
+                    "HTTP Response status from Yadis host is not \"200\". " +
+                    "Got status #{resp.code.inspect}", resp)
             exc.identity_url = result.normalized_uri
             raise exc
         end

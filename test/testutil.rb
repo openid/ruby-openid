@@ -103,4 +103,13 @@ module OpenID
       msg.get_arg(OPENID_NS, 'sig') == GOODSIG
     end
   end
+
+  class HTTPResponse
+    def self._from_raw_data(status, body="", headers={}, final_url=nil)
+      resp = Net::HTTPResponse.new('1.1', status.to_s, 'NONE')
+      me = self._from_net_response(resp, final_url, headers)
+      me.body = body
+      return me
+    end
+  end
 end

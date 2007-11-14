@@ -57,13 +57,6 @@ module OpenID
       return me
     end
 
-    def self._from_raw_data(status, body="", headers={}, final_url=nil)
-      resp = Net::HTTPResponse.new('1.1', status, 'NONE')
-      me = self._from_net_response(resp, final_url, headers)
-      me.body = body
-      return me
-    end
-
     def method_missing(method, *args)
       @_response.send(method, *args)
     end
