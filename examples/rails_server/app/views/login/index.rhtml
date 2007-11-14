@@ -20,7 +20,7 @@ Welcome to the Ruby OpenID server example.  This code is a starting point for de
 <h2>To use the example</h2>
 <p>
   <ol>
-    <li>Enter a username in the form above.  You will be "Logged In" to the server, at which point you may authenticate using an OpenID consumer. Your OpenID URL will be displayed after you log in.<p>The server will automatically create an identity page for you at http://localhost:3000/user/<i>name</i></p></li>
+    <li>Enter a username in the form above.  You will be "Logged In" to the server, at which point you may authenticate using an OpenID consumer. Your OpenID URL will be displayed after you log in.<p>The server will automatically create an identity page for you at <%= @base_url %>user/<i>name</i></p></li>
     <li>Run the example OpenID consumer: <blockquote>ruby examples/consumer.rb</blockquote></li>
     <li>In another browser window visit <a href="http://localhost:2000/">http://localhost:2000/</a>, and type your OpenID URL to verfiy your identity with this server.</li>
   </ol>

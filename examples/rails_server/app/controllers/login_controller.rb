@@ -5,7 +5,12 @@ class LoginController < ApplicationController
 
   layout 'server'
 
+  def base_url
+    url_for(:controller => 'login', :action => nil, :only_path => false)
+  end
+
   def index
+    @base_url = base_url
     # just show the login page
   end
 
@@ -17,7 +22,7 @@ class LoginController < ApplicationController
     unless user.nil?
       session[:username] = user unless user.nil?
       session[:approvals] = []
-      flash[:notice] = "Your OpenID URL is <b>http://localhost:3000/user/#{user}</b><br/><br/>Proceed to step 2 below."
+      flash[:notice] = "Your OpenID URL is <b>#{base_url}user/#{user}</b><br/><br/>Proceed to step 2 below."
     else
       flash[:error] = "Sorry, couldn't log you in. Try again."
     end
