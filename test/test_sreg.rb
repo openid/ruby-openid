@@ -189,6 +189,14 @@ module OpenID
         assert_equal(['nickname'], sreg_req.required)
       end
 
+      def test_from_openid_request_no_sreg
+        message = Message.new
+        openid_req = Server::OpenIDRequest.new
+        openid_req.message = message
+        sreg_req = SRegRequest.from_openid_request(openid_req)
+        assert(sreg_req.nil?)
+      end
+
       def test_parse_extension_args_empty
         req = SRegRequest.new
         req.parse_extension_args({})

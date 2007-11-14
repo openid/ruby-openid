@@ -96,12 +96,14 @@ module OpenID
     # fields that were requested in the OpenID request with the
     # given arguments
     # Takes an OpenID::CheckIDRequest, returns an OpenID::SRegRequest
+    # return nil if the extension was not requested.
     def self.from_openid_request(request)
       # Since we're going to mess with namespace URI mapping, don't
       # mutate the object that was passed in.
       message = request.message.copy
       ns_uri = OpenID::get_sreg_ns(message)
       args = message.get_args(ns_uri)
+      return nil if args == {}
       req = new(nil,nil,nil,ns_uri)
       req.parse_extension_args(args)
       return req
