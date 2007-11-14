@@ -162,9 +162,11 @@ EOS
       'fullname' => 'Mayor McCheese',
       'email' => 'mayor@example.com'
     }
-
-    sregresp = OpenID::SRegResponse.extract_response(sregreq, sreg_data)
-    oidresp.add_extension(sregresp)
+    
+    if sregreq.were_fields_requested?
+      sregresp = OpenID::SRegResponse.extract_response(sregreq, sreg_data)
+      oidresp.add_extension(sregresp)
+    end
   end
 
   def render_response(oidresp)
