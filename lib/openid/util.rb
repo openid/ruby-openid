@@ -8,34 +8,6 @@ require "openid/extras"
 srand(Time.now.to_f)
 
 module OpenID
-
-  # Code returned when either the of the
-  # OpenID::OpenIDConsumer.begin_auth or OpenID::OpenIDConsumer.complete_auth
-  # methods return successfully.
-  SUCCESS = 'success'
-
-  # Code OpenID::OpenIDConsumer.complete_auth
-  # returns when the value it received indicated an invalid login.
-  FAILURE = 'failure'
-
-  # Code returned by OpenIDConsumer.complete_auth when the user
-  # cancels the operation from the server.
-  CANCEL = 'cancel'
-
-  # Code returned by OpenID::OpenIDConsumer.complete_auth when the
-  # OpenIDConsumer instance is in immediate mode and ther server sends back a
-  # URL for the user to login with.
-  SETUP_NEEDED = 'setup needed'
-
-  # Code returned by OpenID::OpenIDConsumer.begin_auth when it is unable
-  # to fetch the URL given by the user.
-  HTTP_FAILURE = 'http failure'
-
-  # Code returned by OpenID::OpenIDConsumer.begin_auth when the page fetched
-  # from the OpenID URL doesn't contain the necessary link tags to function
-  # as an identity page.
-  PARSE_ERROR = 'parse error'
-
   class AssertionError < Exception
   end
 
