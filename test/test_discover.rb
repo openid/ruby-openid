@@ -15,14 +15,15 @@ require 'openid/util'
 
 module OpenID
   class SimpleMockFetcher
-    def initialize(responses)
+    def initialize(test, responses)
+      @test = test
       @responses = responses.dup
     end
 
     def fetch(url, body=nil, headers=nil, limit=nil)
       response = @responses.shift
-      Util.assert(body.nil?)
-      Util.assert(response.final_url == url)
+      @test.assert(body.nil?)
+      @test.assert_equal(response.final_url, url)
       return response
     end
   end
@@ -46,7 +47,7 @@ module OpenID
 
       @responses.each { |response_set|
         @url = response_set[0].final_url
-        OpenID.fetcher = SimpleMockFetcher.new(response_set)
+        OpenID.fetcher = SimpleMockFetcher.new(self, response_set)
       
         expected_status = response_set[-1].code
         begin
