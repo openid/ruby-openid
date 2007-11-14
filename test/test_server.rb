@@ -2229,4 +2229,42 @@ module OpenID
       # @failIf(@messages, @messages)
     end
   end
+
+  class RunthroughTestCase < Test::Unit::TestCase
+    def setup
+      @store = MemoryStore.new
+      @server = Server::Server.new(@store, "http://example.com/openid/server")
+    end
+
+    def test_openid1_assoc_checkid
+      assoc_args = {'openid.mode' => 'associate',
+                    'openid.assoc_type' => 'HMAC-SHA1'}
+      areq = @server.decode_request(assoc_args)
+      aresp = @server.handle_request(areq)
+      
+      amess = aresp.fields
+      assert(amess.is_openid1)
+      ahandle = amess.get_arg(OPENID_NS, 'assoc_handle')
+      assert(ahandle)
+      assoc = @store.get_association('http://localhost/|normal', ahandle)
+      assert(assoc.is_a?(Association))
+
+
+      checkid_args = {'openid.mode' => 'checkid_setup',
+                      'openid.return_to' => 'http://example.com/openid/consumer',
+                      'openid.assoc_handle' => ahandle,
+                      'openid.identity' => 'http://foo.com/'}
+      
+      cireq = @server.decode_request(checkid_args)
+      ciresp = cireq.answer(true)
+
+      signed_resp = @server.signatory.sign(ciresp)
+
+      assert_equal(assoc.get_message_signature(signed_resp.fields),
+                   signed_resp.fields.get_arg(OPENID_NS, 'sig'))
+                   
+      assert(assoc.check_message_signature(signed_resp.fields))
+    end
+
+  end
 end
