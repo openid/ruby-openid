@@ -81,7 +81,7 @@ module OpenID
       # arguments are not signed, return nil.
       def get_signed_ns(ns_uri)
         msg_args = @message.get_args(ns_uri)
-        msg_args.each do |key|
+        msg_args.each_key do |key|
           if !signed?(ns_uri, key)
             return nil
           end

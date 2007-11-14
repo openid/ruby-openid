@@ -25,6 +25,9 @@ module OpenID
           @local_id
         end
 
+        def compatibility_mode
+          @preferred_namespace == OPENID1_NS
+        end
       end
 
       module CheckIDTestMixin
@@ -75,7 +78,10 @@ module OpenID
                        internal_message.get_openid_namespace)
 
           assert_equal(preferred_namespace, msg.get_openid_namespace)
-
+          assert((preferred_namespace == OPENID1_NS &&
+                  @checkid_req.send_redirect?) ||
+                 (preferred_namespace != OPENID1_NS &&
+                  !@checkid_req.send_redirect?))
           assert_openid_value_equal(msg, 'mode', expected_mode)
 
           # Implement these in subclasses because they depend on
