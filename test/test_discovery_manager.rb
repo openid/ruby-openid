@@ -246,7 +246,7 @@ module OpenID
 
     def test_load
       thing = "opaque"
-      @manager.store(thing)
+      @session[@key] = thing
       assert_equal(@manager.load, thing)
     end
 
