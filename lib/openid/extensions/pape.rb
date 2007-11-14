@@ -47,9 +47,13 @@ module OpenID
 
       # Instantiate a Request object from the arguments in a
       # checkid_* OpenID message
+      # return nil if the extension was not requested.
       def self.from_openid_request(oid_req)
         pape_req = new
         args = oid_req.message.get_args(NS_URI)
+        if args == {}
+          return nil
+        end
         pape_req.parse_extension_args(args)
         return pape_req
       end

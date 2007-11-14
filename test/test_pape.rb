@@ -70,6 +70,14 @@ module OpenID
         assert_equal(5476, req.max_auth_age)
       end
 
+      def test_from_openid_request_no_pape
+        message = Message.new
+        openid_req = Server::OpenIDRequest.new
+        openid_req.message = message
+        pape_req = PAPE::Request.from_openid_request(openid_req)
+        assert(pape_req.nil?)
+      end
+
       def test_preferred_types
         @req.add_policy_uri(PAPE::AUTH_PHISHING_RESISTANT)
         @req.add_policy_uri(PAPE::AUTH_MULTI_FACTOR)
