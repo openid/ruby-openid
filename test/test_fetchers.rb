@@ -141,6 +141,7 @@ class FetcherTestCase < Test::Unit::TestCase
       @server.start
     }
     @uri = _uri_build
+    sleep 0.2
   end
 
   def _uri_build(path='/')
@@ -155,7 +156,6 @@ class FetcherTestCase < Test::Unit::TestCase
   def teardown
     @server.shutdown
     # Sleep a little because sometimes this blocks forever.
-    sleep 0.2
     @server_thread.join
   end
 
@@ -263,14 +263,29 @@ EOF
     end
   end
 
+  class FakeConnection < Net::HTTP
+    attr_reader :use_ssl, :ca_file
+
+    def use_ssl=(v)
+      @use_ssl = v
+    end
+
+    def ca_file=(ca_file)
+      @ca_file = ca_file
+    end
+  end
+
   def test_ssl_with_ca_file
     f = OpenID::StandardFetcher.new
     ca_file = "BOGUS"
     f.ca_file = ca_file
 
     f.extend(OpenID::InstanceDefExtension)
-    f.instance_def(:supports_ssl?) do |conn|
-      true
+    f.instance_def(:make_http) do |uri|
+      FakeConnection.new(uri.host, uri.port)
+    end
+
+    f.instance_def(:set_verified) do |conn, verified|
     end
 
     conn = f.make_connection(URI::parse("https://someurl.com"))
@@ -281,8 +296,11 @@ EOF
     f = OpenID::StandardFetcher.new
 
     f.extend(OpenID::InstanceDefExtension)
-    f.instance_def(:supports_ssl?) do |conn|
-      true
+    f.instance_def(:make_http) do |uri|
+      FakeConnection.new(uri.host, uri.port)
+    end
+
+    f.instance_def(:set_verified) do |conn, verified|
     end
 
     conn = nil

@@ -128,6 +128,14 @@ module OpenID
       Net::HTTP.new(uri.host, uri.port)
     end
 
+    def set_verified(conn, verify)
+      if verify
+        conn.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      else
+        conn.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+    end
+
     def make_connection(uri)
       conn = make_http(uri)
 
@@ -142,12 +150,12 @@ module OpenID
           conn.use_ssl = true
 
           if @ca_file
-            conn.verify_mode = OpenSSL::SSL::VERIFY_PEER
+            set_verified(conn, true)
             conn.ca_file = @ca_file
           else
             Util.log("WARNING: making https request to #{uri} without verifying " +
                      "server certificate; no CA path was specified.")
-            conn.verify_mode = OpenSSL::SSL::VERIFY_NONE
+            set_verified(conn, false)
           end
         else
           raise RuntimeError, "SSL support not found; cannot fetch #{uri}"
