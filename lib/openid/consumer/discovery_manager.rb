@@ -85,7 +85,6 @@ module OpenID
       end
 
       def create_manager(yadis_url, services)
-        key = session_key
         manager = get_manager
         if !manager.nil?
           raise StandardError, "There is already a manager for #{yadis_url}"

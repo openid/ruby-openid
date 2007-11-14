@@ -1,6 +1,7 @@
 
 require 'test/unit'
 require 'openid/consumer/discovery_manager'
+require 'openid/extras'
 
 require 'testutil'
 
@@ -183,21 +184,79 @@ module OpenID
     end
 
     def test_create_manager
+      assert(@session[@key].nil?)
+
+      services = ["created", "manager"]
+      returned_disco = @manager.create_manager(@yadis_url, services)
+
+      stored_disco = @session[@key]
+      assert(stored_disco.for_url?(@yadis_url))
+      assert_equal(stored_disco.next, "created")
+
+      assert_equal(stored_disco, returned_disco)
+
+      # Calling create_manager with a preexisting manager should
+      # result in StandardError.
+      assert_raise(StandardError) {
+        @manager.create_manager(@yadis_url, services)
+      }
+
+      # create_manager should do nothing (and return nil) if given no
+      # services.
+      @session[@key] = nil
+      result = @manager.create_manager(@yadis_url, [])
+      assert(result.nil?)
+      assert(@session[@key].nil?)
     end
 
+    class DestroyCalledException < StandardError; end
+
     def test_destroy_manager
+      # destroy_manager should remove the manager from the session,
+      # forcibly if necessary.
+      valid_disco = Consumer::DiscoveredServices.new(@url, @yadis_url, ["serv"])
+      invalid_disco = Consumer::DiscoveredServices.new("http://not.mine.com/",
+                                                       "http://different.url.com/",
+                                                       ["serv"])
+
+      @session[@key] = valid_disco
+      @manager.destroy_manager
+      assert(@session[@key].nil?)
+
+      @session[@key] = invalid_disco
+      @manager.destroy_manager
+      assert_equal(@session[@key], invalid_disco)
+
+      # Force destruction of manager, no matter which URLs it's for.
+      @manager.destroy_manager(true)
+      assert(@session[@key].nil?)
     end
 
     def test_session_key
+      assert(@manager.session_key.ends_with?(
+               @manager.instance_variable_get("@session_key_suffix")))
     end
 
     def test_store
+      thing = "opaque"
+      assert(@session[@key].nil?)
+      @manager.store(thing)
+      assert_equal(@session[@key], thing)
     end
 
     def test_load
+      thing = "opaque"
+      @manager.store(thing)
+      assert_equal(@manager.load, thing)
     end
 
-    def test_destroy
+    def test_destroy!
+      thing = "opaque"
+      @manager.store(thing)
+      assert_equal(@manager.load, thing)
+      @manager.destroy!
+      assert(@session[@key].nil?)
+      assert(@manager.load.nil?)
     end
   end
 end
