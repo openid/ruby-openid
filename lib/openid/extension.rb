@@ -20,7 +20,7 @@ module OpenID
     # arguments.  Returns the message with added extension args.
     def to_message(message = nil)
       message = Message.new if message.nil?
-      
+
       message.namespaces.add_alias(@ns_uri, @ns_alias)
       # XXX python ignores keyerror if m.ns.getAlias(uri) == alias
 
