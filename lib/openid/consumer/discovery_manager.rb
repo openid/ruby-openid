@@ -6,10 +6,10 @@ module OpenID
     class DiscoveredServices
       attr_reader :current
 
-      def initialize(starting_url, yadis_url, services, session_key)
+      def initialize(starting_url, yadis_url, services)
         @starting_url = starting_url
         @yadis_url = yadis_url
-        @services = services.dup
+        @services = services
         @session_key = session_key
         @current = nil
       end
@@ -67,7 +67,7 @@ module OpenID
         manager = get_manager(force)
         if !manager.nil?
           service = manager.current
-          destroy_manager
+          destroy_manager(force)
         else
           service = nil
         end
@@ -81,7 +81,7 @@ module OpenID
         if force || manager.nil? || manager.for_url?(@url)
           return manager
         else
-          return None
+          return nil
         end
       end
 
@@ -94,7 +94,7 @@ module OpenID
         if services.empty?
           return nil
         end
-        manager = DiscoveredServices.new(@url, yadis_url, services, key)
+        manager = DiscoveredServices.new(@url, yadis_url, services)
         store(manager)
         return manager
       end
@@ -110,7 +110,7 @@ module OpenID
       end
 
       def store(manager)
-        @session[session_key] = manager
+        @session[session_key] = self
       end
 
       def load
