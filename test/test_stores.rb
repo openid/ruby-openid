@@ -210,7 +210,7 @@ module OpenID
 
     def setup
       raise "filestoretest directory exists" if File.exists?('filestoretest')
-      @store = FileStore.new('filestoretest')
+      @store = FilesystemStore.new('filestoretest')
     end
 
     def teardown

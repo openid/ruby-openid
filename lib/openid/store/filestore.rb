@@ -8,7 +8,7 @@ require 'openid/association'
 
 module OpenID
 
-  class FileStore < Store
+  class FilesystemStore < Store
     @@FILENAME_ALLOWED = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-".split("")
 
     # Create a FilesystemStore instance, putting all data in +directory+.
