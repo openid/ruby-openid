@@ -9,8 +9,7 @@ module OpenID
       def initialize(starting_url, yadis_url, services)
         @starting_url = starting_url
         @yadis_url = yadis_url
-        @services = services
-        @session_key = session_key
+        @services = services.dup
         @current = nil
       end
 
@@ -110,7 +109,7 @@ module OpenID
       end
 
       def store(manager)
-        @session[session_key] = self
+        @session[session_key] = manager
       end
 
       def load

@@ -59,13 +59,13 @@ module OpenID
 
   # I need to be able to test the protected methods; this lets me do
   # that.
-  class PassthroughDiscoveryManager < Consumer::SessionDiscoveryManager
+  class PassthroughDiscoveryManager < Consumer::DiscoveryManager
     def method_missing(m, *args)
       method(m).call(*args)
     end
   end
 
-  class TestSessionDiscoveryManager < Test::Unit::TestCase
+  class TestDiscoveryManager < Test::Unit::TestCase
     def setup
       @session = {}
       @url = "http://unittest.com/"
@@ -77,10 +77,10 @@ module OpenID
 
     def test_construct
       # Make sure the default session key suffix is not nil.
-      m = Consumer::SessionDiscoveryManager.new(nil, nil)
+      m = Consumer::DiscoveryManager.new(nil, nil)
       assert(!m.instance_variable_get("@session_key_suffix").nil?)
 
-      m = Consumer::SessionDiscoveryManager.new(nil, nil, "override")
+      m = Consumer::DiscoveryManager.new(nil, nil, "override")
       assert_equal(m.instance_variable_get("@session_key_suffix"), "override")
     end
 
