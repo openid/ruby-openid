@@ -400,7 +400,7 @@ module OpenID
       }
 
       assert_raise(Server::NoReturnToError) {
-        req.get_cancel_url
+        req.cancel_url
       }
     end
 
@@ -1338,7 +1338,7 @@ module OpenID
     end
 
     def test_getCancelURL
-      url = @request.get_cancel_url
+      url = @request.cancel_url
       rt, query_string = url.split('?', -1)
       assert_equal(@request.return_to, rt)
       query = Util.parse_query(query_string)
@@ -1350,7 +1350,7 @@ module OpenID
       @request.mode = 'checkid_immediate'
       @request.immediate = true
       assert_raise(ArgumentError) {
-        @request.get_cancel_url
+        @request.cancel_url
       }
     end
   end

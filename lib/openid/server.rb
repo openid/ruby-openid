@@ -859,7 +859,7 @@ module OpenID
         return response.to_url(server_url)
       end
 
-      def get_cancel_url
+      def cancel_url
         # Get the URL to cancel this request.
         #
         # Useful for creating a "Cancel" button on a web form so that
