@@ -14,10 +14,26 @@ module OpenID
   end
 
   class Consumer
-    class IdResHandler
-      attr_accessor :openid1_nonce_query_arg_name,
-                    :openid1_return_to_identifier_name
+    @openid1_return_to_nonce_name = 'rp_nonce'
+    @openid1_return_to_claimed_id_name = 'openid1_claimed_id'
 
+    def self.openid1_return_to_nonce_name=(query_arg_name)
+      @openid1_return_to_nonce_name = query_arg_name
+    end
+
+    def self.openid1_return_to_nonce_name
+      @openid1_return_to_nonce_name
+    end
+
+    def self.openid1_return_to_claimed_id_name=(query_arg_name)
+      @openid1_return_to_claimed_id_name = query_arg_name
+    end
+
+    def self.openid1_return_to_claimed_id_name
+      @openid1_return_to_claimed_id_name
+    end
+
+    class IdResHandler
       attr_reader :endpoint, :message
 
       def initialize(message, return_to, store=nil, endpoint=nil)
@@ -26,8 +42,6 @@ module OpenID
         @endpoint = endpoint
         @return_to = return_to
         @signed_list = nil
-        @openid1_nonce_query_arg_name = 'rp_nonce'
-        @openid1_return_to_identifier_name = 'openid1_claimed_id'
 
         # Start the verification process
         id_res
@@ -242,7 +256,8 @@ module OpenID
       def check_nonce
         case openid_namespace
         when OPENID1_NS
-          nonce = @message.get_arg(BARE_NS, openid1_nonce_query_arg_name)
+          nonce =
+            @message.get_arg(BARE_NS, Consumer.openid1_return_to_nonce_name)
 
           # We generated the nonce, so it uses the empty string as the
           # server URL
@@ -329,8 +344,8 @@ module OpenID
       end
 
       def verify_discovery_results_openid1
-        claimed_id = @message.get_arg(BARE_NS,
-                                      openid1_return_to_identifier_name)
+        claimed_id =
+          @message.get_arg(BARE_NS, Consumer.openid1_return_to_claimed_id_name)
 
         if claimed_id.nil?
           if @endpoint.nil?
