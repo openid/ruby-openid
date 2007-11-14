@@ -10,7 +10,7 @@ class LoginController < ApplicationController
   end
 
   def submit
-    user = @params[:username]
+    user = params[:username]
 
     # if we get a user, log them in by putting their username in
     # the session hash.

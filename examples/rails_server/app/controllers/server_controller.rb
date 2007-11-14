@@ -1,12 +1,13 @@
 require 'pathname'
 
 # load the openid library, first trying rubygems
-begin
-  require "rubygems"
-  require_gem "ruby-openid", ">= 1.0"
-rescue LoadError
-  require "openid"
-end
+#begin
+#  require "rubygems"
+#  require_gem "ruby-openid", ">= 1.0"
+#rescue LoadError
+require "openid"
+require 'openid/extensions/sreg'
+#end
 
 class ServerController < ApplicationController
 
@@ -16,7 +17,7 @@ class ServerController < ApplicationController
   
   def index
     begin
-      request = server.decode_request(@params)
+      oidreq = server.decode_request(params)
     rescue ProtocolError => e
       # invalid openid request, so just display a page with an error message
       render_text e.to_s
@@ -24,36 +25,36 @@ class ServerController < ApplicationController
     end
       
     # no openid.mode was given
-    unless request
+    unless oidreq
       render_text "This is an OpenID server endpoint."
       return
     end
     
-    if request.kind_of?(CheckIDRequest)
+    if oidreq.kind_of?(CheckIDRequest)
 
-      if self.is_authorized(request.identity_url, request.trust_root)
-        response = request.answer(true)
+      if self.is_authorized(oidreq.identity, oidreq.trust_root)
+        oidresp = oidreq.answer(true)
         
         # add the sreg response if requested
-        self.add_sreg(request, response)
+        self.add_sreg(oidreq, oidresp)
 
-      elsif request.immediate
+      elsif oidreq.immediate
         server_url = url_for :action => 'index'
-        response = request.answer(false, server_url)
+        oidresp = oidreq.answer(false, server_url)
         
       else
-        @session[:last_request] = request
-        @request = request
+        session[:last_oidreq] = oidreq
+        @oidreq = oidreq
         flash[:notice] = "Do you trust this site with your identity?"
         render :template => 'server/decide', :layout => 'server'
         return
       end
 
     else
-      response = server.handle_request(request)
+      oidresp = server.handle_request(oidreq)
     end
   
-    self.render_response(response)
+    self.render_response(oidresp)
   end
 
   def user_page
@@ -69,12 +70,12 @@ class ServerController < ApplicationController
     end
 
     # content negotiation failed, so just render the user page    
-    xrds_url = url_for(:controller=>'user',:action=>@params[:username])+'/xrds'
+    xrds_url = url_for(:controller=>'user',:action=>params[:username])+'/xrds'
     identity_page = <<EOS
 <html><head>
 <meta http-equiv="X-XRDS-Location" content="#{xrds_url}" />
 <link rel="openid.server" href="#{url_for :action => 'index'}" />
-</head><body><p>OpenID identity page for #{@params[:username]}</p>
+</head><body><p>OpenID identity page for #{params[:username]}</p>
 </body></html>
 EOS
 
@@ -89,17 +90,21 @@ EOS
   end
 
   def decision
-    request = @session[:last_request]
-    @session[:last_request] = nil
+    oidreq = session[:last_oidreq]
+    session[:last_oidreq] = nil
 
-    if @params[:yes].nil?
-      redirect_to request.cancel_url
+    if params[:yes].nil?
+      redirect_to oidreq.cancel_url
       return
     else
-      session[:approvals] << request.trust_root
-      response = request.answer(true)
-      self.add_sreg(request, response)
-      return self.render_response(response)
+      if session[:approvals]
+        session[:approvals] << oidreq.trust_root
+      else
+        session[:approvals] = [oidreq.trust_root]
+      end
+      oidresp = oidreq.answer(true)
+      self.add_sreg(oidreq, oidresp)
+      return self.render_response(oidresp)
     end
   end
 
@@ -107,9 +112,10 @@ EOS
 
   def server
     if @server.nil?
+      server_url = url_for :action => 'index', :only_path => false
       dir = Pathname.new(RAILS_ROOT).join('db').join('openid-store')
       store = OpenID::FilesystemStore.new(dir)
-      @server = Server.new(store)
+      @server = Server.new(store, server_url)
     end
     return @server
   end
@@ -128,13 +134,13 @@ EOS
 <?xml version="1.0" encoding="UTF-8"?>
 <xrds:XRDS
     xmlns:xrds="xri://$xrds"
-    xmlns:openid="http://openid.net/xmlns/1.0"
     xmlns="xri://$xrd*($v*2.0)">
   <XRD>
-    <Service priority="1">
+    <Service priority="0">
+      <Type>http://specs.openid.net/auth/2.0/signon</Type>
       <Type>http://openid.net/signon/1.0</Type>
       <Type>http://openid.net/sreg/1.0</Type>
-      <URI>#{url_for(:controller => 'server')}</URI>
+      <URI>#{url_for(:controller => 'server', :only_path => false)}</URI>
     </Service>
   </XRD>
 </xrds:XRDS>
@@ -144,45 +150,38 @@ EOS
     render_text yadis
   end  
 
-  def add_sreg(request, response)
-    # Your code should examine request.query
-    # for openid.sreg.required, openid.sreg.optional, and
-    # openid.sreg.policy_url, and generate add fields to your response
-    # accordingly. For this example, we'll just see if there are any
-    # sreg args and add some sreg data to the response.  Take note,
-    # that this does not actually respect the sreg query, it just sends
-    # back some fake sreg data.  Your implemetation should be better! :)
+  def add_sreg(oidreq, oidresp)
+    # check for Simple Registration arguments and respond
+    sregreq = OpenID::SRegRequest.from_openid_request(oidreq)
 
-    required = request.query['openid.sreg.required']
-    optional = request.query['openid.sreg.optional']
-    policy_url = request.query['openid.sreg.policy_url']
+    # In a real application, this data would be user-specific,
+    # and the user should be asked for permission to release
+    # it.
+    sreg_data = {
+      'nickname' => session[:username],
+      'fullname' => 'Mayor McCheese',
+      'email' => 'mayor@example.com'
+    }
 
-    if required or optional or policy_url
-      # this should be taken out of the user's profile,
-      # but since we don't have one lets just make up some data.
-      # Also, the user should be able to approve the transfer
-      # and modify each field if she likes.
-      sreg_fields = {
-        'email' => 'mayor@example.com',
-        'nickname' => 'Mayor McCheese'
-      }    
-      response.add_fields('sreg', sreg_fields)
-    end
-
+    sregresp = OpenID::SRegResponse.extract_response(sregreq, sreg_data)
+    oidresp.add_extension(sregresp)
   end
 
-  def render_response(response)    
-    web_response = server.encode_response(response)
+  def render_response(oidresp)
+    if oidresp.needs_signing
+      signed_response = server.signatory.sign(oidresp)
+    end
+    web_response = server.encode_response(oidresp)
 
     case web_response.code
-    when HTTP_OK
-      render_text web_response.body, :status => 200           
+    when HTTP_OK 
+      render :text => web_response.body, :status => 200           
 
     when HTTP_REDIRECT
-      redirect_to web_response.redirect_url
+      redirect_to web_response.headers['location']
 
     else
-      render_text web_response.body, :status => 400
+      render :text => web_response.body, :status => 400
     end   
   end
 
