@@ -1,5 +1,5 @@
 
-require 'openid/server/server'
+require 'openid/server'
 require 'openid/cryptutil'
 require 'openid/association'
 require 'openid/util'

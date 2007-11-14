@@ -1,6 +1,6 @@
 require 'openid/extensions/pape'
 require 'openid/message'
-require 'openid/server/server'
+require 'openid/server'
 
 module OpenID
   module PAPETest
