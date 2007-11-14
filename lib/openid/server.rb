@@ -1443,7 +1443,7 @@ module OpenID
       attr_accessor :store, :signatory, :encoder, :decoder, :negotiator,
       :op_endpoint
 
-      def initialize(store, op_endpoint=nil)
+      def initialize(store, op_endpoint)
         # A new L{Server}.
         #
         # @param store: The back-end where my associations are stored.
@@ -1463,11 +1463,6 @@ module OpenID
         @encoder = @@encoderClass.new(@signatory)
         @decoder = @@decoderClass.new(self)
         @negotiator = DefaultNegotiator.copy()
-
-        if !op_endpoint
-          Util.log("Server constructor requires op_endpoint parameter " +
-                   "for OpenID 2.0 servers")
-        end
         @op_endpoint = op_endpoint
       end
 
