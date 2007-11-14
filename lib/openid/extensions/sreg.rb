@@ -262,6 +262,9 @@ module OpenID
       data[field_name]
     end
 
+    def empty?
+      @data.empty?
+    end
     # XXX is there more to a hashlike interface I should add?
   end
 end
