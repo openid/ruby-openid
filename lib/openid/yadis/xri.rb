@@ -2,13 +2,11 @@ require 'openid/yadis/xrds'
 require 'openid/fetchers'
 
 module OpenID
-  # The '(' is for cross-reference authorities, and hopefully has a
-  # matching ')' somewhere.
-
   module Yadis
-
     module XRI
 
+      # The '(' is for cross-reference authorities, and hopefully has a
+      # matching ')' somewhere.
       XRI_AUTHORITIES = ["!", "=", "@", "+", "$", "("]
 
       def self.identifier_scheme(identifier)
