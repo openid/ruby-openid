@@ -12,7 +12,7 @@ SPEC = Gem::Specification.new do |s|
   s.files = files.delete_if {|f| f.include?('_darcs') || f.include?('admin')}
   s.require_path = 'lib'
   s.autorequire = 'openid'
-  s.test_file = 'test/runtests.rb'
+  s.test_file = 'admin/runtests.rb'
   s.has_rdoc = true
   s.extra_rdoc_files = ['README','INSTALL','COPYING','LICENSE']
   s.rdoc_options << '--main' << 'README'
