@@ -42,6 +42,8 @@ module OpenID
       @openid1_return_to_claimed_id_name
     end
 
+    # Handles an openid.mode=id_res response. This object is
+    # instantiated and used by the Consumer.
     class IdResHandler
       attr_reader :endpoint, :message
 
