@@ -99,24 +99,6 @@ module OpenID
           @message.get_args(namespace_uri)
         end
       end
-
-      def ==(other)
-        if !other.instance_of?(self.class)
-          return false
-        end
-
-        [
-         'endpoint',
-         'identity_url',
-         'message',
-         'signed_fields',
-        ].each do |var_name|
-          var_name = '@' + var_name
-          if instance_var_get(var_name) != other.instance_var_get(var_name)
-            return false
-          end
-        end
-      end
     end
 
     class FailureResponse
