@@ -408,10 +408,10 @@ module OpenID
         return response
       end
 
+      # Respond to this request indicating that the association type
+      # or association session type is not supported.
       def answer_unsupported(message, preferred_association_type=nil,
                              preferred_session_type=nil)
-        # Respond to this request indicating that the association type
-        # or association session type is not supported.
         if @message.is_openid1()
           raise ProtocolError.new(@message)
         end
@@ -434,54 +434,39 @@ module OpenID
       end
     end
 
+    # A request to confirm the identity of a user.
+    #
+    # This class handles requests for openid modes
+    # +checkid_immediate+ and +checkid_setup+ .
+    #
+    # Attributes
+    # mode:: +checkid_immediate+ or +checkid_setup+
+    # immediate:: Is this an immediate-mode request?
+    # identity:: The OP-local identifier being checked.
+    # claimed_id:: The claimed identifier.  Not present in OpenID 1.x
+    #     messages.
+    # trust_root::  This URL
+    #     identifies the party making the request, and the user will use
+    #     that to make her decision about what answer she trusts them to
+    #     have.  Referred to as "realm" in OpenID 2.0.
+    # return_to:: The URL to send the user agent back to to
+    #     reply to this request.
+    # assoc_handle:: Provided in smart mode requests, a handle
+    #     for a previously established association.  nil for dumb
+    #     mode requests.
     class CheckIDRequest < OpenIDRequest
-      # A request to confirm the identity of a user.
-      #
-      # This class handles requests for openid modes
-      # X{C{checkid_immediate}} and X{C{checkid_setup}}.
-      #
-      # @cvar mode: "X{C{checkid_immediate}}" or "X{C{checkid_setup}}"
-      # @type mode: str
-      #
-      # @ivar immediate: Is this an immediate-mode request?
-      # @type immediate: bool
-      #
-      # @ivar identity: The OP-local identifier being checked.
-      # @type identity: str
-      #
-      # @ivar claimed_id: The claimed identifier.  Not present in OpenID 1.x
-      # messages.
-      # @type claimed_id: str
-      #
-      # @ivar trust_root: "Are you Frank?" asks the checkid request.
-      # "Who wants to know?"  C{trust_root}, that's who.  This URL
-      # identifies the party making the request, and the user will use
-      # that to make her decision about what answer she trusts them to
-      # have.  Referred to as "realm" in OpenID 2.0.
-      # @type trust_root: str
-      #
-      # @ivar return_to: The URL to send the user agent back to to
-      # reply to this request.
-      # @type return_to: str
-      #
-      # @ivar assoc_handle: Provided in smart mode requests, a handle
-      # for a previously established association.  C{None} for dumb
-      # mode requests.
-      # @type assoc_handle: str
 
       attr_accessor :assoc_handle, :identity, :claimed_id,
       :return_to, :trust_root, :op_endpoint, :immediate, :mode
 
+      # These parameters are assigned directly as attributes,
+      # see the #CheckIDRequest class documentation for their
+      # descriptions.
+      #
+      # Raises #MalformedReturnURL when the +return_to+ URL is not
+      # a URL.
       def initialize(identity, return_to, op_endpoint, trust_root=nil,
                      immediate=false, assoc_handle=nil)
-        # Construct me.
-        #
-        # These parameters are assigned directly as class attributes,
-        # see my L{class documentation<CheckIDRequest>} for their
-        # descriptions.
-        #
-        # @raises MalformedReturnURL: When the C{return_to} URL is not
-        # a URL.
         @namespace = OPENID2_NS
         @assoc_handle = assoc_handle
         @identity = identity
@@ -508,26 +493,23 @@ module OpenID
         end
       end
 
+      # Construct me from an OpenID message.
+      #
+      # message:: An OpenID checkid_* request Message
+      #
+      # op_endpoint:: The endpoint URL of the server that this
+      #     message was sent to.
+      #
+      # Raises:
+      #   ProtocolError:: When not all required parameters are present
+      #     in the message.
+      #
+      #   MalformedReturnURL:: When the +return_to+ URL is not
+      #     a URL.
+      #
+      #   UntrustedReturnURL:: When the +return_to+ URL is
+      #     outside the +trust_root+.
       def self.from_message(message, op_endpoint)
-        # Construct me from an OpenID message.
-        #
-        # @raises ProtocolError: When not all required parameters are present
-        #     in the message.
-        #
-        # @raises MalformedReturnURL: When the C{return_to} URL is not
-        # a URL.
-        #
-        # @raises UntrustedReturnURL: When the C{return_to} URL is
-        # outside the C{trust_root}.
-        #
-        # @param message: An OpenID checkid_* request Message
-        # @type message: openid.message.Message
-        #
-        # @param op_endpoint: The endpoint URL of the server that this
-        # message was sent to.
-        # @type op_endpoint: str
-        #
-        # @returntype: L{CheckIDRequest}
         obj = self.allocate
         obj.message = message
         obj.namespace = message.get_openid_namespace()
@@ -608,19 +590,14 @@ module OpenID
         return obj
       end
 
+      # Is the identifier to be selected by the IDP?
       def id_select
-        # Is the identifier to be selected by the IDP?
-        #
-        # @returntype: bool
-
         # So IDPs don't have to import the constant
         return @identity == IDENTIFIER_SELECT
       end
 
+      # Is my return_to under my trust_root?
       def trust_root_valid
-        # Is my return_to under my trust_root?
-        # 
-        # @returntype: bool
         if !@trust_root
           return true
         end
@@ -637,74 +614,62 @@ module OpenID
         end
       end
 
+      # Does the relying party publish the return_to URL for this
+      # response under the realm? It is up to the provider to set a
+      # policy for what kinds of realms should be allowed. This
+      # return_to URL verification reduces vulnerability to
+      # data-theft attacks based on open proxies,
+      # corss-site-scripting, or open redirectors.
+      #
+      # This check should only be performed after making sure that
+      # the return_to URL matches the realm.
+      #
+      # Raises DiscoveryFailure if the realm
+      #     URL does not support Yadis discovery (and so does not
+      #     support the verification process).
+      #
+      # Returns true if the realm publishes a document with the
+      #     return_to URL listed
       def return_to_verified
-        # Does the relying party publish the return_to URL for this
-        # response under the realm? It is up to the provider to set a
-        # policy for what kinds of realms should be allowed. This
-        # return_to URL verification reduces vulnerability to
-        # data-theft attacks based on open proxies,
-        # corss-site-scripting, or open redirectors.
-        #
-        # This check should only be performed after making sure that
-        # the return_to URL matches the realm.
-        #
-        # @see: trustRootValid
-        # 
-        # @raises openid.yadis.discover.DiscoveryFailure: if the realm
-        #     URL does not support Yadis discovery (and so does not
-        #     support the verification process).
-        #
-        # @returntype: bool
-        #
-        # @returns: True if the realm publishes a document with the
-        #     return_to URL listed
         return TrustRoot.verify_return_to(@trust_root, @return_to)
       end
 
+      # Respond to this request.
+      # 
+      # allow:: Allow this user to claim this identity, and allow the
+      #     consumer to have this information?
+      #
+      # server_url:: DEPRECATED.  Passing op_endpoint to the
+      #     #Server constructor makes this optional.
+      #
+      #     When an OpenID 1.x immediate mode request does not
+      #     succeed, it gets back a URL where the request may be
+      #     carried out in a not-so-immediate fashion.  Pass my URL
+      #     in here (the fully qualified address of this server's
+      #     endpoint, i.e.  <tt>http://example.com/server</tt>), and I
+      #     will use it as a base for the URL for a new request.
+      #
+      #     Optional for requests where #CheckIDRequest.immediate
+      #     is false or +allow+ is true.
+      #
+      # identity:: The OP-local identifier to answer with.  Only for use
+      #     when the relying party requested identifier selection.
+      #
+      # claimed_id:: The claimed identifier to answer with,
+      #     for use with identifier selection in the case where the
+      #     claimed identifier and the OP-local identifier differ,
+      #     i.e. when the claimed_id uses delegation.
+      #
+      #     If +identity+ is provided but this is not,
+      #     +claimed_id+ will default to the value of +identity+.
+      #     When answering requests that did not ask for identifier
+      #     selection, the response +claimed_id+ will default to
+      #     that of the request.
+      #
+      #     This parameter is new in OpenID 2.0.
+      #
+      # Version 2.0 deprecates +server_url+ and adds +claimed_id+.
       def answer(allow, server_url=nil, identity=nil, claimed_id=nil)
-        # Respond to this request.
-        #
-        # @param allow: Allow this user to claim this identity, and allow the
-        #     consumer to have this information?
-        # @type allow: bool
-        #
-        # @param server_url: DEPRECATED.  Passing C{op_endpoint} to the
-        #     L{Server} constructor makes this optional.
-        #
-        #     When an OpenID 1.x immediate mode request does not
-        #     succeed, it gets back a URL where the request may be
-        #     carried out in a not-so-immediate fashion.  Pass my URL
-        #     in here (the fully qualified address of this server's
-        #     endpoint, i.e.  C{http://example.com/server}), and I
-        #     will use it as a base for the URL for a new request.
-        #
-        #     Optional for requests where C{CheckIDRequest.immediate}
-        #     is C{False} or C{allow} is C{True}.
-        #
-        # @type server_url: str
-        #
-        # @param identity: The OP-local identifier to answer with.  Only for use
-        #     when the relying party requested identifier selection.
-        # @type identity: str or None
-        #
-        # @param claimed_id: The claimed identifier to answer with,
-        #     for use with identifier selection in the case where the
-        #     claimed identifier and the OP-local identifier differ,
-        #     i.e. when the claimed_id uses delegation.
-        #
-        #     If C{identity} is provided but this is not,
-        #     C{claimed_id} will default to the value of C{identity}.
-        #     When answering requests that did not ask for identifier
-        #     selection, the response C{claimed_id} will default to
-        #     that of the request.
-        #
-        #     This parameter is new in OpenID 2.0.
-        # @type claimed_id: str or None
-        #
-        # @returntype: L{OpenIDResponse}
-        #
-        # @change: Version 2.0 deprecates C{server_url} and adds C{claimed_id}.
-
         # FIXME: undocumented exceptions
         if !@return_to
           raise NoReturnToError
@@ -823,12 +788,8 @@ module OpenID
       def encode_to_url(server_url)
         # Encode this request as a URL to GET.
         #
-        # @param server_url: The URL of the OpenID server to make this
-        # request of.
-        #
-        # @type server_url: str
-        #
-        # @returntype: str
+        # server_url:: The URL of the OpenID server to make this
+        #              request of.
         if !@return_to
           raise NoReturnToError
         end
@@ -866,13 +827,10 @@ module OpenID
         # operation can be carried out directly without another trip
         # through the server.
         #
-        # (Except you probably want to make another trip through the
-        # server so that it knows that the user did make a decision.
-        # Or you could simulate this method by doing
-        # C{.answer(False).encodeToURL()})
+        # (Except you may want to make another trip through the
+        # server so that it knows that the user did make a decision.)
         #
-        # @returntype: str
-        # @returns: The return_to URL with openid.mode = cancel.
+        # Returns a URL as a string.
         if !@return_to
           raise NoReturnToError
         end
@@ -899,32 +857,26 @@ module OpenID
     class OpenIDResponse
       # I am a response to an OpenID request.
       #
-      # @ivar request: The request I respond to.
-      # @type request: L{OpenIDRequest}
-      #
-      # @ivar fields: My parameters as a dictionary with each key
-      # mapping to one value.  Keys are parameter names with no
-      # leading "C{openid.}". e.g.  "C{identity}" and "C{mac_key}",
-      # never "C{openid.identity}".
-      # @type fields: L{openid.message.Message}
-      #
-      # @ivar signed: The names of the fields which should be signed.
-      # @type signed: list of str
+      # Attributes:
+      #  request:: The #OpenIDRequest I respond to.
+      #  fields:: An #OpenID::Message with the data to be returned.
+      #           Keys are parameter names with no
+      #           leading +openid.+ e.g.  +identity+ and +mac_key+
+      #           never +openid.identity+ .
+      # signed:: A list of the names of the fields which should be signed.
 
       # Implementer's note: In a more symmetric client/server
-      # implementation, there would be more types of OpenIDResponse
+      # implementation, there would be more types of #OpenIDResponse
       # object and they would have validated attributes according to
       # the type of response.  But as it is, Response objects in a
       # server are basically write-only, their only job is to go out
       # over the wire, so this is just a loose wrapper around
-      # OpenIDResponse.fields.
+      # #OpenIDResponse.fields.
 
       attr_accessor :request, :fields
 
       def initialize(request)
-        # Make a response to an L{OpenIDRequest}.
-        #
-        # @type request: L{OpenIDRequest}
+        # Make a response to an OpenIDRequest.
         @request = request
         @fields = Message.new(request.namespace)
       end
@@ -938,24 +890,18 @@ module OpenID
 
       def to_form_markup
         # Returns the form markup for this response.
-        #
-        # @returntype: str
         return @fields.to_form_markup(
                  @fields.get_arg(OPENID_NS, 'return_to'))
       end
 
       def render_as_form
-        # Returns True if this response's encoding is
+        # Returns true if this response's encoding is
         # ENCODE_HTML_FORM.  Convenience method for server authors.
-        #
-        # @returntype: bool
         return self.which_encoding == ENCODE_HTML_FORM
       end
 
       def needs_signing
         # Does this response require signing?
-        #
-        # @returntype: bool
         return @fields.get_arg(OPENID_NS, 'mode') == 'id_res'
       end
 
@@ -963,8 +909,7 @@ module OpenID
 
       def which_encoding
         # How should I be encoded?
-        #
-        # @returns: one of ENCODE_URL or ENCODE_KVFORM.
+        # returns one of ENCODE_URL or ENCODE_KVFORM.
         if BROWSER_REQUEST_MODES.member?(@request.mode)
           if @fields.get_openid_namespace == OPENID2_NS and
               encode_to_url.length > OPENID1_URL_LIMIT
@@ -979,23 +924,16 @@ module OpenID
 
       def encode_to_url
         # Encode a response as a URL for the user agent to GET.
-        #
         # You will generally use this URL with a HTTP redirect.
-        #
-        # @returns: A URL to direct the user agent back to.
-        # @returntype: str
         return @fields.to_url(@request.return_to)
       end
 
       def add_extension(extension_response)
         # Add an extension response to this response message.
         #
-        # @param extension_response: An object that implements the
-        #     extension interface for adding arguments to an OpenID
+        # extension_response:: An object that implements the
+        #     #OpenID::Extension interface for adding arguments to an OpenID
         #     message.
-        # @type extension_response: L{openid.extension}
-        #
-        # @returntype: None
         extension_response.to_message(@fields)
       end
 
@@ -1006,10 +944,8 @@ module OpenID
         # messages which came directly from the consumer and not
         # through the user agent.
         #
-        # @see: OpenID Specs,
-        #    U{Key-Value Colon/Newline format<http://openid.net/specs.bml#keyvalue>}
-        #
-        # @returntype: str
+        # see: OpenID Specs,
+        #    <a href="http://openid.net/specs.bml#keyvalue">Key-Value Colon/Newline format</a>
         return @fields.to_kvform
       end
 
@@ -1018,21 +954,17 @@ module OpenID
       end
     end
 
-    class WebResponse
       # I am a response to an OpenID request in terms a web server
       # understands.
       #
-      # I generally come from an L{Encoder}, either directly or from
-      # L{Server.encodeResponse}.
+      # I generally come from an #Encoder, either directly or from
+      # #Server.encodeResponse.
       #
-      # @ivar code: The HTTP code of this response.
-      # @type code: int
-      #
-      # @ivar headers: Headers to include in this response.
-      # @type headers: dict
-      #
-      # @ivar body: The body of this response.
-      # @type body: str
+      #   Attributes
+      #   code:: The HTTP code of this response as an integer.
+      #   headers:: #Hash of headers to include in this response.
+      #   body: The body of this response.
+    class WebResponse
 
       attr_accessor :code, :headers, :body
 
