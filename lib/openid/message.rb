@@ -3,7 +3,7 @@ require 'openid/kvform'
 
 module OpenID
 
-  IDENTIFIER_SELECT = 'http://openid.net/identifier_select/2.0'
+  IDENTIFIER_SELECT = 'http://specs.openid.net/auth/2.0/identifier_select'
 
   # URI for Simple Registration extension, the only commonly deployed
   # OpenID 1.x extension, and so a special case.
