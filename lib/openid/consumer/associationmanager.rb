@@ -109,6 +109,10 @@ module OpenID
       end
 
       def get_association
+        if @store.nil?
+          return nil
+        end
+
         assoc = @store.get_association(@server_url)
         if assoc.nil? || assoc.expires_in <= 0
           assoc = negotiate_association
