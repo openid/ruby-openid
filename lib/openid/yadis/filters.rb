@@ -2,6 +2,7 @@
 # endpoint information out of a Yadis XRD file using the REXML
 # XML parser.
 
+#
 module OpenID
   module Yadis
     class BasicServiceEndpoint
