@@ -1,22 +1,6 @@
 require 'uri'
 require 'openid/urinorm'
 
-TOP_LEVEL_DOMAINS = %w'
-  com edu gov int mil net org biz info name museum coop aero ac ad ae
-  af ag ai al am an ao aq ar as at au aw az ba bb bd be bf bg bh bi bj
-  bm bn bo br bs bt bv bw by bz ca cc cd cf cg ch ci ck cl cm cn co cr
-  cu cv cx cy cz de dj dk dm do dz ec ee eg eh er es et eu fi fj fk fm
-  fo fr ga gd ge gf gg gh gi gl gm gn gp gq gr gs gt gu gw gy hk hm hn
-  hr ht hu id ie il im in io iq ir is it je jm jo jp ke kg kh ki km kn
-  kp kr kw ky kz la lb lc li lk lr ls lt lu lv ly ma mc md mg mh mk ml
-  mm mn mo mp mq mr ms mt mu mv mw mx my mz na nc ne nf ng ni nl no np
-  nr nu nz om pa pe pf pg ph pk pl pm pn pr ps pt pw py qa re ro ru rw
-  sa sb sc sd se sg sh si sj sk sl sm sn so sr st sv sy sz tc td tf tg
-  th tj tk tm tn to tp tr tt tv tw tz ua ug uk um us uy uz va vc ve vg
-  vi vn vu wf ws ye yt yu za zm zw'
-
-ALLOWED_PROTOCOLS = ['http', 'https']
-
 module OpenID
 
   class RealmVerificationRedirected < Exception
@@ -33,6 +17,22 @@ module OpenID
   end
 
   module TrustRoot
+    TOP_LEVEL_DOMAINS = %w'
+      com edu gov int mil net org biz info name museum coop aero ac ad
+      ae af ag ai al am an ao aq ar as at au aw az ba bb bd be bf bg
+      bh bi bj bm bn bo br bs bt bv bw by bz ca cc cd cf cg ch ci ck
+      cl cm cn co cr cu cv cx cy cz de dj dk dm do dz ec ee eg eh er
+      es et eu fi fj fk fm fo fr ga gd ge gf gg gh gi gl gm gn gp gq
+      gr gs gt gu gw gy hk hm hn hr ht hu id ie il im in io iq ir is
+      it je jm jo jp ke kg kh ki km kn kp kr kw ky kz la lb lc li lk
+      lr ls lt lu lv ly ma mc md mg mh mk ml mm mn mo mp mq mr ms mt
+      mu mv mw mx my mz na nc ne nf ng ni nl no np nr nu nz om pa pe
+      pf pg ph pk pl pm pn pr ps pt pw py qa re ro ru rw sa sb sc sd
+      se sg sh si sj sk sl sm sn so sr st sv sy sz tc td tf tg th tj
+      tk tm tn to tp tr tt tv tw tz ua ug uk um us uy uz va vc ve vg
+      vi vn vu wf ws ye yt yu za zm zw'
+
+    ALLOWED_PROTOCOLS = ['http', 'https']
 
     # The URI for relying party discovery, used in realm verification.
     #
@@ -59,9 +59,9 @@ module OpenID
       end
     end
 
+    # Is the return_to URL under one of the supplied allowed
+    # return_to URLs?
     def TrustRoot.return_to_matches(allowed_return_to_urls, return_to)
-      # Is the return_to URL under one of the supplied allowed
-      # return_to URLs?
       allowed_return_to_urls.each { |allowed_return_to|
         # A return_to pattern works the same as a realm, except that
         # it's not allowed to use a wildcard. We'll model this by
@@ -86,9 +86,9 @@ module OpenID
       return false
     end
 
+    # Given a relying party discovery URL return a list of return_to
+    # URLs.
     def TrustRoot.get_allowed_return_urls(relying_party_url)
-      # Given a relying party discovery URL return a list of return_to
-      # URLs.
       rp_url_after_redirects, return_to_urls = services.get_service_endpoints(
         relying_party_url, _extract_return_url)
 
@@ -101,17 +101,17 @@ module OpenID
       return return_to_urls
     end
 
-    # _vrfy parameter is there to make testing easier
+    # Verify that a return_to URL is valid for the given realm.
+    #
+    # This function builds a discovery URL, performs Yadis discovery
+    # on it, makes sure that the URL does not redirect, parses out
+    # the return_to URLs, and finally checks to see if the current
+    # return_to URL matches the return_to.
+    #
+    # raises DiscoveryFailure when Yadis discovery fails returns
+    # true if the return_to URL is valid for the realm
     def TrustRoot.verify_return_to(realm_str, return_to, _vrfy=nil)
-      # Verify that a return_to URL is valid for the given realm.
-      #
-      # This function builds a discovery URL, performs Yadis discovery
-      # on it, makes sure that the URL does not redirect, parses out
-      # the return_to URLs, and finally checks to see if the current
-      # return_to URL matches the return_to.
-      #
-      # raises DiscoveryFailure: When Yadis discovery fails returns
-      # true if the return_to URL is valid for the realm
+      # _vrfy parameter is there to make testing easier
       if _vrfy.nil?
         _vrfy = self.method('get_allowed_return_urls')
       end
@@ -221,24 +221,24 @@ module OpenID
         return TrustRoot.parse(trust_root).sane?
       end
 
+      # quick func for validating a url against a trust root.  See the
+      # TrustRoot class if you need more control.
       def self.check_url(trust_root, url)
-        # quick func for validating a url against a trust root.  See the
-        # TrustRoot class if you need more control."""
         tr = self.parse(trust_root)
         return (!tr.nil? and tr.validate_url(url))
       end
 
+      # Return a discovery URL for this realm.
+      #
+      # This function does not check to make sure that the realm is
+      # valid. Its behaviour on invalid inputs is undefined.
+      #
+      # return_to:: The relying party return URL of the OpenID
+      # authentication request
+      #
+      # Returns the URL upon which relying party discovery should be
+      # run in order to verify the return_to URL
       def build_discovery_url
-        # Return a discovery URL for this realm.
-        #
-        # This function does not check to make sure that the realm is
-        # valid. Its behaviour on invalid inputs is undefined.
-        #
-        # return_to: The relying party return URL of the OpenID
-        # authentication request
-        #
-        # Returns the URL upon which relying party discovery should be
-        # run in order to verify the return_to URL
         if self.wildcard
           # Use "www." in place of the star
           www_domain = 'www.' + @host
