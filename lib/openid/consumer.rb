@@ -185,6 +185,7 @@ module OpenID
     # every HTTP request that handles OpenID transactions.
     #
     # session: the session object to use to store request information.
+    # The session should behave like a hash.
     #
     # store: an object that implements the interface in Store.
     def initialize(session, store)
@@ -194,7 +195,7 @@ module OpenID
     end
 
     # Start the OpenID authentication process. See steps 1-2 in the
-    # overview at the top of this file.
+    # overview for the Consumer class.
     #
     # user_url: Identity URL given by the user. This method performs a
     # textual transformation of the URL to try and make sure it is
@@ -202,17 +203,17 @@ module OpenID
     # normalized to http://example.com/ normalizing and resolving any
     # redirects the server might issue.
     #
-    # anonymous: Whether to make an anonymous request of the OpenID
-    # provider.  Such a request does not ask for an authorization
-    # assertion for an OpenID identifier, but may be used with
-    # extensions to pass other data.  e.g. "I don't care who you are,
-    # but I'd like to know your time zone."
+    # anonymous: A boolean value.  Whether to make an anonymous
+    # request of the OpenID provider.  Such a request does not ask for
+    # an authorization assertion for an OpenID identifier, but may be
+    # used with extensions to pass other data.  e.g. "I don't care who
+    # you are, but I'd like to know your time zone."
     #
-    # Returns An object containing the discovered information will be
-    # returned, with a method for building a redirect URL to the
+    # Returns a CheckIDRequest object containing the discovered
+    # information, with a method for building a redirect URL to the
     # server, as described in step 3 of the overview. This object may
     # also be used to add extension arguments to the request, using
-    # its addExtensionArg method.
+    # its add_extension_arg method.
     #
     # Raises DiscoveryFailure when no OpenID server can be found for
     # this URL.
@@ -230,7 +231,7 @@ module OpenID
     end
 
     # Start OpenID verification without doing OpenID server
-    # discovery. This method is used internally by Consumer.begin
+    # discovery. This method is used internally by Consumer.begin()
     # after discovery is performed, and exists to provide an interface
     # for library users needing to perform their own discovery.
     #
@@ -257,10 +258,9 @@ module OpenID
 
     # Called to interpret the server's response to an OpenID
     # request. It is called in step 4 of the flow described in the
-    # consumer overview.
+    # Consumer overview.
     #
-    # query: A dictionary of the query parameters for this HTTP
-    # request.
+    # query: A hash of the query parameters for this HTTP request.
     #
     # return_to: The return URL used to invoke the application.
     # Extract the URL from your application's web request framework
