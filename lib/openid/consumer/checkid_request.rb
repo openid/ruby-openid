@@ -10,8 +10,8 @@ module OpenID
     #
     # It is separate from the consumer because you may wish to add
     # things to the request before sending it on its way to the
-    # server. It also has serialization options that let you encode the
-    # authentication request as a URL or as a form POST.
+    # server. It also has serialization options that let you encode
+    # the authentication request as a URL or as a form POST.
     class CheckIDRequest
       attr_accessor :return_to_args
 
@@ -28,13 +28,13 @@ module OpenID
 
       attr_reader :anonymous
 
-      # Set whether this request should be made anonymously. If a request
-      # is anonymous, the identifier will not be sent in the request. This
-      # is only useful if you are making another kind of request with an
-      # extension in this request.
+      # Set whether this request should be made anonymously. If a
+      # request is anonymous, the identifier will not be sent in the
+      # request. This is only useful if you are making another kind of
+      # request with an extension in this request.
       #
-      # Anonymous requests are not allowed when the request is made with
-      # OpenID 1.
+      # Anonymous requests are not allowed when the request is made
+      # with OpenID 1.
       def anonymous=(is_anonymous)
         if is_anonymous && @message.is_openid1
           raise ArgumentError, ("OpenID1 requests MUST include the "\
@@ -43,19 +43,21 @@ module OpenID
         @anonymous = is_anonymous
       end
 
-      # Add an object that implements the extension interface for adding
-      # arguments to an OpenID message to this checkid request
+      # Add an object that implements the extension interface for
+      # adding arguments to an OpenID message to this checkid request.
+      #
+      # extension_request: an OpenID::Extension object.
       def add_extension(extension_request)
         extension_request.to_message(@message)
       end
 
       # Add an extension argument to this OpenID authentication
       # request. You probably want to use add_extension and the
-      # OpenID::Extension interface
+      # OpenID::Extension interface.
       #
       # Use caution when adding arguments, because they will be
-      # URL-escaped and appended to the redirect URL, which can easily get
-      # quite long.
+      # URL-escaped and appended to the redirect URL, which can easily
+      # get quite long.
       def add_extension_arg(namespace, key, value)
         @message.set_arg(namespace, key, value)
       end
@@ -67,10 +69,10 @@ module OpenID
       #
       # If immediate mode is requested, the OpenID provider is to send
       # back a response immediately, useful for behind-the-scenes
-      # authentication attempts.  Otherwise the OpenID provider may engage
-      # the user before providing a response.  This is the default case,
-      # as the user may need to provide credentials or approve the request
-      # before a positive response can be sent.
+      # authentication attempts.  Otherwise the OpenID provider may
+      # engage the user before providing a response.  This is the
+      # default case, as the user may need to provide credentials or
+      # approve the request before a positive response can be sent.
       def get_message(realm, return_to=nil, immediate=false)
         if !return_to.nil?
           return_to = Util.append_args(return_to, @return_to_args)
@@ -100,9 +102,10 @@ module OpenID
 
         if not @anonymous
           if @endpoint.is_op_identifier
-            # This will never happen when we're in OpenID 1 compatibility
-            # mode, as long as is_op_identifier() returns false
-            # whenever preferred_namespace returns OPENID1_NS.
+            # This will never happen when we're in OpenID 1
+            # compatibility mode, as long as is_op_identifier()
+            # returns false whenever preferred_namespace returns
+            # OPENID1_NS.
             claimed_id = request_identity = IDENTIFIER_SELECT
           else
             request_identity = @endpoint.get_local_id
@@ -132,8 +135,8 @@ module OpenID
       # Returns a URL with an encoded OpenID request.
       #
       # The resulting URL is the OpenID provider's endpoint URL with
-      # parameters appended as query arguments.  You should redirect the
-      # user agent to this URL.
+      # parameters appended as query arguments.  You should redirect
+      # the user agent to this URL.
       #
       # OpenID 2.0 endpoints also accept POST requests, see
       # 'send_redirect?' and 'form_markup'.
@@ -146,8 +149,8 @@ module OpenID
       #
       # form_tag_attrs is a hash of attributes to be added to the form
       # tag. 'accept-charset' and 'enctype' have defaults that can be
-      # overridden. If a value is supplied for 'action' or 'method', it
-      # will be replaced.
+      # overridden. If a value is supplied for 'action' or 'method',
+      # it will be replaced.
       def form_markup(realm, return_to=nil, immediate=false,
                       form_tag_attrs=nil)
         message = get_message(realm, return_to, immediate)
