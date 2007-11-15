@@ -7,6 +7,8 @@ require 'pathname'
 #rescue LoadError
 require "openid"
 require 'openid/extensions/sreg'
+require 'openid/extensions/pape'
+require 'openid/store/filestore'
 #end
 
 class ServerController < ApplicationController
@@ -36,7 +38,9 @@ class ServerController < ApplicationController
         oidresp = oidreq.answer(true)
         
         # add the sreg response if requested
-        self.add_sreg(oidreq, oidresp)
+        add_sreg(oidreq, oidresp)
+        # ditto pape
+        add_pape(oidreq, oidresp)
 
       elsif oidreq.immediate
         server_url = url_for :action => 'index'
@@ -103,7 +107,8 @@ EOS
         session[:approvals] = [oidreq.trust_root]
       end
       oidresp = oidreq.answer(true)
-      self.add_sreg(oidreq, oidresp)
+      add_sreg(oidreq, oidresp)
+      add_pape(oidreq, oidresp)
       return self.render_response(oidresp)
     end
   end
@@ -154,6 +159,7 @@ EOS
     # check for Simple Registration arguments and respond
     sregreq = OpenID::SRegRequest.from_openid_request(oidreq)
 
+    return if sregreq.nil?
     # In a real application, this data would be user-specific,
     # and the user should be asked for permission to release
     # it.
@@ -163,10 +169,16 @@ EOS
       'email' => 'mayor@example.com'
     }
     
-    if sregreq.were_fields_requested?
-      sregresp = OpenID::SRegResponse.extract_response(sregreq, sreg_data)
-      oidresp.add_extension(sregresp)
-    end
+    sregresp = OpenID::SRegResponse.extract_response(sregreq, sreg_data)
+    oidresp.add_extension(sregresp)
+  end
+
+  def add_pape(oidreq, oidresp)
+    papereq = OpenID::PAPE::Request.from_openid_request(oidreq)
+    return if papereq.nil?
+    paperesp = OpenID::PAPE::Response.new
+    paperesp.nist_auth_level = 0 # we don't even do auth at all!
+    oidresp.add_extension(paperesp)
   end
 
   def render_response(oidresp)
