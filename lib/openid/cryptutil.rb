@@ -5,6 +5,8 @@ require "hmac/sha1"
 require "hmac/sha2"
 
 module OpenID
+  # This module contains everything needed to perform low-level
+  # cryptograph and data manipulation tasks.
   module CryptUtil
 
     # Generate a random number, doing a little extra work to make it
@@ -12,14 +14,12 @@ module OpenID
     # doesn't have /dev/urandom then this number is not
     # cryptographically safe. See
     # <http://www.cosine.org/2007/08/07/security-ruby-kernel-rand/>
-    # for more information.
+    # for more information.  max is the largest possible value of such
+    # a random number, where the result will be less than max.
     def CryptUtil.rand(max)
       Kernel.srand()
       return Kernel.rand(max)
     end
-
-    # These crypto functions are defined here to make using alternate
-    # implementations easier.
 
     def CryptUtil.sha1(text)
       return Digest::SHA1.digest(text)
@@ -38,7 +38,8 @@ module OpenID
     end
 
     # Generate a random string of the given length, composed of the
-    # specified characters
+    # specified characters.  If chars is nil, generate a string
+    # composed of characters in the range 0..255.
     def CryptUtil.random_string(length, chars=nil)
       s = ""
 
@@ -50,6 +51,8 @@ module OpenID
       return s
     end
 
+    # Convert a number to its binary representation; return a string
+    # of bytes.
     def CryptUtil.num_to_binary(n)
       bits = n.to_s(2)
       prepend = (8 - bits.length % 8)
@@ -57,6 +60,7 @@ module OpenID
       return [bits].pack('B*')
     end
 
+    # Convert a string of bytes into a number.
     def CryptUtil.binary_to_num(s)
       # taken from openid-ruby 0.0.1
       s = "\000" * (4 - (s.length % 4)) + s
@@ -68,10 +72,12 @@ module OpenID
       return num
     end
 
+    # Encode a number as a base64-encoded byte string.
     def CryptUtil.num_to_base64(l)
       return OpenID::Util.to_base64(num_to_binary(l))
     end
 
+    # Decode a base64 byte string to a number.
     def CryptUtil.base64_to_num(s)
       return binary_to_num(OpenID::Util.from_base64(s))
     end

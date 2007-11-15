@@ -1,14 +1,11 @@
-# Functions for generating and parsing HTTP Accept: headers for
-# supporting server-directed content negotiation.
-
 module OpenID
 
   module Yadis
 
+    # Generate an accept header value
+    #
+    # [str or (str, float)] -> str
     def self.generate_accept_header(*elements)
-      # Generate an accept header value
-      #
-      # [str or (str, float)] -> str
       parts = []
       elements.each { |element|
         if element.is_a?(String)
