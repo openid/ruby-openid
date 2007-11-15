@@ -5,16 +5,16 @@
 require 'openid/extension'
 
 module OpenID
-  
+
   module PAPE
     NS_URI = "http://specs.openid.net/extensions/pape/1.0"
     AUTH_MULTI_FACTOR_PHYSICAL =
       'http://schemas.openid.net/pape/policies/2007/06/multi-factor-physical'
-    AUTH_MULTI_FACTOR = 
+    AUTH_MULTI_FACTOR =
       'http://schemas.openid.net/pape/policies/2007/06/multi-factor'
-    AUTH_PHISHING_RESISTANT = 
+    AUTH_PHISHING_RESISTANT =
       'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant'
-    
+
     # A Provider Authentication Policy request, sent from a relying
     # party to a provider
     class Request < Extension
@@ -25,8 +25,6 @@ module OpenID
         @preferred_auth_policies = preferred_auth_policies
         @max_auth_age = max_auth_age
       end
-
-      # _nonzero
 
       # Add an acceptable authentication policy URI to this request
       # This method is intended to be used by the relying party to add
@@ -129,7 +127,7 @@ module OpenID
           else
             nist_level = nist_level_str.to_i
             # if it's zero here we have a bad value
-            if nist_level == 0 
+            if nist_level == 0
               nist_level = nil
             end
           end
