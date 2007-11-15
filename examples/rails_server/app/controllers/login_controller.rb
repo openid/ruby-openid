@@ -10,6 +10,9 @@ class LoginController < ApplicationController
   end
 
   def index
+    response.headers['X-XRDS-Location'] = url_for(:controller => "server",
+                                                  :action => "idp_xrds",
+                                                  :only_path => false)
     @base_url = base_url
     # just show the login page
   end

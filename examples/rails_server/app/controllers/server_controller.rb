@@ -6,6 +6,7 @@ require 'pathname'
 #  require_gem "ruby-openid", ">= 1.0"
 #rescue LoadError
 require "openid"
+require "openid/consumer/discovery"
 require 'openid/extensions/sreg'
 require 'openid/extensions/pape'
 require 'openid/store/filestore'
@@ -31,11 +32,30 @@ class ServerController < ApplicationController
       render_text "This is an OpenID server endpoint."
       return
     end
-    
+
+    oidresp = nil
+
     if oidreq.kind_of?(CheckIDRequest)
 
-      if self.is_authorized(oidreq.identity, oidreq.trust_root)
-        oidresp = oidreq.answer(true)
+      identity = oidreq.identity
+
+      if oidreq.id_select
+        if oidreq.immediate
+          oidresp = oidreq.answer(false)
+        elsif session[:username].nil?
+          # The user hasn't logged in.
+          show_decision_page(oidreq)
+          return
+        else
+          # Else, set the identity to the one the user is using.
+          identity = url_for_user
+        end
+      end
+
+      if oidresp
+        nil
+      elsif self.is_authorized(identity, oidreq.trust_root)
+        oidresp = oidreq.answer(true, nil, identity)
         
         # add the sreg response if requested
         add_sreg(oidreq, oidresp)
@@ -47,10 +67,7 @@ class ServerController < ApplicationController
         oidresp = oidreq.answer(false, server_url)
         
       else
-        session[:last_oidreq] = oidreq
-        @oidreq = oidreq
-        flash[:notice] = "Do you trust this site with your identity?"
-        render :template => 'server/decide', :layout => 'server'
+        show_decision_page(oidreq)
         return
       end
 
@@ -61,6 +78,17 @@ class ServerController < ApplicationController
     self.render_response(oidresp)
   end
 
+  def show_decision_page(oidreq, message="Do you trust this site with your identity?")
+    session[:last_oidreq] = oidreq
+    @oidreq = oidreq
+
+    if message
+      flash[:notice] = message
+    end
+
+    render :template => 'server/decide', :layout => 'server'
+  end
+
   def user_page
     # Yadis content-negotiation: we want to return the xrds if asked for.
     accept = request.env['HTTP_ACCEPT']
@@ -69,7 +97,7 @@ class ServerController < ApplicationController
     # to do real Accept header parsing and logic.  Though I expect it will work
     # 99% of the time.
     if accept and accept.include?('application/xrds+xml')
-      render_xrds
+      user_xrds
       return
     end
 
@@ -89,8 +117,22 @@ EOS
     render_text identity_page
   end
 
-  def xrds
-    render_xrds
+  def user_xrds
+    types = [
+             OpenID::OPENID_2_0_TYPE,
+             OpenID::OPENID_1_0_TYPE,
+             OpenID::SREG_URI,
+            ]
+
+    render_xrds(types)
+  end
+
+  def idp_xrds
+    types = [
+             OpenID::OPENID_IDP_2_0_TYPE,
+            ]
+
+    render_xrds(types)
   end
 
   def decision
@@ -101,12 +143,28 @@ EOS
       redirect_to oidreq.cancel_url
       return
     else
+      id_to_send = params[:id_to_send]
+
+      identity = oidreq.identity
+      if oidreq.id_select
+        if id_to_send and id_to_send != ""
+          session[:username] = id_to_send
+          session[:approvals] = []
+          identity = url_for_user
+        else
+          msg = "You must enter a username to in order to send " +
+            "an identifier to the Relying Party."
+          show_decision_page(oidreq, msg)
+          return
+        end
+      end
+
       if session[:approvals]
         session[:approvals] << oidreq.trust_root
       else
         session[:approvals] = [oidreq.trust_root]
       end
-      oidresp = oidreq.answer(true)
+      oidresp = oidreq.answer(true, nil, identity)
       add_sreg(oidreq, oidresp)
       add_pape(oidreq, oidresp)
       return self.render_response(oidresp)
@@ -134,7 +192,13 @@ EOS
     return (session[:username] and (identity_url == url_for_user) and self.approved(trust_root))
   end
 
-  def render_xrds
+  def render_xrds(types)
+    type_str = ""
+
+    types.each { |uri|
+      type_str += "<Type>#{uri}</Type>\n      "
+    }
+
     yadis = <<EOS
 <?xml version="1.0" encoding="UTF-8"?>
 <xrds:XRDS
@@ -142,9 +206,7 @@ EOS
     xmlns="xri://$xrd*($v*2.0)">
   <XRD>
     <Service priority="0">
-      <Type>http://specs.openid.net/auth/2.0/signon</Type>
-      <Type>http://openid.net/signon/1.0</Type>
-      <Type>http://openid.net/sreg/1.0</Type>
+      #{type_str}
       <URI>#{url_for(:controller => 'server', :only_path => false)}</URI>
     </Service>
   </XRD>
