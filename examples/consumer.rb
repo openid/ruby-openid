@@ -273,7 +273,7 @@ END_OF_STRING
     <div id="verify-form">
       <form method="get" action="#{self.build_url("/begin")}">
         Identity&nbsp;URL:
-      <input type="text" name="openid_url" value="#{form_contents}" />
+      <input type="text" name="openid_identifier" value="#{form_contents}" />
         <input type="submit" value="Verify" />
         <input type="checkbox" id="sregbox" name="sreg" #{checked} />
         <label for="sregbox">with simple registration</label>
