@@ -9,7 +9,6 @@ include WEBrick
 # load the openid library, first trying rubygems
 begin
   require "openid"
-  require "openid/fetchers"
   require "openid/store/filestore"
   require "openid/extensions/sreg"
 rescue LoadError
