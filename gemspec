@@ -3,9 +3,9 @@ require 'rubygems'
 SPEC = Gem::Specification.new do |s|
   s.name = `cat admin/library-name`.strip
   s.version = `darcs changes --tags= | awk '$1 == "tagged" { print $2 }' | head -n 1`.strip
-  s.author = 'Brian Ellin (JanRain, Inc)'
-  s.email = 'brian@janrian.com'
-  s.homepage = 'http://www.openidenabled.com/openid/libraries/ruby'
+  s.author = 'JanRain, Inc'
+  s.email = 'openid@janrain.com'
+  s.homepage = 'http://openidenabled.com/ruby-openid/'
   s.platform = Gem::Platform::RUBY
   s.summary = 'A library for consuming and serving OpenID identities.'
   files = Dir.glob("{examples,lib,test}/**/*")
@@ -16,5 +16,4 @@ SPEC = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = ['README','INSTALL','COPYING','LICENSE']
   s.rdoc_options << '--main' << 'README'
-  s.add_dependency('ruby-yadis', '>= 0.3.4')
 end
