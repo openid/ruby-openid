@@ -679,9 +679,9 @@ module OpenID
           if @namespace != OPENID1_NS and !@op_endpoint
             # In other words, that warning I raised in
             # Server.__init__?  You should pay attention to it now.
-            raise RuntimeError.new(sprintf("%s should be constructed with op_endpoint " +
-                                           "to respond to OpenID 2.0 messages.",
-                                           self))
+            raise RuntimeError, ("#{self} should be constructed with "\
+                                 "op_endpoint to respond to OpenID 2.0 "\
+                                 "messages.")
           end
 
           server_url = @op_endpoint
@@ -706,8 +706,8 @@ module OpenID
         response = OpenIDResponse.new(self)
 
         if claimed_id and @namespace == OPENID1_NS
-          raise VersionError.new(sprintf("claimed_id is new in OpenID 2.0 and not " +
-                                         "available for %s", @namespace))
+          raise VersionError, ("claimed_id is new in OpenID 2.0 and not "\
+                               "available for #{@namespace}")
         end
 
         if identity and !claimed_id
@@ -717,9 +717,9 @@ module OpenID
         if allow
           if @identity == IDENTIFIER_SELECT
             if !identity
-              raise ArgumentError.new(
-                      "This request uses IdP-driven identifier selection." +
-                      "You must supply an identifier in the response.")
+              raise ArgumentError, ("This request uses IdP-driven "\
+                                    "identifier selection.You must supply "\
+                                    "an identifier in the response.")
             end
 
             response_identity = identity
@@ -727,26 +727,23 @@ module OpenID
 
           elsif @identity
             if identity and (@identity != identity)
-              raise ArgumentError.new(
-                sprintf("Request was for identity %s, cannot reply " +
-                        "with identity %s", @identity, identity))
+              raise ArgumentError, ("Request was for identity #{@identity}, "\
+                                    "cannot reply with identity #{identity}")
             end
 
             response_identity = @identity
             response_claimed_id = @claimed_id
           else
             if identity
-              raise ArgumentError.new(
-                sprintf("This request specified no identity and you " +
-                        "supplied %s", identity))
+              raise ArgumentError, ("This request specified no identity "\
+                                    "and you supplied #{identity}")
             end
             response_identity = nil
           end
 
           if @namespace == OPENID1_NS and !response_identity
-            raise ArgumentError.new(
-                    "Request was an OpenID 1 request, so response must " +
-                    "include an identifier.")
+            raise ArgumentError, ("Request was an OpenID 1 request, so "\
+                                  "response must include an identifier.")
           end
 
           response.fields.update_args(OPENID_NS, {
@@ -757,26 +754,25 @@ module OpenID
                 })
 
           if response_identity
-            response.fields.set_arg(
-                  OPENID_NS, 'identity', response_identity)
+            response.fields.set_arg(OPENID_NS, 'identity', response_identity)
             if @namespace == OPENID2_NS
-              response.fields.set_arg(
-                  OPENID_NS, 'claimed_id', response_claimed_id)
+              response.fields.set_arg(OPENID_NS,
+                                      'claimed_id', response_claimed_id)
             end
           end
         else
           response.fields.set_arg(OPENID_NS, 'mode', mode)
           if @immediate
             if @namespace == OPENID1_NS and !server_url
-              raise ArgumentError.new("setup_url is required for allow=false " +
-                                      "in OpenID 1.x immediate mode.")
+              raise ArgumentError, ("setup_url is required for allow=false "\
+                                    "in OpenID 1.x immediate mode.")
             end
 
             # Make a new request just like me, but with
-            # immediate=False.
-            setup_request = self.class.new(
-                                     @identity, @return_to, @op_endpoint, @trust_root,
-                                     false, @assoc_handle)
+            # immediate=false.
+            setup_request = self.class.new(@identity, @return_to,
+                                           @op_endpoint, @trust_root, false,
+                                           @assoc_handle)
             setup_url = setup_request.encode_to_url(server_url)
             response.fields.set_arg(OPENID_NS, 'user_setup_url', setup_url)
           end
