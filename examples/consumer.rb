@@ -81,24 +81,25 @@ class SimpleServlet < HTTPServlet::AbstractServlet
 
   def do_begin
     # First make sure the user entered something
-    openid_url = @req.query.fetch("openid_url", "")
+    openid_identifier = @req.query.fetch("openid_identifier", "")
 
-    if openid_url.empty?
+    if openid_identifier.empty?
       render("Enter an OpenID identifier to verify",
-             css_class="error", form_contents=openid_url)
+             css_class="error", form_contents=openid_identifier)
       return HTTPStatus::Success
     end
 
     # Then ask the openid library to begin the authorization
     begin
-      checkid_request = $consumer.begin(openid_url)
+      checkid_request = $consumer.begin(openid_identifier)
     rescue OpenID::Yadis::DiscoveryFailure => why
       # If the URL was unusable (either because of network conditions,
       # a server error, or that the response returned was not an
       # OpenID identity page), the library will raise
       # OpenID::Yadis::DiscoveryFailure Let the user know that the URL
       # is unusable.
-      render("Error performing discovery: #{why.message}", "error", openid_url)
+      render("Error performing discovery: #{why.message}",
+             "error", openid_identifier)
       return HTTPStatus::Success
     end
 
