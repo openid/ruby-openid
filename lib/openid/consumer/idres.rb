@@ -17,18 +17,27 @@ module OpenID
     @openid1_return_to_nonce_name = 'rp_nonce'
     @openid1_return_to_claimed_id_name = 'openid1_claimed_id'
 
+    # Set the name of the query parameter that this library will use
+    # to thread a nonce through an OpenID 1 transaction. It will be
+    # appended to the return_to URL.
     def self.openid1_return_to_nonce_name=(query_arg_name)
       @openid1_return_to_nonce_name = query_arg_name
     end
 
+    # See openid1_return_to_nonce_name= documentation
     def self.openid1_return_to_nonce_name
       @openid1_return_to_nonce_name
     end
 
+    # Set the name of the query parameter that this library will use
+    # to thread the requested URL through an OpenID 1 transaction (for
+    # use when verifying discovered information). It will be appended
+    # to the return_to URL.
     def self.openid1_return_to_claimed_id_name=(query_arg_name)
       @openid1_return_to_claimed_id_name = query_arg_name
     end
 
+    # See openid1_return_to_claimed_id_name=
     def self.openid1_return_to_claimed_id_name
       @openid1_return_to_claimed_id_name
     end
