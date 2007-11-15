@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-OUTPUT_FILE="deps.jpg"
+OUTPUT_FILE="deps.png"
 
 if [ ! "$1" ] ; then
   echo "Usage: graph-require.sh <lib_directory> [output_filename]"
@@ -26,5 +26,5 @@ matches = [(file, dep) for (file, dep)
            if re.match('(yadis|openid)($|/)', dep)
           ]
 g = pydot.graph_from_edges(matches, directed=True)
-g.write_jpeg('$OUTPUT_FILE')
+g.write_png('$OUTPUT_FILE')
 EOF
