@@ -93,6 +93,17 @@ module OpenID
           Yadis.each_service(doc)
         }
       end
+
+      def test_equal_j3h
+        doc = Yadis.parseXRDS(read_data_file('=j3h.2007.11.14.xrds'))
+        count = 0
+        result = Yadis::each_service(doc) { |e|
+          assert_equal 'Service', e.name
+          count += 1
+        }
+        assert_not_nil result
+        assert_equal 2, count
+      end
     end
 
     # XXX: test prioSort!
