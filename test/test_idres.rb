@@ -225,7 +225,7 @@ module OpenID
 
         def setup
           @assoc = GoodAssoc.new('{not_dumb}')
-          @store = MemoryStore.new
+          @store = Store::Memory.new
           @server_url = 'http://server.url/'
           @endpoint = DummyEndpoint.new(@server_url)
           @store.store_association(@server_url, @assoc)
@@ -411,7 +411,7 @@ module OpenID
             'is_valid' => 'true',
             })
           @assoc = GoodAssoc.new
-          @store = MemoryStore.new
+          @store = Store::Memory.new
           @server_url = 'http://invalid/'
           @endpoint =  DummyEndpoint.new(@server_url)
           @idres = IdResHandler.new(nil, nil, @store, @endpoint)
@@ -778,7 +778,7 @@ module OpenID
           endpoint.type_uris = [OPENID_2_0_TYPE]
 
           assoc = GoodAssoc.new
-          store = MemoryStore.new
+          store = Store::Memory.new
           store.store_association(endpoint.server_url, assoc)
 
           signed_fields =

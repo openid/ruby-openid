@@ -165,7 +165,7 @@ module OpenID
       @tr_url = "http://rp.unittest/"
       @assoc_handle = "{assoc}{handle}"
       @op_endpoint = 'http://endpoint.unittest/encode'
-      @store = MemoryStore.new()
+      @store = Store::Memory.new()
       @server = Server::Server.new(@store, @op_endpoint)
       @decode = Server::Decoder.new(@server).method('decode')
     end
@@ -675,7 +675,7 @@ module OpenID
       @encoder = Server::Encoder.new
       @encode = @encoder.method('encode')
       @op_endpoint = 'http://endpoint.unittest/encode'
-      @store = MemoryStore.new
+      @store = Store::Memory.new
       @server = Server::Server.new(@store, @op_endpoint)
     end
 
@@ -859,7 +859,7 @@ module OpenID
     def setup
       @_dumb_key = Server::Signatory._dumb_key
       @_normal_key = Server::Signatory._normal_key
-      @store = MemoryStore.new()
+      @store = Store::Memory.new()
       @server = Server::Server.new(@store, "http://signing.unittest/enc")
       @request = Server::CheckIDRequest.new(
                                     'http://bombom.unittest/',
@@ -957,7 +957,7 @@ module OpenID
   class TestCheckID < Test::Unit::TestCase
     def setup
       @op_endpoint = 'http://endpoint.unittest/'
-      @store = MemoryStore.new()
+      @store = Store::Memory.new()
       @server = Server::Server.new(@store, @op_endpoint)
       @request = Server::CheckIDRequest.new(
                                     'http://bambam.unittest/',
@@ -1359,7 +1359,7 @@ module OpenID
 
     def setup
       @op_endpoint = 'http://endpoint.unittest/ext'
-      @store = MemoryStore.new()
+      @store = Store::Memory.new()
       @server = Server::Server.new(@store, @op_endpoint)
       @request = Server::CheckIDRequest.new(
                                     'http://bambam.unittest/',
@@ -1506,7 +1506,7 @@ module OpenID
 
     def setup
       @request = Server::AssociateRequest.from_message(Message.from_post_args({}))
-      @store = MemoryStore.new()
+      @store = Store::Memory.new()
       @signatory = Server::Signatory.new(@store)
     end
 
@@ -1751,7 +1751,7 @@ module OpenID
     include TestUtil
 
     def setup
-      @store = MemoryStore.new()
+      @store = Store::Memory.new()
       @server = Server::Server.new(@store, "http://server.unittest/endpt")
       # catchlogs_setup()
     end
@@ -1908,7 +1908,7 @@ module OpenID
     include TestUtil
 
     def setup
-      @store = MemoryStore.new()
+      @store = Store::Memory.new()
       @signatory = Server::Signatory.new(@store)
       @_dumb_key = @signatory.class._dumb_key
       @_normal_key = @signatory.class._normal_key
@@ -2232,7 +2232,7 @@ module OpenID
 
   class RunthroughTestCase < Test::Unit::TestCase
     def setup
-      @store = MemoryStore.new
+      @store = Store::Memory.new
       @server = Server::Server.new(@store, "http://example.com/openid/server")
     end
 

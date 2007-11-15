@@ -804,7 +804,7 @@ module OpenID
 
     def setup
       @server_url = 'http://invalid/'
-      @store = MemoryStore.new
+      @store = Store::Memory.new
       @assoc_manager = Consumer::AssociationManager.new(@store, @server_url)
       @assoc_manager.extend(Const)
       @assoc = Association.new('handle', 'secret', Time.now, 10000,
