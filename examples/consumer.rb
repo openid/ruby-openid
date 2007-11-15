@@ -67,6 +67,10 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     end
   end
 
+  def do_POST(req, res)
+    do_GET(req, res)
+  end
+
   def policy_url
     build_url('policy')
   end
