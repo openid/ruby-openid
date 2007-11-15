@@ -1,9 +1,6 @@
-# This module contains functions and classes used for extracting
-# endpoint information out of a Yadis XRD file using the ElementTree
+# This file contains functions and classes used for extracting
+# endpoint information out of a Yadis XRD file using the REXML
 # XML parser.
-
-# XXX NEEDS XRDS
-# from openid.yadis.etxrd import expandService
 
 module OpenID
   module Yadis
@@ -28,68 +25,59 @@ module OpenID
         @service_element = service_element
       end
 
+      # Query this endpoint to see if it has any of the given type
+      # URIs. This is useful for implementing other endpoint classes
+      # that e.g. need to check for the presence of multiple
+      # versions of a single protocol.
       def match_types(type_uris)
-        # Query this endpoint to see if it has any of the given type
-        # URIs. This is useful for implementing other endpoint classes
-        # that e.g. need to check for the presence of multiple
-        # versions of a single protocol.
-        #
-        # @param type_uris: The URIs that you wish to check
-        # @type type_uris: iterable of str
-        #
-        # @return: all types that are in both in type_uris and
-        # self.type_uris
         return @type_uris & type_uris
       end
 
+      # Trivial transform from a basic endpoint to itself. This
+      # method exists to allow BasicServiceEndpoint to be used as a
+      # filter.
+      #
+      # If you are subclassing this object, re-implement this function.
       def self.from_basic_service_endpoint(endpoint)
-        # Trivial transform from a basic endpoint to itself. This
-        # method exists to allow BasicServiceEndpoint to be used as a
-        # filter.
-        #
-        # If you are subclassing this object, re-implement this function.
-        #
-        # @param endpoint: An instance of BasicServiceEndpoint
-        # @return: The object that was passed in, with no processing.
         return endpoint
       end
 
+      # A hack to make both this class and its instances respond to
+      # this message since Ruby doesn't support static methods.
       def from_basic_service_endpoint(endpoint)
-        # A hack to make both this class and its instances respond to
-        # this message since Ruby doesn't support static methods.
         return self.class.from_basic_service_endpoint(endpoint)
       end
 
     end
 
+    # Take a list of basic filters and makes a filter that
+    # transforms the basic filter into a top-level filter. This is
+    # mostly useful for the implementation of make_filter, which
+    # should only be needed for special cases or internal use by
+    # this library.
+    #
+    # This object is useful for creating simple filters for services
+    # that use one URI and are specified by one Type (we expect most
+    # Types will fit this paradigm).
+    #
+    # Creates a BasicServiceEndpoint object and apply the filter
+    # functions to it until one of them returns a value.
     class TransformFilterMaker
       attr_reader :filter_procs
 
-      # Take a list of basic filters and makes a filter that
-      # transforms the basic filter into a top-level filter. This is
-      # mostly useful for the implementation of make_filter, which
-      # should only be needed for special cases or internal use by
-      # this library.
+      # Initialize the filter maker's state
       #
-      # This object is useful for creating simple filters for services
-      # that use one URI and are specified by one Type (we expect most
-      # Types will fit this paradigm).
-      #
-      # Creates a BasicServiceEndpoint object and apply the filter
-      # functions to it until one of them returns a value.
+      # filter_functions are the endpoint transformer
+      # Procs to apply to the basic endpoint. These are called in
+      # turn until one of them does not return nil, and the result
+      # of that transformer is returned.
       def initialize(filter_procs)
-        # Initialize the filter maker's state
-        #
-        # @param filter_functions: The endpoint transformer functions
-        # (Procs) to apply to the basic endpoint. These are called in
-        # turn until one of them does not return nil, and the result
-        # of that transformer is returned.
         @filter_procs = filter_procs
       end
 
+      # Returns an array of endpoint objects produced by the
+      # filter procs.
       def get_service_endpoints(yadis_url, service_element)
-        # Returns an iterator of endpoint objects produced by the
-        # filter procs.
         endpoints = []
 
         # Do an expansion of the service element by xrd:Type and
@@ -105,7 +93,6 @@ module OpenID
             endpoints << e
           end
         }
-
         return endpoints
       end
 
@@ -134,9 +121,9 @@ module OpenID
         @subfilters = subfilters
       end
 
+      # Generate all endpoint objects for all of the subfilters of
+      # this filter and return their concatenation.
       def get_service_endpoints(yadis_url, service_element)
-        # Generate all endpoint objects for all of the subfilters of
-        # this filter and return their concatenation.
         endpoints = []
         @subfilters.each { |subfilter|
           endpoints += subfilter.get_service_endpoints(yadis_url, service_element)
@@ -150,12 +137,11 @@ module OpenID
     @@filter_type_error = TypeError.new(
       'Expected a filter, an endpoint, a callable or a list of any of these.')
 
+    # Convert a filter-convertable thing into a filter
+    #
+    # parts should be a filter, an endpoint, a callable, or a list of
+    # any of these.
     def self.make_filter(parts)
-      # Convert a filter-convertable thing into a filter
-      #
-      # @param parts: a filter, an endpoint, a callable, or a list of
-      # any of these.
-
       # Convert the parts into a list, and pass to mk_compound_filter
       if parts.nil?
         parts = [BasicServiceEndpoint]
@@ -168,13 +154,12 @@ module OpenID
       end
     end
 
+    # Create a filter out of a list of filter-like things
+    #
+    # Used by make_filter
+    #
+    # parts should be a list of things that can be passed to make_filter
     def self.mk_compound_filter(parts)
-      # Create a filter out of a list of filter-like things
-      #
-      # Used by make_filter
-      #
-      # @param parts: list of filter, endpoint, callable or list of
-      # any of these
 
       if !parts.respond_to?('each')
         raise TypeError, "#{parts.inspect} is not iterable"
