@@ -282,8 +282,6 @@ module OpenID
 
     protected
 
-    # Session stuff
-
     def session_get(name)
       @session[session_key(name)]
     end
@@ -333,8 +331,6 @@ module OpenID
     def handle_idres(message, return_to)
       IdResHandler.new(message, return_to, @store, last_requested_endpoint)
     end
-
-    # complete() mode handlers
 
     def complete_invalid(message, unused_return_to)
       mode = message.get_arg(OPENID_NS, 'mode', '<No mode set>')
