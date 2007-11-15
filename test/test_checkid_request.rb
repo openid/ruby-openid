@@ -78,10 +78,6 @@ module OpenID
                        internal_message.get_openid_namespace)
 
           assert_equal(preferred_namespace, msg.get_openid_namespace)
-          assert((preferred_namespace == OPENID1_NS &&
-                  @checkid_req.send_redirect?) ||
-                 (preferred_namespace != OPENID1_NS &&
-                  !@checkid_req.send_redirect?))
           assert_openid_value_equal(msg, 'mode', expected_mode)
 
           # Implement these in subclasses because they depend on
@@ -132,6 +128,21 @@ module OpenID
             @checkid_req.get_message(@realm, @return_to, immediate)
           }
           assert_has_identifiers(msg, @endpoint.local_id, @endpoint.claimed_id)
+        end
+
+        def test_send_redirect?
+          silence_logging {
+            url = @checkid_req.redirect_url(@realm, @return_to, immediate)
+            assert(url.length < OPENID1_URL_LIMIT)
+            assert(@checkid_req.send_redirect?(@realm, @return_to, immediate))
+
+            @return_to << '/foo' * 1000
+            url = @checkid_req.redirect_url(@realm, @return_to, immediate)
+            assert(url.length > OPENID1_URL_LIMIT)
+            actual = @checkid_req.send_redirect?(@realm, @return_to, immediate)
+            expected = preferred_namespace != OPENID2_NS
+            assert_equal(expected, actual)
+          }
         end
       end
 
@@ -259,6 +270,7 @@ module OpenID
           assert_equal(IDENTIFIER_SELECT,
                        msg.get_arg(OPENID1_NS, 'identity'))
         end
+
       end
 
       class TestCheckIDRequestOpenID1Immediate < TestCheckIDRequestOpenID1

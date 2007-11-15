@@ -159,8 +159,15 @@ module OpenID
 
       # Should this OpenID authentication request be sent as a HTTP
       # redirect or as a POST (form submission)?
-      def send_redirect?
-        return @endpoint.compatibility_mode
+      #
+      # This takes the same parameters as redirect_url or form_markup
+      def send_redirect?(realm, return_to=nil, immediate=false)
+        if @endpoint.compatibility_mode
+          return true
+        else
+          url = redirect_url(realm, return_to, immediate)
+          return url.length <= OPENID1_URL_LIMIT
+        end
       end
     end
   end
