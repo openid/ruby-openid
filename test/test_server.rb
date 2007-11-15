@@ -8,6 +8,7 @@ require 'openid/store/memstore'
 require 'openid/dh'
 require 'openid/consumer/associationmanager'
 require 'util'
+require "testutil"
 
 require 'test/unit'
 require 'uri'
