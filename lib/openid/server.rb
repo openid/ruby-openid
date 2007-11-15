@@ -30,43 +30,41 @@ module OpenID
 
       # I represent an incoming OpenID request.
       #
-      # @cvar mode: the C{X{openid.mode}} of this request.
-      # @type mode: str
+      # Attributes:
+      # mode:: The "openid.mode" of this request
       def initialize
         @mode = nil
       end
     end
 
+    # A request to verify the validity of a previous response.
+    #
+    # See OpenID Specs, Verifying Directly with the OpenID Provider
+    # <http://openid.net/specs/openid-authentication-2_0-12.html#verifying_signatures>
     class CheckAuthRequest < OpenIDRequest
-      # A request to verify the validity of a previous response.
-      #
-      # @cvar mode: "X{C{check_authentication}}"
-      # @type mode: str
-      #
-      # @ivar assoc_handle: The X{association handle} the response was signed with.
-      # @type assoc_handle: str
-      # @ivar signed: The message with the signature which wants checking.
-      # @type signed: L{Message}
-      #
-      # @ivar invalidate_handle: An X{association handle} the client is asking
-      # about the validity of.  Optional, may be C{None}.
-      # @type invalidate_handle: str
-      #
-      # @see: U{OpenID Specs, Mode: check_authentication
-      # <http://openid.net/specs.bml#mode-check_authentication>}
 
-      attr_accessor :assoc_handle, :signed, :invalidate_handle, :sig
+      # The association handle the response was signed with.
+      attr_accessor :assoc_handle
 
+      # The message with the signature which wants checking.
+      attr_accessor :signed
+
+      # An association handle the client is asking about the validity
+      # of. May be nil.
+      attr_accessor :invalidate_handle
+
+      attr_accessor :sig
+
+      # Construct me.
+      #
+      # These parameters are assigned directly as class attributes.
+      #
+      # Parameters:
+      # assoc_handle:: the association handle for this request
+      # signed:: The signed message
+      # invalidate_handle:: An association handle that the relying
+      #                     party is checking to see if it is invalid
       def initialize(assoc_handle, signed, invalidate_handle=nil)
-        # Construct me.
-        #
-        # These parameters are assigned directly as class attributes,
-        # see my L{class documentation<CheckAuthRequest>} for their
-        # descriptions.
-        #
-        # @type assoc_handle: str
-        # @type signed: L{Message}
-        # @type invalidate_handle: str
         super()
 
         @mode = "check_authentication"
@@ -79,13 +77,8 @@ module OpenID
         @namespace = OPENID2_NS
       end
 
+      # Construct me from an OpenID::Message.
       def self.from_message(message, op_endpoint=UNUSED)
-        # Construct me from an OpenID Message.
-        #
-        # @param message: An OpenID check_authentication Message
-        # @type message: L{openid.message.Message}
-        #
-        # @returntype: L{CheckAuthRequest}
         assoc_handle = message.get_arg(OPENID_NS, 'assoc_handle')
         invalidate_handle = message.get_arg(OPENID_NS, 'invalidate_handle')
 
@@ -113,18 +106,12 @@ module OpenID
         return obj
       end
 
+      # Respond to this request.
+      #
+      # Given a Signatory, I can check the validity of the signature
+      # and the invalidate_handle.  I return a response with an
+      # is_valid (and, if appropriate invalidate_handle) field.
       def answer(signatory)
-        # Respond to this request.
-        #
-        # Given a L{Signatory}, I can check the validity of the
-        # signature and the X{C{invalidate_handle}}.
-        #
-        # @param signatory: The L{Signatory} to use to check the signature.
-        # @type signatory: L{Signatory}
-        #
-        # @returns: A response with an X{C{is_valid}} (and, if
-        #    appropriate X{C{invalidate_handle}}) field.
-        # @returntype: L{OpenIDResponse}
         is_valid = signatory.verify(@assoc_handle, @signed)
         # Now invalidate that assoc_handle so it this checkAuth
         # message cannot be replayed.
@@ -173,19 +160,17 @@ module OpenID
       end
     end
 
+    # An object that knows how to handle association requests with
+    # no session type.
+    #
+    # See OpenID Specs, Section 8: Establishing Associations
+    # <http://openid.net/specs/openid-authentication-2_0-12.html#associations>
     class PlainTextServerSession < BaseServerSession
+      # The session_type for this association session. There is no
+      # type defined for plain-text in the OpenID specification, so we
+      # use 'no-encryption'.
       attr_reader :session_type
-      # An object that knows how to handle association requests with
-      # no session type.
-      #
-      # @cvar session_type: The session_type for this association
-      #   session. There is no type defined for plain-text in the OpenID
-      #   specification, so we use 'no-encryption'.
-      # @type session_type: str
-      #
-      # @see: U{OpenID Specs, Mode: associate
-      # <http://openid.net/specs.bml#mode-associate>}
-      # @see: AssociateRequest
+
       def initialize
         super('no-encryption', ['HMAC-SHA1', 'HMAC-SHA256'])
       end
@@ -199,26 +184,20 @@ module OpenID
       end
     end
 
+    # An object that knows how to handle association requests with the
+    # Diffie-Hellman session type.
+    #
+    # See OpenID Specs, Section 8: Establishing Associations
+    # <http://openid.net/specs/openid-authentication-2_0-12.html#associations>
     class DiffieHellmanSHA1ServerSession < BaseServerSession
-      # An object that knows how to handle association requests with the
-      # Diffie-Hellman session type.
-      #
-      # @cvar session_type: The session_type for this association
-      #   session.
-      # @type session_type: str
-      #
-      # @ivar dh: The Diffie-Hellman algorithm values for this request
-      # @type dh: DiffieHellman
-      #
-      # @ivar consumer_pubkey: The public key sent by the consumer in the
-      #   associate request
-      # @type consumer_pubkey: long
-      #
-      # @see: U{OpenID Specs, Mode: associate
-      #   <http://openid.net/specs.bml#mode-associate>}
-      # @see: AssociateRequest
 
-      attr_accessor :dh, :consumer_pubkey
+      # The Diffie-Hellman algorithm values for this request
+      attr_accessor :dh
+
+      # The public key sent by the consumer in the associate request
+      attr_accessor :consumer_pubkey
+
+      # The session_type for this association session.
       attr_reader :session_type
 
       def initialize(dh, consumer_pubkey)
@@ -229,14 +208,11 @@ module OpenID
         @consumer_pubkey = consumer_pubkey
       end
 
+      # Construct me from OpenID Message
+      #
+      # Raises ProtocolError when parameters required to establish the
+      # session are missing.
       def self.from_message(message)
-        # @param message: The associate request message
-        # @type message: openid.message.Message
-        #
-        # @returntype: L{DiffieHellmanSHA1ServerSession}
-        #
-        # @raises ProtocolError: When parameters required to establish the
-        #   session are missing.
         dh_modulus = message.get_arg(OPENID_NS, 'dh_modulus')
         dh_gen = message.get_arg(OPENID_NS, 'dh_gen')
         if ((!dh_modulus and dh_gen) or
@@ -294,22 +270,18 @@ module OpenID
       end
     end
 
+    # A request to establish an association.
+    #
+    # See OpenID Specs, Section 8: Establishing Associations
+    # <http://openid.net/specs/openid-authentication-2_0-12.html#associations>
     class AssociateRequest < OpenIDRequest
-      # A request to establish an X{association}.
-      #
-      # @cvar mode: "X{C{check_authentication}}"
-      # @type mode: str
-      #
-      # @ivar assoc_type: The type of association.  The protocol currently only
-      #   defines one value for this, "X{C{HMAC-SHA1}}".
-      # @type assoc_type: str
-      #
-      # @ivar session: An object that knows how to handle association
-      #   requests of a certain type.
-      #
-      # @see: U{OpenID Specs, Mode: associate
-      #   <http://openid.net/specs.bml#mode-associate>}
-      attr_accessor :session, :assoc_type
+      # An object that knows how to handle association requests of a
+      # certain type.
+      attr_accessor :session
+
+      # The type of association. Supported values include HMAC-SHA256
+      # and HMAC-SHA1
+      attr_accessor :assoc_type
 
       @@session_classes = {
         'no-encryption' => PlainTextServerSession,
@@ -317,12 +289,11 @@ module OpenID
         'DH-SHA256' => DiffieHellmanSHA256ServerSession,
       }
 
+      # Construct me.
+      #
+      # The session is assigned directly as a class attribute. See my
+      # class documentation for its description.
       def initialize(session, assoc_type)
-        # Construct me.
-        #
-        # The session is assigned directly as a class attribute. See
-        # my L{class documentation<AssociateRequest>} for its
-        # description.
         super()
         @session = session
         @assoc_type = assoc_type
@@ -331,13 +302,8 @@ module OpenID
         @mode = "associate"
       end
 
+      # Construct me from an OpenID Message.
       def self.from_message(message, op_endpoint=UNUSED)
-        # Construct me from an OpenID Message.
-        #
-        # @param message: The OpenID associate request
-        # @type message: openid.message.Message
-        #
-        # @returntype: L{AssociateRequest}
         if message.is_openid1()
           session_type = message.get_arg(OPENID1_NS, 'session_type')
           if session_type == 'no-encryption'
@@ -383,15 +349,13 @@ module OpenID
         return obj
       end
 
+      # Respond to this request with an association.
+      #
+      # assoc:: The association to send back.
+      #
+      # Returns a response with the association information, encrypted
+      # to the consumer's public key if appropriate.
       def answer(assoc)
-        # Respond to this request with an X{association}.
-        #
-        # @param assoc: The association to send back.
-        # @type assoc: L{openid.association.Association}
-        #
-        # @returns: A response with the association information, encrypted
-        #     to the consumer's X{public key} if appropriate.
-        # @returntype: L{OpenIDResponse}
         response = OpenIDResponse.new(self)
         response.fields.update_args(OPENID_NS, {
             'expires_in' => sprintf('%d', assoc.expires_in()),
@@ -438,26 +402,35 @@ module OpenID
     #
     # This class handles requests for openid modes
     # +checkid_immediate+ and +checkid_setup+ .
-    #
-    # Attributes
-    # mode:: +checkid_immediate+ or +checkid_setup+
-    # immediate:: Is this an immediate-mode request?
-    # identity:: The OP-local identifier being checked.
-    # claimed_id:: The claimed identifier.  Not present in OpenID 1.x
-    #     messages.
-    # trust_root::  This URL
-    #     identifies the party making the request, and the user will use
-    #     that to make her decision about what answer she trusts them to
-    #     have.  Referred to as "realm" in OpenID 2.0.
-    # return_to:: The URL to send the user agent back to to
-    #     reply to this request.
-    # assoc_handle:: Provided in smart mode requests, a handle
-    #     for a previously established association.  nil for dumb
-    #     mode requests.
     class CheckIDRequest < OpenIDRequest
 
-      attr_accessor :assoc_handle, :identity, :claimed_id,
-      :return_to, :trust_root, :op_endpoint, :immediate, :mode
+      # Provided in smart mode requests, a handle for a previously
+      # established association.  nil for dumb mode requests.
+      attr_accessor :assoc_handle
+
+      # Is this an immediate-mode request?
+      attr_accessor :immediate
+
+      # The URL to send the user agent back to to reply to this
+      # request.
+      attr_accessor :return_to
+
+      # The OP-local identifier being checked.
+      attr_accessor :identity
+
+      # The claimed identifier.  Not present in OpenID 1.x
+      # messages.
+      attr_accessor :claimed_id
+
+      # This URL identifies the party making the request, and the user
+      # will use that to make her decision about what answer she
+      # trusts them to have. Referred to as "realm" in OpenID 2.0.
+      attr_accessor :trust_root
+
+      # mode:: +checkid_immediate+ or +checkid_setup+
+      attr_accessor :mode
+
+      attr_accessor :return_to, :op_endpoint
 
       # These parameters are assigned directly as attributes,
       # see the #CheckIDRequest class documentation for their
@@ -498,17 +471,16 @@ module OpenID
       # message:: An OpenID checkid_* request Message
       #
       # op_endpoint:: The endpoint URL of the server that this
-      #     message was sent to.
+      #               message was sent to.
       #
       # Raises:
-      #   ProtocolError:: When not all required parameters are present
-      #     in the message.
+      # ProtocolError:: When not all required parameters are present
+      #                 in the message.
       #
-      #   MalformedReturnURL:: When the +return_to+ URL is not
-      #     a URL.
+      # MalformedReturnURL:: When the +return_to+ URL is not a URL.
       #
-      #   UntrustedReturnURL:: When the +return_to+ URL is
-      #     outside the +trust_root+.
+      # UntrustedReturnURL:: When the +return_to+ URL is
+      #                      outside the +trust_root+.
       def self.from_message(message, op_endpoint)
         obj = self.allocate
         obj.message = message
@@ -625,48 +597,50 @@ module OpenID
       # the return_to URL matches the realm.
       #
       # Raises DiscoveryFailure if the realm
-      #     URL does not support Yadis discovery (and so does not
-      #     support the verification process).
+      # URL does not support Yadis discovery (and so does not
+      # support the verification process).
       #
       # Returns true if the realm publishes a document with the
-      #     return_to URL listed
+      # return_to URL listed
       def return_to_verified
         return TrustRoot.verify_return_to(@trust_root, @return_to)
       end
 
       # Respond to this request.
-      # 
+      #
       # allow:: Allow this user to claim this identity, and allow the
-      #     consumer to have this information?
+      #         consumer to have this information?
       #
       # server_url:: DEPRECATED.  Passing op_endpoint to the
-      #     #Server constructor makes this optional.
+      #              #Server constructor makes this optional.
       #
-      #     When an OpenID 1.x immediate mode request does not
-      #     succeed, it gets back a URL where the request may be
-      #     carried out in a not-so-immediate fashion.  Pass my URL
-      #     in here (the fully qualified address of this server's
-      #     endpoint, i.e.  <tt>http://example.com/server</tt>), and I
-      #     will use it as a base for the URL for a new request.
+      #              When an OpenID 1.x immediate mode request does
+      #              not succeed, it gets back a URL where the request
+      #              may be carried out in a not-so-immediate fashion.
+      #              Pass my URL in here (the fully qualified address
+      #              of this server's endpoint, i.e.
+      #              <tt>http://example.com/server</tt>), and I will
+      #              use it as a base for the URL for a new request.
       #
-      #     Optional for requests where #CheckIDRequest.immediate
-      #     is false or +allow+ is true.
+      #              Optional for requests where
+      #              #CheckIDRequest.immediate is false or +allow+ is
+      #              true.
       #
       # identity:: The OP-local identifier to answer with.  Only for use
-      #     when the relying party requested identifier selection.
+      #            when the relying party requested identifier selection.
       #
       # claimed_id:: The claimed identifier to answer with,
-      #     for use with identifier selection in the case where the
-      #     claimed identifier and the OP-local identifier differ,
-      #     i.e. when the claimed_id uses delegation.
+      #              for use with identifier selection in the case where the
+      #              claimed identifier and the OP-local identifier differ,
+      #              i.e. when the claimed_id uses delegation.
       #
-      #     If +identity+ is provided but this is not,
-      #     +claimed_id+ will default to the value of +identity+.
-      #     When answering requests that did not ask for identifier
-      #     selection, the response +claimed_id+ will default to
-      #     that of the request.
+      #              If +identity+ is provided but this is not,
+      #              +claimed_id+ will default to the value of +identity+.
+      #              When answering requests that did not ask for identifier
+      #              selection, the response +claimed_id+ will default to
+      #              that of the request.
       #
-      #     This parameter is new in OpenID 2.0.
+      #              This parameter is new in OpenID 2.0.
       #
       # Version 2.0 deprecates +server_url+ and adds +claimed_id+.
       def answer(allow, server_url=nil, identity=nil, claimed_id=nil)
@@ -850,26 +824,27 @@ module OpenID
       end
     end
 
+    # I am a response to an OpenID request.
+    #
+    # Attributes:
+    # signed:: A list of the names of the fields which should be signed.
+    #
+    # Implementer's note: In a more symmetric client/server
+    # implementation, there would be more types of #OpenIDResponse
+    # object and they would have validated attributes according to
+    # the type of response.  But as it is, Response objects in a
+    # server are basically write-only, their only job is to go out
+    # over the wire, so this is just a loose wrapper around
+    # #OpenIDResponse.fields.
     class OpenIDResponse
-      # I am a response to an OpenID request.
-      #
-      # Attributes:
-      #  request:: The #OpenIDRequest I respond to.
-      #  fields:: An #OpenID::Message with the data to be returned.
-      #           Keys are parameter names with no
-      #           leading +openid.+ e.g.  +identity+ and +mac_key+
-      #           never +openid.identity+ .
-      # signed:: A list of the names of the fields which should be signed.
+      # The #OpenIDRequest I respond to.
+      attr_accessor :request
 
-      # Implementer's note: In a more symmetric client/server
-      # implementation, there would be more types of #OpenIDResponse
-      # object and they would have validated attributes according to
-      # the type of response.  But as it is, Response objects in a
-      # server are basically write-only, their only job is to go out
-      # over the wire, so this is just a loose wrapper around
-      # #OpenIDResponse.fields.
-
-      attr_accessor :request, :fields
+      # An #OpenID::Message with the data to be returned.
+      # Keys are parameter names with no
+      # leading openid. e.g. identity and mac_key
+      # never openid.identity.
+      attr_accessor :fields
 
       def initialize(request)
         # Make a response to an OpenIDRequest.
@@ -950,25 +925,27 @@ module OpenID
       end
     end
 
-      # I am a response to an OpenID request in terms a web server
-      # understands.
-      #
-      # I generally come from an #Encoder, either directly or from
-      # #Server.encodeResponse.
-      #
-      #   Attributes
-      #   code:: The HTTP code of this response as an integer.
-      #   headers:: #Hash of headers to include in this response.
-      #   body: The body of this response.
+    # I am a response to an OpenID request in terms a web server
+    # understands.
+    #
+    # I generally come from an #Encoder, either directly or from
+    # #Server.encodeResponse.
     class WebResponse
 
-      attr_accessor :code, :headers, :body
+      # The HTTP code of this response as an integer.
+      attr_accessor :code
+
+      # #Hash of headers to include in this response.
+      attr_accessor :headers
+
+      # The body of this response.
+      attr_accessor :body
 
       def initialize(code=HTTP_OK, headers=nil, body="")
         # Construct me.
         #
         # These parameters are assigned directly as class attributes,
-        # see my L{class documentation<WebResponse>} for their
+        # see my class documentation for their
         # descriptions.
         @code = code
         if headers
@@ -980,20 +957,15 @@ module OpenID
       end
     end
 
+    # I sign things.
+    #
+    # I also check signatures.
+    #
+    # All my state is encapsulated in a store, which means I'm not
+    # generally pickleable but I am easy to reconstruct.
     class Signatory
-      # I sign things.
-      #
-      # I also check signatures.
-      #
-      # All my state is encapsulated in an
-      # L{OpenIDStore<openid.store.interface.OpenIDStore>}, which
-      # means I'm not generally pickleable but I am easy to
-      # reconstruct.
-      #
-      # @cvar SECRET_LIFETIME: The number of seconds a secret remains valid.
-      # @type SECRET_LIFETIME: int
-
-      SECRET_LIFETIME = 14 * 24 * 60 * 60 # 14 days, in seconds
+      # The number of seconds a secret remains valid. Defaults to 14 days.
+      attr_accessor :secret_lifetime
 
       # keys have a bogus server URL in them because the filestore
       # really does expect that key to be a URL.  This seems a little
@@ -1012,27 +984,16 @@ module OpenID
 
       attr_accessor :store
 
+      # Create a new Signatory. store is The back-end where my
+      # associations are stored.
       def initialize(store)
-        # Create a new Signatory.
-        #
-        # @param store: The back-end where my associations are stored.
-        # @type store: L{openid.store.interface.OpenIDStore}
         Util.assert(store)
         @store = store
+        @secret_lifetime = 14 * 24 * 60 * 60
       end
 
+      # Verify that the signature for some data is valid.
       def verify(assoc_handle, message)
-        # Verify that the signature for some data is valid.
-        # 
-        # @param assoc_handle: The handle of the association used to sign the
-        #   data.
-        # @type assoc_handle: str
-        #
-        # @param message: The signed message to verify
-        # @type message: openid.message.Message
-        #
-        # @returns: C{True} if the signature is valid, C{False} if not.
-        # @returntype: bool
         assoc = get_association(assoc_handle, true)
         if !assoc
           Util.log(sprintf("failed to get assoc with handle %s to verify " +
@@ -1051,19 +1012,12 @@ module OpenID
         return valid
       end
 
+      # Sign a response.
+      #
+      # I take an OpenIDResponse, create a signature for everything in
+      # its signed list, and return a new copy of the response object
+      # with that signature included.
       def sign(response)
-        # Sign a response.
-        #
-        # I take a L{OpenIDResponse}, create a signature for
-        # everything in its L{signed<OpenIDResponse.signed>} list, and
-        # return a new copy of the response object with that signature
-        # included.
-        #
-        # @param response: A response to sign.
-        # @type response: L{OpenIDResponse}
-        #
-        # @returns: A signed copy of the response.
-        # @returntype: L{OpenIDResponse}
         signed_response = response.copy
         assoc_handle = response.request.assoc_handle
         if assoc_handle
@@ -1094,24 +1048,14 @@ module OpenID
         return signed_response
       end
 
+      # Make a new association.
       def create_association(dumb=true, assoc_type='HMAC-SHA1')
-        # Make a new association.
-        #
-        # @param dumb: Is this association for a dumb-mode transaction?
-        # @type dumb: bool
-        #
-        # @param assoc_type: The type of association to create.  Currently
-        #     there is only one type defined, C{HMAC-SHA1}.
-        # @type assoc_type: str
-        #
-        # @returns: the new association.
-        # @returntype: L{openid.association.Association}
         secret = CryptUtil.random_string(OpenID.get_secret_size(assoc_type))
         uniq = Util.to_base64(CryptUtil.random_string(4))
         handle = sprintf('{%s}{%x}{%s}', assoc_type, Time.now.to_i, uniq)
 
         assoc = Association.from_expires_in(
-            SECRET_LIFETIME, handle, secret, assoc_type)
+            secret_lifetime, handle, secret, assoc_type)
 
         if dumb
           key = @@_dumb_key
@@ -1123,18 +1067,8 @@ module OpenID
         return assoc
       end
 
+      # Get the association with the specified handle.
       def get_association(assoc_handle, dumb, checkExpiration=true)
-        # Get the association with the specified handle.
-        #
-        # @type assoc_handle: str
-        #
-        # @param dumb: Is this association used with dumb mode?
-        # @type dumb: bool
-        #
-        # @returns: the association, or None if no valid association with that
-        #     handle was found.
-        # @returntype: L{openid.association.Association}
-
         # Hmm.  We've created an interface that deals almost entirely
         # with assoc_handles.  The only place outside the Signatory
         # that uses this (and thus the only place that ever sees
@@ -1166,13 +1100,8 @@ module OpenID
         return assoc
       end
 
+      # Invalidates the association with the given handle.
       def invalidate(assoc_handle, dumb)
-        # Invalidates the association with the given handle.
-        #
-        # @type assoc_handle: str
-        #
-        # @param dumb: Is this association used with dumb mode?
-        # @type dumb: bool
         if dumb
           key = @@_dumb_key
         else
@@ -1183,22 +1112,21 @@ module OpenID
       end
     end
 
+    # I encode responses in to WebResponses.
+    #
+    # If you don't like WebResponses, you can do
+    # your own handling of OpenIDResponses with
+    # OpenIDResponse.whichEncoding,
+    # OpenIDResponse.encodeToURL, and
+    # OpenIDResponse.encodeToKVForm.
     class Encoder
-      # I encode responses in to L{WebResponses<WebResponse>}.
-      #
-      # If you don't like L{WebResponses<WebResponse>}, you can do
-      # your own handling of L{OpenIDResponses<OpenIDResponse>} with
-      # L{OpenIDResponse.whichEncoding},
-      # L{OpenIDResponse.encodeToURL}, and
-      # L{OpenIDResponse.encodeToKVForm}.
-
       @@responseFactory = WebResponse
 
+      # Encode a response to a WebResponse.
+      #
+      # Raises EncodingError when I can't figure out how to encode
+      # this message.
       def encode(response)
-        # Encode a response to a L{WebResponse}.
-        #
-        # @raises EncodingError: When I can't figure out how to encode this
-        # message.
         encode_as = response.which_encoding()
         if encode_as == ENCODE_KVFORM
           wr = @@responseFactory.new(HTTP_OK, nil,
@@ -1223,32 +1151,26 @@ module OpenID
       end
     end
 
+    # I encode responses in to WebResponses, signing
+    # them when required.
     class SigningEncoder < Encoder
-      # I encode responses in to L{WebResponses<WebResponse>}, signing
-      # them when required.
 
       attr_accessor :signatory
 
+      # Create a SigningEncoder given a Signatory
       def initialize(signatory)
-        # Create a L{SigningEncoder}.
-        #
-        # @param signatory: The L{Signatory} I will make signatures with.
-        # @type signatory: L{Signatory}
         @signatory = signatory
       end
 
+      # Encode a response to a WebResponse, signing it first if
+      # appropriate.
+      #
+      # Raises EncodingError when I can't figure out how to encode this
+      # message.
+      #
+      # Raises AlreadySigned when this response is already signed.
       def encode(response)
-        # Encode a response to a L{WebResponse}, signing it first if
-        # appropriate.
-        #
-        # @raises EncodingError: When I can't figure out how to encode this
-        #     message.
-        #
-        # @raises AlreadySigned: When this response is already signed.
-        #
-        # @returntype: L{WebResponse}
-
-        # the isinstance is a bit of a kludge... it means there isn't
+        # the is_a? is a bit of a kludge... it means there isn't
         # really an adapter to make the interfaces quite match.
         if !response.is_a?(Exception) and response.needs_signing()
           if !@signatory
@@ -1268,8 +1190,8 @@ module OpenID
       end
     end
 
+    # I decode an incoming web request in to a OpenIDRequest.
     class Decoder
-      # I decode an incoming web request in to a L{OpenIDRequest}.
 
       @@handlers = {
         'checkid_setup' => CheckIDRequest.method('from_message'),
@@ -1280,29 +1202,20 @@ module OpenID
 
       attr_accessor :server
 
+      # Construct a Decoder. The server is necessary because some
+      # replies reference their server.
       def initialize(server)
-        # Construct a Decoder.
-        #
-        # @param server: The server which I am decoding requests for.
-        #     (Necessary because some replies reference their server.)
-        # @type server: L{Server}
         @server = server
       end
 
+      # I transform query parameters into an OpenIDRequest.
+      #
+      # If the query does not seem to be an OpenID request at all, I
+      # return nil.
+      #
+      # Raises ProtocolError when the query does not seem to be a valid
+      # OpenID request.
       def decode(query)
-        # I transform query parameters into an L{OpenIDRequest}.
-        #
-        # If the query does not seem to be an OpenID request at all, I
-        # return C{None}.
-        #
-        # @param query: The query parameters as a dictionary with each
-        #     key mapping to one value.
-        # @type query: dict
-        #
-        # @raises ProtocolError: When the query does not seem to be a valid
-        #     OpenID request.
-        #
-        # @returntype: L{OpenIDRequest}
         if query.nil? or query.length == 0
           return nil
         end
@@ -1319,73 +1232,55 @@ module OpenID
         return handler.call(message, @server.op_endpoint)
       end
 
+      # Called to decode queries when no handler for that mode is
+      # found.
+      #
+      # This implementation always raises ProtocolError.
       def default_decoder(message, server)
-        # Called to decode queries when no handler for that mode is
-        # found.
-        #
-        # @raises ProtocolError: This implementation always raises
-        #     L{ProtocolError}.
         mode = message.get_arg(OPENID_NS, 'mode')
         msg = sprintf("No decoder for mode %s", mode)
         raise ProtocolError.new(message, msg)
       end
     end
 
+    # I handle requests for an OpenID server.
+    #
+    # Some types of requests (those which are not checkid requests)
+    # may be handed to my handleRequest method, and I will take care
+    # of it and return a response.
+    #
+    # For your convenience, I also provide an interface to
+    # Decoder.decode and SigningEncoder.encode through my methods
+    # decodeRequest and encodeResponse.
+    #
+    # All my state is encapsulated in an store, which means I'm not
+    # generally pickleable but I am easy to reconstruct.
     class Server
-      # I handle requests for an OpenID server.
-      #
-      # Some types of requests (those which are not C{checkid}
-      # requests) may be handed to my L{handleRequest} method, and I
-      # will take care of it and return a response.
-      #
-      # For your convenience, I also provide an interface to
-      # L{Decoder.decode} and L{SigningEncoder.encode} through my
-      # methods L{decodeRequest} and L{encodeResponse}.
-      #
-      # All my state is encapsulated in an
-      # L{OpenIDStore<openid.store.interface.OpenIDStore>}, which
-      # means I'm not generally pickleable but I am easy to
-      # reconstruct.
-      #
-      # @ivar signatory: I'm using this for associate requests and to
-      # sign things.
-      # @type signatory: L{Signatory}
-      #
-      # @ivar decoder: I'm using this to decode things.
-      # @type decoder: L{Decoder}
-      #
-      # @ivar encoder: I'm using this to encode things.
-      # @type encoder: L{Encoder}
-      #
-      # @ivar op_endpoint: My URL.
-      # @type op_endpoint: str
-      #
-      # @ivar negotiator: I use this to determine which kinds of
-      # associations I can make and how.
-      # @type negotiator: L{openid.association.SessionNegotiator}
-
       @@signatoryClass = Signatory
       @@encoderClass = SigningEncoder
       @@decoderClass = Decoder
 
-      attr_accessor :store, :signatory, :encoder, :decoder, :negotiator,
-      :op_endpoint
+      # The back-end where my associations and nonces are stored.
+      attr_accessor :store
 
+      # I'm using this for associate requests and to sign things.
+      attr_accessor :signatory
+
+      # I'm using this to encode things.
+      attr_accessor :encoder
+
+      # I'm using this to decode things.
+      attr_accessor :decoder
+
+      # I use this instance of OpenID::AssociationNegotiator to
+      # determine which kinds of associations I can make and how.
+      attr_accessor :negotiator
+
+      # My URL.
+      attr_accessor :op_endpoint
+
+      # op_endpoint is new in library version 2.0.
       def initialize(store, op_endpoint)
-        # A new L{Server}.
-        #
-        # @param store: The back-end where my associations are stored.
-        # @type store: L{openid.store.interface.OpenIDStore}
-        #
-        # @param op_endpoint: My URL, the fully qualified address of this
-        #     server's endpoint, i.e. C{http://example.com/server}
-        # @type op_endpoint: str
-        #
-        # @change: C{op_endpoint} is new in library version 2.0.  It
-        #     currently defaults to C{None} for compatibility with
-        #     earlier versions of the library, but you must provide it
-        #     if you want to respond to any version 2 OpenID requests.
-
         @store = store
         @signatory = @@signatoryClass.new(@store)
         @encoder = @@encoderClass.new(@signatory)
@@ -1394,20 +1289,13 @@ module OpenID
         @op_endpoint = op_endpoint
       end
 
+      # Handle a request.
+      #
+      # Give me a request, I will give you a response.  Unless it's a
+      # type of request I cannot handle myself, in which case I will
+      # raise RuntimeError.  In that case, you can handle it yourself,
+      # or add a method to me for handling that request type.
       def handle_request(request)
-        # Handle a request.
-        #
-        # Give me a request, I will give you a response.  Unless it's
-        # a type of request I cannot handle myself, in which case I
-        # will raise C{NotImplementedError}.  In that case, you can
-        # handle it yourself, or add a method to me for handling that
-        # request type.
-        #
-        # @raises NotImplementedError: When I do not have a handler defined
-        #     for that type of request.
-        #
-        # @returntype: L{OpenIDResponse}
-
         begin
           handler = self.method('openid_' + request.mode)
         rescue NameError
@@ -1419,19 +1307,13 @@ module OpenID
         return handler.call(request)
       end
 
+      # Handle and respond to check_authentication requests.
       def openid_check_authentication(request)
-        # Handle and respond to C{check_authentication} requests.
-        #
-        # @returntype: L{OpenIDResponse}
         return request.answer(@signatory)
       end
 
+      # Handle and respond to associate requests.
       def openid_associate(request)
-        # Handle and respond to C{associate} requests.
-        #
-        # @returntype: L{OpenIDResponse}
-
-        # XXX: TESTME
         assoc_type = request.assoc_type
         session_type = request.session.session_type
         if @negotiator.allowed?(assoc_type, session_type)
@@ -1448,59 +1330,37 @@ module OpenID
         end
       end
 
+      # Transform query parameters into an OpenIDRequest.
+      # query should contain the query parameters as a Hash with
+      # each key mapping to one value.
+      #
+      # If the query does not seem to be an OpenID request at all, I
+      # return nil.
       def decode_request(query)
-        # Transform query parameters into an L{OpenIDRequest}.
-        #
-        # If the query does not seem to be an OpenID request at all, I
-        # return C{None}.
-        #
-        # @param query: The query parameters as a dictionary with each
-        #     key mapping to one value.
-        # @type query: dict
-        #
-        # @raises ProtocolError: When the query does not seem to be a valid
-        #     OpenID request.
-        #
-        # @returntype: L{OpenIDRequest}
-        #
-        # @see: L{Decoder.decode}
         return @decoder.decode(query)
       end
 
+      # Encode a response to a WebResponse, signing it first if
+      # appropriate.
+      #
+      # Raises EncodingError when I can't figure out how to encode this
+      # message.
+      #
+      # Raises AlreadySigned When this response is already signed.
       def encode_response(response)
-        # Encode a response to a L{WebResponse}, signing it first if
-        # appropriate.
-        #
-        # @raises EncodingError: When I can't figure out how to encode this
-        #    message.
-        #
-        # @raises AlreadySigned: When this response is already signed.
-        #
-        # @returntype: L{WebResponse}
-        #
-        # @see: L{SigningEncoder.encode}
         return @encoder.encode(response)
       end
     end
 
+    # A message did not conform to the OpenID protocol.
     class ProtocolError < Exception
-      # A message did not conform to the OpenID protocol.
-      #
-      # @ivar message: The query that is failing to be a valid OpenID
-      # request.
-      # @type message: openid.message.Message
+      # The query that is failing to be a valid OpenID request.
+      attr_accessor :openid_message
+      attr_accessor :reference
+      attr_accessor :contact
 
-      attr_accessor :openid_message, :reference, :contact
-
+      # text:: A message about the encountered error.
       def initialize(message, text=nil, reference=nil, contact=nil)
-        # When an error occurs.
-        #
-        # @param message: The message that is failing to be a valid
-        # OpenID request.
-        # @type message: openid.message.Message
-        #
-        # @param text: A message about the encountered error.  Set as C{args[0]}.
-        # @type text: str
         @openid_message = message
         @reference = reference
         @contact = contact
@@ -1508,10 +1368,8 @@ module OpenID
         super(text)
       end
 
+      # Get the return_to argument from the request, if any.
       def get_return_to
-        # Get the return_to argument from the request, if any.
-        #
-        # @returntype: str
         if @openid_message.nil?
           return nil
         else
@@ -1519,16 +1377,14 @@ module OpenID
         end
       end
 
+      # Did this request have a return_to parameter?
       def has_return_to
-        # Did this request have a return_to parameter?
-        #
-        # @returntype: bool
-        return !get_return_to().nil?
+        return !get_return_to.nil?
       end
 
+      # Generate a Message object for sending to the relying party,
+      # after encoding.
       def to_message
-        # Generate a Message object for sending to the relying party,
-        # after encoding.
         namespace = @openid_message.get_openid_namespace()
         reply = Message.new(namespace)
         reply.set_arg(OPENID_NS, 'mode', 'error')
@@ -1559,12 +1415,12 @@ module OpenID
         return to_message().to_form_markup(get_return_to())
       end
 
+      # How should I be encoded?
+      #
+      # Returns one of ENCODE_URL, ENCODE_KVFORM, or None.  If None,
+      # I cannot be encoded as a protocol message and should be
+      # displayed to the user.
       def which_encoding
-        # How should I be encoded?
-        #
-        # @returns: one of ENCODE_URL, ENCODE_KVFORM, or None.  If None,
-        # I cannot be encoded as a protocol message and should be
-        # displayed to the user.
         if has_return_to()
           if @openid_message.get_openid_namespace() == OPENID2_NS and
               encode_to_url().length > OPENID1_URL_LIMIT
@@ -1585,40 +1441,28 @@ module OpenID
           end
         end
 
-        # According to the OpenID spec as of this writing, we are
-        # probably supposed to switch on request type here (GET versus
-        # POST) to figure out if we're supposed to print
-        # machine-readable or human-readable content at this point.
-        # GET/POST seems like a pretty lousy way of making the
-        # distinction though, as it's just as possible that the user
-        # agent could have mistakenly been directed to post to the
-        # server URL.
-
-        # Basically, if your request was so broken that you didn't
-        # manage to include an openid.mode, I'm not going to worry too
-        # much about returning you something you can't parse.
+        # If your request was so broken that you didn't manage to
+        # include an openid.mode, I'm not going to worry too much
+        # about returning you something you can't parse.
         return nil
       end
     end
 
+    # Raised when an operation was attempted that is not compatible
+    # with the protocol version being used.
     class VersionError < Exception
-      # Raised when an operation was attempted that is not compatible
-      # with the protocol version being used.
     end
 
+    # Raised when a response to a request cannot be generated
+    # because the request contains no return_to URL.
     class NoReturnToError < Exception
-      # Raised when a response to a request cannot be generated
-      # because the request contains no return_to URL.
     end
 
+    # Could not encode this as a protocol message.
+    #
+    # You should probably render it and show it to the user.
     class EncodingError < Exception
-      # Could not encode this as a protocol message.
-      #
-      # You should probably render it and show it to the user.
-      #
-      # @ivar response: The response that failed to encode.
-      # @type response: L{OpenIDResponse}
-
+      # The response that failed to encode.
       attr_reader :response
 
       def initialize(response)
@@ -1627,13 +1471,12 @@ module OpenID
       end
     end
 
+    # This response is already signed.
     class AlreadySigned < EncodingError
-      # This response is already signed.
     end
 
+    # A return_to is outside the trust_root.
     class UntrustedReturnURL < ProtocolError
-      # A return_to is outside the trust_root.
-
       attr_reader :return_to, :trust_root
 
       def initialize(message, return_to, trust_root)
@@ -1649,21 +1492,18 @@ module OpenID
       end
     end
 
+    # The return_to URL doesn't look like a valid URL.
     class MalformedReturnURL < ProtocolError
       attr_reader :return_to
 
-      # The return_to URL doesn't look like a valid URL.
       def initialize(openid_message, return_to)
         @return_to = return_to
         super(openid_message)
       end
     end
 
+    # The trust root is not well-formed.
     class MalformedTrustRoot < ProtocolError
-      # The trust root is not well-formed.
-      #
-      # @see: OpenID Specs,
-      # U{openid.trust_root<http://openid.net/specs.bml#mode-checkid_immediate>}
     end
   end
 end

@@ -1,4 +1,3 @@
-
 require 'openid/server'
 require 'openid/cryptutil'
 require 'openid/association'
@@ -1663,7 +1662,7 @@ module OpenID
       assert_equal(rfg.call("assoc_handle"), @assoc.handle)
 
       failUnlessExpiresInMatches(response.fields,
-                                 @signatory.class::SECRET_LIFETIME)
+                                 @signatory.secret_lifetime)
 
       assert_equal(
                    rfg.call("mac_key"), Util.to_base64(@assoc.secret))
@@ -1681,7 +1680,7 @@ module OpenID
       assert_equal(rfg.call("assoc_handle"), @assoc.handle)
 
       failUnlessExpiresInMatches(
-                                 response.fields, @signatory.class::SECRET_LIFETIME)
+                                 response.fields, @signatory.secret_lifetime)
 
       assert_equal(
                    rfg.call("mac_key"), Util.to_base64(@assoc.secret))
