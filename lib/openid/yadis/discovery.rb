@@ -7,11 +7,11 @@ module OpenID
 
   module Yadis
 
+    # Raised when a YADIS protocol error occurs in the discovery
+    # process
     class DiscoveryFailure < StandardError
       attr_accessor :identity_url, :http_response
 
-      # Raised when a YADIS protocol error occurs in the discovery
-      # process
       def initialize(message, http_response)
         super(message)
         @identity_url = nil
@@ -19,58 +19,62 @@ module OpenID
       end
     end
 
+    # Contains the result of performing Yadis discovery on a URI
     class DiscoveryResult
-      # Contains the result of performing Yadis discovery on a URI
 
-      attr_accessor :request_uri, :normalized_uri, :xrds_uri, :content_type, :response_text
+      # The result of following redirects from the request_uri
+      attr_accessor :normalize_uri
+
+      # The URI from which the response text was returned (set to
+      # nil if there was no XRDS document found)
+      attr_accessor :xrds_uri
+
+      # The content-type returned with the response_text
+      attr_accessor :content_type
+
+      # The document returned from the xrds_uri
+      attr_accessor :response_text
+
+      attr_accessor :request_uri, :normalized_uri
 
       def initialize(request_uri)
         # Initialize the state of the object
         #
         # sets all attributes to None except the request_uri
         @request_uri = request_uri
-
-        # The result of following redirects from the request_uri
         @normalized_uri = nil
-
-        # The URI from which the response text was returned (set to
-        # None if there was no XRDS document found)
         @xrds_uri = nil
-
-        # The content-type returned with the response_text
         @content_type = nil
-
-        # The document returned from the xrds_uri
         @response_text = nil
       end
 
+      # Was the Yadis protocol's indirection used?
       def used_yadis_location?
-        # Was the Yadis protocol's indirection used?
         return @normalized_uri != @xrds_uri
       end
 
+      # Is the response text supposed to be an XRDS document?
       def is_xrds
-        # Is the response text supposed to be an XRDS document?
         return (used_yadis_location?() or
                 @content_type == YADIS_CONTENT_TYPE)
       end
     end
 
+    # Discover services for a given URI.
+    #
+    # uri: The identity URI as a well-formed http or https URI. The
+    # well-formedness and the protocol are not checked, but the
+    # results of this function are undefined if those properties do
+    # not hold.
+    #
+    # returns a DiscoveryResult object
+    #
+    # Any exception that can be raised by fetching a URL with the
+    # default fetcher.
+    #
+    # Raises DiscoveryFailure when the HTTP response does not have
+    # a 200 code.
     def self.discover(uri)
-      # Discover services for a given URI.
-      #
-      # uri: The identity URI as a well-formed http or https URI. The
-      # well-formedness and the protocol are not checked, but the
-      # results of this function are undefined if those properties do
-      # not hold.
-      #
-      # returns a DiscoveryResult object
-      #
-      # @raises Exception: Any exception that can be raised by
-      # fetching a URL with the given fetcher.
-      #
-      # @raises DiscoveryFailure: When the HTTP response does not have
-      # a 200 code.
       result = DiscoveryResult.new(uri)
       resp = OpenID.fetch(uri, nil, {'Accept' => YADIS_ACCEPT_HEADER})
       if resp.code != "200"
@@ -105,17 +109,14 @@ module OpenID
       return result
     end
 
+    # Given a HTTPResponse, return the location of the Yadis
+    # document.
+    #
+    # May be the URL just retrieved, another URL, or None, if I
+    # can't find any.
+    #
+    # [non-blocking]
     def self.where_is_yadis?(resp)
-      # Given a HTTPResponse, return the location of the Yadis
-      # document.
-      #
-      # May be the URL just retrieved, another URL, or None, if I
-      # can't find any.
-      #
-      # [non-blocking]
-      #
-      # @returns: str or None
-
       # Attempt to find out where to go to discover the document or if
       # we already have it
       content_type = resp['content-type']
