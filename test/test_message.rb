@@ -37,6 +37,12 @@ module OpenID
       assert_raises(Message::KeyNotFound) do
         @m.get_aliased_arg('ns.pork', NO_DEFAULT)
       end
+
+      ns_uri = "urn:pork"
+      @m.namespaces.add_alias(ns_uri, 'pork_alias')
+
+      # Should return ns_uri.
+      assert_equal(ns_uri, @m.get_aliased_arg('ns.pork_alias', NO_DEFAULT))
     end
 
     def test_to_post_args

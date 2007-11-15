@@ -416,7 +416,7 @@ module OpenID
       ns_alias, key = aliased_key.split('.', 2)
       if ns_alias == 'ns'
         uri = @namespaces.get_namespace_uri(key)
-        if default == NO_DEFAULT
+        if uri.nil? and default == NO_DEFAULT
           raise KeyNotFound, "Namespace #{key} not defined when looking "\
                              "for #{aliased_key}"
         else
