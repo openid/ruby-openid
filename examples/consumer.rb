@@ -107,8 +107,8 @@ class SimpleServlet < HTTPServlet::AbstractServlet
     if @req.query.fetch('sreg', false)
       required = ['email', 'nickname']
       optional = ['fullname', 'dob', 'gender', 'postcode', 'country']
-      sreg_req = SRegRequest.new(required, optional, policy_url)
-      checkid_request.add_extendion(sreg_req)
+      sreg_req = OpenID::SRegRequest.new(required, optional, policy_url)
+      checkid_request.add_extension(sreg_req)
 
       # Only necessary so that we can maintain the checkbox state when
       # the user returns.
