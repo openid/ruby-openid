@@ -1,12 +1,17 @@
 require 'openid/util'
 
 module OpenID
+
+  # Stores for Associations and nonces. Used by both the Consumer and
+  # the Server. If you have a database abstraction layer or other
+  # state storage in your application or framework already, you can
+  # implement the store interface.
   module Store
     # Abstract Store
     # Changes in 2.0:
-    #  - removed store_nonce, get_auth_key, is_dumb
-    #  - changed use_nonce to support one-way nonces
-    #  - added cleanup_nonces, cleanup_associations, cleanup
+    # * removed store_nonce, get_auth_key, is_dumb
+    # * changed use_nonce to support one-way nonces
+    # * added cleanup_nonces, cleanup_associations, cleanup
     class Interface < Object
 
       # Put a Association object into storage.
