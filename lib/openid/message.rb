@@ -312,11 +312,11 @@ module OpenID
       end
 
       if namespace != BARE_NS and namespace.class != String
-        raise ArgumentError, "Namespace must be BARE_NS, OPENID_NS or a string. Got #{namespace}"
+        raise ArgumentError, "Namespace must be BARE_NS, OPENID_NS or a string. Got #{namespace.inspect}"
       end
 
       if namespace != BARE_NS and namespace.index(':').nil?
-        msg = "OpenID 2.0 namespace identifiers SHOULD be URIs. Got #{namespace}"
+        msg = "OpenID 2.0 namespace identifiers SHOULD be URIs. Got #{namespace.inspect}"
         Util.log(msg)
 
         if namespace == 'sreg'
