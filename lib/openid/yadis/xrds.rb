@@ -129,7 +129,9 @@ module OpenID
     end
 
     def Yadis::get_yadis_xrd(xrds_tree)
-      xrds_tree.root.each_element('/xrds:XRDS/XRD[last()]') { |el|
+      REXML::XPath.each(xrds_tree.root,
+                        '/xrds:XRDS/xrd:XRD[last()]',
+                        XRDS_NAMESPACES) { |el|
         return el
       }
       raise XRDSError.new("No XRD element found.")
