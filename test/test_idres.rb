@@ -3,7 +3,7 @@ require "util"
 require "test/unit"
 require "openid/consumer/idres"
 require "openid/protocolerror"
-require "openid/store/memstore"
+require "openid/store/memory"
 require "openid/store/nonce"
 
 module OpenID

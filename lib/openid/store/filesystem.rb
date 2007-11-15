@@ -11,7 +11,7 @@ module OpenID
     class Filesystem < Interface
       @@FILENAME_ALLOWED = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-".split("")
 
-      # Create a FilesystemStore instance, putting all data in +directory+.
+      # Create a Filesystem store instance, putting all data in +directory+.
       def initialize(directory)
         p_dir = Pathname.new(directory)
         @nonce_dir = p_dir.join('nonces')
