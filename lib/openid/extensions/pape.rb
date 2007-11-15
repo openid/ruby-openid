@@ -91,6 +91,7 @@ module OpenID
       attr_accessor :ns_alias, :auth_policies, :auth_age, :nist_auth_level
       def initialize(auth_policies=[], auth_age=nil, nist_auth_level=nil)
         @ns_alias = 'pape'
+        @ns_uri = NS_URI
         @auth_policies = auth_policies
         @auth_age = auth_age
         @nist_auth_level = nist_auth_level
