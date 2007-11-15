@@ -14,9 +14,7 @@ module OpenID
   # This module documents the main interface with the OpenID consumer
   # library.  The only part of the library which has to be used and
   # isn't documented in full here is the store required to create an
-  # Consumer instance.  More on the abstract store type and concrete
-  # implementations of it that are provided in the documentation for
-  # the Consumer's constructor.
+  # Consumer instance.
   #
   # = OVERVIEW
   #
@@ -59,11 +57,19 @@ module OpenID
   # which cover a wide variety of situations in which consumers may
   # use the library.
   #
-  # This module contains a class, Consumer, with methods corresponding
-  # to the actions necessary in each of steps 2, 3, and 4 described in
-  # the overview.  Use of this library should be as easy as creating
-  # an Consumer instance and calling the methods appropriate for the
-  # action the site wants to take.
+  # The Consumer class has methods corresponding to the actions
+  # necessary in each of steps 2, 3, and 4 described in the overview.
+  # Use of this library should be as easy as creating an Consumer
+  # instance and calling the methods appropriate for the action the
+  # site wants to take.
+  #
+  # This library automatically detects which version of the OpenID
+  # protocol should be used for a transaction and constructs the
+  # proper requests and responses.  Users of this library do not need
+  # to worry about supporting multiple protocol versions; the library
+  # supports them implicitly.  Depending on the version of the
+  # protocol in use, the OpenID transaction may be more secure.  See
+  # the OpenID specifications for more information.
   #
   # = SESSIONS, STORES, AND STATELESS MODE
   #
@@ -139,10 +145,11 @@ module OpenID
   # store of choice.
   #
   # Next, the application should call the <tt>begin</tt> method of
-  # Consumer instance.  This method takes the OpenID URL.  The
-  # <tt>begin</tt> method returns a CheckIDRequest object.
+  # Consumer instance.  This method takes the OpenID URL as entered by
+  # the user.  The <tt>begin</tt> method returns a CheckIDRequest
+  # object.
   #
-  # Next, the application should call the redirect_url on the
+  # Next, the application should call the redirect_url method on the
   # CheckIDRequest object.  The parameter <tt>return_to</tt> is the
   # URL that the OpenID server will send the user back to after
   # attempting to verify his or her identity.  The <tt>realm</tt>
@@ -162,7 +169,7 @@ module OpenID
   # finish the request.
   #
   # Get a Consumer instance with the same session and store as before
-  # and call its complete method, passing in all the received query
+  # and call its complete() method, passing in all the received query
   # arguments and the <tt>return_to</tt> URL mentioned above.
   #
   # There are multiple possible return types possible from that
