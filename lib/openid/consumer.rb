@@ -9,6 +9,166 @@ require "openid/yadis/discovery"
 require "openid/store/nonce"
 
 module OpenID
+  # OpenID support for Relying Parties (aka Consumers).
+  #
+  # This module documents the main interface with the OpenID consumer
+  # library.  The only part of the library which has to be used and
+  # isn't documented in full here is the store required to create an
+  # Consumer instance.  More on the abstract store type and concrete
+  # implementations of it that are provided in the documentation for
+  # the Consumer's constructor.
+  #
+  # = OVERVIEW
+  #
+  # The OpenID identity verification process most commonly uses the
+  # following steps, as visible to the user of this library:
+  #
+  # 1. The user enters their OpenID into a field on the consumer's
+  #    site, and hits a login button.
+  #
+  # 2. The consumer site discovers the user's OpenID provider using
+  #    the Yadis protocol.
+  #
+  # 3. The consumer site sends the browser a redirect to the OpenID
+  #    provider.  This is the authentication request as described in
+  #    the OpenID specification.
+  #
+  # 4. The OpenID provider's site sends the browser a redirect back to
+  #    the consumer site.  This redirect contains the provider's
+  #    response to the authentication request.
+  #
+  # The most important part of the flow to note is the consumer's site
+  # must handle two separate HTTP requests in order to perform the
+  # full identity check.
+  #
+  # = LIBRARY DESIGN
+  #
+  # This consumer library is designed with that flow in mind.  The
+  # goal is to make it as easy as possible to perform the above steps
+  # securely.
+  #
+  # At a high level, there are two important parts in the consumer
+  # library.  The first important part is this module, which contains
+  # the interface to actually use this library.  The second is
+  # openid/store/interface.rb, which describes the interface to use if
+  # you need to create a custom method for storing the state this
+  # library needs to maintain between requests.
+  #
+  # In general, the second part is less important for users of the
+  # library to know about, as several implementations are provided
+  # which cover a wide variety of situations in which consumers may
+  # use the library.
+  #
+  # This module contains a class, Consumer, with methods corresponding
+  # to the actions necessary in each of steps 2, 3, and 4 described in
+  # the overview.  Use of this library should be as easy as creating
+  # an Consumer instance and calling the methods appropriate for the
+  # action the site wants to take.
+  #
+  # = SESSIONS, STORES, AND STATELESS MODE
+  #
+  # The Consumer object keeps track of two types of state:
+  #
+  # 1. State of the user's current authentication attempt.  Things
+  #    like the identity URL, the list of endpoints discovered for
+  #    that URL, and in case where some endpoints are unreachable, the
+  #    list of endpoints already tried.  This state needs to be held
+  #    from Consumer.begin() to Consumer.complete(), but it is only
+  #    applicable to a single session with a single user agent, and at
+  #    the end of the authentication process (i.e. when an OP replies
+  #    with either <tt>id_res</tt>. or <tt>cancel</tt> it may be
+  #    discarded.
+  #
+  # 2. State of relationships with servers, i.e. shared secrets
+  #    (associations) with servers and nonces seen on signed messages.
+  #    This information should persist from one session to the next
+  #    and should not be bound to a particular user-agent.
+  #
+  # These two types of storage are reflected in the first two
+  # arguments of Consumer's constructor, <tt>session</tt> and
+  # <tt>store</tt>.  <tt>session</tt> is a dict-like object and we
+  # hope your web framework provides you with one of these bound to
+  # the user agent.  <tt>store</tt> is an instance of Store.
+  #
+  # Since the store does hold secrets shared between your application
+  # and the OpenID provider, you should be careful about how you use
+  # it in a shared hosting environment.  If the filesystem or database
+  # permissions of your web host allow strangers to read from them, do
+  # not store your data there!  If you have no safe place to store
+  # your data, construct your consumer with nil for the store, and it
+  # will operate only in stateless mode.  Stateless mode may be
+  # slower, put more load on the OpenID provider, and trusts the
+  # provider to keep you safe from replay attacks.
+  #
+  # Several store implementation are provided, and the interface is
+  # fully documented so that custom stores can be used as well.  See
+  # the documentation for the Consumer class for more information on
+  # the interface for stores.  The implementations that are provided
+  # allow the consumer site to store the necessary data in several
+  # different ways, including several SQL databases and normal files
+  # on disk.
+  #
+  # = IMMEDIATE MODE
+  #
+  # In the flow described above, the user may need to confirm to the
+  # OpenID provider that it's ok to disclose his or her identity.  The
+  # provider may draw pages asking for information from the user
+  # before it redirects the browser back to the consumer's site.  This
+  # is generally transparent to the consumer site, so it is typically
+  # ignored as an implementation detail.
+  #
+  # There can be times, however, where the consumer site wants to get
+  # a response immediately.  When this is the case, the consumer can
+  # put the library in immediate mode.  In immediate mode, there is an
+  # extra response possible from the server, which is essentially the
+  # server reporting that it doesn't have enough information to answer
+  # the question yet.
+  #
+  # = USING THIS LIBRARY
+  #
+  # Integrating this library into an application is usually a
+  # relatively straightforward process.  The process should basically
+  # follow this plan:
+  #
+  # Add an OpenID login field somewhere on your site.  When an OpenID
+  # is entered in that field and the form is submitted, it should make
+  # a request to the your site which includes that OpenID URL.
+  #
+  # First, the application should instantiate a Consumer with a
+  # session for per-user state and store for shared state using the
+  # store of choice.
+  #
+  # Next, the application should call the <tt>begin</tt> method of
+  # Consumer instance.  This method takes the OpenID URL.  The
+  # <tt>begin</tt> method returns an CheckIDRequest object.
+  #
+  # Next, the application should call the redirect_url on the
+  # CheckIDRequest object.  The parameter <tt>return_to</tt> is the
+  # URL that the OpenID server will send the user back to after
+  # attempting to verify his or her identity.  The <tt>realm</tt>
+  # parameter is the URL (or URL pattern) that identifies your web
+  # site to the user when he or she is authorizing it.  Send a
+  # redirect to the resulting URL to the user's browser.
+  #
+  # That's the first half of the authentication process.  The second
+  # half of the process is done after the user's OpenID Provider sends
+  # the user's browser a redirect back to your site to complete their
+  # login.
+  #
+  # When that happens, the user will contact your site at the URL
+  # given as the <tt>return_to</tt> URL to the redirect_url call made
+  # above.  The request will have several query parameters added to
+  # the URL by the OpenID provider as the information necessary to
+  # finish the request.
+  #
+  # Get a Consumer instance with the same session and store as before
+  # and call its complete method, passing in all the received query
+  # arguments and the <tt>return_to</tt> URL mentioned above.
+  #
+  # There are multiple possible return types possible from that
+  # method. These indicate the whether or not the login was
+  # successful, and include any additional information appropriate for
+  # their type.
   class Consumer
     attr_accessor :session_key_prefix
 
