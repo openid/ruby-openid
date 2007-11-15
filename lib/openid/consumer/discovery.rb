@@ -11,6 +11,7 @@ require 'openid/yadis/xri'
 require 'openid/yadis/services'
 require 'openid/yadis/filters'
 require 'openid/consumer/html_parse'
+require 'openid/yadis/xrires'
 
 module OpenID
 
