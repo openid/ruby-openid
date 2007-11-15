@@ -140,7 +140,7 @@ module OpenID
   #
   # Next, the application should call the <tt>begin</tt> method of
   # Consumer instance.  This method takes the OpenID URL.  The
-  # <tt>begin</tt> method returns an CheckIDRequest object.
+  # <tt>begin</tt> method returns a CheckIDRequest object.
   #
   # Next, the application should call the redirect_url on the
   # CheckIDRequest object.  The parameter <tt>return_to</tt> is the
@@ -172,12 +172,43 @@ module OpenID
   class Consumer
     attr_accessor :session_key_prefix
 
+    # Initialize a Consumer instance.
+    #
+    # You should create a new instance of the Consumer object with
+    # every HTTP request that handles OpenID transactions.
+    #
+    # session: the session object to use to store request information.
+    #
+    # store: an object that implements the interface in Store.
     def initialize(session, store)
       @session = session
       @store = store
       @session_key_prefix = 'OpenID::Consumer::'
     end
 
+    # Start the OpenID authentication process. See steps 1-2 in the
+    # overview at the top of this file.
+    #
+    # user_url: Identity URL given by the user. This method performs a
+    # textual transformation of the URL to try and make sure it is
+    # normalized. For example, a user_url of example.com will be
+    # normalized to http://example.com/ normalizing and resolving any
+    # redirects the server might issue.
+    #
+    # anonymous: Whether to make an anonymous request of the OpenID
+    # provider.  Such a request does not ask for an authorization
+    # assertion for an OpenID identifier, but may be used with
+    # extensions to pass other data.  e.g. "I don't care who you are,
+    # but I'd like to know your time zone."
+    #
+    # Returns An object containing the discovered information will be
+    # returned, with a method for building a redirect URL to the
+    # server, as described in step 3 of the overview. This object may
+    # also be used to add extension arguments to the request, using
+    # its addExtensionArg method.
+    #
+    # Raises DiscoveryFailure when no OpenID server can be found for
+    # this URL.
     def begin(openid_identifier, anonymous=false)
       manager = discovery_manager(openid_identifier)
       service = manager.get_next_service(&method(:discover))
@@ -191,6 +222,16 @@ module OpenID
       end
     end
 
+    # Start OpenID verification without doing OpenID server
+    # discovery. This method is used internally by Consumer.begin
+    # after discovery is performed, and exists to provide an interface
+    # for library users needing to perform their own discovery.
+    #
+    # service: an OpenID service endpoint descriptor.  This object and
+    # factories for it are found in the openid/consumer/discovery.rb
+    # module.
+    #
+    # Returns an OpenID authentication request object.
     def begin_without_discovery(service, anonymous)
       assoc = association_manager(service).get_association
       checkid_request = CheckIDRequest.new(assoc, service)
@@ -207,6 +248,22 @@ module OpenID
       return checkid_request
     end
 
+    # Called to interpret the server's response to an OpenID
+    # request. It is called in step 4 of the flow described in the
+    # consumer overview.
+    #
+    # query: A dictionary of the query parameters for this HTTP
+    # request.
+    #
+    # return_to: The return URL used to invoke the application.
+    # Extract the URL from your application's web request framework
+    # and specify it here to have it checked against the
+    # openid.return_to value in the response.  If the return_to URL
+    # check fails, the status of the completion will be FAILURE.
+    #
+    # Returns a subclass of Response. The type of response is
+    # indicated by the status attribute, which will be one of
+    # SUCCESS, CANCEL, FAILURE, or SETUP_NEEDED.
     def complete(query, return_to)
       message = Message.from_post_args(query)
       mode = message.get_arg(OPENID_NS, 'mode', 'invalid')
