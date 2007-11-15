@@ -59,6 +59,7 @@ module OpenID
         # this message since Ruby doesn't support static methods.
         return self.class.from_basic_service_endpoint(endpoint)
       end
+
     end
 
     class TransformFilterMaker
