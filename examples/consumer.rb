@@ -156,13 +156,13 @@ class SimpleServlet < HTTPServlet::AbstractServlet
 
       did_sreg = @req.query.fetch('did_sreg', false)
       if did_sreg
-        message << "Simple registration data were requested"
+        message << " Simple registration data were requested"
         sreg_resp = OpenID::SRegResponse.from_success_response(response)
         if sreg_resp.empty?
           message << ", but no data were sent."
         else
           message << ". The following data were sent:"
-          sreg_resp.each_pair do |k, v|
+          sreg_resp.data.each_pair do |k, v|
             message << "<br/><b>#{k}</b>: #{v}"
           end
         end
@@ -210,11 +210,12 @@ END
     @res.set_redirect(HTTPStatus::TemporaryRedirect, url)
   end
 
-  def render(message=nil, css_class="alert", form_contents="", checked="")
+  def render(message=nil, css_class="alert", form_contents="", checked=false)
     @res.body = page_header
     unless message.nil?
       @res.body << "<div class=\"#{css_class}\">#{message}</div>"
     end
+    checked = checked ? " checked='checked'" : ''
     @res.body << page_footer(form_contents, checked)
   end
 
