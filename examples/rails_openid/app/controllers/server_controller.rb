@@ -17,7 +17,7 @@ class ServerController < ApplicationController
   include ServerHelper
   include OpenID::Server
   layout nil
-  
+
   def index
     begin
       oidreq = server.decode_request(params)
@@ -26,7 +26,7 @@ class ServerController < ApplicationController
       render_text e.to_s
       return
     end
-      
+
     # no openid.mode was given
     unless oidreq
       render_text "This is an OpenID server endpoint."
@@ -56,7 +56,7 @@ class ServerController < ApplicationController
         nil
       elsif self.is_authorized(identity, oidreq.trust_root)
         oidresp = oidreq.answer(true, nil, identity)
-        
+
         # add the sreg response if requested
         add_sreg(oidreq, oidresp)
         # ditto pape
@@ -65,7 +65,7 @@ class ServerController < ApplicationController
       elsif oidreq.immediate
         server_url = url_for :action => 'index'
         oidresp = oidreq.answer(false, server_url)
-        
+
       else
         show_decision_page(oidreq)
         return
@@ -74,7 +74,7 @@ class ServerController < ApplicationController
     else
       oidresp = server.handle_request(oidreq)
     end
-  
+
     self.render_response(oidresp)
   end
 
@@ -92,7 +92,7 @@ class ServerController < ApplicationController
   def user_page
     # Yadis content-negotiation: we want to return the xrds if asked for.
     accept = request.env['HTTP_ACCEPT']
-    
+
     # This is not technically correct, and should eventually be updated
     # to do real Accept header parsing and logic.  Though I expect it will work
     # 99% of the time.
@@ -101,7 +101,7 @@ class ServerController < ApplicationController
       return
     end
 
-    # content negotiation failed, so just render the user page    
+    # content negotiation failed, so just render the user page
     xrds_url = url_for(:controller=>'user',:action=>params[:username])+'/xrds'
     identity_page = <<EOS
 <html><head>
@@ -215,7 +215,7 @@ EOS
 
     response.headers['content-type'] = 'application/xrds+xml'
     render_text yadis
-  end  
+  end
 
   def add_sreg(oidreq, oidresp)
     # check for Simple Registration arguments and respond
@@ -230,7 +230,7 @@ EOS
       'fullname' => 'Mayor McCheese',
       'email' => 'mayor@example.com'
     }
-    
+
     sregresp = OpenID::SReg::Response.extract_response(sregreq, sreg_data)
     oidresp.add_extension(sregresp)
   end
@@ -250,15 +250,15 @@ EOS
     web_response = server.encode_response(oidresp)
 
     case web_response.code
-    when HTTP_OK 
-      render :text => web_response.body, :status => 200           
+    when HTTP_OK
+      render :text => web_response.body, :status => 200
 
     when HTTP_REDIRECT
       redirect_to web_response.headers['location']
 
     else
       render :text => web_response.body, :status => 400
-    end   
+    end
   end
 
 
