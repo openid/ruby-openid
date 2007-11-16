@@ -71,7 +71,7 @@ module OpenID
     end
   end
 
-  class FetchingError < StandardError
+  class FetchingError < OpenIDError
   end
 
   class HTTPRedirectLimitReached < FetchingError
