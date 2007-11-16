@@ -10,7 +10,10 @@ module OpenID
       XRI_AUTHORITIES = ["!", "=", "@", "+", "$", "("]
 
       def self.identifier_scheme(identifier)
-        if identifier.match('^xri://') or XRI_AUTHORITIES.member?(identifier[0].chr)
+        if (!identifier.nil? and
+            identifier.length > 0 and
+            (identifier.match('^xri://') or
+             XRI_AUTHORITIES.member?(identifier[0].chr)))
           return :xri
         else
           return :uri
