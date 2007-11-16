@@ -310,7 +310,7 @@ module OpenID
     end
 
     def cleanup_last_requested_endpoint
-      @session.delete(session_key('last_requested_endpoint'))
+      @session[session_key('last_requested_endpoint')] = nil
     end
 
     def discovery_manager(openid_identifier)

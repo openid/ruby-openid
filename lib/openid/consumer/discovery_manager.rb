@@ -116,7 +116,7 @@ module OpenID
       end
 
       def destroy!
-        @session.delete(session_key)
+        @session[session_key] = nil
       end
     end
   end
