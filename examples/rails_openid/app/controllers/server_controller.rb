@@ -219,7 +219,7 @@ EOS
 
   def add_sreg(oidreq, oidresp)
     # check for Simple Registration arguments and respond
-    sregreq = OpenID::SRegRequest.from_openid_request(oidreq)
+    sregreq = OpenID::SReg::Request.from_openid_request(oidreq)
 
     return if sregreq.nil?
     # In a real application, this data would be user-specific,
@@ -231,7 +231,7 @@ EOS
       'email' => 'mayor@example.com'
     }
     
-    sregresp = OpenID::SRegResponse.extract_response(sregreq, sreg_data)
+    sregresp = OpenID::SReg::Response.extract_response(sregreq, sreg_data)
     oidresp.add_extension(sregresp)
   end
 
