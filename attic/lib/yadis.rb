@@ -1,8 +1,0 @@
-require 'yadis/yadis'
-require 'yadis/xrds'
-require 'yadis/service'
-require 'yadis/parsehtml'
-require 'yadis/fetcher'
-require 'yadis/manager'
-require 'yadis/xri'
-require 'yadis/xrires'
