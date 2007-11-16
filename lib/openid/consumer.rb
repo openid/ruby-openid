@@ -261,6 +261,10 @@ module OpenID
     # Consumer overview.
     #
     # query: A hash of the query parameters for this HTTP request.
+    # Note that in rails, this is <b>not</b> <tt>params</tt> but
+    # <tt>params.reject{|k,v|request.path_parameters[k]}</tt>
+    # because <tt>controller</tt> and <tt>action</tt> and other
+    # "path parameters" are included in params.
     #
     # return_to: The return URL used to invoke the application.
     # Extract the URL from your application's web request framework
