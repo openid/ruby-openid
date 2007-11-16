@@ -87,7 +87,7 @@ module OpenID
 
       def test_404
         uri = "http://something.unittest/"
-        assert_raise(Yadis::DiscoveryFailure) {
+        assert_raise(DiscoveryFailure) {
           with_fetcher(MockFetcher.new) { Yadis.discover(uri) }
         }
       end
@@ -123,8 +123,8 @@ module OpenID
       def runCustomTest
         setup
 
-        if @expected.respond_to?("ancestors") and @expected.ancestors.member?(Yadis::DiscoveryFailure)
-          @testcase.assert_raise(Yadis::DiscoveryFailure) {
+        if @expected.respond_to?("ancestors") and @expected.ancestors.member?(DiscoveryFailure)
+          @testcase.assert_raise(DiscoveryFailure) {
             do_discovery
           }
         else

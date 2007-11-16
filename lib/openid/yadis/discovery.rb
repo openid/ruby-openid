@@ -5,19 +5,18 @@ require 'openid/yadis/parsehtml'
 
 module OpenID
 
-  module Yadis
+  # Raised when a error occurs in the discovery process
+  class DiscoveryFailure < StandardError
+    attr_accessor :identity_url, :http_response
 
-    # Raised when a YADIS protocol error occurs in the discovery
-    # process
-    class DiscoveryFailure < StandardError
-      attr_accessor :identity_url, :http_response
-
-      def initialize(message, http_response)
-        super(message)
-        @identity_url = nil
-        @http_response = http_response
-      end
+    def initialize(message, http_response)
+      super(message)
+      @identity_url = nil
+      @http_response = http_response
     end
+  end
+
+  module Yadis
 
     # Contains the result of performing Yadis discovery on a URI
     class DiscoveryResult

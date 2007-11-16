@@ -97,7 +97,7 @@ module OpenID
       # we represent by None
       if id_name.nil?
         Util.assert(result_name.nil?)
-        return input_url, Yadis::DiscoveryFailure
+        return input_url, DiscoveryFailure
       end
 
       result = generateSample(result_name, base_url)

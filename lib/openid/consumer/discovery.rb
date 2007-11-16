@@ -259,7 +259,7 @@ module OpenID
         elsif local_id != local_id_element.text
           format = 'More than one %s tag found in one service element'
           message = sprintf(format, local_id_tag)
-          raise Yadis::DiscoveryFailure.new(message, nil)
+          raise DiscoveryFailure.new(message, nil)
         end
       }
     }
@@ -273,7 +273,7 @@ module OpenID
     begin
       normalized = URINorm.urinorm(url)
     rescue ArgumentError => why
-      raise Yadis::DiscoveryFailure.new(sprintf('Normalizing identifier: %s', why[0]), nil)
+      raise DiscoveryFailure.new(sprintf('Normalizing identifier: %s', why[0]), nil)
     else
       defragged = URI::parse(normalized)
       defragged.fragment = nil
@@ -422,7 +422,7 @@ module OpenID
   def self.discover_no_yadis(uri)
     http_resp = OpenID.fetch(uri)
     if http_resp.code != "200"
-      raise Yadis::DiscoveryFailure.new(
+      raise DiscoveryFailure.new(
         "HTTP Response status from identity URL host is not \"200\". "\
         "Got status #{http_resp.code.inspect}", http_resp)
     end
@@ -442,7 +442,7 @@ module OpenID
     parsed = URI::parse(uri)
     if !parsed.scheme.nil? and !parsed.scheme.empty?
       if !['http', 'https'].member?(parsed.scheme)
-        raise Yadis::DiscoveryFailure.new(
+        raise DiscoveryFailure.new(
                 "URI scheme #{parsed.scheme} is not HTTP or HTTPS", nil)
       end
     end

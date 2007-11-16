@@ -60,7 +60,7 @@ module OpenID
 
         def test_begin_failure
           @services = []
-          assert_raises(Yadis::DiscoveryFailure) {
+          assert_raises(DiscoveryFailure) {
             consumer.begin(@user_input, @anonymous)
           }
         end

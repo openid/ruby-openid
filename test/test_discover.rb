@@ -52,7 +52,7 @@ module OpenID
         expected_status = response_set[-1].code
         begin
           OpenID.discover(@url)
-        rescue Yadis::DiscoveryFailure => why
+        rescue DiscoveryFailure => why
           assert_equal(why.http_response.code, expected_status)
         else
           flunk('Did not raise DiscoveryFailure')
@@ -119,7 +119,7 @@ module OpenID
 
       begin
         OpenID.discover('users.stompy.janrain.com:8000/x')
-      rescue Yadis::DiscoveryFailure => why
+      rescue DiscoveryFailure => why
         flunk("failed to parse url with port correctly: #{why}")
       rescue RuntimeError
       end
@@ -245,7 +245,7 @@ module OpenID
     end
 
     def test_404
-      assert_raise(Yadis::DiscoveryFailure) {
+      assert_raise(DiscoveryFailure) {
         OpenID.discover(@id_url + '/404')
       }
     end
@@ -432,7 +432,7 @@ module OpenID
     end
 
     def test_yadis2BadLocalID
-      assert_raise(Yadis::DiscoveryFailure) {
+      assert_raise(DiscoveryFailure) {
         _discover('application/xrds+xml',
                   read_data_file('test_discover/yadis_2_bad_local_id.xml', false),
                   1)
@@ -454,7 +454,7 @@ module OpenID
     end
 
     def test_yadis1And2BadLocalID
-      assert_raise(Yadis::DiscoveryFailure) {
+      assert_raise(DiscoveryFailure) {
         _discover('application/xrds+xml',
                   read_data_file('test_discover/openid_1_and_2_xrds_bad_delegate.xml', false),
                   1)

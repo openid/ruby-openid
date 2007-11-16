@@ -222,9 +222,8 @@ module OpenID
       service = manager.get_next_service(&method(:discover))
 
       if service.nil?
-        raise Yadis::DiscoveryFailure.new("No usable OpenID services were "\
-                                          "found for "\
-                                          "#{openid_identifier.inspect}", nil)
+        raise DiscoveryFailure.new("No usable OpenID services were found "\
+                                   "for #{openid_identifier.inspect}", nil)
       else
         begin_without_discovery(service, anonymous)
       end
@@ -380,7 +379,7 @@ module OpenID
 
       begin
         idres = handle_idres(message, return_to)
-      rescue Yadis::DiscoveryFailure, ProtocolError => why
+      rescue DiscoveryFailure, ProtocolError => why
         return FailureResponse.new(last_requested_endpoint, why.message)
       else
         return SuccessResponse.new(idres.endpoint, message,
