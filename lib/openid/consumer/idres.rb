@@ -137,7 +137,12 @@ module OpenID
       end
 
       def verify_return_to
-        msg_return_to = URI.parse(fetch('return_to'))
+        begin
+          msg_return_to = URI.parse(fetch('return_to'))
+        rescue URI::InvalidURIError
+          raise ProrocolError("return_to is not a valid URI")
+        end
+
         verify_return_to_args(msg_return_to)
         if !@return_to.nil?
           verify_return_to_base(msg_return_to)
@@ -171,7 +176,12 @@ module OpenID
       end
 
       def verify_return_to_base(msg_return_to)
-        app_parsed = URI.parse(@return_to)
+        begin
+          app_parsed = URI.parse(@return_to)
+        rescue URI::InvalidURIError
+          raise ProtocolError, "return_to is not a valid URI"
+        end
+
         [:scheme, :host, :port, :path].each do |meth|
           if msg_return_to.send(meth) != app_parsed.send(meth)
             raise ProtocolError, "return_to #{meth.to_s} does not match"
@@ -465,9 +475,14 @@ module OpenID
           when :xri
             endpoint.claimed_id
           when :uri
-            parsed = URI.parse(endpoint.claimed_id)
-            parsed.fragment = nil
-            parsed.to_s
+            begin
+              parsed = URI.parse(endpoint.claimed_id)
+            rescue URI::InvalidURIError
+              endpoint.claimed_id
+            else
+              parsed.fragment = nil
+              parsed.to_s
+            end
           else
             raise StandardError, 'Not reached'
           end

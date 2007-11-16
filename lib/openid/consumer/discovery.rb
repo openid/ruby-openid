@@ -439,7 +439,12 @@ module OpenID
       uri = 'http://' + uri
     end
 
-    parsed = URI::parse(uri)
+    begin
+      parsed = URI::parse(uri)
+    rescue URI::InvalidURIError => why
+      raise DiscoveryFailure.new("URI is not valid: #{why.message}", nil)
+    end
+
     if !parsed.scheme.nil? and !parsed.scheme.empty?
       if !['http', 'https'].member?(parsed.scheme)
         raise DiscoveryFailure.new(
