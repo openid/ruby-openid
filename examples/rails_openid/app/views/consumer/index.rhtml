@@ -21,6 +21,10 @@
         border: 1px solid #ff0000;
         background: #ffaaaa;
       }
+      .success {
+        border: 1px solid #00ff00;
+        background: #aaffaa;
+      }
       #verify-form {
         border: 1px solid #777777;
         background: #dddddd;
@@ -44,6 +48,11 @@
     <% if flash[:error] %>
       <div class='error'>
        <%= h(flash[:error]) %>
+      </div>
+    <% end %>
+    <% if flash[:success] %>
+      <div class='success'>
+       <%= h(flash[:success]) %>
       </div>
     <% end %>
     <% if flash[:sreg_results] %>
