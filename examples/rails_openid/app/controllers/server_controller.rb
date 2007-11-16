@@ -9,7 +9,7 @@ require "openid"
 require "openid/consumer/discovery"
 require 'openid/extensions/sreg'
 require 'openid/extensions/pape'
-require 'openid/store/filestore'
+require 'openid/store/filesystem'
 #end
 
 class ServerController < ApplicationController
@@ -177,7 +177,7 @@ EOS
     if @server.nil?
       server_url = url_for :action => 'index', :only_path => false
       dir = Pathname.new(RAILS_ROOT).join('db').join('openid-store')
-      store = OpenID::FilesystemStore.new(dir)
+      store = OpenID::Store::Filesystem.new(dir)
       @server = Server.new(store, server_url)
     end
     return @server
