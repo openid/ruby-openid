@@ -68,14 +68,15 @@ module OpenID
     #
     # returns a DiscoveryResult object
     #
-    # Any exception that can be raised by fetching a URL with the
-    # default fetcher.
-    #
     # Raises DiscoveryFailure when the HTTP response does not have
     # a 200 code.
     def self.discover(uri)
       result = DiscoveryResult.new(uri)
-      resp = OpenID.fetch(uri, nil, {'Accept' => YADIS_ACCEPT_HEADER})
+      begin
+        resp = OpenID.fetch(uri, nil, {'Accept' => YADIS_ACCEPT_HEADER})
+      rescue Exception
+        raise DiscoveryFailure.new("Failed to fetch identity URL.",$!)
+      end
       if resp.code != "200"
         raise DiscoveryFailure.new(
                 "HTTP Response status from identity URL host is not \"200\""\
@@ -92,7 +93,11 @@ module OpenID
       result.xrds_uri = self.where_is_yadis?(resp)
 
       if result.xrds_uri and result.used_yadis_location?
-        resp = OpenID.fetch(result.xrds_uri)
+        begin
+          resp = OpenID.fetch(result.xrds_uri)
+        rescue
+          raise DiscoveryFailure.new("Failed to fetch Yadis URL.", $!)
+        end
         if resp.code != "200"
             exc = DiscoveryFailure.new(
                     "HTTP Response status from Yadis host is not \"200\". " +

@@ -83,15 +83,14 @@ module OpenID
   end
 
   class TestFetchException < Test::Unit::TestCase
-    # Make sure exceptions get passed through discover function from
-    # fetcher.
+    # Discovery should only raise DiscoveryFailure
 
     def initialize(*args)
       super(*args)
 
       @cases = [
-                Exception.new(),
                 DidFetch.new(),
+                Exception.new(),
                 ArgumentError.new(),
                 RuntimeError.new(),
                ]
@@ -100,11 +99,9 @@ module OpenID
     def test_fetch_exception
       @cases.each { |exc|
         OpenID.fetcher = ErrorRaisingFetcher.new(exc)
-        begin
+        assert_raises(DiscoveryFailure) {
           OpenID.discover('http://doesnt.matter/')
-        rescue Object => thing
-          assert(thing.is_a?(exc.class), [thing.class, exc.class, thing].inspect)
-        end
+        }
         OpenID.fetcher = nil
       }
     end
@@ -120,7 +117,7 @@ module OpenID
       begin
         OpenID.discover('users.stompy.janrain.com:8000/x')
       rescue DiscoveryFailure => why
-        flunk("failed to parse url with port correctly: #{why}")
+        assert why.to_s.match("Failed to fetch")
       rescue RuntimeError
       end
 

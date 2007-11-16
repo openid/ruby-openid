@@ -49,7 +49,11 @@ module OpenID
 
           services = service_types.collect { |service_type|
             url = self.query_url(xri, service_type)
-            response = OpenID.fetch(url)
+            begin
+              response = OpenID.fetch(url)
+            rescue
+              raise XRIHTTPError, ["Could not fetch #{xri}", $!]
+            end
             raise XRIHTTPError, "Could not fetch #{xri}" if response.nil?
 
             xrds = Yadis::parseXRDS(response.body)

@@ -33,7 +33,7 @@ module OpenID
       else
         error_message = "bad status code from server #{server_url}: "\
         "#{response.code}"
-        raise StandardError.new(error_message)
+        raise ProtocolError.new(error_message)
       end
     end
   end
@@ -41,7 +41,11 @@ module OpenID
   # Send the message to the server via HTTP POST and receive and parse
   # a response in KV Form
   def self.make_kv_post(request_message, server_url)
-    http_response = self.fetch(server_url, request_message.to_url_encoded)
+    begin
+      http_response = self.fetch(server_url, request_message.to_url_encoded)
+    rescue
+      raise ProtocolError.new($!)
+    end
     return Message.from_http_response(http_response, server_url)
   end
 end

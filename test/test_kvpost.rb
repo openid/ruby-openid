@@ -37,7 +37,7 @@ module OpenID
       args = {'error' => 'I ate too much cheese',
         'error_code' => 'sadness'}
       resp = mk_resp(500, args)
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         Message.from_http_response(resp, 'http://invalid')
       }
     end
@@ -57,7 +57,7 @@ module OpenID
     end
 
     def test_make_kv_post
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         make_kv_post_with_response(500, {})
       }
     end
