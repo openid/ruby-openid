@@ -15,8 +15,8 @@ class ConsumerController < ApplicationController
   def start
     begin
       oidreq = consumer.begin(params[:openid_identifier])
-    rescue OpenID::DiscoveryFailure
-      flash[:error] = "Discovery failed for #{params[:openid_identifier]}"
+    rescue OpenID::OpenIDError => e
+      flash[:error] = "Discovery failed for #{params[:openid_identifier]}: #{e}"
       redirect_to :action => 'index'
       return
     end
