@@ -12,8 +12,14 @@ class ConsumerController < ApplicationController
     # render an openid form
   end
 
-  def begin
-    oidreq = consumer.begin(params[:openid_identifier])
+  def start
+    begin
+      oidreq = consumer.begin(params[:openid_identifier])
+    rescue OpenID::DiscoveryFailure
+      flash[:error] = "Discovery failed for #{params[:openid_identifier]}"
+      redirect_to :action => 'index'
+      return
+    end
     if params[:use_sreg]
       sregreq = OpenID::SReg::Request.new
       # required fields
