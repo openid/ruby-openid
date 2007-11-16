@@ -22,6 +22,11 @@ module OpenID
     end
   end
 
+  class KVPostNetworkError < OpenIDError
+  end
+  class HTTPStatusError < OpenIDError
+  end
+
   class Message
     def self.from_http_response(response, server_url)
       msg = self.from_kvform(response.body)
@@ -33,7 +38,7 @@ module OpenID
       else
         error_message = "bad status code from server #{server_url}: "\
         "#{response.code}"
-        raise ProtocolError.new(error_message)
+        raise HTTPStatusError.new(error_message)
       end
     end
   end
@@ -43,8 +48,8 @@ module OpenID
   def self.make_kv_post(request_message, server_url)
     begin
       http_response = self.fetch(server_url, request_message.to_url_encoded)
-    rescue
-      raise ProtocolError.new($!)
+    rescue Exception
+      raise KVPostNetworkError.new("Unable to contact OpenID server: #{$!.to_s}")
     end
     return Message.from_http_response(http_response, server_url)
   end
