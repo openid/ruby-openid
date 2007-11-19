@@ -55,13 +55,15 @@ class ConsumerController < ApplicationController
     oidresp = consumer.complete(parameters, return_to)
     case oidresp.status
     when OpenID::Consumer::FAILURE
-      if oidresp.identity_url
-        flash[:error] = "Verification of #{oidresp.identity_url} failed: #{oidresp.message}"
+      if oidresp.display_identifier
+        flash[:error] = ("Verification of #{oidresp.display_identifier}"\
+                         " failed: #{oidresp.message}")
       else
         flash[:error] = "Verification failed: #{oidresp.message}"
       end
     when OpenID::Consumer::SUCCESS
-      flash[:success] = "Verification of #{oidresp.identity_url} succeeded."
+      flash[:success] = ("Verification of #{oidresp.display_identifier}"\
+                         " succeeded.")
       if params[:did_sreg]
         sreg_resp = OpenID::SReg::Response.from_success_response(oidresp)
         sreg_message = "Simple Registration data was requested"
