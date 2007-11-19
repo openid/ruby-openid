@@ -24,11 +24,8 @@ module OpenID
   OPENID_1_0_MESSAGE_NS = OPENID1_NS
   OPENID_2_0_MESSAGE_NS = OPENID2_NS
 
+  # Object representing an OpenID service endpoint.
   class OpenIDServiceEndpoint
-    # Object representing an OpenID service endpoint.
-    #
-    # @ivar identity_url: the verified identifier.
-    # @ivar canonicalID: For XRI, the persistent identifier.
 
     # OpenID service type URIs, listed in order of preference.  The
     # ordering of this list affects yadis and XRI service discovery.
@@ -40,8 +37,13 @@ module OpenID
         OPENID_1_0_TYPE,
         ]
 
-    attr_accessor :claimed_id, :server_url, :type_uris, :local_id,
-      :canonicalID, :used_yadis
+    # the verified identifier.
+    attr_accessor :claimed_id
+
+    # For XRI, the persistent identifier.
+    attr_accessor :canonicalID
+
+    attr_accessor :server_url, :type_uris, :local_id, :used_yadis
 
     def initialize
       @claimed_id = nil
