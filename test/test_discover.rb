@@ -166,7 +166,8 @@ module OpenID
 
     def _checkService(s, server_url, claimed_id=nil,
                       local_id=nil, canonical_id=nil,
-                      types=nil, used_yadis=false)
+                      types=nil, used_yadis=false,
+                      display_identifier=nil)
       assert_equal(server_url, s.server_url)
       if types == ['2.0 OP']
         assert(!claimed_id)
@@ -201,6 +202,12 @@ module OpenID
 
       assert_equal(type_uris, s.type_uris)
       assert_equal(canonical_id, s.canonicalID)
+
+      if canonical_id.nil?
+        assert_equal(claimed_id, s.display_identifier)
+      else
+        assert_equal(display_identifier, s.display_identifier)
+      end
     end
 
     def setup
@@ -524,7 +531,8 @@ module OpenID
                     'http://smoker.myopenid.com/',
                     Yadis::XRI.make_xri("=!1000"),
                     ['1.0'],
-                    true)
+                    true,
+                    '=smoker')
 
       _checkService(services[1],
                     "http://www.livejournal.com/openid/server.bml",
@@ -532,7 +540,8 @@ module OpenID
                     'http://frank.livejournal.com/',
                     Yadis::XRI.make_xri("=!1000"),
                     ['1.0'],
-                    true)
+                    true,
+                    '=smoker')
     end
 
     def test_xriNoCanonicalID

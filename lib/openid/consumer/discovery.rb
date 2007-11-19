@@ -52,6 +52,15 @@ module OpenID
       @local_id = nil
       @canonicalID = nil
       @used_yadis = false # whether this came from an XRDS
+      @display_identifier = nil
+    end
+
+    def display_identifier
+      @display_identifier || @claimed_id
+    end
+
+    def display_identifier=(display_identifier)
+      @display_identifier = display_identifier
     end
 
     def uses_extension(extension_uri)
@@ -415,6 +424,7 @@ module OpenID
       # constructor instead of tacking it on after?
       endpoint.canonicalID = canonicalID
       endpoint.claimed_id = canonicalID
+      endpoint.display_identifier = iname
     }
 
     # FIXME: returned xri should probably be in some normal form
