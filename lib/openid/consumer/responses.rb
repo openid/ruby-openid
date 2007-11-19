@@ -20,19 +20,18 @@ module OpenID
 
 
     module Response
-      attr_reader :endpoint, :identity_url
+      attr_reader :endpoint
 
       def status
         self.class::STATUS
       end
 
-      def endpoint=(endpoint)
-        @endpoint = endpoint
-        if endpoint.nil?
-          @identity_url = nil
-        else
-          @identity_url = endpoint.claimed_id
-        end
+      def identity_url
+        @endpoint ? @endpoint.claimed_id : nil
+      end
+
+      def display_identifier
+        @endpoint ? @endpoint.display_identifier : nil
       end
     end
 
@@ -107,7 +106,7 @@ module OpenID
 
       attr_reader :message, :contact, :reference
       def initialize(endpoint, message, contact=nil, reference=nil)
-        self.endpoint=(endpoint)
+        @endpoint = endpoint
         @message = message
         @contact = contact
         @reference = reference
@@ -118,7 +117,7 @@ module OpenID
       include Response
       STATUS = CANCEL
       def initialize(endpoint)
-        self.endpoint=(endpoint)
+        @endpoint = endpoint
       end
     end
 
@@ -126,7 +125,7 @@ module OpenID
       include Response
       STATUS = SETUP_NEEDED
       def initialize(endpoint, setup_url)
-        self.endpoint=(endpoint)
+        @endpoint = endpoint
         @setup_url = setup_url
       end
     end
