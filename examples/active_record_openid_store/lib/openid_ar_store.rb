@@ -1,17 +1,9 @@
 require 'association'
 require 'nonce'
-require 'open_id_setting'
+require 'openid/store/interface'
 
-class ActiveRecordOpenIDStore < OpenID::Store
-  def get_auth_key
-    setting = OpenIdSetting.find_by_setting 'auth_key'
-    if setting.nil?
-      auth_key = OpenID::Util.random_string(20)
-      setting = OpenIdSetting.create :setting => 'auth_key', :value => auth_key
-    end
-    setting.value
-  end
-
+# not in OpenID module to avoid namespace conflict
+class ActiveRecordStore < OpenID::Store::Interface
   def store_association(server_url, assoc)
     remove_association(server_url, assoc.handle)    
     Association.create(:server_url => server_url,
@@ -23,13 +15,15 @@ class ActiveRecordOpenIDStore < OpenID::Store
   end
 
   def get_association(server_url, handle=nil)
-    assocs = handle.blank? ? 
-    Association.find_all_by_server_url(server_url) :
-      Association.find_all_by_server_url_and_handle(server_url, handle)
-    
+    assocs = if handle.blank?
+        Association.find_all_by_server_url(server_url)
+      else
+        Association.find_all_by_server_url_and_handle(server_url, handle)
+      end
+
     assocs.reverse.each do |assoc|
       a = assoc.from_record    
-      if a.expired?
+      if a.expires_in == 0
         assoc.destroy
       else
         return a
@@ -40,43 +34,24 @@ class ActiveRecordOpenIDStore < OpenID::Store
   end
   
   def remove_association(server_url, handle)
-    assoc = Association.find_by_server_url_and_handle(server_url, handle)
-    unless assoc.nil?
-      assoc.destroy
-      return true
-    end
-    false
+    Association.delete_all(['server_url = ? AND handle = ?', server_url, handle]) > 0
   end
   
-  def store_nonce(nonce)
-    use_nonce(nonce)
-    Nonce.create :nonce => nonce, :created => Time.now.to_i
+  def use_nonce(server_url, timestamp, salt)
+    return false if Nonce.find_by_server_url_and_timestamp_and_salt(server_url, timestamp, salt)
+    return false if (timestamp - Time.now.to_i).abs > OpenID::Nonce.skew
+    Nonce.create(:server_url => server_url, :timestamp => timestamp, :salt => salt)
+    return true
   end
   
-  def use_nonce(nonce)
-    nonce = Nonce.find_by_nonce(nonce)
-    return false if nonce.nil?
-    
-    age = Time.now.to_i - nonce.created
-    nonce.destroy
-
-    age < 6.hours # max nonce age of 6 hours
-  end
-  
-  def dumb?
-    false
-  end
-
-  # not part of the api, but useful
-  def gc
+  def cleanup_nonces
     now = Time.now.to_i
-
-    # remove old nonces
-    nonces = Nonce.find(:all)
-    nonces.each {|n| n.destroy if now - n.created > 6.hours} unless nonces.nil?
-    
-    # remove expired assocs
-    assocs = Association.find(:all)
-    assocs.each { |a| a.destroy if a.from_record.expired? } unless assocs.nil?
+    Nonce.delete_all(["timestamp > ? OR timestamp < ?", now + OpenID::Nonce.skew, now - OpenID::Nonce.skew])
   end
+
+  def cleanup_associations
+    now = Time.now.to_i
+    Association.delete_all(['issued + lifetime > ?',now])
+  end
+
 end

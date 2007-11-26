@@ -1,3 +1,4 @@
+# Use this migration to create the tables for the ActiveRecord store
 class AddOpenIdStoreToDb < ActiveRecord::Migration
   def self.up
     create_table "open_id_associations", :force => true do |t|
@@ -10,19 +11,14 @@ class AddOpenIdStoreToDb < ActiveRecord::Migration
     end
 
     create_table "open_id_nonces", :force => true do |t|
-      t.column "nonce", :string
-      t.column "created", :integer
-    end
-
-    create_table "open_id_settings", :force => true do |t|
-      t.column "setting", :string
-      t.column "value", :binary
+      t.column :server_url, :string, :null => false
+      t.column :timestamp, :integer, :null => false
+      t.column :salt, :string, :null => false
     end
   end
 
   def self.down
     drop_table "open_id_associations"
     drop_table "open_id_nonces"
-    drop_table "open_id_settings"
   end
 end

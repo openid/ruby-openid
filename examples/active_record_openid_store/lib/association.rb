@@ -1,3 +1,5 @@
+require 'openid/association'
+
 class Association < ActiveRecord::Base
   set_table_name 'open_id_associations'
   def from_record

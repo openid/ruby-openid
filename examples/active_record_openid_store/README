@@ -7,7 +7,7 @@ machines, they must must all have access to the same OpenID store
 data, so the FilesystemStore won't do.
 
 This directory contains a plugin for connecting your
-OpenID enabled rails app to an ActiveRecord based OpenID::Store.
+OpenID enabled rails app to an ActiveRecord based OpenID store.
 
 ==Install
 
@@ -32,6 +32,11 @@ this:
 
 5) That's it! All your OpenID state will now be stored in the database.
 
+==Upgrade
+
+If you are upgrading from the 1.x ActiveRecord store, replace your old
+RAILS_ROOT/vendor/plugins/active_record_openid_store/ directory with
+the new one and run the migration XXX_upgrade_open_id_store.rb.
 
 ==What about garbage collection? 
 
@@ -41,7 +46,7 @@ task in your app's Rakefile like so:
 
   desc 'GC OpenID store'
   task :gc_openid_store => :environment do
-    ActiveRecordOpenIDStore.new.gc
+    ActiveRecordOpenIDStore.new.cleanup
   end
 
 Run it by typing:
@@ -50,4 +55,4 @@ Run it by typing:
 
 
 ==Questions?
-Contact Brian Ellin: brian at janrain dot com
+Contact Dag Arneson: dag at janrain dot com
