@@ -80,11 +80,11 @@ module OpenID
     # The number of seconds until this association expires
     def expires_in(now=nil)
       if now.nil?
-        now = Time.now
-      elsif now.is_a?(Integer)
-        now = Time.at(now)
+        now = Time.now.to_i
+      else
+        now = now.to_i
       end
-      time_diff = (issued + lifetime) - now
+      time_diff = (issued.to_i + lifetime) - now
       if time_diff < 0
         return 0
       else
