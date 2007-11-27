@@ -14,6 +14,7 @@ module OpenID
     # the authentication request as a URL or as a form POST.
     class CheckIDRequest
       attr_accessor :return_to_args
+      attr_reader :endpoint
 
       # Users of this library should not create instances of this
       # class.  Instances of this class are created by the library
