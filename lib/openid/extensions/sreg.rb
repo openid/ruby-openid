@@ -261,7 +261,7 @@ module OpenID
       # Read-only hashlike interface.
       # Raises an exception if the field name is bad
       def [](field_name)
-        check_sreg_field_name(field_name)
+        OpenID::check_sreg_field_name(field_name)
         data[field_name]
       end
 
