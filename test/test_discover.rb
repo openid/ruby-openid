@@ -201,7 +201,7 @@ module OpenID
       type_uris = types.collect { |t| openid_types[t] }
 
       assert_equal(type_uris, s.type_uris)
-      assert_equal(canonical_id, s.canonicalID)
+      assert_equal(canonical_id, s.canonical_id)
 
       if canonical_id.nil?
         assert_equal(claimed_id, s.display_identifier)
@@ -556,7 +556,7 @@ module OpenID
       # XRI.
       endpoint = OpenIDServiceEndpoint.new()
       endpoint.claimed_id = Yadis::XRI.make_xri("=!1000")
-      endpoint.canonicalID = Yadis::XRI.make_xri("=!1000")
+      endpoint.canonical_id = Yadis::XRI.make_xri("=!1000")
       assert_equal(endpoint.get_local_id, Yadis::XRI.make_xri("=!1000"))
     end
   end
@@ -672,8 +672,8 @@ module OpenID
       assert(!@endpoint.compatibility_mode())
     end
 
-    def test_canonicalID
-      assert_equal(@endpoint.canonicalID, nil)
+    def test_canonical_id
+      assert_equal(@endpoint.canonical_id, nil)
     end
 
     def test_serverURL

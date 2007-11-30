@@ -41,7 +41,7 @@ module OpenID
     attr_accessor :claimed_id
 
     # For XRI, the persistent identifier.
-    attr_accessor :canonicalID
+    attr_accessor :canonical_id
 
     attr_accessor :server_url, :type_uris, :local_id, :used_yadis
 
@@ -50,7 +50,7 @@ module OpenID
       @server_url = nil
       @type_uris = []
       @local_id = nil
-      @canonicalID = nil
+      @canonical_id = nil
       @used_yadis = false # whether this came from an XRDS
       @display_identifier = nil
     end
@@ -119,10 +119,10 @@ module OpenID
       # bug!"  but Python actually makes that one big expression
       # somehow, i.e.  "x is x is x" is not the same thing as "(x is
       # x) is x".  That's pretty weird, dude.  -- kmt, 1/07
-      if @local_id.nil? and @canonicalID.nil?
+      if @local_id.nil? and @canonical_id.nil?
         return @claimed_id
       else
-        return (@local_id or @canonicalID)
+        return (@local_id or @canonical_id)
       end
     end
 
@@ -224,9 +224,9 @@ module OpenID
 
     def to_s
       return sprintf("<%s server_url=%s claimed_id=%s " +
-                     "local_id=%s canonicalID=%s used_yadis=%s>",
+                     "local_id=%s canonical_id=%s used_yadis=%s>",
                      self.class, @server_url, @claimed_id,
-                     @local_id, @canonicalID, @used_yadis)
+                     @local_id, @canonical_id, @used_yadis)
     end
   end
 
@@ -403,10 +403,10 @@ module OpenID
     endpoints = []
 
     begin
-      canonicalID, services = Yadis::XRI::ProxyResolver.new().query(
+      canonical_id, services = Yadis::XRI::ProxyResolver.new().query(
             iname, OpenIDServiceEndpoint::OPENID_TYPE_URIS)
 
-      if canonicalID.nil?
+      if canonical_id.nil?
         raise Yadis::XRDSError.new(sprintf('No CanonicalID found for XRI %s', iname))
       end
 
@@ -422,8 +422,8 @@ module OpenID
     endpoints.each { |endpoint|
       # Is there a way to pass this through the filter to the endpoint
       # constructor instead of tacking it on after?
-      endpoint.canonicalID = canonicalID
-      endpoint.claimed_id = canonicalID
+      endpoint.canonical_id = canonical_id
+      endpoint.claimed_id = canonical_id
       endpoint.display_identifier = iname
     }
 
