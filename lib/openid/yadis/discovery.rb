@@ -1,4 +1,5 @@
 
+require 'openid/util'
 require 'openid/fetchers'
 require 'openid/yadis/constants'
 require 'openid/yadis/parsehtml'
@@ -6,7 +7,7 @@ require 'openid/yadis/parsehtml'
 module OpenID
 
   # Raised when a error occurs in the discovery process
-  class DiscoveryFailure < StandardError
+  class DiscoveryFailure < OpenIDError
     attr_accessor :identity_url, :http_response
 
     def initialize(message, http_response)
