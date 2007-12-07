@@ -3,22 +3,14 @@ OpenID library.  Make sure you have properly installed the library
 before running the examples.  These examples are a great place to
 start in integrating OpenID into your application.
 
-==consumer.rb
-consumer.rb runs a simple web server (WEBrick) and will
-verify OpenID identities.  To test this out you'll need a valid
-OpenID URL and to run:
+==Rails example
 
- ruby consumer.rb
+The rails_openid contains a fully functional OpenID server and relying
+party, and acts as a starting point for implementing your own
+production rails server.  You'll need the latest version of Ruby on
+Rails installed, and then:
 
-Point your browser at http://localhost:2000/ and follow the instructions.
-
-==Rails server example
-
-The rails_server contains a fully functions OpenID server, and acts as
-a starting point for implementing your own production rails server.
-You'll need the latest version of Ruby on Rails installed, and then:
-
- cd rails_server
+ cd rails_openid
  ./script/server
 
 Open a web browser to http://localhost:3000/ and follow the instructions.
@@ -35,7 +27,10 @@ http://wiki.rubyonrails.com/rails/pages/LoginGenerator
 
 ===Running the generator
 
-* Copy the contents of rails_openid_login_generator into ~/.rails/generators/openid_login (or symlink: ln -s examples/rails_openid_login_generator ~/.rails/generators/openid_login)
+* Copy the contents of rails_openid_login_generator into 
+ ~/.rails/generators/openid_login 
+ (or symlink: ln -s examples/rails_openid_login_generator 
+                    ~/.rails/generators/openid_login)
 * run script/generate openid_login openid
 
 You will now have an openid_controller.rb in app/controllers. You'll
@@ -46,9 +41,6 @@ README_LOGIN in you rails root directory.
 ==Rails ActiveRecord OpenIDStore plugin
 
 For various reasons you may want or need to deploy your ruby openid
-consumer/server using an SQL based store.  The
-active_record_openid_store is a plugin that makes using an SQL based
-store simple.  Follow the README inside the plugin's dir for usage.
-
-
-
+consumer/server using an SQL based store.  The active_record_openid_store 
+is a plugin that makes using an SQL based store simple.  Follow the
+README inside the plugin's dir for usage.
