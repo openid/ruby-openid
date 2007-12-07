@@ -101,8 +101,7 @@ module OpenID
 
   class StandardFetcher
 
-    # FIXME: Use an OpenID::VERSION constant here.
-    USER_AGENT = "ruby-openid/#{VERSION} (#{PLATFORM})"
+    USER_AGENT = "ruby-openid/#{OpenID::VERSION} (#{PLATFORM})"
 
     REDIRECT_LIMIT = 5
 
