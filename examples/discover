@@ -3,7 +3,7 @@ require "openid/consumer/discovery"
 
 $names = [[:server_url,   "Server URL  "],
           [:local_id,     "Local ID    "],
-          [:canonicalID, "Canonical ID"],
+          [:canonical_id, "Canonical ID"],
          ]
 
 def show_services(user_input, normalized, services)
