@@ -7,6 +7,6 @@
 #
 # Must be run from the base of the repository
 
-RDOC_FILES="README INSTALL COPYING LICENSE lib/openid examples/README"
+RDOC_FILES="README INSTALL COPYING LICENSE UPGRADE lib/openid examples/README"
 MAIN=README
 rdoc --main="$MAIN" $RDOC_FILES
