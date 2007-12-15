@@ -8,8 +8,7 @@ A Ruby library for verifying and serving OpenID identities.
 * Does not depend on underlying web framework
 * Supports multiple storage mechanisms (Filesystem, ActiveRecord, Memory)
 * Example code to help you get started, including:
-  * WEBrick-based consumer
-  * Ruby on rails based server
+  * Ruby on Rails based consumer and server
   * OpenIDLoginGenerator for quickly getting creating a rails app that uses
     OpenID for authentication
   * ActiveRecordOpenIDStore plugin
@@ -30,7 +29,7 @@ Check the installation:
   => true
 
 The library is known to work with Ruby 1.8.4 on Unix, Max OSX and
-Win32.  Examples have been tested with Rails 1.1 and 1.2.
+Win32.  Examples have been tested with Rails 1.1 and 1.2, and 2.0.
 
 ==Getting Started with OpenID::Consumer
 OpenID::Consumer is the place to start if you'd like to support OpenID
@@ -66,7 +65,7 @@ bugs, etc.  Also check out the openid channel on the freenode IRC
 network.
 
 ==Author
-Copyright 2006, JanRain, Inc.
+Copyright 2006-2007, JanRain, Inc.
 
 Contact openid@janrain.com or visit the OpenID channel on pibb.com:
 
