@@ -1,3 +1,8 @@
+The code in lib/hmac/ is Copyright 2001 by Daiki Ueno, and distributed under
+the terms of the Ruby license.  See http://www.ruby-lang.org/en/LICENSE.txt
+
+The remainder of this package is Copyright 2006-2007 by JanRain, Inc. and
+distributed under the terms of license below:
 
                                  Apache License
                            Version 2.0, January 2004

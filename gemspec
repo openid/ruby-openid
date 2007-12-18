@@ -15,6 +15,6 @@ SPEC = Gem::Specification.new do |s|
   s.autorequire = 'openid'
   s.test_file = 'admin/runtests.rb'
   s.has_rdoc = true
-  s.extra_rdoc_files = ['README','INSTALL','COPYING','LICENSE','UPGRADE']
+  s.extra_rdoc_files = ['README','INSTALL','LICENSE','UPGRADE']
   s.rdoc_options << '--main' << 'README'
 end
