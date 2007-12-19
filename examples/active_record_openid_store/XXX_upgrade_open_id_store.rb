@@ -1,6 +1,6 @@
 # Use this migration to upgrade the old 1.1 ActiveRecord store schema
 # to the new 2.0 schema.
-class UpgradeOpenIDStore < ActiveRecord::Migration
+class UpgradeOpenIdStore < ActiveRecord::Migration
   def self.up
     drop_table "open_id_settings"
     drop_table "open_id_nonces"
