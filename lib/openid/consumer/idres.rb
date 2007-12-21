@@ -47,11 +47,11 @@ module OpenID
     class IdResHandler
       attr_reader :endpoint, :message
 
-      def initialize(message, return_to, store=nil, endpoint=nil)
+      def initialize(message, current_url, store=nil, endpoint=nil)
         @store = store # Fer the nonce and invalidate_handle
         @message = message
         @endpoint = endpoint
-        @return_to = return_to
+        @current_url = current_url
         @signed_list = nil
 
         # Start the verification process
@@ -144,7 +144,7 @@ module OpenID
         end
 
         verify_return_to_args(msg_return_to)
-        if !@return_to.nil?
+        if !@current_url.nil?
           verify_return_to_base(msg_return_to)
         end
       end
@@ -177,9 +177,9 @@ module OpenID
 
       def verify_return_to_base(msg_return_to)
         begin
-          app_parsed = URI.parse(@return_to)
+          app_parsed = URI.parse(@current_url)
         rescue URI::InvalidURIError
-          raise ProtocolError, "return_to is not a valid URI"
+          raise ProtocolError, "current_url is not a valid URI: #{@current_url}"
         end
 
         [:scheme, :host, :port, :path].each do |meth|

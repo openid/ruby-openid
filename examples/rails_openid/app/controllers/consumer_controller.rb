@@ -50,9 +50,10 @@ class ConsumerController < ApplicationController
   end
 
   def complete
-    return_to = url_for(:action => 'complete', :only_path => false)
+    # FIXME - url_for some action is not necessarily the current URL.
+    current_url = url_for(:action => 'complete', :only_path => false)
     parameters = params.reject{|k,v|request.path_parameters[k]}
-    oidresp = consumer.complete(parameters, return_to)
+    oidresp = consumer.complete(parameters, current_url)
     case oidresp.status
     when OpenID::Consumer::FAILURE
       if oidresp.display_identifier

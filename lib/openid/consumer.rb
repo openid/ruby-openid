@@ -170,7 +170,7 @@ module OpenID
   #
   # Get a Consumer instance with the same session and store as before
   # and call its complete() method, passing in all the received query
-  # arguments and the <tt>return_to</tt> URL mentioned above.
+  # arguments and URL currently being handled.
   #
   # There are multiple possible return types possible from that
   # method. These indicate the whether or not the login was
@@ -265,16 +265,20 @@ module OpenID
     # because <tt>controller</tt> and <tt>action</tt> and other
     # "path parameters" are included in params.
     #
-    # return_to: The return URL used to invoke the application.
-    # Extract the URL from your application's web request framework
-    # and specify it here to have it checked against the
-    # openid.return_to value in the response.  If the return_to URL
-    # check fails, the status of the completion will be FAILURE.
+    # current_url: Extract the URL of the current request from your
+    # application's web request framework and specify it here to have it
+    # checked against the openid.return_to value in the response.  Do not
+    # just pass <tt>args['openid.return_to']</tt> here; that will defeat the
+    # purpose of this check.  (See OpenID Authentication 2.0 section 11.1.)
+    #
+    # If the return_to URL check fails, the status of the completion will be
+    # FAILURE.
+
     #
     # Returns a subclass of Response. The type of response is
     # indicated by the status attribute, which will be one of
     # SUCCESS, CANCEL, FAILURE, or SETUP_NEEDED.
-    def complete(query, return_to)
+    def complete(query, current_url)
       message = Message.from_post_args(query)
       mode = message.get_arg(OPENID_NS, 'mode', 'invalid')
       begin
@@ -282,7 +286,7 @@ module OpenID
       rescue NameError
         meth = method(:complete_invalid)
       end
-      response = meth.call(message, return_to)
+      response = meth.call(message, current_url)
       cleanup_last_requested_endpoint
       if [SUCCESS, CANCEL].member?(response.status)
         cleanup_session
@@ -338,8 +342,8 @@ module OpenID
                              service.compatibility_mode, negotiator)
     end
 
-    def handle_idres(message, return_to)
-      IdResHandler.new(message, return_to, @store, last_requested_endpoint)
+    def handle_idres(message, current_url)
+      IdResHandler.new(message, current_url, @store, last_requested_endpoint)
     end
 
     def complete_invalid(message, unused_return_to)
@@ -369,7 +373,7 @@ module OpenID
       end
     end
 
-    def complete_id_res(message, return_to)
+    def complete_id_res(message, current_url)
       if message.is_openid1
         setup_url = message.get_arg(OPENID1_NS, 'user_setup_url')
         if !setup_url.nil?
@@ -378,7 +382,7 @@ module OpenID
       end
 
       begin
-        idres = handle_idres(message, return_to)
+        idres = handle_idres(message, current_url)
       rescue DiscoveryFailure, ProtocolError => why
         return FailureResponse.new(last_requested_endpoint, why.message)
       else
