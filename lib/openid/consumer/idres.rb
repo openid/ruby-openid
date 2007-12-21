@@ -140,7 +140,7 @@ module OpenID
         begin
           msg_return_to = URI.parse(fetch('return_to'))
         rescue URI::InvalidURIError
-          raise ProrocolError("return_to is not a valid URI")
+          raise ProtocolError, ("return_to is not a valid URI")
         end
 
         verify_return_to_args(msg_return_to)
@@ -425,8 +425,8 @@ module OpenID
         if services.length == 0
           # XXX: this might want to be something other than
           # ProtocolError. In Python, it's DiscoveryFailure
-          raise ProtocolError("No OpenID information found at "\
-                             "#{to_match.claimed_id}")
+          raise ProtocolError, ("No OpenID information found at "\
+                                "#{to_match.claimed_id}")
         end
         verify_discovered_services(services, to_match)
       end
@@ -455,8 +455,8 @@ module OpenID
         end
 
         # XXX: is DiscoveryFailure in Python OpenID
-        raise ProtocolError("No matching endpoint found after "\
-                            "discovering #{to_match.claimed_id}")
+        raise ProtocolError, ("No matching endpoint found after "\
+                              "discovering #{to_match.claimed_id}")
       end
 
       def verify_discovery_single(endpoint, to_match)
