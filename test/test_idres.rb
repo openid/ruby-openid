@@ -320,7 +320,7 @@ module OpenID
             msg = Message.new(OPENID2_NS)
             raise ServerError.from_message(msg), 'For you!'
           end
-            
+
           OpenID.with_method_overridden(:make_kv_post, send_error) do
             assert_protocol_error("Error from") {
               call_check_auth do |idres|
@@ -337,7 +337,7 @@ module OpenID
             me.assert_equal(:req, req)
             :expected_response
           end
-            
+
           OpenID.with_method_overridden(:make_kv_post, send_resp) do
             final_resp = call_check_auth do |idres|
               idres.instance_def(:create_check_auth_request) {
