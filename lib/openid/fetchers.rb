@@ -99,6 +99,17 @@ module OpenID
     @fetcher = fetcher
   end
 
+  # Set the default fetcher to use the HTTP proxy defined in the environment
+  # variable 'http_proxy'.
+  def self.fetcher_use_env_http_proxy
+    proxy_string = ENV['http_proxy']
+    return unless proxy_string
+
+    proxy_uri = URI.parse(proxy_string)
+    @fetcher = StandardFetcher.new(proxy_uri.host, proxy_uri.port,
+                                   proxy_uri.user, proxy_uri.password)
+  end
+  
   class StandardFetcher
 
     USER_AGENT = "ruby-openid/#{OpenID::VERSION} (#{PLATFORM})"
@@ -107,8 +118,11 @@ module OpenID
 
     attr_accessor :ca_file
 
-    def initialize
+    # I can fetch through a HTTP proxy; arguments are as for Net::HTTP::Proxy.
+    def initialize(proxy_addr=nil, proxy_port=nil,
+                   proxy_user=nil, proxy_pass=nil)
       @ca_file = nil
+      @proxy = Net::HTTP::Proxy(proxy_addr, proxy_port, proxy_user, proxy_pass)
     end
 
     def supports_ssl?(conn)
@@ -116,7 +130,7 @@ module OpenID
     end
 
     def make_http(uri)
-      Net::HTTP.new(uri.host, uri.port)
+      @proxy.new(uri.host, uri.port)
     end
 
     def set_verified(conn, verify)

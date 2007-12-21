@@ -470,3 +470,38 @@ class DefaultFetcherTest < Test::Unit::TestCase
     assert(OpenID.fetcher.is_a?(OpenID::StandardFetcher))
   end
 end
+
+class ProxyTest < Test::Unit::TestCase
+  def test_proxy_unreachable
+    assert_raise(Errno::ECONNREFUSED) {
+      f = OpenID::StandardFetcher.new('127.0.0.1', 1)
+      # If this tries to connect to the proxy (on port 1), I expect
+      # a 'connection refused' error.  If it tries to contact the below
+      # URI first, it will get some other sort of error.
+      f.fetch("http://unittest.invalid")
+    }
+  end
+
+  def test_proxy_env
+    ENV['http_proxy'] = 'http://127.0.0.1:3128/'
+    OpenID.fetcher_use_env_http_proxy
+    
+    # make_http just to give us something with readable attributes to inspect.
+    conn = OpenID.fetcher.make_http(URI.parse('http://127.0.0.2'))
+    assert_equal('127.0.0.1', conn.proxy_address)
+    assert_equal(3128, conn.proxy_port)
+  end
+  # These aren't fully automated tests, but if you start a proxy
+  # on port 8888 (tinyproxy's default) and check its logs...
+#   def test_proxy
+#     f = OpenID::StandardFetcher.new('127.0.0.1', 8888)
+#     result = f.fetch("http://www.example.com/")
+#     assert_match(/RFC.*2606/, result.body)
+#   end
+
+#   def test_proxy_https
+#     f = OpenID::StandardFetcher.new('127.0.0.1', 8888)
+#     result = f.fetch("https://www.myopenid.com/")
+#     assert_match(/myOpenID/, result.body)
+#   end
+end
