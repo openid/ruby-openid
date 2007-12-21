@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 require "openid/consumer/discovery"
+require 'openid/fetchers'
+
+OpenID::fetcher_use_env_proxy
 
 $names = [[:server_url,   "Server URL  "],
           [:local_id,     "Local ID    "],
