@@ -811,6 +811,46 @@ module OpenID
                        signed_fields.map {|f|'openid.' + f})
         end
       end
+
+
+      class DiscoverAndVerifyTest < Test::Unit::TestCase
+        include ProtocolErrorMixin
+        include TestUtil
+
+        def test_no_services
+          me = self
+          disco = Proc.new do |e|
+            me.assert_equal(e, :sentinel)
+            [:undefined, []]
+          end
+          endpoint = OpenIDServiceEndpoint.new
+          endpoint.claimed_id = :sentinel
+          idres = IdResHandler.new(nil, nil)
+          assert_log_matches('Performing discovery on') do
+            assert_protocol_error('No OpenID information found') do
+              OpenID.with_method_overridden(:discover, disco) do
+                idres.send(:discover_and_verify, endpoint)
+              end
+            end
+          end
+        end
+      end
+
+      class VerifyDiscoveredServicesTest < Test::Unit::TestCase
+        include ProtocolErrorMixin
+        include TestUtil
+
+        def test_no_services
+          endpoint = OpenIDServiceEndpoint.new
+          endpoint.claimed_id = :sentinel
+          idres = IdResHandler.new(nil, nil)
+          assert_log_matches('Discovery verification failure') do
+            assert_protocol_error('No matching endpoint') do
+              idres.send(:verify_discovered_services, [], endpoint)
+            end
+          end
+        end
+      end
     end
   end
 end
