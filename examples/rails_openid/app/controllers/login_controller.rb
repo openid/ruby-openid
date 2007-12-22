@@ -1,6 +1,8 @@
 # Controller for handling the login, logout process for "users" of our
 # little server.  Users have no password.  This is just an example.
 
+require 'openid'
+
 class LoginController < ApplicationController
 
   layout 'server'
