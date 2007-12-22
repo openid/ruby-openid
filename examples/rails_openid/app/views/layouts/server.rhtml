@@ -32,7 +32,13 @@
       table {
         padding: 1em;
       }
-      li {margin-bottom: .5em;}		
+      li {margin-bottom: .5em;}
+      span.openid:before {
+        content: url(<%= @base_url %>images/openid_login_bg.gif) ;
+      }
+      span.openid {
+        font-size: smaller;
+      }
   </style>
   <body>
 
@@ -40,7 +46,8 @@
 
     <% if session[:username] %>
       <div style="float:right;">
-        Welcome, <%= session[:username] %> | <%= link_to('Log out', :controller => 'login', :action => 'logout') %>
+        Welcome, <%= session[:username] %> | <%= link_to('Log out', :controller => 'login', :action => 'logout') %><br />
+	<span class="openid"><%= @base_url %>user/<%= session[:username] %></span>
       </div>
     <% end %>
 
