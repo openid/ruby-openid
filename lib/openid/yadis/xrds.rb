@@ -65,8 +65,8 @@ module OpenID
         parent_sought = childID[0...childID.rindex('!')]
 
         parent_list = []
-        xrd.elements.each_element(CANONICALID_TAG) { |c|
-          XRI.make_xri(c.text)
+        xrd.elements.each("CanonicalID") { |c|
+          parent_list.push(XRI.make_xri(c.text))
         }
 
         if !parent_list.member?(parent_sought)
