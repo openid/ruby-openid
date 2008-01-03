@@ -2,7 +2,7 @@
 require "openid/consumer/discovery"
 require 'openid/fetchers'
 
-OpenID::fetcher_use_env_proxy
+OpenID::fetcher_use_env_http_proxy
 
 $names = [[:server_url,   "Server URL  "],
           [:local_id,     "Local ID    "],
