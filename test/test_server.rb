@@ -975,9 +975,14 @@ module OpenID
 
     def test_trustRootInvalid_modified
       @request.trust_root = "does://not.parse/"
-      assert_raise(Server::MalformedTrustRoot) {
-        @request.trust_root_valid()
-      }
+      @request.message = :sentinel
+      begin
+        result = @request.trust_root_valid
+      rescue Server::MalformedTrustRoot => why
+        assert_equal(:sentinel, why.openid_message)
+      else
+        flunk("Expected MalformedTrustRoot, got #{result.inspect}")
+      end
     end
 
     def test_trustRootvalid_absent_trust_root

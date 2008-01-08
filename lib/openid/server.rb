@@ -576,7 +576,7 @@ module OpenID
 
         tr = TrustRoot::TrustRoot.parse(@trust_root)
         if !tr
-          raise MalformedTrustRoot.new(nil, @trust_root)
+          raise MalformedTrustRoot.new(@message, @trust_root)
         end
 
         if @return_to
