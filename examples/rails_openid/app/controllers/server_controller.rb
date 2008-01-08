@@ -23,13 +23,13 @@ class ServerController < ApplicationController
       oidreq = server.decode_request(params)
     rescue ProtocolError => e
       # invalid openid request, so just display a page with an error message
-      render_text e.to_s
+      render :text => e.to_s, :status => 500
       return
     end
 
     # no openid.mode was given
     unless oidreq
-      render_text "This is an OpenID server endpoint."
+      render :text => "This is an OpenID server endpoint."
       return
     end
 
@@ -114,7 +114,7 @@ EOS
     # Also add the Yadis location header, so that they don't have
     # to parse the html unless absolutely necessary.
     response.headers['X-XRDS-Location'] = xrds_url
-    render_text identity_page
+    render :text => identity_page
   end
 
   def user_xrds
@@ -214,7 +214,7 @@ EOS
 EOS
 
     response.headers['content-type'] = 'application/xrds+xml'
-    render_text yadis
+    render :text => yadis
   end
 
   def add_sreg(oidreq, oidresp)
