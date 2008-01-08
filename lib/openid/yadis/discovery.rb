@@ -76,12 +76,12 @@ module OpenID
       begin
         resp = OpenID.fetch(uri, nil, {'Accept' => YADIS_ACCEPT_HEADER})
       rescue Exception
-        raise DiscoveryFailure.new("Failed to fetch identity URL.",$!)
+        raise DiscoveryFailure.new("Failed to fetch identity URL #{uri} : #{$!}", $!)
       end
       if resp.code != "200"
         raise DiscoveryFailure.new(
-                "HTTP Response status from identity URL host is not \"200\""\
-                ". Got status #{resp.code.inspect}", resp)
+                "HTTP Response status from identity URL host is not \"200\"."\
+                "Got status #{resp.code.inspect} for #{resp.final_url}", resp)
       end
 
       # Note the URL after following redirects
@@ -97,12 +97,12 @@ module OpenID
         begin
           resp = OpenID.fetch(result.xrds_uri)
         rescue
-          raise DiscoveryFailure.new("Failed to fetch Yadis URL.", $!)
+          raise DiscoveryFailure.new("Failed to fetch Yadis URL #{result.xrds_uri} : #{$!}", $!)
         end
         if resp.code != "200"
             exc = DiscoveryFailure.new(
                     "HTTP Response status from Yadis host is not \"200\". " +
-                    "Got status #{resp.code.inspect}", resp)
+                                       "Got status #{resp.code.inspect} for #{resp.final_url}", resp)
             exc.identity_url = result.normalized_uri
             raise exc
         end
