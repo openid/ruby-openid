@@ -114,11 +114,6 @@ module OpenID
     def get_local_id
       # Return the identifier that should be sent as the
       # openid.identity parameter to the server.
-
-      # I looked at this conditional and thought "ah-hah! there's the
-      # bug!"  but Python actually makes that one big expression
-      # somehow, i.e.  "x is x is x" is not the same thing as "(x is
-      # x) is x".  That's pretty weird, dude.  -- kmt, 1/07
       if @local_id.nil? and @canonical_id.nil?
         return @claimed_id
       else
