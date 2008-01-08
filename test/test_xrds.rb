@@ -156,5 +156,14 @@ END
         assert_same e7, sorted[3]
       end
     end
+
+    class GetCanonicalIDTestCase < Test::Unit::TestCase
+      include XRDSTestMixin
+
+      def test_multisegment_xri
+        xmldoc = Yadis.parseXRDS(read_data_file('subsegments.xrds'))
+        result = Yadis.get_canonical_id('xri://=nishitani*masaki', xmldoc)
+      end
+    end
   end
 end
