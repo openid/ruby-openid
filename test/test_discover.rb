@@ -769,4 +769,12 @@ module OpenID
                              OPENID_IDP_2_0_TYPE)
     end
   end
+
+  class TestEndpointDisplayIdentifier < Test::Unit::TestCase
+    def test_strip_fragment
+      @endpoint = OpenIDServiceEndpoint.new()
+      @endpoint.claimed_id = 'http://recycled.invalid/#123'
+      assert_equal 'http://recycled.invalid/', @endpoint.display_identifier
+    end
+  end
 end

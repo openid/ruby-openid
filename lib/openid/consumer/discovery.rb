@@ -56,7 +56,13 @@ module OpenID
     end
 
     def display_identifier
-      @display_identifier || @claimed_id
+      return @display_identifier if @display_identifier
+      return @claimed_id if @claimed_id.nil? or not URI.parse(@claimed_id).fragment
+
+      disp = URI.parse(@claimed_id)
+      disp.fragment = nil
+
+      return disp.to_s
     end
 
     def display_identifier=(display_identifier)
