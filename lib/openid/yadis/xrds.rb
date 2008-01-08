@@ -87,21 +87,6 @@ module OpenID
       return canonicalID
     end
 
-    def Yadis::mkXRDSTag(name)
-      e = REXML::Element.new('xrds:' + name)
-      e.add_namespace('xrds', XRDS_NS)
-      return e
-    end
-
-    def Yadis::mkXRDTag(name)
-      e = REXML::Element.new('xrd:' + name)
-      e.add_namespace('xrd', XRD_NS_2_0)
-      return e
-    end
-
-    ROOT_TAG = Yadis::mkXRDSTag('XRDS')
-    CANONICALID_TAG = mkXRDTag('CanonicalID')
-
     class XRDSError < StandardError
     end
 
@@ -126,8 +111,8 @@ module OpenID
     def Yadis::is_xrds?(xrds_tree)
       xrds_root = xrds_tree.root
       return (!xrds_root.nil? and
-        xrds_root.name == ROOT_TAG.name and
-        xrds_root.namespace == ROOT_TAG.namespace)
+        xrds_root.name == 'XRDS' and
+        xrds_root.namespace == XRDS_NS)
     end
 
     def Yadis::get_yadis_xrd(xrds_tree)
