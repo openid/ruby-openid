@@ -40,7 +40,7 @@ ARGV.each do |openid_identifier|
   puts "Running discovery on #{openid_identifier}"
   begin
     normalized_identifier, services = OpenID.discover(openid_identifier)
-  rescue OpenID::Yadis::DiscoveryFailure => why
+  rescue OpenID::DiscoveryFailure => why
     puts "Discovery failed: #{why.message}"
     puts
   else
