@@ -26,10 +26,25 @@ module OpenID
         self.class::STATUS
       end
 
+      # The identity URL that has been authenticated; the Claimed Identifier.
+      # See also display_identifier.
       def identity_url
         @endpoint ? @endpoint.claimed_id : nil
       end
 
+      # The display identifier is related to the Claimed Identifier, but the
+      # two are not always identical.  The display identifier is something the
+      # user should recognize as what they entered, whereas the response's
+      # claimed identifier (in the identity_url attribute) may have extra
+      # information for better persistence.
+      #
+      # URLs will be stripped of their fragments for display.  XRIs will
+      # display the human-readable identifier (i-name) instead of the
+      # persistent identifier (i-number).
+      #
+      # Use the display identifier in your user interface.  Use identity_url
+      # for querying your database or authorization server, or other
+      # identifier equality comparisons.
       def display_identifier
         @endpoint ? @endpoint.display_identifier : nil
       end
