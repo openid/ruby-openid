@@ -800,6 +800,9 @@ module OpenID
   end
 
   class TestAssocManagerGetAssociation < Test::Unit::TestCase
+    include FetcherMixin
+    include TestUtil
+
     attr_reader :negotiate_association
 
     def setup
@@ -838,6 +841,21 @@ module OpenID
       set_negotiate_response(nil)
       @store.store_association(@server_url, @assoc)
       assert_equal(@assoc, @assoc_manager.get_association)
+    end
+
+    def test_request_assoc_with_status_error
+      fetcher_class = Class.new do
+        define_method(:fetch) do |*args|
+          MockResponse.new(500, '')
+        end
+      end
+      with_fetcher(fetcher_class.new) do
+        assert_log_matches('Got HTTP status error when requesting') {
+          result = @assoc_manager.send(:request_association, 'HMAC-SHA1',
+                                       'no-encryption')
+          assert(result.nil?)
+        }
+      end
     end
   end
 

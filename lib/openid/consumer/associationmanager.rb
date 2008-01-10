@@ -187,10 +187,12 @@ module OpenID
       def request_association(assoc_type, session_type)
         assoc_session, args = create_associate_request(assoc_type, session_type)
 
-        response = OpenID.make_kv_post(args, @server_url)
-
         begin
+          response = OpenID.make_kv_post(args, @server_url)
           return extract_association(response, assoc_session)
+        rescue HTTPStatusError => why
+          Util.log("Got HTTP status error when requesting association: #{why}")
+          return nil
         rescue Message::KeyNotFound => why
           Util.log("Missing required parameter in response from "\
                    "#{@server_url}: #{why}")
