@@ -1,5 +1,7 @@
 require 'openid/extensions/ax'
 require 'openid/message'
+require 'openid/consumer/responses'
+require 'openid/consumer/discovery'
 
 module OpenID
   module AX
@@ -522,6 +524,38 @@ module OpenID
         assert_raises(Error) { @msg.get_single(@type_a) }
       end
 
+      def test_from_success_response
+        uri = 'http://under.the.sea/'
+        name = 'ext0'
+        value = 'snarfblat'
+
+        m = OpenID::Message.from_openid_args({
+                                               'mode' => 'id_res',
+                                               'ns' => OPENID2_NS,
+                                               'ns.ax' => AXMessage::NS_URI,
+                                               'ax.update_url' => 'http://example.com/realm/update_path',
+                                               'ax.mode' => 'fetch_response',
+                                               'ax.type.' + name => uri,
+                                               'ax.count.' + name => '1',
+                                               'ax.value.' + name + '.1' => value,
+                                             })
+
+        e = OpenID::OpenIDServiceEndpoint.new()
+        resp = OpenID::Consumer::SuccessResponse.new(e, m, [])
+
+        ax_resp = FetchResponse.from_success_response(resp, false)
+
+        values = ax_resp[uri]
+        assert_equal(values, [value])
+      end
+
+      def test_from_success_response_empty
+        e = OpenID::OpenIDServiceEndpoint.new()
+        m = OpenID::Message.from_openid_args({'mode' => 'id_res'})
+        resp = OpenID::Consumer::SuccessResponse.new(e, m, [])
+        ax_resp = FetchResponse.from_success_response(resp)
+        assert(ax_resp.nil?)
+      end
     end
 
     class StoreRequestTest < Test::Unit::TestCase

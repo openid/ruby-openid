@@ -29,6 +29,7 @@ module OpenID
       NS_URI = 'http://openid.net/srv/ax/1.0'
       def initialize
         @ns_alias = 'ax'
+        @ns_uri = NS_URI
         @mode = nil
       end
 
@@ -262,6 +263,7 @@ module OpenID
     class KeyValueMessage < AXMessage
       attr_reader :data
       def initialize
+        super()
         @mode = nil
         @data = {}
         @data.default = []
@@ -446,12 +448,19 @@ module OpenID
       # Construct a FetchResponse object from an OpenID library
       # SuccessResponse object.
       def self.from_success_response(success_response, signed=true)
+        obj = self.new
         if signed
-          ax_args = success_response.get_signed_ns(@ns_uri)
+          ax_args = success_response.get_signed_ns(obj.ns_uri)
         else
-          ax_args = success_response.message.get_args(@ns_uri)
+          ax_args = success_response.message.get_args(obj.ns_uri)
         end
-        new.parse_extension_args(ax_args)
+
+        begin
+          obj.parse_extension_args(ax_args)
+          return obj
+        rescue Error => e
+          return nil
+        end
       end
     end
 
