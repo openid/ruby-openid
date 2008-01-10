@@ -1,12 +1,13 @@
-== Upgrading from the OpenID 1.x series library
+= Upgrading from the OpenID 1.x series library
 
-= Consumer Upgrade
+== Consumer Upgrade
 
 The flow is largely the same, however there are a number of significant 
 changes.  The consumer example is helpful to look at:
 examples/ruby_openid/app/controllers/consumer_controller.rb
 
-+ Stores
+
+=== Stores
 
 You will need to require the file for the store that you are using.
 For the filesystem store, this is 'openid/stores/filesystem'
@@ -22,7 +23,7 @@ Also, note that the stores now can be garbage collected with the method
   store.cleanup
 
 
-+ Starting the OpenID transaction
+=== Starting the OpenID transaction
 
 The OpenIDRequest object no longer has status codes.  Instead,
 consumer.begin raises an OpenID::OpenIDError if there is a problem
@@ -56,7 +57,8 @@ additional arguments to the return_to url, use
 Generating the redirect is the same as before, but add any extensions
 first.
 
-+ Requesting Simple Registration Data
+
+=== Requesting Simple Registration Data
 
 You'll need to require the code for the extension
   require 'openid/extensions/sreg'
@@ -74,7 +76,8 @@ Exchange (AX) and Provider Authentication Policy Extension (PAPE) are
 included with the library, and additional extensions can be implemented
 subclassing OpenID::Extension.
 
-+ Completing the transaction
+
+=== Completing the transaction
 
 The return_to and its arguments are verified, so you need to pass in
 the base URL and the arguments.  With Rails, the params method mashes
@@ -102,7 +105,9 @@ with
   nickname = sreg_response['nickname']
   # etc.
 
+
 == Server Upgrade
+
 The server code is mostly the same as before, with the exception of
 extensions.  Also, you must pass in the endpoint URL to the server 
 constructor:
