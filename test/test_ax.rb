@@ -2,6 +2,7 @@ require 'openid/extensions/ax'
 require 'openid/message'
 require 'openid/consumer/responses'
 require 'openid/consumer/discovery'
+require 'openid/consumer/checkid_request'
 
 module OpenID
   module AX
@@ -432,6 +433,32 @@ module OpenID
         assert(fr.is_a?(FetchRequest))
       end
 
+      def test_add_extension
+        openid_req_msg = Message.from_openid_args({
+                                                    'mode' => 'checkid_setup',
+                                                    'ns' => OPENID2_NS,
+                                                    'return_to' => 'http://example.com/realm',
+                                                  })
+
+        e = OpenID::OpenIDServiceEndpoint.new
+        openid_req = Consumer::CheckIDRequest.new(nil, e)
+        openid_req.message = openid_req_msg
+
+        fr = FetchRequest.new
+        fr.add(AttrInfo.new("urn:bogus"))
+
+        openid_req.add_extension(fr)
+
+        expected = {
+          'mode' => 'fetch_request',
+          'if_available' => 'ext0',
+          'type.ext0' => 'urn:bogus',
+        }
+
+        expected.each { |k,v|
+          assert(openid_req.message.get_arg(AXMessage::NS_URI, k) == v)
+        }
+      end
     end
 
     class FetchResponseTest < Test::Unit::TestCase

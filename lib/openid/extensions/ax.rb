@@ -112,6 +112,7 @@ module OpenID
       attr_accessor :update_url
 
       def initialize(update_url = nil)
+        super()
         @mode = 'fetch_request'
         @requested_attributes = {}
         @update_url = update_url
