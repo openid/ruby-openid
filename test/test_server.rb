@@ -1784,7 +1784,7 @@ module OpenID
       monkeycalled = Counter.new()
 
       @server.extend(InstanceDefExtension)
-      @server.instance_def(:openid_monkeymode) do
+      @server.instance_def(:openid_monkeymode) do |request|
         raise UnhandledError
       end
 

@@ -287,7 +287,7 @@ module OpenID
         expires_in = self.class.extract_expires_in(assoc_response)
 
         # OpenID 1 has funny association session behaviour.
-        if assoc_response.is_openid1:
+        if assoc_response.is_openid1
             session_type = get_openid1_session_type(assoc_response)
         else
           session_type = assoc_response.get_arg(OPENID2_NS, 'session_type',

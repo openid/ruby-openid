@@ -1,6 +1,7 @@
 require 'openid/extensions/sreg'
 require 'openid/message'
 require 'openid/server'
+require 'test/unit'
 
 module OpenID
   module SReg

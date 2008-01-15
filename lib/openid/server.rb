@@ -430,7 +430,7 @@ module OpenID
       # mode:: +checkid_immediate+ or +checkid_setup+
       attr_accessor :mode
 
-      attr_accessor :return_to, :op_endpoint
+      attr_accessor :op_endpoint
 
       # These parameters are assigned directly as attributes,
       # see the #CheckIDRequest class documentation for their

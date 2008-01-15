@@ -1,8 +1,12 @@
 require "openid/util"
 require "digest/sha1"
 require "digest/sha2"
-require "hmac/sha1"
-require "hmac/sha2"
+begin
+  require "digest/hmac"
+rescue LoadError
+  require "hmac/sha1"
+  require "hmac/sha2"
+end
 
 module OpenID
   # This module contains everything needed to perform low-level
@@ -26,7 +30,11 @@ module OpenID
     end
 
     def CryptUtil.hmac_sha1(key, text)
-      return HMAC::SHA1.digest(key, text)
+      if Digest.const_defined? :HMAC      
+        Digest::HMAC.new(key,Digest::SHA1).update(text).digest
+      else
+        return HMAC::SHA1.digest(key, text)
+      end
     end
 
     def CryptUtil.sha256(text)
@@ -34,7 +42,11 @@ module OpenID
     end
 
     def CryptUtil.hmac_sha256(key, text)
-      return HMAC::SHA256.digest(key, text)
+      if Digest.const_defined? :HMAC      
+        Digest::HMAC.new(key,Digest::SHA256).update(text).digest
+      else
+        return HMAC::SHA256.digest(key, text)
+      end
     end
 
     # Generate a random string of the given length, composed of the

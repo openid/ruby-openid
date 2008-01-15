@@ -6,8 +6,8 @@ class LinkParseTestCase < Test::Unit::TestCase
   include OpenID::TestDataMixin
 
   def attr_cmp(expected, found)
-    e = expected.to_a
-    f = found.to_a
+    e = expected.to_a.sort
+    f = found.to_a.sort
     while (ep = e.shift)
       ek, ev = ep
       fk, fv = f.shift

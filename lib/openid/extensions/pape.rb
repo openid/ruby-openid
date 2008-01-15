@@ -133,7 +133,7 @@ module OpenID
           end
           if nist_level and nist_level >= 0 and nist_level < 5
             @nist_auth_level = nist_level
-          elsif strict:
+          elsif strict
             raise ArgumentError, "nist_auth_level must be an integer 0 through 4, not #{nist_level_str.inspect}"
           end
         end

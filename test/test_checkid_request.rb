@@ -7,9 +7,6 @@ require "util"
 module OpenID
   class Consumer
     class CheckIDRequest
-      # For testing
-      attr_reader :message
-
       class DummyEndpoint
         attr_accessor :preferred_namespace, :local_id, :server_url,
           :is_op_identifier, :claimed_id

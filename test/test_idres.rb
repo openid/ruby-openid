@@ -603,7 +603,9 @@ module OpenID
                                  'identity' => 'sour grapes',
                                  'claimed_id' => 'monkeysoft',
                                  'op_endpoint' => 'Phone Home'}) do |idres|
-              idres.instance_def(:discover_and_verify) {@endpoint = endpoint}
+              idres.instance_def(:discover_and_verify) do |to_match|
+                @endpoint = endpoint
+              end
             end
           }
           assert(endpoint.equal?(result))
@@ -624,7 +626,9 @@ module OpenID
                                  'claimed_id' => 'monkeysoft',
                                  'op_endpoint' => 'Green Cheese'}) do |idres|
                         idres.extend(InstanceDefExtension)
-              idres.instance_def(:discover_and_verify) {@endpoint = endpoint}
+              idres.instance_def(:discover_and_verify) do |to_match|
+                @endpoint = endpoint
+              end
             end
           }
           assert(endpoint.equal?(result))
@@ -705,7 +709,7 @@ module OpenID
             assert_raises(verified_error) {
               call_verify_modify({'ns' => OPENID1_NS,
                                    'identity' => @endpoint.local_id}) { |idres|
-                idres.instance_def(:discover_and_verify) do
+                idres.instance_def(:discover_and_verify) do |to_match|
                   raise verified_error
                 end
               }

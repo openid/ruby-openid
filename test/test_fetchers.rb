@@ -266,6 +266,11 @@ EOF
   class FakeConnection < Net::HTTP
     attr_reader :use_ssl, :ca_file
 
+    def initialize *args
+      super
+      @ca_file = nil
+    end
+
     def use_ssl=(v)
       @use_ssl = v
     end

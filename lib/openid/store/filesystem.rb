@@ -174,7 +174,7 @@ module OpenID
       end
 
       def cleanup_associations
-        association_filenames = Dir[@association_dir.join("*")]
+        association_filenames = Dir[@association_dir.join("*").to_s]
         count = 0
         association_filenames.each do |af|
           begin
@@ -204,7 +204,7 @@ module OpenID
       end
 
       def cleanup_nonces
-        nonces = Dir[@nonce_dir.join("*")]
+        nonces = Dir[@nonce_dir.join("*").to_s]
         now = Time.now.to_i
 
         count = 0

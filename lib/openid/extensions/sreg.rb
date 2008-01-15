@@ -194,7 +194,8 @@ module OpenID
 
       # Add the given list of fields to the request.
       def request_fields(field_names, required = false, strict = false)
-        raise ArgumentError unless field_names[0].is_a?(String)
+        raise ArgumentError unless field_names.respond_to?(:each) and
+                                   field_names[0].is_a?(String)
         field_names.each{|fn|request_field(fn, required, strict)}
       end
 

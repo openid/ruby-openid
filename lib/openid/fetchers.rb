@@ -112,7 +112,7 @@ module OpenID
   
   class StandardFetcher
 
-    USER_AGENT = "ruby-openid/#{OpenID::VERSION} (#{PLATFORM})"
+    USER_AGENT = "ruby-openid/#{OpenID::VERSION} (#{RUBY_PLATFORM})"
 
     REDIRECT_LIMIT = 5
 

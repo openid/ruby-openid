@@ -100,7 +100,7 @@ module OpenID
 
           consumer = Consumer.new(@session, nil)
           consumer.extend(InstanceDefExtension)
-          consumer.instance_def(:association_manager) do
+          consumer.instance_def(:association_manager) do |service|
             assoc_manager
           end
           consumer

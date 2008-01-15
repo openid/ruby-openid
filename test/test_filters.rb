@@ -84,28 +84,28 @@ module OpenID
 
     def test_nil_filter
       # A transform filter with a single nil filter should return nil.
-      endpoint = "unused"
       nil_filter = Proc.new { |endpoint| nil }
       t = Yadis::TransformFilterMaker.new([nil_filter])
+      endpoint = "unused"
       assert(t.apply_filters(endpoint).nil?)
     end
 
     def test_identity_filter
       # A transform filter with an identity filter should return the
       # input.
-      endpoint = "unused"
       identity_filter = Proc.new { |endpoint| endpoint }
       t = Yadis::TransformFilterMaker.new([identity_filter])
+      endpoint = "unused"
       assert(t.apply_filters(endpoint) == endpoint)
     end
 
     def test_return_different_endpoint
       # Make sure the result of the filter is returned, rather than
       # the input.
-      endpoint = "unused"
       returned_endpoint = "returned endpoint"
       filter = Proc.new { |endpoint| returned_endpoint }
       t = Yadis::TransformFilterMaker.new([filter])
+      endpoint = "unused"
       assert(t.apply_filters(endpoint) == returned_endpoint)
     end
 

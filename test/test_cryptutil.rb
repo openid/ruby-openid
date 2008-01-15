@@ -1,5 +1,7 @@
+# coding: ASCII-8BIT
 require 'test/unit'
 require "openid/cryptutil"
+require "pathname"
 
 class CryptUtilTestCase < Test::Unit::TestCase
   BIG = 2 ** 256

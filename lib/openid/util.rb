@@ -1,4 +1,3 @@
-require "base64"
 require "cgi"
 require "uri"
 require "logger"
@@ -38,7 +37,7 @@ module OpenID
     end
 
     def Util.to_base64(s)
-      Base64.encode64(s).gsub("\n", "")
+      [s].pack('m').gsub("\n", "")
     end
 
     def Util.from_base64(s)
@@ -46,7 +45,7 @@ module OpenID
       if !BASE64_RE.match(without_newlines)
         raise ArgumentError, "Malformed input: #{s.inspect}"
       end
-      Base64.decode64(without_newlines)
+      without_newlines.unpack('m').first
     end
 
     def Util.urlencode(args)

@@ -63,12 +63,20 @@ module OpenID
     def with_method_overridden(method_name, proc)
       original = method(method_name)
       begin
+        # TODO: find a combination of undef calls which prevent the warning
+        verbose, $VERBOSE = $VERBOSE, false
         define_method(method_name, proc)
         module_function(method_name)
+        $VERBOSE = verbose
         yield
       ensure
-        define_method(method_name, original)
-        module_function(method_name)
+        if original.respond_to? :owner
+          original.owner.send(:undef_method, method_name)
+          original.owner.send :define_method, method_name, original
+        else
+          define_method(method_name, original)
+          module_function(method_name)
+        end
       end
     end
   end
@@ -84,7 +92,10 @@ module OpenID
   module InstanceDefExtension
     def instance_def(method_name, &proc)
       (class << self;self;end).instance_eval do
+        # TODO: find a combination of undef calls which prevent the warning
+        verbose, $VERBOSE = $VERBOSE, false
         define_method(method_name, proc)
+        $VERBOSE = verbose
       end
     end
   end

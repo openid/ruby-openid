@@ -15,7 +15,7 @@ module OpenID
         return nil if ['/head', 'body', '/body'].member?(el.tag_name)
 
         if el.tag_name == 'head'
-          unless el.to_s[-2] == 47 # tag ends with a /: a short tag
+          unless el.to_s[-2] == ?/ # tag ends with a /: a short tag
             in_head = true
           end
         end

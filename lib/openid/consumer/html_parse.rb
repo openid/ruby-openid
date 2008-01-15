@@ -2,10 +2,8 @@ require "openid/yadis/htmltokenizer"
 
 module OpenID
 
-  REFLAGS = Regexp::MULTILINE | Regexp::IGNORECASE | Regexp::EXTENDED
-
   # Stuff to remove before we start looking for tags
-  REMOVED_RE = Regexp.compile('
+  REMOVED_RE = /
     # Comments
     <!--.*?-->
 
@@ -18,9 +16,9 @@ module OpenID
     # make sure script is not an XML namespace
     (?!:)
 
-    [^>]*>.*?</script>
+    [^>]*>.*?<\/script>
 
-  ', REFLAGS, 'u')
+  /mixu 
 
   def OpenID.openid_unescape(s)
     s.gsub('&amp;','&').gsub('&lt;','<').gsub('&gt;','>').gsub('&quot;','"')

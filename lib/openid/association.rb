@@ -223,7 +223,7 @@ module OpenID
         self.class.check_session_type(assoc_type, session_type)
         session_types = [session_type]
       end
-      session_types.each do |session_type|
+      for session_type in session_types do
         @allowed_types << [assoc_type, session_type]
       end
     end
