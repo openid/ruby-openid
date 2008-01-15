@@ -279,7 +279,7 @@ module OpenID
         def request_association(assoc_type, session_type)
           m = @responses.shift
           if m.is_a?(Message)
-            raise ServerError.from_message(m)
+            raise ServerError.from_message(m, nil)
           else
             return m
           end

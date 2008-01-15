@@ -318,7 +318,7 @@ module OpenID
           OpenID.extend(OverrideMethodMixin)
           send_error = lambda do |req, server_url|
             msg = Message.new(OPENID2_NS)
-            raise ServerError.from_message(msg), 'For you!'
+            raise ServerError.from_message(msg, server_url), 'For you!'
           end
 
           OpenID.with_method_overridden(:make_kv_post, send_error) do

@@ -7,18 +7,19 @@ module OpenID
   class ServerError < OpenIDError
     attr_reader :error_text, :error_code, :message
 
-    def initialize(error_text, error_code, message)
+    def initialize(error_text, error_code, message, server_url)
       super(error_text)
       @error_text = error_text
       @error_code = error_code
+      @server_url = server_url
       @message = message
     end
 
-    def self.from_message(msg)
+    def self.from_message(msg, server_url)
       error_text = msg.get_arg(OPENID_NS, 'error',
                                '<no error message supplied>')
       error_code = msg.get_arg(OPENID_NS, 'error_code')
-      return self.new(error_text, error_code, msg)
+      return self.new(error_text, error_code, msg, server_url)
     end
   end
 
@@ -34,7 +35,7 @@ module OpenID
       when 200
         return msg
       when 400
-        raise ServerError.from_message(msg)
+        raise ServerError.from_message(msg, server_url)
       else
         error_message = "bad status code from server #{server_url}: "\
         "#{response.code}"
