@@ -4,7 +4,7 @@
 
 The flow is largely the same, however there are a number of significant 
 changes.  The consumer example is helpful to look at:
-examples/ruby_openid/app/controllers/consumer_controller.rb
+examples/rails_openid/app/controllers/consumer_controller.rb
 
 
 === Stores
