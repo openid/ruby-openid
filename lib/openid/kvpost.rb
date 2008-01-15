@@ -4,7 +4,7 @@ require "openid/fetchers"
 module OpenID
   # Exception that is raised when the server returns a 400 response
   # code to a direct request.
-  class ServerError < Exception
+  class ServerError < OpenIDError
     attr_reader :error_text, :error_code, :message
 
     def initialize(error_text, error_code, message)
