@@ -222,12 +222,7 @@ module OpenID
                                "request: #{why.message}"
         end
 
-        begin
-          response = OpenID.make_kv_post(request, server_url)
-        rescue ServerError => why
-          raise ProtocolError, "Error from #{server_url} during "\
-                               "check_authentication: #{why.message}"
-        end
+        response = OpenID.make_kv_post(request, server_url)
 
         process_check_auth_response(response)
       end

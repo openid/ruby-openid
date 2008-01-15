@@ -383,7 +383,7 @@ module OpenID
 
       begin
         idres = handle_idres(message, current_url)
-      rescue DiscoveryFailure, ProtocolError => why
+      rescue OpenIDError => why
         return FailureResponse.new(last_requested_endpoint, why.message)
       else
         return SuccessResponse.new(idres.endpoint, message,
