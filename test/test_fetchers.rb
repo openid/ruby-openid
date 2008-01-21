@@ -367,7 +367,26 @@ EOF
     }
   end
 
-  class TestingException < Exception; end
+  class TimeoutConnection
+    def start(&block)
+      raise Timeout::Error
+    end
+  end
+
+  def test_fetchingerror
+    f = OpenID::StandardFetcher.new
+
+    f.extend(OpenID::InstanceDefExtension)
+    f.instance_def(:make_connection) do |uri|
+      TimeoutConnection.new
+    end
+
+    assert_raise(OpenID::FetchingError) {
+      f.fetch("https://bogus.com/")
+    }
+  end
+  
+  class TestingException < OpenID::FetchingError; end
 
   class NoSSLSupportConnection
     def supports_ssl?
@@ -425,7 +444,7 @@ EOF
     }
   end
 
-  class PostConnectionCheckException < Exception; end
+  class PostConnectionCheckException < OpenID::FetchingError; end
 
   class UseSSLConnection < NoSSLSupportConnection
     def use_ssl?
@@ -478,13 +497,20 @@ end
 
 class ProxyTest < Test::Unit::TestCase
   def test_proxy_unreachable
-    assert_raise(Errno::ECONNREFUSED) {
+    begin
       f = OpenID::StandardFetcher.new('127.0.0.1', 1)
       # If this tries to connect to the proxy (on port 1), I expect
       # a 'connection refused' error.  If it tries to contact the below
       # URI first, it will get some other sort of error.
       f.fetch("http://unittest.invalid")
-    }
+    rescue OpenID::FetchingError => why
+      # XXX: Is this a translatable string that is going to break?
+      if why.message =~ /Connection refused/
+        return
+      end
+      raise why
+    end
+    flunk "expected Connection Refused, but it passed."
   end
 
   def test_proxy_env

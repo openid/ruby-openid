@@ -196,6 +196,12 @@ module OpenID
         }
       rescue OpenSSL::SSL::SSLError => why
         raise SSLFetchingError, "Error connecting to SSL URL #{url}: #{why}"
+      rescue FetchingError => why
+        raise why
+      rescue Exception => why
+        # Things we've caught here include a Timeout::Error, which descends
+        # from SignalException.
+        raise FetchingError, "Error fetching #{url}: #{why}"
       end
 
       case response
