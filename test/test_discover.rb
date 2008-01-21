@@ -777,4 +777,13 @@ module OpenID
       assert_equal 'http://recycled.invalid/', @endpoint.display_identifier
     end
   end
+
+
+  class TestNormalizeURL < Test::Unit::TestCase
+    def test_no_host
+      assert_raise(DiscoveryFailure) {
+        OpenID::normalize_url('http:///too-many.invalid/slashes')
+      }
+    end
+  end
 end

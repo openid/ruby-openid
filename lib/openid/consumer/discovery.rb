@@ -284,8 +284,8 @@ module OpenID
     # DiscoveryFailure
     begin
       normalized = URINorm.urinorm(url)
-    rescue ArgumentError => why
-      raise DiscoveryFailure.new(sprintf('Normalizing identifier: %s', why[0]), nil)
+    rescue URI::Error => why
+      raise DiscoveryFailure.new("Error normalizing #{url}: #{why.message}", nil)
     else
       defragged = URI::parse(normalized)
       defragged.fragment = nil
