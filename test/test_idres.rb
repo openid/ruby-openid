@@ -145,7 +145,7 @@ module OpenID
         end
 
         def test_unexpected_arg_okay
-          assert_bad_args("Parameter foo does", {
+          assert_bad_args("Unexpected parameter", {
               'openid.mode' => 'id_res',
               'openid.return_to' => 'http://example.com/',
               'foo' => 'bar',
@@ -158,7 +158,7 @@ module OpenID
             'openid.return_to' => 'http://example.com/?foo=bar',
             })
 
-          assert_bad_args('Parameter foo val', {
+          assert_bad_args("Parameter 'foo' val", {
             'openid.mode' => 'id_res',
             'openid.return_to' => 'http://example.com/?foo=bar',
             'foo' => 'foos',

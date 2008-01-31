@@ -160,17 +160,28 @@ module OpenID
         return_to_parsed_query.each_pair do |rt_key, rt_val|
           msg_val = query[rt_key]
           if msg_val.nil?
-            raise ProtocolError, "Message missing return_to argument #{rt_key}"
+            raise ProtocolError, "Message missing return_to argument '#{rt_key}'"
           elsif msg_val != rt_val
-            raise ProtocolError, ("Parameter #{rt_key} value "\
+            raise ProtocolError, ("Parameter '#{rt_key}' value "\
                                   "#{msg_val.inspect} does not match "\
                                   "return_to's value #{rt_val.inspect}")
           end
         end
         @message.get_args(BARE_NS).each_pair do |bare_key, bare_val|
-          if return_to_parsed_query[bare_key] != bare_val
-            raise ProtocolError, ("Parameter #{bare_key} does not match "\
-                                  "return_to URL")
+          rt_val = return_to_parsed_query[bare_key]
+          if not return_to_parsed_query.has_key? bare_key
+            # This may be caused by your web framework throwing extra
+            # entries in to your parameters hash that were not GET or
+            # POST parameters.  For example, Rails has been known to
+            # add "controller" and "action" keys; another server adds
+            # at least a "format" key.
+            raise ProtocolError, ("Unexpected parameter (not on return_to): "\
+                                  "'#{bare_key}'=#{rt_val.inspect})")
+          end
+          if rt_val != bare_val
+            raise ProtocolError, ("Parameter '#{bare_key}' value "\
+                                  "#{bare_val.inspect} does not match "\
+                                  "return_to's value #{rt_val.inspect}")
           end
         end
       end
