@@ -73,7 +73,7 @@ module OpenID
         end
         
       end
-    rescue RuntimeError # just stop parsing if there's an error
+    rescue Exception # just stop parsing if there's an error
     end
     return links
   end
