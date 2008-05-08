@@ -128,7 +128,7 @@ module OpenID
 
       # According to the spec, the content-type header must be an
       # exact match, or else we have to look for an indirection.
-      if (!content_type.nil? and
+      if (!content_type.nil? and !content_type.to_s.empty? and
           content_type.split(';', 2)[0].downcase == YADIS_CONTENT_TYPE)
         return resp.final_url
       else
