@@ -115,14 +115,17 @@ module OpenID
     USER_AGENT = "ruby-openid/#{OpenID::VERSION} (#{RUBY_PLATFORM})"
 
     REDIRECT_LIMIT = 5
+    TIMEOUT = 60
 
     attr_accessor :ca_file
+    attr_accessor :timeout
 
     # I can fetch through a HTTP proxy; arguments are as for Net::HTTP::Proxy.
     def initialize(proxy_addr=nil, proxy_port=nil,
                    proxy_user=nil, proxy_pass=nil)
       @ca_file = nil
       @proxy = Net::HTTP::Proxy(proxy_addr, proxy_port, proxy_user, proxy_pass)
+      @timeout = TIMEOUT
     end
 
     def supports_ssl?(conn)
@@ -130,7 +133,10 @@ module OpenID
     end
 
     def make_http(uri)
-      @proxy.new(uri.host, uri.port)
+      http = @proxy.new(uri.host, uri.port)
+      http.read_timeout = @timeout
+      http.open_timeout = @timeout
+      return http
     end
 
     def set_verified(conn, verify)
@@ -177,10 +183,10 @@ module OpenID
       headers ||= {}
       headers['User-agent'] ||= USER_AGENT
 
-      conn = make_connection(url)
-      response = nil
-
       begin
+        conn = make_connection(url)
+        response = nil
+
         response = conn.start {
           # Check the certificate against the URL's hostname
           if supports_ssl?(conn) and conn.use_ssl?
@@ -194,6 +200,8 @@ module OpenID
             conn.request_post(url.request_uri, body, headers)
           end
         }
+      rescue RuntimeError => why
+        raise why
       rescue OpenSSL::SSL::SSLError => why
         raise SSLFetchingError, "Error connecting to SSL URL #{url}: #{why}"
       rescue FetchingError => why
