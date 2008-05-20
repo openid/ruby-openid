@@ -115,7 +115,7 @@ module OpenID
       # encountered
       def parse_extension_args(args, strict=false)
         policies_str = args['auth_policies']
-        if policies_str
+        if policies_str and policies_str != 'none'
           @auth_policies = policies_str.split(' ')
         end
 
@@ -159,7 +159,12 @@ module OpenID
       end
 
       def get_extension_args
-        ns_args = {'auth_policies' => @auth_policies.join(' ')}
+        ns_args = {}
+        if @auth_policies.empty?
+          ns_args['auth_policies'] = 'none'
+        else
+          ns_args['auth_policies'] = @auth_policies.join(' ')
+        end
         if @nist_auth_level
           unless (0..4).member? @nist_auth_level
             raise ArgumentError, "nist_auth_level must be an integer 0 through 4, not #{@nist_auth_level.inspect}"

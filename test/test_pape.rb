@@ -131,7 +131,7 @@ module OpenID
       end
 
       def test_get_extension_args
-        assert_equal({'auth_policies' => ''}, @req.get_extension_args)
+        assert_equal({'auth_policies' => 'none'}, @req.get_extension_args)
         @req.add_policy_uri('http://uri')
         assert_equal({'auth_policies' => 'http://uri'}, @req.get_extension_args)
         @req.add_policy_uri('http://zig')
