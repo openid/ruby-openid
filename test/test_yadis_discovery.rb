@@ -161,7 +161,7 @@ module OpenID
         return OpenID::HTTPResponse._from_raw_data(200, "", {}, nil)
       end
     end
-    
+
     class BlankContentTypeFetcher
       def fetch(url, body=nil, headers=nil, redirect_limit=nil)
         return OpenID::HTTPResponse._from_raw_data(200, "", {"Content-Type" => ""}, nil)
@@ -208,7 +208,7 @@ module OpenID
           assert_equal(nil, result.content_type)
         end
       end
-      
+
       def test_blank_content_type
         with_fetcher(BlankContentTypeFetcher.new) do
           result = Yadis.discover("http://bogus")
