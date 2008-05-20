@@ -179,6 +179,9 @@ module OpenID
     def fetch(url, body=nil, headers=nil, redirect_limit=REDIRECT_LIMIT)
       unparsed_url = url.dup
       url = URI::parse(url)
+      if url.nil?
+        raise FetchingError, "Invalid URL: #{unparsed_url}"
+      end
 
       headers ||= {}
       headers['User-agent'] ||= USER_AGENT
@@ -218,7 +221,13 @@ module OpenID
           raise HTTPRedirectLimitReached.new(
             "Too many redirects, not fetching #{response['location']}")
         end
-        return fetch(response['location'], body, headers, redirect_limit - 1)
+        begin
+          return fetch(response['location'], body, headers, redirect_limit - 1)
+        rescue HTTPRedirectLimitReached => e
+          raise e
+        rescue FetchingError => why
+          raise FetchingError, "Error encountered in redirect from #{url}: #{why}"
+        end
       else
         return HTTPResponse._from_net_response(response, unparsed_url)
       end
