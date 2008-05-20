@@ -6,7 +6,7 @@ require 'openid/store/interface'
 class ActiveRecordStore < OpenID::Store::Interface
   def store_association(server_url, assoc)
     remove_association(server_url, assoc.handle)    
-    Association.create(:server_url => server_url,
+    Association.create!(:server_url => server_url,
                        :handle     => assoc.handle,
                        :secret     => assoc.secret,
                        :issued     => assoc.issued.to_i,
@@ -40,7 +40,7 @@ class ActiveRecordStore < OpenID::Store::Interface
   def use_nonce(server_url, timestamp, salt)
     return false if Nonce.find_by_server_url_and_timestamp_and_salt(server_url, timestamp, salt)
     return false if (timestamp - Time.now.to_i).abs > OpenID::Nonce.skew
-    Nonce.create(:server_url => server_url, :timestamp => timestamp, :salt => salt)
+    Nonce.create!(:server_url => server_url, :timestamp => timestamp, :salt => salt)
     return true
   end
   
