@@ -28,13 +28,13 @@ module OpenID
       parsed = Util.kv_to_seq(serialized)
       parsed_fields = parsed.map{|k, v| k.to_sym}
       if parsed_fields != FIELD_ORDER
-          raise StandardError, 'Unexpected fields in serialized association'\
+          raise ProtocolError, 'Unexpected fields in serialized association'\
           " (Expected #{FIELD_ORDER.inspect}, got #{parsed_fields.inspect})"
       end
       version, handle, secret64, issued_s, lifetime_s, assoc_type =
         parsed.map {|field, value| value}
       if version != '2'
-        raise StandardError, "Attempted to deserialize unsupported version "\
+        raise ProtocolError, "Attempted to deserialize unsupported version "\
                              "(#{parsed[0][1].inspect})"
       end
 
@@ -101,7 +101,7 @@ module OpenID
       when 'HMAC-SHA256'
         CryptUtil.hmac_sha256(@secret, kv)
       else
-        raise StandardError, "Association has unknown type: "\
+        raise ProtocolError, "Association has unknown type: "\
           "#{assoc_type.inspect}"
       end
     end
@@ -111,7 +111,7 @@ module OpenID
     def make_pairs(message)
       signed = message.get_arg(OPENID_NS, 'signed')
       if signed.nil?
-        raise StandardError, 'Missing signed list'
+        raise ProtocolError, 'Missing signed list'
       end
       signed_fields = signed.split(',', -1)
       data = message.to_post_args
@@ -122,7 +122,7 @@ module OpenID
     def check_message_signature(message)
       message_sig = message.get_arg(OPENID_NS, 'sig')
       if message_sig.nil?
-        raise StandardError, "#{message} has no sig."
+        raise ProtocolError, "#{message} has no sig."
       end
       calculated_sig = get_message_signature(message)
       return calculated_sig == message_sig
@@ -190,13 +190,13 @@ module OpenID
       when 'HMAC-SHA256'
         ['DH-SHA256', 'no-encryption']
       else
-        raise StandardError, "Unknown association type #{assoc_type.inspect}"
+        raise ProtocolError, "Unknown association type #{assoc_type.inspect}"
       end
     end
 
     def self.check_session_type(assoc_type, session_type)
       if !get_session_types(assoc_type).include?(session_type)
-        raise StandardError, "Session type #{session_type.inspect} not "\
+        raise ProtocolError, "Session type #{session_type.inspect} not "\
                              "valid for association type #{assoc_type.inspect}"
       end
     end

@@ -24,14 +24,14 @@ module OpenID
     def test_deserialize_failure
       field_list = Util.kv_to_seq(@assoc.serialize)
       kv = Util.seq_to_kv(field_list + [['monkeys', 'funny']])
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         Association.deserialize(kv)
       }
 
       bad_version_list = field_list.dup
       bad_version_list[0] = ['version', 'moon']
       bad_version_kv = Util.seq_to_kv(bad_version_list)
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         Association.deserialize(bad_version_kv)
       }
     end
@@ -127,7 +127,7 @@ module OpenID
 
     def test_sign_bad_assoc_type
       @assoc.instance_eval { @assoc_type = 'Cookies' }
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         @assoc.sign([])
       }
     end
@@ -156,7 +156,7 @@ module OpenID
                     })
       assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
                                           "HMAC-SHA1")
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         assoc.check_message_signature(m)
       }
     end
@@ -169,7 +169,7 @@ module OpenID
                     })
       assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
                                           "HMAC-SHA1")
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         assoc.check_message_signature(m)
       }
     end
@@ -240,13 +240,13 @@ module OpenID
     end
 
     def test_bad_assoc_type
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         AssociationNegotiator.new([['OMG', 'Ponies']])
       }
     end
 
     def test_bad_session_type
-      assert_raises(StandardError) {
+      assert_raises(ProtocolError) {
         AssociationNegotiator.new([['HMAC-SHA1', 'OMG-Ponies']])
       }
     end

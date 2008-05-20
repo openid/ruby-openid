@@ -554,7 +554,7 @@ module OpenID
 
         def test_openid1_no_endpoint
           @endpoint = nil
-          assert_raises(StandardError) {
+          assert_raises(ProtocolError) {
             call_verify({'identity' => 'snakes on a plane'})
           }
         end

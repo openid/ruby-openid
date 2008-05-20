@@ -376,7 +376,7 @@ module OpenID
 
         if claimed_id.nil?
           if @endpoint.nil?
-            raise StandardError, ("When using OpenID 1, the claimed ID must "\
+            raise ProtocolError, ("When using OpenID 1, the claimed ID must "\
                                   "be supplied, either by passing it through "\
                                   "as a return_to parameter or by using a "\
                                   "session, and supplied to the IdResHandler "\
