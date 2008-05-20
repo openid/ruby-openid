@@ -57,9 +57,18 @@ module OpenID
 
     def display_identifier
       return @display_identifier if @display_identifier
-      return @claimed_id if @claimed_id.nil? or not URI.parse(@claimed_id).fragment
 
-      disp = URI.parse(@claimed_id)
+      return @claimed_id if @claimed_id.nil? 
+
+      begin
+        parsed_identifier = URI.parse(@claimed_id)
+      rescue URI::InvalidURIError
+        raise ProtocolError, "Claimed identifier #{claimed_id} is not a valid URI"
+      end
+
+      return @claimed_id if not parsed_identifier.fragment
+
+      disp = parsed_identifier
       disp.fragment = nil
 
       return disp.to_s
