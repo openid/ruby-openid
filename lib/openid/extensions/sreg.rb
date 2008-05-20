@@ -246,6 +246,7 @@ module OpenID
         ns_uri = OpenID::get_sreg_ns(success_response.message)
         if signed_only
           args = success_response.get_signed_ns(ns_uri)
+          return nil if args.nil? # No signed args, so fail
         else
           args = success_response.message.get_args(ns_uri)
         end
