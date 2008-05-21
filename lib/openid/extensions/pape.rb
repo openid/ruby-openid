@@ -14,7 +14,7 @@ module OpenID
       'http://schemas.openid.net/pape/policies/2007/06/multi-factor'
     AUTH_PHISHING_RESISTANT =
       'http://schemas.openid.net/pape/policies/2007/06/phishing-resistant'
-
+    TIME_VALIDATOR = /\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/
     # A Provider Authentication Policy request, sent from a relying
     # party to a provider
     class Request < Extension
@@ -86,12 +86,12 @@ module OpenID
     # A Provider Authentication Policy response, sent from a provider
     # to a relying party
     class Response < Extension
-      attr_accessor :ns_alias, :auth_policies, :auth_age, :nist_auth_level
-      def initialize(auth_policies=[], auth_age=nil, nist_auth_level=nil)
+      attr_accessor :ns_alias, :auth_policies, :auth_time, :nist_auth_level
+      def initialize(auth_policies=[], auth_time=nil, nist_auth_level=nil)
         @ns_alias = 'pape'
         @ns_uri = NS_URI
         @auth_policies = auth_policies
-        @auth_age = auth_age
+        @auth_time = auth_time
         @nist_auth_level = nist_auth_level
       end
 
@@ -138,22 +138,13 @@ module OpenID
           end
         end
 
-        auth_age_str = args['auth_age']
-        if auth_age_str
-          # special handling of zero to handle to_i behavior
-          if auth_age_str.strip == '0'
-            auth_age = 0
-          else
-            auth_age = auth_age_str.to_i
-            # if it's zero here we have a bad value
-            if auth_age == 0
-              auth_age = nil
-            end
-          end
-          if auth_age and auth_age >= 0
-            @auth_age = auth_age
+        auth_time_str = args['auth_time']
+        if auth_time_str
+          # validate time string
+          if auth_time_str =~ TIME_VALIDATOR
+            @auth_time = auth_time_str
           elsif strict
-            raise ArgumentError, "auth_age must be a non-negative integer, not #{auth_age_str.inspect}"
+            raise ArgumentError, "auth_time must be in RFC3339 format"
           end
         end
       end
@@ -172,11 +163,11 @@ module OpenID
           ns_args['nist_auth_level'] = @nist_auth_level.to_s
         end
 
-        if @auth_age
-          if @auth_age < 0
-            raise ArgumentError, "auth_age must be a non-negative integer, not #{@auth_age.inspect}"
+        if @auth_time
+          unless @auth_time =~ TIME_VALIDATOR
+            raise ArgumentError, "auth_time must be in RFC3339 format"
           end
-          ns_args['auth_age'] = @auth_age.to_s
+          ns_args['auth_time'] = @auth_time
         end
         return ns_args
       end
