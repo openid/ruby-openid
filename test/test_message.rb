@@ -317,6 +317,7 @@ module OpenID
                      'openid.error' => 'unit test',
                      'openid.foos.ball' => 'awesome',
                      'xey' => 'value',
+                     'openid.ns.foos' => 'http://invalid/'
                    }, @m.to_post_args)
     end
 
@@ -522,7 +523,7 @@ module OpenID
     end
   end
 
-  class OpenID1ExplicitMessageTest < OpenID1MessageTest
+  class OpenID1ExplicitMessageTest < Test::Unit::TestCase
     # XXX - check to make sure the test suite will get built the way this
     # expects.
     def setup
@@ -530,6 +531,62 @@ module OpenID
                                           'openid.error'=>'unit test',
                                           'openid.ns'=>OPENID1_NS})
     end
+
+    def test_to_post_args
+      assert_equal({'openid.mode' => 'error',
+                    'openid.error' => 'unit test',
+                    'openid.ns'=>OPENID1_NS,
+                    },
+                   @m.to_post_args)
+    end
+
+    def test_to_post_args_ns
+      invalid_ns = 'http://invalid/'
+      @m.namespaces.add_alias(invalid_ns, 'foos')
+      @m.set_arg(invalid_ns, 'ball', 'awesome')
+      @m.set_arg(BARE_NS, 'xey', 'value')
+      assert_equal({'openid.mode' => 'error',
+                     'openid.error' => 'unit test',
+                     'openid.foos.ball' => 'awesome',
+                     'xey' => 'value',
+                     'openid.ns'=>OPENID1_NS,
+                     'openid.ns.foos' => 'http://invalid/'
+                   }, @m.to_post_args)
+    end
+
+    def test_to_args
+      assert_equal({'mode' => 'error',
+                     'error' => 'unit test',
+                     'ns'=>OPENID1_NS
+                     },
+                   @m.to_args)
+    end
+
+    def test_to_kvform
+      assert_equal("error:unit test\nmode:error\nns:#{OPENID1_NS}\n",
+                   @m.to_kvform)
+    end
+
+    def test_to_url_encoded
+      assert_equal('openid.error=unit+test&openid.mode=error&openid.ns=http%3A%2F%2Fopenid.net%2Fsignon%2F1.0',
+                   @m.to_url_encoded)
+    end
+
+    def test_to_url
+      base_url = 'http://base.url/'
+      actual = @m.to_url(base_url)
+      actual_base = actual[0...base_url.length]
+      assert_equal(base_url, actual_base)
+      assert_equal('?', actual[base_url.length].chr)
+      query = actual[base_url.length+1..-1]
+      assert_equal({'openid.mode'=>['error'],
+                    'openid.error'=>['unit test'],
+                    'openid.ns'=>[OPENID1_NS],
+                    },
+                   CGI.parse(query))
+    end
+
+
   end
 
   class OpenID2MessageTest < Test::Unit::TestCase
@@ -1041,6 +1098,7 @@ module OpenID
 
       # It gets used automatically by the Message class:
       msg = Message.from_openid_args({'invalid.stuff' => 'things'})
+      assert(msg.is_openid1)
       assert_equal(alias_, msg.namespaces.get_alias(invalid_ns))
       assert_equal(invalid_ns, msg.namespaces.get_namespace_uri(alias_))
     end

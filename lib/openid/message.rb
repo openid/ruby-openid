@@ -151,39 +151,47 @@ module OpenID
 
       # ensure that there is an OpenID namespace definition
       openid_ns_uri = @namespaces.get_namespace_uri(NULL_NAMESPACE)
-      openid_ns_uri = OPENID1_NS unless openid_ns_uri
-
-      self.set_openid_namespace(openid_ns_uri)
+      # Here, if the null namespace is not explicitly defined, 
+      # openid_ns_uri is nil.  In that case, the following line sets
+      # the null namespace implicitly to OPENID1_NS
+      # It also sets up the namespace instance variable.
+      openid_ns_uri = set_openid_namespace(openid_ns_uri)
 
       # put the pairs into the appropriate namespaces
       ns_args.each { |ns_alias, ns_key, value|
         ns_uri = @namespaces.get_namespace_uri(ns_alias)
         unless ns_uri
-          # only try to map an alias to a default if it's an
-          # OpenID 1.x namespace
-          @@registered_aliases.each { |_alias, _uri|
-            if _alias == ns_alias
-              ns_uri = _uri
-              break
-            end
-          }
-
+          ns_uri = _get_default_namespace(ns_alias)
           unless ns_uri
             ns_uri = openid_ns_uri
             ns_key = "#{ns_alias}.#{ns_key}"
           else
-            @namespaces.add_alias(ns_uri, ns_alias)
+            @namespaces.add_alias(ns_uri, ns_alias, true)
           end
         end
         self.set_arg(ns_uri, ns_key, value)
       }
     end
 
-    def set_openid_namespace(openid_ns_uri)
+    def _get_default_namespace(mystery_alias)
+      # only try to map an alias to a default if it's an
+      # OpenID 1.x namespace
+      if is_openid1
+        @@registered_aliases[mystery_alias]
+      end
+    end
+
+    def set_openid_namespace(openid_ns_uri=nil)
+      if openid_ns_uri.nil?
+        openid_ns_uri = OPENID1_NS
+        implicit = true
+      else
+        implicit = false
+      end
       if !@@allowed_openid_namespaces.include?(openid_ns_uri)
         raise ArgumentError, "Invalid null namespace: #{openid_ns_uri}"
       end
-      @namespaces.add_alias(openid_ns_uri, NULL_NAMESPACE)
+      @namespaces.add_alias(openid_ns_uri, NULL_NAMESPACE, implicit)
       @openid_ns_uri = openid_ns_uri
     end
 
@@ -214,16 +222,15 @@ module OpenID
 
       # add namespace defs to the output
       @namespaces.each { |ns_uri, ns_alias|
-        if ns_alias == NULL_NAMESPACE
-          if ns_uri != OPENID1_NS
-            args['openid.ns'] = ns_uri
-          end
-        else
-          if get_openid_namespace != OPENID1_NS
-            ns_key = 'openid.ns.' + ns_alias
-            args[ns_key] = ns_uri
-          end
+        if @namespaces.implicit?(ns_uri)
+          next
         end
+        if ns_alias == NULL_NAMESPACE
+          ns_key = 'openid.ns'
+        else
+          ns_key = 'openid.ns.' + ns_alias
+        end
+        args[ns_key] = ns_uri
       }
 
       @args.each { |k, value|
@@ -447,6 +454,7 @@ module OpenID
     def initialize
       @alias_to_namespace = {}
       @namespace_to_alias = {}
+      @implicit_namespaces = []
     end
 
     def get_alias(namespace_uri)
@@ -458,7 +466,7 @@ module OpenID
     end
 
     # Add an alias from this namespace URI to the alias.
-    def add_alias(namespace_uri, desired_alias)
+    def add_alias(namespace_uri, desired_alias, implicit=false)
       # Check that desired_alias is not an openid protocol field as
       # per the spec.
       Util.assert(!OPENID_PROTOCOL_FIELDS.include?(desired_alias),
@@ -487,6 +495,7 @@ module OpenID
 
       @alias_to_namespace[desired_alias] = namespace_uri
       @namespace_to_alias[namespace_uri] = desired_alias
+      @implicit_namespaces << namespace_uri if implicit
       return desired_alias
     end
 
@@ -524,6 +533,10 @@ module OpenID
     def namespace_uris
       # Return an iterator over the namespace URIs
       return @namespace_to_alias.keys()
+    end
+
+    def implicit?(namespace_uri)
+      return @implicit_namespaces.member?(namespace_uri)
     end
 
     def aliases
