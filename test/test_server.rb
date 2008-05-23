@@ -752,6 +752,26 @@ module OpenID
       assert(/ foo="bar"/ =~ form_markup, form_markup)
     end
 
+    def test_to_html
+       request = Server::CheckIDRequest.new(
+                                   'http://bombom.unittest/',
+                                   'http://burr.unittest/999',
+                                   @server.op_endpoint,
+                                   'http://burr.unittest/',
+                                   false,
+                                   nil)
+      response = Server::OpenIDResponse.new(request)
+      response.fields = Message.from_openid_args({
+                                                   'ns' => OPENID2_NS,
+                                                   'mode' => 'id_res',
+                                                   'identity' => request.identity,
+                                                   'claimed_id' => request.identity,
+                                                   'return_to' => 'x' * OPENID1_URL_LIMIT,
+                                                 })
+      html = response.to_html
+      assert(html)
+    end
+
     def test_id_res_OpenID1_exceeds_limit
       # Check that when an OpenID 1 response exceeds the OpenID 1
       # message size, a GET response is issued.  Technically, this

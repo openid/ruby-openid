@@ -870,6 +870,12 @@ module OpenID
                  form_tag_attrs)
       end
 
+      # Wraps the form tag from to_form_markup in a complete HTML document
+      # that uses javascript to autosubmit the form.
+      def to_html(form_tag_attrs=nil)
+        return Util.auto_submit_html(to_form_markup(form_tag_attrs))
+      end
+
       def render_as_form
         # Returns true if this response's encoding is
         # ENCODE_HTML_FORM.  Convenience method for server authors.
@@ -1418,6 +1424,10 @@ module OpenID
 
       def to_form_markup
         return to_message().to_form_markup(get_return_to())
+      end
+
+      def to_html
+        return Util.auto_submit_html(to_form_markup)
       end
 
       # How should I be encoded?

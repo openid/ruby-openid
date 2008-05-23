@@ -90,6 +90,16 @@ module OpenID
     def Util.log(message)
       logger.info(message)
     end
+
+    def Util.auto_submit_html(form)
+      return "
+<html>
+<body onload='document.forms[0].submit();'>
+#{form}
+</body>
+</html>
+"
+    end
   end
 
 end

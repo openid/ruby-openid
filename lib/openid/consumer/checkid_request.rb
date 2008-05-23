@@ -158,6 +158,17 @@ module OpenID
         return message.to_form_markup(@endpoint.server_url, form_tag_attrs)
       end
 
+      # Get a complete HTML document that autosubmits the request to the IDP
+      # with javascript.  This method wraps form_markup - see that method's
+      # documentation for help with the parameters.
+      def html_markup(realm, return_to=nil, immediate=false,
+                      form_tag_attrs=nil)
+        Util.auto_submit_html(form_markup(realm, 
+                                          return_to, 
+                                          immediate, 
+                                          form_tag_attrs))
+      end
+
       # Should this OpenID authentication request be sent as a HTTP
       # redirect or as a POST (form submission)?
       #
