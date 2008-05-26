@@ -370,20 +370,12 @@ module OpenID
         end
 
         def test_create_check_auth_request_success
-          msg = call_idres_method(:create_check_auth_request) {}
-          openid_args = @message.get_args(OPENID_NS)
-          openid_args['mode'] = 'check_authentication'
-          assert_equal(openid_args, msg.to_args)
+          ca_msg = call_idres_method(:create_check_auth_request) {}
+          expected = @message.copy
+          expected.set_arg(OPENID_NS, 'mode', 'check_authentication')
+          assert_equal(expected, ca_msg)
         end
 
-        def test_create_check_auth_request_success_extra
-          @message.set_arg(OPENID_NS, 'cookies', 'chocolate_chip')
-          msg = call_idres_method(:create_check_auth_request) {}
-          openid_args = @message.get_args(OPENID_NS)
-          openid_args['mode'] = 'check_authentication'
-          openid_args.delete('cookies')
-          assert_equal(openid_args, msg.to_args)
-        end
       end
 
       class CheckAuthResponseTest < Test::Unit::TestCase

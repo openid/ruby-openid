@@ -239,24 +239,17 @@ module OpenID
       end
 
       def create_check_auth_request
-        check_args = {}
+        signed_list = @message.get_arg(OPENID_NS, 'signed', NO_DEFAULT).split(',')
 
-        # Arguments that are always passed to the server and not
-        # included in the signature.
-        for k in ['assoc_handle', 'sig', 'signed', 'invalidate_handle']
-          val = fetch(k, nil)
-          if !val.nil?
-            check_args[k] = val
-          end
-        end
+        # check that we got all the signed arguments
+        signed_list.each {|k|
+          @message.get_aliased_arg(k, NO_DEFAULT)
+        }
 
-        for k in signed_list
-          val = @message.get_aliased_arg(k, NO_DEFAULT)
-          check_args[k] = val
-        end
+        ca_message = @message.copy
+        ca_message.set_arg(OPENID_NS, 'mode', 'check_authentication')
 
-        check_args['mode'] = 'check_authentication'
-        return Message.from_openid_args(check_args)
+        return ca_message
       end
 
       # Process the response message from a check_authentication
