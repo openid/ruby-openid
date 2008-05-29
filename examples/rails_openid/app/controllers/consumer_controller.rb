@@ -45,7 +45,7 @@ class ConsumerController < ApplicationController
     if oidreq.send_redirect?(realm, return_to, params[:immediate])
       redirect_to oidreq.redirect_url(realm, return_to, params[:immediate])
     else
-      @form_text = oidreq.form_markup(realm, return_to, params[:immediate], {'id' => 'openid_form'})
+      render :text => oidreq.html_markup(realm, return_to, params[:immediate], {'id' => 'openid_form'})
     end
   end
 
@@ -108,7 +108,7 @@ class ConsumerController < ApplicationController
   def consumer
     if @consumer.nil?
       dir = Pathname.new(RAILS_ROOT).join('db').join('cstore')
-      store = OpenID::Store::Filesystem.new(dir)
+      store = ActiveRecordStore.new
       @consumer = OpenID::Consumer.new(session, store)
     end
     return @consumer
