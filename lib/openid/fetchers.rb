@@ -10,6 +10,8 @@ rescue LoadError
   require 'net/http'
 end
 
+MAX_RESPONSE_KB = 1024
+
 module Net
   class HTTP
     def post_connection_check(hostname)
@@ -185,6 +187,7 @@ module OpenID
 
       headers ||= {}
       headers['User-agent'] ||= USER_AGENT
+      headers['Range'] ||= "0-#{MAX_RESPONSE_KB*1024}"
 
       begin
         conn = make_connection(url)
