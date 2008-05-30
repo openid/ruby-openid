@@ -104,6 +104,7 @@ module OpenID
       # Create a Response object from an OpenID::Consumer::SuccessResponse
       def self.from_success_response(success_response)
         args = success_response.get_signed_ns(NS_URI)
+        return nil if args.nil?
         pape_resp = new
         pape_resp.parse_extension_args(args)
         return pape_resp

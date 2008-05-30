@@ -1,6 +1,7 @@
 require 'openid/extensions/pape'
 require 'openid/message'
 require 'openid/server'
+require 'openid/consumer/responses'
 
 module OpenID
   module PAPETest
@@ -225,6 +226,21 @@ module OpenID
         req = PAPE::Response.from_success_response(oid_req)
         assert_equal([PAPE::AUTH_MULTI_FACTOR, PAPE::AUTH_PHISHING_RESISTANT], req.auth_policies)
         assert_equal('1983-11-05T12:30:24Z', req.auth_time)
+      end
+
+      def test_from_success_response_unsigned
+        openid_req_msg = Message.from_openid_args({
+          'mode' => 'id_res',
+          'ns' => OPENID2_NS,
+          'ns.pape' => PAPE::NS_URI,
+          'pape.auth_policies' => [PAPE::AUTH_MULTI_FACTOR, PAPE::AUTH_PHISHING_RESISTANT].join(' '),
+          'pape.auth_time' => '1983-11-05T12:30:24Z'
+          })
+        signed_stuff = {}
+        endpoint = OpenIDServiceEndpoint.new
+        oid_req = Consumer::SuccessResponse.new(endpoint, openid_req_msg, signed_stuff)
+        req = PAPE::Response.from_success_response(oid_req)
+        assert(req.nil?, req.inspect)
       end
     end
   end
