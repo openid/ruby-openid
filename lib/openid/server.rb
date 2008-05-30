@@ -364,7 +364,8 @@ module OpenID
             })
         response.fields.update_args(OPENID_NS,
                                    @session.answer(assoc.secret))
-        if @session.session_type != 'no-encryption'
+        unless (@session.session_type == 'no-encryption' and
+                @namespace == OPENID1_NS)
           response.fields.set_arg(
               OPENID_NS, 'session_type', @session.session_type)
         end
