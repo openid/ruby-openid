@@ -551,6 +551,38 @@ module OpenID
           }
         end
 
+        def test_openid1_fallback_1_0
+          claimed_id = 'http://claimed.id/'
+          @endpoint = nil
+          resp_mesg = Message.from_openid_args({
+            'ns' => OPENID1_NS,
+            'identity' => claimed_id,
+            })
+
+          # Pass the OpenID 1 claimed_id this way since we're passing
+          # None for the endpoint.
+          resp_mesg.set_arg(BARE_NS, 'openid1_claimed_id', claimed_id)
+
+          # We expect the OpenID 1 discovery verification to try
+          # matching the discovered endpoint against the 1.1 type and
+          # fall back to 1.0.
+          expected_endpoint = OpenIDServiceEndpoint.new
+          expected_endpoint.type_uris = [OPENID_1_0_TYPE]
+          expected_endpoint.local_id = nil
+          expected_endpoint.claimed_id = claimed_id
+  
+          hacked_discover = Proc.new { ['unused', [expected_endpoint]] }
+          idres = IdResHandler.new(resp_mesg, nil, nil, @endpoint)
+          assert_log_matches('Performing discovery') {
+            OpenID.with_method_overridden(:discover, hacked_discover) {
+              idres.send(:verify_discovery_results)
+            }
+          }
+          actual_endpoint = idres.instance_variable_get(:@endpoint)
+          assert_equal(actual_endpoint, expected_endpoint)
+
+        end
+
         def test_openid2_no_op_endpoint
           assert_protocol_error("Missing required field: "\
                                 "<#{OPENID2_NS}>op_endpoint") {
@@ -595,12 +627,12 @@ module OpenID
                                  'identity' => 'sour grapes',
                                  'claimed_id' => 'monkeysoft',
                                  'op_endpoint' => 'Phone Home'}) do |idres|
-              idres.instance_def(:discover_and_verify) do |to_match|
+              idres.instance_def(:discover_and_verify) do
                 @endpoint = endpoint
               end
             end
           }
-          assert(endpoint.equal?(result))
+          assert_equal(endpoint, result)
         end
 
 
@@ -618,7 +650,7 @@ module OpenID
                                  'claimed_id' => 'monkeysoft',
                                  'op_endpoint' => 'Green Cheese'}) do |idres|
                         idres.extend(InstanceDefExtension)
-              idres.instance_def(:discover_and_verify) do |to_match|
+              idres.instance_def(:discover_and_verify) do
                 @endpoint = endpoint
               end
             end
@@ -661,8 +693,9 @@ module OpenID
 
           idres = IdResHandler.new(msg, nil, nil, @endpoint)
           idres.extend(InstanceDefExtension)
-          idres.instance_def(:discover_and_verify) { |to_match|
-            me.assert_equal(endpoint.claimed_id, to_match.claimed_id)
+          idres.instance_def(:discover_and_verify) { |claimed_id, to_match|
+            me.assert_equal(endpoint.claimed_id, to_match[0].claimed_id)
+            me.assert_equal(claimed_id, endpoint.claimed_id)
             raise ProtocolError, text
           }
           assert_log_matches('Error attempting to use stored',
@@ -701,7 +734,7 @@ module OpenID
             assert_raises(verified_error) {
               call_verify_modify({'ns' => OPENID1_NS,
                                    'identity' => @endpoint.local_id}) { |idres|
-                idres.instance_def(:discover_and_verify) do |to_match|
+                idres.instance_def(:discover_and_verify) do
                   raise verified_error
                 end
               }
@@ -809,7 +842,7 @@ module OpenID
           assert_log_matches('Performing discovery on') do
             assert_protocol_error('No OpenID information found') do
               OpenID.with_method_overridden(:discover, disco) do
-                idres.send(:discover_and_verify, endpoint)
+                idres.send(:discover_and_verify, :sentinel, [endpoint])
               end
             end
           end
@@ -826,7 +859,8 @@ module OpenID
           idres = IdResHandler.new(nil, nil)
           assert_log_matches('Discovery verification failure') do
             assert_protocol_error('No matching endpoint') do
-              idres.send(:verify_discovered_services, [], endpoint)
+              idres.send(:verify_discovered_services,
+                         'http://bogus.id/', [], [endpoint])
             end
           end
         end

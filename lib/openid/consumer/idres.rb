@@ -345,7 +345,7 @@ module OpenID
 
         if @endpoint.nil?
           Util.log('No pre-discovered information supplied')
-          discover_and_verify(to_match)
+          discover_and_verify(to_match.claimed_id, [to_match])
         else
           begin
             verify_discovery_single(@endpoint, to_match)
@@ -353,7 +353,7 @@ module OpenID
             Util.log("Error attempting to use stored discovery "\
                      "information: #{why.message}")
             Util.log("Attempting discovery to verify endpoint")
-            discover_and_verify(to_match)
+            discover_and_verify(to_match.claimed_id, [to_match])
           end
         end
 
@@ -407,55 +407,53 @@ module OpenID
         # Either no endpoint was supplied or OpenID 1.x verification
         # of the information that's in the message failed on that
         # endpoint.
-        begin
-          discover_and_verify(to_match)
-        rescue TypeURIMismatch
-          discover_and_verify(to_match_1_0)
-        end
+        discover_and_verify(to_match.claimed_id, [to_match, to_match_1_0])
       end
 
       # Given an endpoint object created from the information in an
       # OpenID response, perform discovery and verify the discovery
       # results, returning the matching endpoint that is the result of
       # doing that discovery.
-      def discover_and_verify(to_match)
-        Util.log("Performing discovery on #{to_match.claimed_id}")
-        _, services = OpenID.discover(to_match.claimed_id)
+      def discover_and_verify(claimed_id, to_match_endpoints)
+        Util.log("Performing discovery on #{claimed_id}")
+        _, services = OpenID.discover(claimed_id)
         if services.length == 0
           # XXX: this might want to be something other than
           # ProtocolError. In Python, it's DiscoveryFailure
           raise ProtocolError, ("No OpenID information found at "\
-                                "#{to_match.claimed_id}")
+                                "#{claimed_id}")
         end
-        verify_discovered_services(services, to_match)
+        verify_discovered_services(claimed_id, services, to_match_endpoints)
       end
 
 
-      def verify_discovered_services(services, to_match)
+      def verify_discovered_services(claimed_id, services, to_match_endpoints)
         # Search the services resulting from discovery to find one
         # that matches the information from the assertion
         failure_messages = []
         for endpoint in services
-          begin
-            verify_discovery_single(endpoint, to_match)
-          rescue ProtocolError => why
-            failure_messages << why.message
-          else
-            # It matches, so discover verification has
-            # succeeded. Return this endpoint.
-            @endpoint = endpoint
-            return
+          for to_match_endpoint in to_match_endpoints
+            begin
+              verify_discovery_single(endpoint, to_match_endpoint)
+            rescue ProtocolError => why
+              failure_messages << why.message
+            else
+              # It matches, so discover verification has
+              # succeeded. Return this endpoint.
+              @endpoint = endpoint
+              return
+            end
           end
         end
 
-        Util.log("Discovery verification failure for #{to_match.claimed_id}")
+        Util.log("Discovery verification failure for #{claimed_id}")
         failure_messages.each do |failure_message|
           Util.log(" * Endpoint mismatch: " + failure_message)
         end
 
         # XXX: is DiscoveryFailure in Python OpenID
         raise ProtocolError, ("No matching endpoint found after "\
-                              "discovering #{to_match.claimed_id}")
+                              "discovering #{claimed_id}")
       end
 
       def verify_discovery_single(endpoint, to_match)
