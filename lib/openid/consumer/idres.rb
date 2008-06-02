@@ -2,6 +2,7 @@ require "openid/message"
 require "openid/protocolerror"
 require "openid/kvpost"
 require "openid/consumer/discovery"
+require "openid/urinorm"
 
 module OpenID
   class TypeURIMismatch < ProtocolError
@@ -138,7 +139,7 @@ module OpenID
 
       def verify_return_to
         begin
-          msg_return_to = URI.parse(fetch('return_to'))
+          msg_return_to = URI.parse(URINorm::urinorm(fetch('return_to')))
         rescue URI::InvalidURIError
           raise ProtocolError, ("return_to is not a valid URI")
         end
@@ -188,7 +189,7 @@ module OpenID
 
       def verify_return_to_base(msg_return_to)
         begin
-          app_parsed = URI.parse(@current_url)
+          app_parsed = URI.parse(URINorm::urinorm(@current_url))
         rescue URI::InvalidURIError
           raise ProtocolError, "current_url is not a valid URI: #{@current_url}"
         end

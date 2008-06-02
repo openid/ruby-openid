@@ -201,6 +201,11 @@ module OpenID
           [ [base, {}],
             [base + "?another=arg", {'another' => 'arg'}],
             [base + "?another=arg#frag", {'another' => 'arg'}],
+            ['HTTP'+base[4..-1], {}],
+            [base.sub('com', 'COM'), {}],
+            ['http://example.janrain.com:80/path', {}],
+            ['http://example.janrain.com/p%61th', {}],
+            ['http://example.janrain.com/./path',{}],
           ].each do |return_to, args|
             args['openid.return_to'] = return_to
             msg = Message.from_post_args(args)
