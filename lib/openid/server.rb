@@ -1252,7 +1252,7 @@ module OpenID
       # This implementation always raises ProtocolError.
       def default_decoder(message, server)
         mode = message.get_arg(OPENID_NS, 'mode')
-        msg = sprintf("No decoder for mode %s", mode)
+        msg = sprintf("Unrecognized OpenID mode %s", mode)
         raise ProtocolError.new(message, msg)
       end
     end
