@@ -1283,6 +1283,28 @@ module OpenID
       }
     end
 
+    def test_fromMessageClaimedIDWithoutIdentityOpenID2
+      msg = Message.new(OPENID2_NS)
+      msg.set_arg(OPENID_NS, 'mode', 'checkid_setup')
+      msg.set_arg(OPENID_NS, 'return_to', 'http://invalid:8000/rt')
+      msg.set_arg(OPENID_NS, 'claimed_id', 'https://example.myopenid.com')
+
+      assert_raise(Server::ProtocolError) {
+        Server::CheckIDRequest.from_message(msg, @server)
+      }
+    end
+
+    def test_fromMessageIdentityWithoutClaimedIDOpenID2
+      msg = Message.new(OPENID2_NS)
+      msg.set_arg(OPENID_NS, 'mode', 'checkid_setup')
+      msg.set_arg(OPENID_NS, 'return_to', 'http://invalid:8000/rt')
+      msg.set_arg(OPENID_NS, 'identity', 'https://example.myopenid.com')
+
+      assert_raise(Server::ProtocolError) {
+        Server::CheckIDRequest.from_message(msg, @server)
+      }
+    end
+
     def test_trustRootOpenID1
       # Ignore openid.realm in OpenID 1
       msg = Message.new(OPENID1_NS)

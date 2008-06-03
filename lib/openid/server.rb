@@ -504,20 +504,22 @@ module OpenID
         end
 
         obj.identity = message.get_arg(OPENID_NS, 'identity')
-        if obj.identity and message.is_openid2()
-          obj.claimed_id = message.get_arg(OPENID_NS, 'claimed_id')
-          if !obj.claimed_id
-            s = ("OpenID 2.0 message contained openid.identity but not " +
-                 "claimed_id")
+        obj.claimed_id = message.get_arg(OPENID_NS, 'claimed_id')
+        if message.is_openid1()
+          if !obj.identity
+            s = "OpenID 1 message did not contain openid.identity"
             raise ProtocolError.new(message, s)
           end
         else
-          obj.claimed_id = nil
-        end
-
-        if !obj.identity and obj.namespace == OPENID1_NS
-          s = "OpenID 1 message did not contain openid.identity"
-          raise ProtocolError.new(message, s)
+          if obj.identity and not obj.claimed_id
+            s = ("OpenID 2.0 message contained openid.identity but not " +
+                 "claimed_id")
+            raise ProtocolError.new(message, s)
+          elsif obj.claimed_id and not obj.identity
+            s = ("OpenID 2.0 message contained openid.claimed_id but not " +
+                 "identity")
+            raise ProtocolError.new(message, s)
+          end
         end
 
         # There's a case for making self.trust_root be a TrustRoot
