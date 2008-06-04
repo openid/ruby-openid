@@ -1740,6 +1740,38 @@ module OpenID
       assert(!rfg.call("dh_server_public"))
     end
 
+    def test_plaintext_v2
+        # The main difference between this and the v1 test is that
+        # session_type is always returned in v2.
+        args = {
+            'openid.ns' => OPENID2_NS,
+            'openid.mode' => 'associate',
+            'openid.assoc_type' => 'HMAC-SHA1',
+            'openid.session_type' => 'no-encryption',
+            }
+        @request = Server::AssociateRequest.from_message(
+          Message.from_post_args(args))
+
+        assert(!@request.message.is_openid1())
+
+        @assoc = @signatory.create_association(false, 'HMAC-SHA1')
+        response = @request.answer(@assoc)
+        rfg = lambda { |f| response.fields.get_arg(OPENID_NS, f) }
+
+        assert_equal(rfg.call("assoc_type"), "HMAC-SHA1")
+        assert_equal(rfg.call("assoc_handle"), @assoc.handle)
+
+        failUnlessExpiresInMatches(
+            response.fields, @signatory.secret_lifetime)
+
+        assert_equal(
+            rfg.call("mac_key"), Util.to_base64(@assoc.secret))
+
+        assert_equal(rfg.call("session_type"), "no-encryption")
+        assert(!rfg.call("enc_mac_key"))
+        assert(!rfg.call("dh_server_public"))
+    end
+
     def test_plaintext256
       @assoc = @signatory.create_association(false, 'HMAC-SHA256')
       response = @request.answer(@assoc)
