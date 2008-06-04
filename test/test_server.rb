@@ -1306,6 +1306,21 @@ module OpenID
       }
     end
 
+    def test_fromMessageWithEmptyTrustRoot
+      return_to = 'http://some.url/foo?bar=baz'
+      msg = Message.from_post_args({
+              'openid.assoc_handle' => '{blah}{blah}{OZivdQ==}',
+              'openid.claimed_id' => 'http://delegated.invalid/',
+              'openid.identity' => 'http://op-local.example.com/',
+              'openid.mode' => 'checkid_setup',
+              'openid.ns' => 'http://openid.net/signon/1.0',
+              'openid.return_to' => return_to,
+              'openid.trust_root' => ''
+              });
+      result = Server::CheckIDRequest.from_message(msg, @server)
+      assert_equal(return_to, result.trust_root)
+    end
+
     def test_trustRootOpenID1
       # Ignore openid.realm in OpenID 1
       msg = Message.new(OPENID1_NS)

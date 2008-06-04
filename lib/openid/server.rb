@@ -526,17 +526,17 @@ module OpenID
         # here.  But if TrustRoot isn't currently part of the "public"
         # API, I'm not sure it's worth doing.
         if obj.namespace == OPENID1_NS
-          obj.trust_root = message.get_arg(
-                OPENID_NS, 'trust_root', obj.return_to)
+          trust_root_param = 'trust_root'
         else
-          obj.trust_root = message.get_arg(
-                OPENID_NS, 'realm', obj.return_to)
+          trust_root_param = 'realm'
+        end
+        trust_root = message.get_arg(OPENID_NS, trust_root_param)
+        trust_root = obj.return_to if (trust_root.nil? || trust_root.empty?)
+        obj.trust_root = trust_root
 
-          if !obj.return_to and
-              !obj.trust_root
-            raise ProtocolError.new(message, "openid.realm required when " +
-                                    "openid.return_to absent")
-          end
+        if obj.namespace != OPENID1_NS and !obj.return_to and !obj.trust_root
+          raise ProtocolError.new(message, "openid.realm required when " +
+                                  "openid.return_to absent")
         end
 
         obj.assoc_handle = message.get_arg(OPENID_NS, 'assoc_handle')
