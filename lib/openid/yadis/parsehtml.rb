@@ -9,7 +9,8 @@ module OpenID
       # to keep track of whether or not we are in the head element
       in_head = false
 
-      while el = parser.getTag('head', '/head', 'meta', 'body', '/body', 'html')
+      while el = parser.getTag('head', '/head', 'meta', 'body', '/body', 'html',
+                               'script')
 
         # we are leaving head or have reached body, so we bail
         return nil if ['/head', 'body', '/body'].member?(el.tag_name)
@@ -20,6 +21,12 @@ module OpenID
           end
         end
         next unless in_head
+
+        if el.tag_name == 'script'
+          unless el.to_s[-2] == ?/ # tag ends with a /: a short tag
+            parser.getTag('/script')
+          end
+        end
 
         return nil if el.tag_name == 'html'
 
