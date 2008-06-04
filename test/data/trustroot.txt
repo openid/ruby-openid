@@ -3,7 +3,7 @@ Trust root parsing checking
 ========================================
 
 ----------------------------------------
-19: Does not parse
+21: Does not parse
 ----------------------------------------
 baz.org
 *.foo.com
@@ -20,6 +20,8 @@ http://..it/
 http://.it/
 http://*:8081/
 http://*:80
+http://localhost:1900foo/
+http://foo.com\/
 
  
  	
@@ -70,7 +72,7 @@ return_to matching
 ========================================
 
 ----------------------------------------
-44: matches
+45: matches
 ----------------------------------------
 http://*/                             http://cnn.com/
 http://*/                             http://livejournal.com/
@@ -91,6 +93,7 @@ http://*.bar.co.uk                    http://www.bar.co.uk
 http://*.uoregon.edu                  http://x.cs.uoregon.edu
 http://x.com/abc                      http://x.com/abc
 http://x.com/abc                      http://x.com/abc/def
+http://10.0.0.1/abc                   http://10.0.0.1/abc
 http://*.x.com                        http://x.com/gallery
 http://*.x.com                        http://foo.x.com/gallery
 http://foo.x.com                      http://foo.x.com/gallery/xxx

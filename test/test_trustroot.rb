@@ -9,6 +9,7 @@ class TrustRootTest < Test::Unit::TestCase
   def _test_sanity(case_, sanity, desc)
     tr = OpenID::TrustRoot::TrustRoot.parse(case_)
     if sanity == 'sane'
+      assert(! tr.nil?)
       assert(tr.sane?, [case_, desc])
       assert(OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc])
     elsif sanity == 'insane'
