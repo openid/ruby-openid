@@ -308,7 +308,7 @@ module OpenID
           session_type = message.get_arg(OPENID1_NS, 'session_type')
           if session_type == 'no-encryption'
             Util.log('Received OpenID 1 request with a no-encryption ' +
-                     'assocaition session type. Continuing anyway.')
+                     'association session type. Continuing anyway.')
           elsif !session_type
             session_type = 'no-encryption'
           end
