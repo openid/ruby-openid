@@ -873,9 +873,7 @@ module OpenID
       # it will be replaced.       
       # Returns the form markup for this response.
       def to_form_markup(form_tag_attrs=nil)
-        return @fields.to_form_markup(
-                 @fields.get_arg(OPENID_NS, 'return_to'),
-                 form_tag_attrs)
+        return @fields.to_form_markup(@request.return_to, form_tag_attrs)
       end
 
       # Wraps the form tag from to_form_markup in a complete HTML document

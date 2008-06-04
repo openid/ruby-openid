@@ -859,6 +859,21 @@ module OpenID
       assert(webresponse.headers.member?('location'))
     end
 
+    def test_cancel_to_form
+      request = Server::CheckIDRequest.new(
+                                   'http://bombom.unittest/',
+                                   'http://burr.unittest/999',
+                                   @server.op_endpoint,
+                                   'http://burr.unittest/',
+                                   false, nil)
+      response = Server::OpenIDResponse.new(request)
+      response.fields = Message.from_openid_args({
+                                                   'mode' => 'cancel',
+                                                 })
+      form = response.to_form_markup
+      assert(form.index(request.return_to))
+    end
+
     def test_assocReply
       msg = Message.new(OPENID2_NS)
       msg.set_arg(OPENID2_NS, 'session_type', 'no-encryption')
