@@ -54,6 +54,10 @@ module OpenID
   # Raised when an alias or namespace URI has already been registered.
   class NamespaceAliasRegistrationError < Exception; end
 
+  # Raised if openid.ns is not a recognized value.
+  # See Message class variable @@allowed_openid_namespaces
+  class InvalidOpenIDNamespace < Exception; end
+
   class Message
     attr_reader :namespaces
 
@@ -89,6 +93,8 @@ module OpenID
 
     @@allowed_openid_namespaces = [OPENID1_NS, OPENID2_NS]
 
+    # Raises InvalidNamespaceError if you try to instantiate a Message
+    # with a namespace not in the above allowed list
     def initialize(openid_namspace=nil)
       @args = {}
       @namespaces = NamespaceMap.new
@@ -100,6 +106,8 @@ module OpenID
     end
 
     # Construct a Message containing a set of POST arguments.
+    # Raises InvalidNamespaceError if you try to instantiate a Message
+    # with a namespace not in the above allowed list
     def Message.from_post_args(args)
       m = Message.new
       openid_args = {}
@@ -123,12 +131,16 @@ module OpenID
     end
 
     # Construct a Message from a parsed KVForm message.
+    # Raises InvalidNamespaceError if you try to instantiate a Message
+    # with a namespace not in the above allowed list
     def Message.from_openid_args(openid_args)
       m = Message.new
       m._from_openid_args(openid_args)
       return m
     end
 
+    # Raises InvalidNamespaceError if you try to instantiate a Message
+    # with a namespace not in the above allowed list
     def _from_openid_args(openid_args)
       ns_args = []
 
@@ -189,7 +201,7 @@ module OpenID
         implicit = false
       end
       if !@@allowed_openid_namespaces.include?(openid_ns_uri)
-        raise ArgumentError, "Invalid null namespace: #{openid_ns_uri}"
+        raise InvalidOpenIDNamespace, "Invalid null namespace: #{openid_ns_uri}"
       end
       @namespaces.add_alias(openid_ns_uri, NULL_NAMESPACE, implicit)
       @openid_ns_uri = openid_ns_uri

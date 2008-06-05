@@ -1234,7 +1234,11 @@ module OpenID
           return nil
         end
 
-        message = Message.from_post_args(query)
+        begin
+          message = Message.from_post_args(query)
+        rescue InvalidOpenIDNamespace => e
+          raise ProtocolError.new(nil, e.to_s)
+        end
 
         mode = message.get_arg(OPENID_NS, 'mode')
         if !mode

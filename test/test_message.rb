@@ -255,7 +255,7 @@ module OpenID
     end
 
     def test_set_openid_namespace
-      assert_raise(ArgumentError) {
+      assert_raise(InvalidOpenIDNamespace) {
         @m.set_openid_namespace('http://invalid/')
       }
     end
