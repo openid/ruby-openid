@@ -1449,6 +1449,31 @@ module OpenID
         @request.cancel_url
       }
     end
+
+    def test_fromMessageWithoutTrustRoot
+        msg = Message.new(OPENID2_NS)
+        msg.set_arg(OPENID_NS, 'mode', 'checkid_setup')
+        msg.set_arg(OPENID_NS, 'return_to', 'http://real.trust.root/foo')
+        msg.set_arg(OPENID_NS, 'assoc_handle', 'bogus')
+        msg.set_arg(OPENID_NS, 'identity', 'george')
+        msg.set_arg(OPENID_NS, 'claimed_id', 'george')
+
+        result = Server::CheckIDRequest.from_message(msg, @server.op_endpoint)
+
+        assert_equal(result.trust_root, 'http://real.trust.root/foo')
+    end
+
+    def test_fromMessageWithoutTrustRootOrReturnTo
+        msg = Message.new(OPENID2_NS)
+        msg.set_arg(OPENID_NS, 'mode', 'checkid_setup')
+        msg.set_arg(OPENID_NS, 'assoc_handle', 'bogus')
+        msg.set_arg(OPENID_NS, 'identity', 'george')
+        msg.set_arg(OPENID_NS, 'claimed_id', 'george')
+
+        assert_raises(Server::ProtocolError) {
+          Server::CheckIDRequest.from_message(msg, @server.op_endpoint)
+        }
+    end
   end
 
   class TestCheckIDExtension < Test::Unit::TestCase
