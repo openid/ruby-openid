@@ -659,6 +659,17 @@ module OpenID
         @decode.call(args)
       }
     end
+
+    def test_invalidns
+      args = {'openid.ns' => 'Vegetables',
+              'openid.mode' => 'associate'}
+      begin
+        r = @decode.call(args)
+      rescue Server::ProtocolError => err
+        assert(err.openid_message)
+        assert(err.to_s.index('Vegetables'))
+      end
+    end
   end
 
   class BogusEncoder < Server::Encoder
