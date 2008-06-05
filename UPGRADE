@@ -57,6 +57,11 @@ additional arguments to the return_to url, use
 Generating the redirect is the same as before, but add any extensions
 first.
 
+If you need to set up an SSL certificate authority list for the fetcher,
+use the 'ca_file' attr_accessor on the OpenID::StandardFetcher.  This has
+changed from 'ca_path' in the 1.x.x series library.  That is, set
+OpenID.fetcher.ca_file = '/path/to/ca.list'
+before calling consumer.begin.
 
 === Requesting Simple Registration Data
 
