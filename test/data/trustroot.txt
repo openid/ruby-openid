@@ -72,7 +72,7 @@ return_to matching
 ========================================
 
 ----------------------------------------
-45: matches
+46: matches
 ----------------------------------------
 http://*/                             http://cnn.com/
 http://*/                             http://livejournal.com/
@@ -119,6 +119,7 @@ http://foo.com:80/                    http://foo.com/stuff
 http://foo.com/path                   http://foo.com/path/extra
 http://foo.com/path2                  http://foo.com/path2?extra=query
 http://foo.com/path2                  http://foo.com/path2/?extra=query
+http://foo.com/                       HTTP://foo.com/
 
 ----------------------------------------
 25: does not match
