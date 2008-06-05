@@ -31,20 +31,21 @@ Check the installation:
 The library is known to work with Ruby 1.8.4 on Unix, Max OSX and
 Win32.  Examples have been tested with Rails 1.1 and 1.2, and 2.0.
 
-==Getting Started with OpenID::Consumer
-OpenID::Consumer is the place to start if you'd like to support OpenID
-authentication on your website.  The examples directory contains
-several working examples to help you get started, and the
-OpenID::Consumer class is well-documented.
+==Getting Started
+The best way to start is to look at the rails_openid example.
+You can run it with:
+ cd examples/rails_openid
+ script/server
 
-Also, check out the OpenIDLoginGenerator!  Read examples/README for
-more info.
+If you are writing an OpenID Relying Party, a good place to start is:
+examples/rails_openid/app/controllers/consumer_controller.rb
 
-==Serving OpenID with OpenID::Server
-The examples directory contains a fully-functional OpenID server that
-uses the Ruby on Rails framework.  Start by reading about the
-OpenID::Server interface documentation and looking at the example.
+And if you are writing an OpenID provider:
+examples/rails_openid/app/controllers/server_controller.rb
 
+The library code is quite well documented, so don't be squeamish, and
+look at the library itself if there's anything you don't understand in
+the examples.
 
 ==Homepage
 http://openidenabled.com/ruby-openid/
