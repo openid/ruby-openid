@@ -703,6 +703,7 @@ module OpenID
                                    'http://burr.unittest/',
                                    false,
                                    nil)
+      request.message = Message.new(OPENID2_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
                                                    'ns' => OPENID2_NS,
@@ -728,6 +729,7 @@ module OpenID
                                    'http://burr.unittest/',
                                    false,
                                    nil)
+      request.message = Message.new(OPENID2_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
                                                    'ns' => OPENID2_NS,
@@ -752,6 +754,7 @@ module OpenID
                                    'http://burr.unittest/',
                                    false,
                                    nil)
+      request.message = Message.new(OPENID2_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
                                                    'ns' => OPENID2_NS,
@@ -772,6 +775,7 @@ module OpenID
                                    'http://burr.unittest/',
                                    false,
                                    nil)
+      request.message = Message.new(OPENID2_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
                                                    'ns' => OPENID2_NS,
@@ -796,6 +800,7 @@ module OpenID
                                    'http://burr.unittest/',
                                    false,
                                    nil)
+      request.message = Message.new(OPENID1_NS)
 
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
@@ -818,6 +823,7 @@ module OpenID
                                    @server.op_endpoint,
                                    'http://burr.unittest/',
                                    false, nil)
+      request.message = Message.new(OPENID1_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
                                                    'mode' => 'id_res',
@@ -845,6 +851,7 @@ module OpenID
                                    @server.op_endpoint,
                                    'http://burr.unittest/',
                                    false, nil)
+      request.message = Message.new(OPENID2_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
                                                    'mode' => 'cancel',
@@ -873,6 +880,7 @@ module OpenID
       request = Server::CheckAuthRequest.new('a_sock_monkey',
                                      'siggggg',
                                      [])
+      request.message = Message.new(OPENID2_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
                                                    'is_valid' => 'true',
@@ -921,6 +929,7 @@ module OpenID
                                     @server.op_endpoint,
                                     'http://burr.unittest/',
                                     false, nil)
+      @request.message = Message.new(OPENID2_NS)
 
       @response = Server::OpenIDResponse.new(@request)
       @response.fields = Message.from_openid_args({
@@ -977,6 +986,7 @@ module OpenID
                                    @server.op_endpoint,
                                    'http://burr.unittest/',
                                    false, nil)
+      request.message = Message.new(OPENID2_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields.set_arg(OPENID_NS, 'mode', 'cancel')
       webresponse = @encode.call(response)
@@ -1019,6 +1029,7 @@ module OpenID
                                     @server.op_endpoint,
                                     'http://bar.unittest/',
                                     false)
+      @request.message = Message.new(OPENID2_NS)
     end
 
     def test_trustRootInvalid
@@ -1187,7 +1198,7 @@ module OpenID
     end
 
     def test_immediate_openid1_no_identity
-      @request.namespace = OPENID1_NS
+      @request.message = Message.new(OPENID1_NS)
       @request.immediate = true
       @request.mode = 'checkid_immediate'
       resp = @request.answer(false)
@@ -1195,7 +1206,7 @@ module OpenID
     end
 
     def test_checkid_setup_openid1_no_identity
-      @request.namespace = OPENID1_NS
+      @request.message = Message.new(OPENID1_NS)
       @request.immediate = false
       @request.mode = 'checkid_setup'
       resp = @request.answer(false)
@@ -1203,7 +1214,7 @@ module OpenID
     end
 
     def test_immediate_openid1_no_server_url
-      @request.namespace = OPENID1_NS
+      @request.message = Message.new(OPENID1_NS)
       @request.immediate = true
       @request.mode = 'checkid_immediate'
       @request.op_endpoint = nil
@@ -1214,7 +1225,7 @@ module OpenID
     end
 
     def test_immediate_encode_to_url
-      @request.namespace = OPENID1_NS
+      @request.message = Message.new(OPENID1_NS)
       @request.immediate = true
       @request.mode = 'checkid_immediate'
       @request.trust_root = "BOGUS"
@@ -1250,7 +1261,7 @@ module OpenID
 
     def test_answerAllowWithDelegatedIdentityOpenID1
       # claimed_id parameter doesn't exist in OpenID 1.
-      @request.namespace = OPENID1_NS
+      @request.message = Message.new(OPENID1_NS)
       # claimed_id delegates to selected_id here.
       @request.identity = IDENTIFIER_SELECT
       selected_id = 'http://anon.unittest/9861'
@@ -1269,7 +1280,7 @@ module OpenID
     end
 
     def test_answerAllowNoIdentityOpenID1
-      @request.namespace = OPENID1_NS
+      @request.message = Message.new(OPENID1_NS)
       @request.identity = nil
       assert_raise(ArgumentError) {
         @request.answer(true, nil, nil)
@@ -1393,7 +1404,7 @@ module OpenID
     def test_answerImmediateDenyOpenID1
       # Look for user_setup_url in checkid_immediate negative response
       # in OpenID 1 case.
-      @request.namespace = OPENID1_NS
+      @request.message = Message.new(OPENID1_NS)
       @request.mode = 'checkid_immediate'
       @request.immediate = true
       server_url = "http://setup-url.unittest/"
@@ -1401,8 +1412,8 @@ module OpenID
       answer = @request.answer(false, server_url)
       assert_equal(answer.request, @request)
       assert_equal(3, answer.fields.to_post_args.length, answer.fields)
-      assert_equal(answer.fields.get_openid_namespace, OPENID1_NS)
-      assert_equal(answer.fields.get_arg(OPENID_NS, 'mode'), 'id_res')
+      assert_equal(OPENID1_NS, answer.fields.get_openid_namespace)
+      assert_equal('id_res', answer.fields.get_arg(OPENID_NS, 'mode'))
       assert(answer.fields.get_arg(
                                    OPENID_NS, 'user_setup_url', '').starts_with?(server_url))
     end
@@ -1488,6 +1499,7 @@ module OpenID
                                     @server.op_endpoint,
                                     'http://bar.unittest/',
                                     false)
+      @request.message = Message.new(OPENID2_NS)
       @response = Server::OpenIDResponse.new(@request)
       @response.fields.set_arg(OPENID_NS, 'mode', 'id_res')
       @response.fields.set_arg(OPENID_NS, 'blue', 'star')
@@ -1562,6 +1574,7 @@ module OpenID
                                         })
       @request = Server::CheckAuthRequest.new(
                                       @assoc_handle, @message)
+      @request.message = Message.new(OPENID2_NS)
 
       @signatory = MockSignatory.new([true, @assoc_handle])
     end
@@ -1638,6 +1651,7 @@ module OpenID
       server_dh = DiffieHellman.from_defaults()
       session = Server::DiffieHellmanSHA1ServerSession.new(server_dh, cpub)
       @request = Server::AssociateRequest.new(session, 'HMAC-SHA1')
+      @request.message = Message.new(OPENID2_NS)
       response = @request.answer(@assoc)
       rfg = lambda { |f| response.fields.get_arg(OPENID_NS, f) }
       assert_equal(rfg.call("assoc_type"), "HMAC-SHA1")
@@ -1661,6 +1675,7 @@ module OpenID
       server_dh = DiffieHellman.from_defaults()
       session = Server::DiffieHellmanSHA256ServerSession.new(server_dh, cpub)
       @request = Server::AssociateRequest.new(session, 'HMAC-SHA256')
+      @request.message = Message.new(OPENID2_NS)
       response = @request.answer(@assoc)
       rfg = lambda { |f| response.fields.get_arg(OPENID_NS, f) }
       assert_equal(rfg.call("assoc_type"), "HMAC-SHA256")
@@ -1912,7 +1927,7 @@ module OpenID
     def test_failed_dispatch
       request = Server::OpenIDRequest.new()
       request.mode = "monkeymode"
-      request.namespace = OPENID1_NS
+      request.message = Message.new(OPENID1_NS)
       assert_raise(RuntimeError) {
         webresult = @server.handle_request(request)
       }
@@ -1938,7 +1953,7 @@ module OpenID
 
       request = Server::OpenIDRequest.new()
       request.mode = "monkeymode"
-      request.namespace = OPENID1_NS
+      request.message = Message.new(OPENID1_NS)
       assert_raise(UnhandledError) {
         webresult = @server.handle_request(request)
       }
@@ -2045,6 +2060,7 @@ module OpenID
 
     def test_checkAuth
       request = Server::CheckAuthRequest.new('arrrrrf', '0x3999', [])
+      request.message = Message.new(OPENID2_NS)
       response = nil
       silence_logging {
         response = @server.openid_check_authentication(request)

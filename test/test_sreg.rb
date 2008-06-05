@@ -453,7 +453,6 @@ module OpenID
           req_msg.update_args(NS_URI, sreg_req.get_extension_args)
           req = Server::OpenIDRequest.new
           req.message = req_msg
-          req.namespace = req_msg.get_openid_namespace
 
           # -> checkid_* request
 

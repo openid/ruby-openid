@@ -26,7 +26,7 @@ module OpenID
     UNUSED = nil
 
     class OpenIDRequest
-      attr_accessor :namespace, :message, :mode
+      attr_accessor :message, :mode
 
       # I represent an incoming OpenID request.
       #
@@ -34,6 +34,15 @@ module OpenID
       # mode:: The "openid.mode" of this request
       def initialize
         @mode = nil
+        @message = nil
+      end
+
+      def namespace
+        if @message.nil?
+          raise RuntimeError, "Request has no message"
+        else
+          return @message.get_openid_namespace
+        end
       end
     end
 
@@ -74,7 +83,6 @@ module OpenID
         @assoc_handle = assoc_handle
         @signed = signed
         @invalidate_handle = invalidate_handle
-        @namespace = OPENID2_NS
       end
 
       # Construct me from an OpenID::Message.
@@ -93,7 +101,6 @@ module OpenID
 
         obj = self.new(assoc_handle, signed, invalidate_handle)
         obj.message = message
-        obj.namespace = message.get_openid_namespace()
         obj.sig = message.get_arg(OPENID_NS, 'sig')
 
         if !obj.assoc_handle or
@@ -297,7 +304,6 @@ module OpenID
         super()
         @session = session
         @assoc_type = assoc_type
-        @namespace = OPENID2_NS
 
         @mode = "associate"
       end
@@ -305,7 +311,7 @@ module OpenID
       # Construct me from an OpenID Message.
       def self.from_message(message, op_endpoint=UNUSED)
         if message.is_openid1()
-          session_type = message.get_arg(OPENID1_NS, 'session_type')
+          session_type = message.get_arg(OPENID_NS, 'session_type')
           if session_type == 'no-encryption'
             Util.log('Received OpenID 1 request with a no-encryption ' +
                      'association session type. Continuing anyway.')
@@ -345,7 +351,6 @@ module OpenID
 
         obj = self.new(session, assoc_type)
         obj.message = message
-        obj.namespace = message.get_openid_namespace()
         return obj
       end
 
@@ -365,7 +370,7 @@ module OpenID
         response.fields.update_args(OPENID_NS,
                                    @session.answer(assoc.secret))
         unless (@session.session_type == 'no-encryption' and
-                @namespace == OPENID1_NS)
+                @message.is_openid1)
           response.fields.set_arg(
               OPENID_NS, 'session_type', @session.session_type)
         end
@@ -441,13 +446,13 @@ module OpenID
       # a URL.
       def initialize(identity, return_to, op_endpoint, trust_root=nil,
                      immediate=false, assoc_handle=nil)
-        @namespace = OPENID2_NS
         @assoc_handle = assoc_handle
         @identity = identity
         @claimed_id = identity
         @return_to = return_to
         @trust_root = trust_root or return_to
         @op_endpoint = op_endpoint
+        @message = nil
 
         if immediate
           @immediate = true
@@ -485,7 +490,6 @@ module OpenID
       def self.from_message(message, op_endpoint)
         obj = self.allocate
         obj.message = message
-        obj.namespace = message.get_openid_namespace()
         obj.op_endpoint = op_endpoint
         mode = message.get_arg(OPENID_NS, 'mode')
         if mode == "checkid_immediate"
@@ -497,7 +501,7 @@ module OpenID
         end
 
         obj.return_to = message.get_arg(OPENID_NS, 'return_to')
-        if obj.namespace == OPENID1_NS and !obj.return_to
+        if message.is_openid1 and !obj.return_to
           msg = sprintf("Missing required field 'return_to' from %s",
                         message)
           raise ProtocolError.new(message, msg)
@@ -525,7 +529,7 @@ module OpenID
         # There's a case for making self.trust_root be a TrustRoot
         # here.  But if TrustRoot isn't currently part of the "public"
         # API, I'm not sure it's worth doing.
-        if obj.namespace == OPENID1_NS
+        if message.is_openid1
           trust_root_param = 'trust_root'
         else
           trust_root_param = 'realm'
@@ -534,7 +538,7 @@ module OpenID
         trust_root = obj.return_to if (trust_root.nil? || trust_root.empty?)
         obj.trust_root = trust_root
 
-        if obj.namespace != OPENID1_NS and !obj.return_to and !obj.trust_root
+        if !message.is_openid1 and !obj.return_to and !obj.trust_root
           raise ProtocolError.new(message, "openid.realm required when " +
                                   "openid.return_to absent")
         end
@@ -653,7 +657,7 @@ module OpenID
         end
 
         if !server_url
-          if @namespace != OPENID1_NS and !@op_endpoint
+          if @message.is_openid2 and !@op_endpoint
             # In other words, that warning I raised in
             # Server.__init__?  You should pay attention to it now.
             raise RuntimeError, ("#{self} should be constructed with "\
@@ -666,7 +670,7 @@ module OpenID
 
         if allow
           mode = 'id_res'
-        elsif @namespace == OPENID1_NS
+        elsif @message.is_openid1
           if @immediate
             mode = 'id_res'
           else
@@ -682,9 +686,9 @@ module OpenID
 
         response = OpenIDResponse.new(self)
 
-        if claimed_id and @namespace == OPENID1_NS
+        if claimed_id and @message.is_openid1
           raise VersionError, ("claimed_id is new in OpenID 2.0 and not "\
-                               "available for #{@namespace}")
+                               "available for #{@message.get_openid_namespace}")
         end
 
         if identity and !claimed_id
@@ -718,7 +722,7 @@ module OpenID
             response_identity = nil
           end
 
-          if @namespace == OPENID1_NS and !response_identity
+          if @message.is_openid1 and !response_identity
             raise ArgumentError, ("Request was an OpenID 1 request, so "\
                                   "response must include an identifier.")
           end
@@ -732,7 +736,7 @@ module OpenID
 
           if response_identity
             response.fields.set_arg(OPENID_NS, 'identity', response_identity)
-            if @namespace == OPENID2_NS
+            if @message.is_openid2
               response.fields.set_arg(OPENID_NS,
                                       'claimed_id', response_claimed_id)
             end
@@ -740,7 +744,7 @@ module OpenID
         else
           response.fields.set_arg(OPENID_NS, 'mode', mode)
           if @immediate
-            if @namespace == OPENID1_NS and !server_url
+            if @message.is_openid1 and !server_url
               raise ArgumentError, ("setup_url is required for allow=false "\
                                     "in OpenID 1.x immediate mode.")
             end
@@ -750,6 +754,7 @@ module OpenID
             setup_request = self.class.new(@identity, @return_to,
                                            @op_endpoint, @trust_root, false,
                                            @assoc_handle)
+            setup_request.message = Message.new(@message.get_openid_namespace)
             setup_url = setup_request.encode_to_url(server_url)
             response.fields.set_arg(OPENID_NS, 'user_setup_url', setup_url)
           end
@@ -777,7 +782,7 @@ module OpenID
              'return_to' => @return_to}
 
         if @trust_root
-          if @namespace == OPENID1_NS
+          if @message.is_openid1
             q['trust_root'] = @trust_root
           else
             q['realm'] = @trust_root
@@ -788,8 +793,8 @@ module OpenID
           q['assoc_handle'] = @assoc_handle
         end
 
-        response = Message.new(@namespace)
-        response.update_args(@namespace, q)
+        response = Message.new(@message.get_openid_namespace)
+        response.update_args(@message.get_openid_namespace, q)
         return response.to_url(server_url)
       end
 
@@ -813,7 +818,7 @@ module OpenID
                                   "immediate mode requests.")
         end
 
-        response = Message.new(@namespace)
+        response = Message.new(@message.get_openid_namespace)
         response.set_arg(OPENID_NS, 'mode', 'cancel')
         return response.to_url(@return_to)
       end
@@ -896,7 +901,7 @@ module OpenID
         # How should I be encoded?
         # returns one of ENCODE_URL or ENCODE_KVFORM.
         if BROWSER_REQUEST_MODES.member?(@request.mode)
-          if @fields.get_openid_namespace == OPENID2_NS and
+          if @fields.is_openid2 and
               encode_to_url.length > OPENID1_URL_LIMIT
             return ENCODE_HTML_FORM
           else
@@ -1451,7 +1456,7 @@ module OpenID
       # displayed to the user.
       def which_encoding
         if has_return_to()
-          if @openid_message.get_openid_namespace() == OPENID2_NS and
+          if @openid_message.is_openid2 and
               encode_to_url().length > OPENID1_URL_LIMIT
             return ENCODE_HTML_FORM
           else
