@@ -1,6 +1,9 @@
 
 module OpenID
 
+  class KVFormError < Exception
+  end
+
   module Util
 
     def Util.seq_to_kv(seq, strict=false)
@@ -13,7 +16,7 @@ module OpenID
       err = lambda { |msg|
         msg = "seq_to_kv warning: #{msg}: #{seq.inspect}"
         if strict
-          raise ArgumentError, msg
+          raise KVFormError, msg
         else
           Util.log(msg)
         end
@@ -27,11 +30,11 @@ module OpenID
         end
 
         if !k.index("\n").nil?
-          raise ArgumentError, "Invalid input for seq_to_kv: key contains newline: #{k.inspect}"
+          raise KVFormError, "Invalid input for seq_to_kv: key contains newline: #{k.inspect}"
         end
 
         if !k.index(":").nil?
-          raise ArgumentError, "Invalid input for seq_to_kv: key contains colon: #{k.inspect}"
+          raise KVFormError, "Invalid input for seq_to_kv: key contains colon: #{k.inspect}"
         end
 
         if k.strip() != k
@@ -44,7 +47,7 @@ module OpenID
         end
 
         if !v.index("\n").nil?
-          raise ArgumentError, "Invalid input for seq_to_kv: value contains newline: #{v.inspect}"
+          raise KVFormError, "Invalid input for seq_to_kv: value contains newline: #{v.inspect}"
         end
 
         if v.strip() != v
@@ -66,7 +69,7 @@ module OpenID
       err = lambda { |msg|
         msg = "kv_to_seq warning: #{msg}: #{data.inspect}"
         if strict
-          raise ArgumentError, msg
+          raise KVFormError, msg
         else
           Util.log(msg)
         end

@@ -1058,7 +1058,11 @@ module OpenID
           assoc = create_association(true)
         end
 
-        signed_response.fields = assoc.sign_message(signed_response.fields)
+        begin
+          signed_response.fields = assoc.sign_message(signed_response.fields)
+        rescue KVFormError => err
+          raise EncodingError, err
+        end
         return signed_response
       end
 

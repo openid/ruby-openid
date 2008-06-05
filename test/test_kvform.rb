@@ -54,10 +54,10 @@ class KVFormTests < Test::Unit::TestCase
       # Convert KVForm to dict
       d = Util.kv_to_dict(kv)
 
-      # Strict mode should raise ArgumentError instead of logging
+      # Strict mode should raise KVFormError instead of logging
       # messages
       if warnings > 0
-        assert_raise(ArgumentError) do
+        assert_raise(KVFormError) do
           Util.kv_to_seq(kv, true)
         end
       end
@@ -117,10 +117,10 @@ class KVFormTests < Test::Unit::TestCase
       assert_equal(kvform, actual)
       assert actual.is_a?(String)
 
-      # Strict mode should raise ArgumentError instead of logging
+      # Strict mode should raise KVFormError instead of logging
       # messages
       if warnings > 0
-        assert_raise(ArgumentError) do
+        assert_raise(KVFormError) do
           Util.seq_to_kv(seq, true)
         end
       end
@@ -151,7 +151,7 @@ class KVFormTests < Test::Unit::TestCase
   def _run_kvexcTest(case_)
     seq = case_
 
-    assert_raise(ArgumentError) do
+    assert_raise(KVFormError) do
       Util.seq_to_kv(seq)
     end
   end
