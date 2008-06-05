@@ -9,8 +9,10 @@ module OpenID
   # OpenID 1.x extension, and so a special case.
   SREG_URI = 'http://openid.net/sreg/1.0'
 
-  # The OpenID 1.x namespace URI
+  # The OpenID 1.x namespace URIs
   OPENID1_NS = 'http://openid.net/signon/1.0'
+  OPENID11_NS = 'http://openid.net/signon/1.1'
+  OPENID1_NAMESPACES = [OPENID1_NS, OPENID11_NS]
 
   # The OpenID 2.0 namespace URI
   OPENID2_NS = 'http://specs.openid.net/auth/2.0'
@@ -91,15 +93,16 @@ module OpenID
       @@registered_aliases[alias_] = namespace_uri
     end
 
-    @@allowed_openid_namespaces = [OPENID1_NS, OPENID2_NS]
+    @@allowed_openid_namespaces = [OPENID1_NS, OPENID2_NS, OPENID11_NS]
 
     # Raises InvalidNamespaceError if you try to instantiate a Message
     # with a namespace not in the above allowed list
-    def initialize(openid_namspace=nil)
+    def initialize(openid_namespace=nil)
       @args = {}
       @namespaces = NamespaceMap.new
-      if openid_namspace
-        self.set_openid_namespace(openid_namspace)
+      if openid_namespace
+        implicit = OPENID1_NAMESPACES.member? openid_namespace
+        self.set_openid_namespace(openid_namespace, implicit)
       else
         @openid_ns_uri = nil
       end
@@ -155,19 +158,16 @@ module OpenID
         if ns_alias == 'ns'
           @namespaces.add_alias(value, ns_key)
         elsif ns_alias == NULL_NAMESPACE and ns_key == 'ns'
-          @namespaces.add_alias(value, NULL_NAMESPACE)
+          set_openid_namespace(value, false)
         else
           ns_args << [ns_alias, ns_key, value]
         end
       }
 
-      # ensure that there is an OpenID namespace definition
-      openid_ns_uri = @namespaces.get_namespace_uri(NULL_NAMESPACE)
-      # Here, if the null namespace is not explicitly defined, 
-      # openid_ns_uri is nil.  In that case, the following line sets
-      # the null namespace implicitly to OPENID1_NS
-      # It also sets up the namespace instance variable.
-      openid_ns_uri = set_openid_namespace(openid_ns_uri)
+      # implicitly set an OpenID 1 namespace
+      unless get_openid_namespace
+        set_openid_namespace(OPENID1_NS, true)
+      end
 
       # put the pairs into the appropriate namespaces
       ns_args.each { |ns_alias, ns_key, value|
@@ -175,7 +175,7 @@ module OpenID
         unless ns_uri
           ns_uri = _get_default_namespace(ns_alias)
           unless ns_uri
-            ns_uri = openid_ns_uri
+            ns_uri = get_openid_namespace
             ns_key = "#{ns_alias}.#{ns_key}"
           else
             @namespaces.add_alias(ns_uri, ns_alias, true)
@@ -193,13 +193,7 @@ module OpenID
       end
     end
 
-    def set_openid_namespace(openid_ns_uri=nil)
-      if openid_ns_uri.nil?
-        openid_ns_uri = OPENID1_NS
-        implicit = true
-      else
-        implicit = false
-      end
+    def set_openid_namespace(openid_ns_uri, implicit)
       if !@@allowed_openid_namespaces.include?(openid_ns_uri)
         raise InvalidOpenIDNamespace, "Invalid null namespace: #{openid_ns_uri}"
       end
@@ -212,7 +206,7 @@ module OpenID
     end
 
     def is_openid1
-      return @openid_ns_uri == OPENID1_NS
+      return OPENID1_NAMESPACES.member? @openid_ns_uri
     end
 
     def is_openid2

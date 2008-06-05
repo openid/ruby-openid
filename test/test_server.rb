@@ -55,7 +55,6 @@ module OpenID
       expected_args = {
         'openid.mode' => 'error',
         'openid.error' => 'plucky',
-        'openid.ns' => OPENID1_NS,
       }
 
       rt_base, result_args = e.encode_to_url.split('?', 2)
@@ -125,7 +124,6 @@ module OpenID
       expected_args = {
         'openid.mode' => 'error',
         'openid.error' => 'plucky',
-        'openid.ns' => OPENID1_NS,
       }
 
       assert(e.which_encoding == Server::ENCODE_URL)
@@ -144,7 +142,7 @@ module OpenID
                                     })
       e = Server::ProtocolError.new(args, "waffles")
       assert(!e.has_return_to)
-      expected = "error:waffles\nmode:error\nns:#{OPENID1_NS}\n"
+      expected = "error:waffles\nmode:error\n"
       assert_equal(e.encode_to_kvform, expected)
     end
 
@@ -909,7 +907,7 @@ module OpenID
                                       'openid.mode' => 'associate',
                                       'openid.identity' => 'http://limu.unittest/',
                                     })
-      body="error:snoot\nmode:error\nns:#{OPENID1_NS}\n"
+      body="error:snoot\nmode:error\n"
       webresponse = @encode.call(Server::ProtocolError.new(args, "snoot"))
       assert_equal(webresponse.code, Server::HTTP_ERROR)
       assert_equal(webresponse.headers, {})
@@ -1411,7 +1409,7 @@ module OpenID
       # crappiting setup_url, you dirty my interface with your presence!
       answer = @request.answer(false, server_url)
       assert_equal(answer.request, @request)
-      assert_equal(3, answer.fields.to_post_args.length, answer.fields)
+      assert_equal(2, answer.fields.to_post_args.length, answer.fields)
       assert_equal(OPENID1_NS, answer.fields.get_openid_namespace)
       assert_equal('id_res', answer.fields.get_arg(OPENID_NS, 'mode'))
       assert(answer.fields.get_arg(
