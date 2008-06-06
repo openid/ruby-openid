@@ -19,9 +19,17 @@ module OpenID
     # message, or create a new message containing only those
     # arguments.  Returns the message with added extension args.
     def to_message(message = nil)
+      if message.nil?
+#         warnings.warn('Passing None to Extension.toMessage is deprecated. '
+#                       'Creating a message assuming you want OpenID 2.',
+#                       DeprecationWarning, stacklevel=2)
+        Message.new(OPENID2_NS)
+      end
       message = Message.new if message.nil?
 
-      message.namespaces.add_alias(@ns_uri, @ns_alias)
+      implicit = message.is_openid1()
+
+      message.namespaces.add_alias(@ns_uri, @ns_alias, implicit)
       # XXX python ignores keyerror if m.ns.getAlias(uri) == alias
 
       message.update_args(@ns_uri, get_extension_args)
