@@ -92,8 +92,8 @@ class ConsumerController < ApplicationController
         else
           pape_message << ", but the server did not report one."
         end
-        if pape_resp.auth_age
-          pape_message << "<br><b>Authentication age:</b> #{pape_resp.auth_age} seconds"
+        if pape_resp.auth_time
+          pape_message << "<br><b>Authentication time:</b> #{pape_resp.auth_time} seconds"
         end
         if pape_resp.nist_auth_level
           pape_message << "<br><b>NIST Auth Level:</b> #{pape_resp.nist_auth_level}"
