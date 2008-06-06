@@ -866,6 +866,7 @@ module OpenID
                                    @server.op_endpoint,
                                    'http://burr.unittest/',
                                    false, nil)
+      request.message = Message.new(OPENID2_NS)
       response = Server::OpenIDResponse.new(request)
       response.fields = Message.from_openid_args({
                                                    'mode' => 'cancel',
