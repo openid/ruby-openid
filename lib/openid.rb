@@ -14,3 +14,7 @@
 
 require "openid/consumer"
 require 'openid/server'
+
+module OpenID
+  VERSION = "2.1.1"
+end

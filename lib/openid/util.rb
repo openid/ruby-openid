@@ -11,8 +11,6 @@ module OpenID
   class AssertionError < Exception
   end
 
-  VERSION = "2.1.0"
-
   # Exceptions that are raised by the library are subclasses of this
   # exception type, so if you want to catch all exceptions raised by
   # the library, you can catch OpenIDError
