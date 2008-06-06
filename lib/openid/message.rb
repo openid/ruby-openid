@@ -206,7 +206,7 @@ module OpenID
     end
 
     def is_openid1
-      return OPENID1_NAMESPACES.member? @openid_ns_uri
+      return OPENID1_NAMESPACES.member?(@openid_ns_uri)
     end
 
     def is_openid2
