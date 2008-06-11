@@ -443,7 +443,7 @@ module OpenID
 
   def self.discover_no_yadis(uri)
     http_resp = OpenID.fetch(uri)
-    if http_resp.code != "200"
+    if http_resp.code != "200" and http_resp.code != "206"
       raise DiscoveryFailure.new(
         "HTTP Response status from identity URL host is not \"200\". "\
         "Got status #{http_resp.code.inspect}", http_resp)
