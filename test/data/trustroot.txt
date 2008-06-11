@@ -3,7 +3,7 @@ Trust root parsing checking
 ========================================
 
 ----------------------------------------
-21: Does not parse
+23: Does not parse
 ----------------------------------------
 baz.org
 *.foo.com
@@ -22,6 +22,8 @@ http://*:8081/
 http://*:80
 http://localhost:1900foo/
 http://foo.com\/
+http://π.pi.com/
+http://lambda.com/Λ
 
  
  	
