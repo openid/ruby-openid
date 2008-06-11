@@ -5,7 +5,7 @@ admin/build-docs
 admin/fixperms
 admin/runtests
 admin/graph-require.sh
-examples/consumer.rb
+examples/discover
 EOF
 
-find "examples/rails_server/script/" -type f | xargs chmod +x
+find "examples/rails_openid/script/" -type f | xargs chmod +x
