@@ -68,7 +68,7 @@ module OpenID
 
         parent = XRI.make_xri(xrd.elements["CanonicalID"].text)
 
-        if parent_sought != parent.downcase:
+        if parent_sought != parent.downcase
           raise XRDSFraud.new(sprintf("%s can not come from %s", parent_sought,
                                       parent))
         end
