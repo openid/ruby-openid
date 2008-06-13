@@ -53,7 +53,7 @@ module OpenID
         }
       end
 
-      cid_element = cid_elements[-1]
+      cid_element = cid_elements[0]
 
       if !cid_element
         return nil
@@ -61,19 +61,16 @@ module OpenID
 
       canonicalID = XRI.make_xri(cid_element.text)
 
-      childID = canonicalID
+      childID = canonicalID.downcase
 
       xrd_list[1..-1].each { |xrd|
         parent_sought = childID[0...childID.rindex('!')]
 
-        parent_list = []
-        xrd.elements.each("CanonicalID") { |c|
-          parent_list.push(XRI.make_xri(c.text))
-        }
+        parent = XRI.make_xri(xrd.elements["CanonicalID"].text)
 
-        if !parent_list.member?(parent_sought)
-          raise XRDSFraud.new(sprintf("%s can not come from any of %s", parent_sought,
-                                      parent_list))
+        if parent_sought != parent.downcase:
+          raise XRDSFraud.new(sprintf("%s can not come from %s", parent_sought,
+                                      parent))
         end
 
         childID = parent_sought
