@@ -12,9 +12,9 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-require "openid/consumer"
-require 'openid/server'
-
 module OpenID
   VERSION = "2.1.1"
 end
+
+require "openid/consumer"
+require 'openid/server'
