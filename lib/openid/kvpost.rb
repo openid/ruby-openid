@@ -33,6 +33,8 @@ module OpenID
       case response.code.to_i
       when 200
         return msg
+      when 206
+        return msg
       when 400
         raise ServerError.from_message(msg)
       else
