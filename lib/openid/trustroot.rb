@@ -220,8 +220,13 @@ module OpenID
         return new(unparsed, proto, wildcard, host, port, path)
       end
 
-      def TrustRoot.check_sanity(trust_root)
-        return TrustRoot.parse(trust_root).sane?
+      def TrustRoot.check_sanity(trust_root_string)
+        trust_root = TrustRoot.parse(trust_root_string)
+        if trust_root.nil?
+          return false
+        else
+          return trust_root.sane?
+        end
       end
 
       # quick func for validating a url against a trust root.  See the
