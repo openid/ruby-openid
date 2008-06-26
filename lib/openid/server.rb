@@ -649,9 +649,12 @@ module OpenID
       #
       #              This parameter is new in OpenID 2.0.
       #
+      # Returns an OpenIDResponse object containing a OpenID id_res message.
+      #
+      # Raises NoReturnToError if the return_to is missing.
+      #
       # Version 2.0 deprecates +server_url+ and adds +claimed_id+.
       def answer(allow, server_url=nil, identity=nil, claimed_id=nil)
-        # FIXME: undocumented exceptions
         if !@return_to
           raise NoReturnToError
         end
