@@ -74,7 +74,7 @@ class HTMLTokenizer
         # Token is a comment
         tag_end = @page.index('-->', (@cur_pos + 1))
         if tag_end.nil?
-          raise "No end found to started comment:\n#{@page[@cur_pos,80]}"
+          raise HTMLTokenizerError, "No end found to started comment:\n#{@page[@cur_pos,80]}"
         end
         # p @page[@cur_pos .. (tag_end+2)]
         HTMLComment.new(@page[@cur_pos .. (tag_end + 2)])
@@ -82,7 +82,7 @@ class HTMLTokenizer
         # Token is a html tag
         tag_end = @page.index('>', (@cur_pos + 1))
         if tag_end.nil?
-          raise "No end found to started tag:\n#{@page[@cur_pos,80]}"
+          raise HTMLTokenizerError, "No end found to started tag:\n#{@page[@cur_pos,80]}"
         end
         # p @page[@cur_pos .. tag_end]
         HTMLTag.new(@page[@cur_pos .. tag_end])
@@ -166,6 +166,9 @@ class HTMLTokenizer
 
 end
 
+class HTMLTokenizerError < Exception
+end
+
 # The parent class for all three types of HTML tokens
 class HTMLToken
   attr_accessor :raw
@@ -209,7 +212,7 @@ class HTMLComment < HTMLToken
     super(text)
     temp_arr = text.scan(/^<!--\s*(.*?)\s*-->$/m)
     if temp_arr[0].nil?
-      raise "Text passed to HTMLComment.initialize is not a comment"
+      raise HTMLTokenizerError, "Text passed to HTMLComment.initialize is not a comment"
     end
 
     @contents = temp_arr[0][0]
@@ -222,7 +225,7 @@ class HTMLTag < HTMLToken
   def initialize(text)
     super(text)
     if ?< != text[0] or ?> != text[-1]
-      raise "Text passed to HTMLComment.initialize is not a comment"
+      raise HTMLTokenizerError, "Text passed to HTMLComment.initialize is not a comment"
     end
 
     @attr_hash = Hash.new
@@ -230,7 +233,7 @@ class HTMLTag < HTMLToken
 
     tag_name = text.scan(/[\w:-]+/)[0]
     if tag_name.nil?
-      raise "Error, tag is nil: #{tag_name}"
+      raise HTMLTokenizerError, "Error, tag is nil: #{tag_name}"
     end
 
     if ?/ == text[1]
