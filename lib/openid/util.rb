@@ -4,8 +4,6 @@ require "logger"
 
 require "openid/extras"
 
-srand(Time.now.to_f)
-
 # See OpenID::Consumer or OpenID::Server modules, as well as the store classes
 module OpenID
   class AssertionError < Exception
