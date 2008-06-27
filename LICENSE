@@ -1,6 +1,9 @@
 The code in lib/hmac/ is Copyright 2001 by Daiki Ueno, and distributed under
 the terms of the Ruby license.  See http://www.ruby-lang.org/en/LICENSE.txt
 
+lib/openid/yadis/htmltokenizer.rb is Copyright 2004 by Ben Giddings and
+distributed under the terms of the Ruby license.
+
 The remainder of this package is Copyright 2006-2008 by JanRain, Inc. and
 distributed under the terms of license below:
 
