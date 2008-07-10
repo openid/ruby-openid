@@ -369,7 +369,8 @@ module OpenID
       if message.is_openid1
         return complete_invalid(message, nil)
       else
-        return SetupNeededResponse.new(last_requested_endpoint, nil)
+        setup_url = message.get_arg(OPENID2_NS, 'user_setup_url')
+        return SetupNeededResponse.new(last_requested_endpoint, setup_url)
       end
     end
 
