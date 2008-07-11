@@ -450,7 +450,7 @@ module OpenID
         @identity = identity
         @claimed_id = (claimed_id or identity)
         @return_to = return_to
-        @trust_root = trust_root or return_to
+        @trust_root = (trust_root or return_to)
         @op_endpoint = op_endpoint
         @message = nil
 
