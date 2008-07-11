@@ -605,7 +605,9 @@ module OpenID
           expected_endpoint.local_id = nil
           expected_endpoint.claimed_id = claimed_id
   
-          hacked_discover = Proc.new { ['unused', [expected_endpoint]] }
+          hacked_discover = Proc.new {
+            |_claimed_id| ['unused', [expected_endpoint]]
+          }
           idres = IdResHandler.new(resp_mesg, nil, nil, @endpoint)
           assert_log_matches('Performing discovery') {
             OpenID.with_method_overridden(:discover, hacked_discover) {
@@ -661,7 +663,7 @@ module OpenID
                                  'identity' => 'sour grapes',
                                  'claimed_id' => 'monkeysoft',
                                  'op_endpoint' => 'Phone Home'}) do |idres|
-              idres.instance_def(:discover_and_verify) do
+              idres.instance_def(:discover_and_verify) do |claimed_id, endpoints|
                 @endpoint = endpoint
               end
             end
@@ -684,7 +686,7 @@ module OpenID
                                  'claimed_id' => 'monkeysoft',
                                  'op_endpoint' => 'Green Cheese'}) do |idres|
                         idres.extend(InstanceDefExtension)
-              idres.instance_def(:discover_and_verify) do
+              idres.instance_def(:discover_and_verify) do |claimed_id, endpoints|
                 @endpoint = endpoint
               end
             end
@@ -768,7 +770,7 @@ module OpenID
             assert_raises(verified_error) {
               call_verify_modify({'ns' => OPENID1_NS,
                                    'identity' => @endpoint.local_id}) { |idres|
-                idres.instance_def(:discover_and_verify) do
+                idres.instance_def(:discover_and_verify) do |claimed_id, endpoints|
                   raise verified_error
                 end
               }
