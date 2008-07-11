@@ -1421,6 +1421,7 @@ module OpenID
       @request.message = Message.new(OPENID1_NS)
       @request.mode = 'checkid_immediate'
       @request.immediate = true
+      @request.claimed_id = 'http://claimed-id.test/'
       server_url = "http://setup-url.unittest/"
       # crappiting setup_url, you dirty my interface with your presence!
       answer = @request.answer(false, server_url)
@@ -1428,8 +1429,11 @@ module OpenID
       assert_equal(2, answer.fields.to_post_args.length, answer.fields)
       assert_equal(OPENID1_NS, answer.fields.get_openid_namespace)
       assert_equal('id_res', answer.fields.get_arg(OPENID_NS, 'mode'))
-      assert(answer.fields.get_arg(
-                                   OPENID_NS, 'user_setup_url', '').starts_with?(server_url))
+
+      usu = answer.fields.get_arg(OPENID_NS, 'user_setup_url', '')
+      assert(usu.starts_with?(server_url))
+      expected_substr = 'openid.claimed_id=http%3A%2F%2Fclaimed-id.test%2F'
+      assert(!usu.index(expected_substr).nil?, usu)
     end
 
     def test_answerSetupDeny

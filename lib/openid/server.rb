@@ -445,10 +445,10 @@ module OpenID
       # Raises #MalformedReturnURL when the +return_to+ URL is not
       # a URL.
       def initialize(identity, return_to, op_endpoint, trust_root=nil,
-                     immediate=false, assoc_handle=nil)
+                     immediate=false, assoc_handle=nil, claimed_id=nil)
         @assoc_handle = assoc_handle
         @identity = identity
-        @claimed_id = identity
+        @claimed_id = (claimed_id or identity)
         @return_to = return_to
         @trust_root = trust_root or return_to
         @op_endpoint = op_endpoint
@@ -756,7 +756,7 @@ module OpenID
             # immediate=false.
             setup_request = self.class.new(@identity, @return_to,
                                            @op_endpoint, @trust_root, false,
-                                           @assoc_handle)
+                                           @assoc_handle, @claimed_id)
             setup_request.message = Message.new(@message.get_openid_namespace)
             setup_url = setup_request.encode_to_url(server_url)
             response.fields.set_arg(OPENID_NS, 'user_setup_url', setup_url)
