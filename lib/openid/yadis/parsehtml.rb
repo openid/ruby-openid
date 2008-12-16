@@ -32,7 +32,8 @@ module OpenID
           return nil if el.tag_name == 'html'
 
           if el.tag_name == 'meta' and (equiv = el.attr_hash['http-equiv'])
-            if ['x-xrds-location','x-yadis-location'].member?(equiv.downcase)
+            if ['x-xrds-location','x-yadis-location'].member?(equiv.downcase) &&
+                el.attr_hash.member?('content')
               return CGI::unescapeHTML(el.attr_hash['content'])
             end
           end

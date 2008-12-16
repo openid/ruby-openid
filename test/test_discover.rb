@@ -273,6 +273,33 @@ module OpenID
                     false)
     end
 
+    def test_malformed_meta_tag
+      @id_url = "http://user.myopenid.com/"
+
+      services = _discover(
+                           'text/html',
+                           read_data_file('test_discover/malformed_meta_tag.html', false),
+                           2)
+
+      _checkService(
+                    services[0],
+                    "http://www.myopenid.com/server",
+                    @id_url,
+                    @id_url,
+                    nil,
+                    ['2.0'],
+                    false)
+
+      _checkService(
+                    services[1],
+                    "http://www.myopenid.com/server",
+                    @id_url,
+                    @id_url,
+                    nil,
+                    ['1.1'],
+                    false)
+    end
+
     def test_html1
       services = _discover('text/html',
                            read_data_file('test_discover/openid.html', false),
