@@ -288,6 +288,13 @@ module OpenID
     return local_id
   end
 
+  def self.normalize_xri(xri)
+    # Normalize an XRI, stripping its scheme if present
+    m = /^xri:\/\/(.*)/.match(xri)
+    xri = m[1] if m
+    return xri
+  end
+
   def self.normalize_url(url)
     # Normalize a URL, converting normalization failures to
     # DiscoveryFailure
@@ -411,6 +418,7 @@ module OpenID
 
   def self.discover_xri(iname)
     endpoints = []
+    iname = self.normalize_xri(iname)
 
     begin
       canonical_id, services = Yadis::XRI::ProxyResolver.new().query(

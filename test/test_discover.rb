@@ -571,6 +571,28 @@ module OpenID
                     '=smoker')
     end
 
+    def test_xri_normalize
+      user_xri, services = OpenID.discover_xri('xri://=smoker')
+
+      _checkService(services[0],
+                    "http://www.myopenid.com/server",
+                    Yadis::XRI.make_xri("=!1000"),
+                    'http://smoker.myopenid.com/',
+                    Yadis::XRI.make_xri("=!1000"),
+                    ['1.0'],
+                    true,
+                    '=smoker')
+
+      _checkService(services[1],
+                    "http://www.livejournal.com/openid/server.bml",
+                    Yadis::XRI.make_xri("=!1000"),
+                    'http://frank.livejournal.com/',
+                    Yadis::XRI.make_xri("=!1000"),
+                    ['1.0'],
+                    true,
+                    '=smoker')
+    end
+
     def test_xriNoCanonicalID
       silence_logging {
         user_xri, services = OpenID.discover_xri('=smoker*bad')
