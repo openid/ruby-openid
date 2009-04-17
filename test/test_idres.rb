@@ -685,7 +685,6 @@ module OpenID
                                  'identity' => 'sour grapes',
                                  'claimed_id' => 'monkeysoft',
                                  'op_endpoint' => 'Green Cheese'}) do |idres|
-                        idres.extend(InstanceDefExtension)
               idres.instance_def(:discover_and_verify) do |claimed_id, endpoints|
                 @endpoint = endpoint
               end
