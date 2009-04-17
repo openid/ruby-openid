@@ -693,6 +693,22 @@ module OpenID
           assert(endpoint.equal?(result))
         end
 
+        def test_verify_discovery_single_claimed_id_mismatch
+          idres = IdResHandler.new(nil, nil)
+          @endpoint.local_id = 'my identity'
+          @endpoint.claimed_id = 'http://i-am-sam/'
+          @endpoint.server_url = 'Phone Home'
+          @endpoint.type_uris = [OPENID_2_0_TYPE]
+
+          to_match = @endpoint.dup
+          to_match.claimed_id = 'http://something.else/'
+
+          e = assert_raises(ProtocolError) {
+            idres.send(:verify_discovery_single, @endpoint, to_match)
+          }
+          assert(e.to_s =~ /different subjects/)
+        end
+
         def test_openid2_use_pre_discovered
           @endpoint.local_id = 'my identity'
           @endpoint.claimed_id = 'http://i-am-sam/'
