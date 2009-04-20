@@ -27,7 +27,8 @@ module OpenID
 
         OPENID1_SIGNED = ['return_to', 'identity']
         OPENID2_SIGNED =
-          OPENID1_SIGNED + ['response_nonce', 'claimed_id', 'assoc_handle']
+          OPENID1_SIGNED + ['response_nonce', 'claimed_id', 'assoc_handle',
+                            'op_endpoint']
 
         def mkMsg(ns, fields, signed_fields)
           msg = Message.new(ns)

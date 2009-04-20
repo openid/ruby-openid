@@ -114,7 +114,7 @@ module OpenID
         when OPENID2_NS
           require_fields = basic_fields + ['op_endpoint']
           require_sigs = basic_sig_fields +
-            ['response_nonce', 'claimed_id', 'assoc_handle',]
+            ['response_nonce', 'claimed_id', 'assoc_handle', 'op_endpoint']
         when OPENID1_NS
           require_fields = basic_fields + ['identity']
           require_sigs = basic_sig_fields
