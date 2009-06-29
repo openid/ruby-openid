@@ -116,7 +116,11 @@ module OpenID
         _check_remove(server_url, assoc2.handle, false)
         _check_remove(server_url, assoc3.handle, true)
 
-        _check_retrieve(server_url, nil, assoc)
+        ret_assoc = @store.get_association(server_url, nil)
+        unexpected = [assoc2.handle, assoc3.handle]
+        assert(ret_assoc.nil? || !unexpected.member?(ret_assoc.handle),
+               ret_assoc)
+
         _check_retrieve(server_url, assoc.handle, assoc)
         _check_retrieve(server_url, assoc2.handle, nil)
         _check_retrieve(server_url, assoc3.handle, nil)
