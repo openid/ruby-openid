@@ -11,7 +11,7 @@ module OpenID
     module StoreTestCase
       @@allowed_handle = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
       @@allowed_nonce = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      
+
       def _gen_nonce
         OpenID::CryptUtil.random_string(8, @@allowed_nonce)
       end
@@ -28,9 +28,9 @@ module OpenID
         secret = _gen_secret(20)
         handle = _gen_handle(128)
         OpenID::Association.new(handle, secret, Time.now + issued, lifetime,
-                                'HMAC-SHA1') 
+                                'HMAC-SHA1')
       end
-      
+
       def _check_retrieve(url, handle=nil, expected=nil)
         ret_assoc = @store.get_association(url, handle)
 
@@ -161,10 +161,10 @@ module OpenID
         [server_url, ''].each{|url|
           nonce1 = Nonce::mk_nonce
 
-          _check_use_nonce(nonce1, true, url, "#{url}: nonce allowed by default") 
-          _check_use_nonce(nonce1, false, url, "#{url}: nonce not allowed twice") 
+          _check_use_nonce(nonce1, true, url, "#{url}: nonce allowed by default")
+          _check_use_nonce(nonce1, false, url, "#{url}: nonce not allowed twice")
           _check_use_nonce(nonce1, false, url, "#{url}: nonce not allowed third time")
-          
+
           # old nonces shouldn't pass
           old_nonce = Nonce::mk_nonce(3600)
           _check_use_nonce(old_nonce, false, url, "Old nonce #{old_nonce.inspect} passed")
@@ -187,7 +187,6 @@ module OpenID
         ts, salt = Nonce::split_nonce(recent_nonce)
         assert(@store.use_nonce(server_url, ts, salt), "recent_nonce")
 
-        
         Nonce.skew = 1000
         cleaned = @store.cleanup_nonces
         assert_equal(2, cleaned, "Cleaned #{cleaned} nonces")
@@ -204,7 +203,7 @@ module OpenID
 
       end
     end
-    
+
     class FileStoreTestCase < Test::Unit::TestCase
       include StoreTestCase
 
@@ -220,7 +219,7 @@ module OpenID
 
     class MemoryStoreTestCase < Test::Unit::TestCase
       include StoreTestCase
-      
+
       def setup
         @store = Memory.new
       end
@@ -232,38 +231,37 @@ module OpenID
         abc = Interface.new()
         server_url = "http://server.com/"
         association = OpenID::Association.new("foo", "bar", Time.now, Time.now + 10, "dummy")
-        
-        assert_raise(NotImplementedError) { 
+
+        assert_raise(NotImplementedError) {
           abc.store_association(server_url, association)
         }
 
-        assert_raise(NotImplementedError) { 
+        assert_raise(NotImplementedError) {
           abc.get_association(server_url)
         }
 
-        assert_raise(NotImplementedError) { 
+        assert_raise(NotImplementedError) {
           abc.remove_association(server_url, association.handle)
         }
 
-        assert_raise(NotImplementedError) { 
+        assert_raise(NotImplementedError) {
           abc.use_nonce(server_url, Time.now.to_i, "foo")
         }
 
-        assert_raise(NotImplementedError) { 
+        assert_raise(NotImplementedError) {
           abc.cleanup_nonces()
         }
 
-        assert_raise(NotImplementedError) { 
+        assert_raise(NotImplementedError) {
           abc.cleanup_associations()
         }
 
-        assert_raise(NotImplementedError) { 
+        assert_raise(NotImplementedError) {
           abc.cleanup()
         }
-        
+
       end
 
     end
   end
 end
-

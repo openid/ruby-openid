@@ -26,7 +26,6 @@ def main
     suite = c.collect(tests_dir)
   end
 
-
   result = Test::Unit::UI::Console::TestRunner.run(suite)
   result.passed?
 ensure
