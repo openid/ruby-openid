@@ -49,7 +49,6 @@ module OpenID
       end
 
       def test_store
-        server_url = "http://www.myopenid.com/openid"
         assoc = _gen_assoc(issued=0)
 
         # Make sure that a missing association returns no result
@@ -134,7 +133,9 @@ module OpenID
         _check_remove(server_url, assoc2.handle, false)
         _check_remove(server_url, assoc.handle, false)
         _check_remove(server_url, assoc3.handle, false)
+      end
 
+      def test_assoc_cleanup
         assocValid1 = _gen_assoc(-3600, 7200)
         assocValid2 = _gen_assoc(-5)
         assocExpired1 = _gen_assoc(-7200, 3600)
@@ -156,8 +157,11 @@ module OpenID
         assert_equal(expected, actual, msg)
       end
 
+      def server_url
+        "http://www.myopenid.com/openid"
+      end
+
       def test_nonce
-        server_url = "http://www.myopenid.com/openid"
         [server_url, ''].each{|url|
           nonce1 = Nonce::mk_nonce
 
@@ -170,7 +174,9 @@ module OpenID
           _check_use_nonce(old_nonce, false, url, "Old nonce #{old_nonce.inspect} passed")
 
         }
+      end
 
+      def test_nonce_cleanup
         now = Time.now.to_i
         old_nonce1 = Nonce::mk_nonce(now - 20000)
         old_nonce2 = Nonce::mk_nonce(now - 10000)
