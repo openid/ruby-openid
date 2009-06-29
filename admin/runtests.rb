@@ -7,6 +7,16 @@ require "pathname"
 require 'test/unit/collector/dir'
 require 'test/unit/ui/console/testrunner'
 
+begin
+  require 'rubygems'
+  require 'memcache'
+rescue LoadError
+else
+  if ENV['TESTING_MEMCACHE']
+    TESTING_MEMCACHE = MemCache.new(ENV['TESTING_MEMCACHE'])
+  end
+end
+
 def main
   old_verbose = $VERBOSE
   $VERBOSE = true

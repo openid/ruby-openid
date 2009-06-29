@@ -1,6 +1,7 @@
 require 'test/unit'
 require 'openid/store/interface'
 require 'openid/store/filesystem'
+require 'openid/store/memcache'
 require 'openid/store/memory'
 require 'openid/util'
 require 'openid/store/nonce'
@@ -232,6 +233,26 @@ module OpenID
 
       def setup
         @store = Memory.new
+      end
+    end
+
+    begin
+      ::TESTING_MEMCACHE
+    rescue NameError
+    else
+      class MemcacheStoreTestCase < Test::Unit::TestCase
+        include StoreTestCase
+        def setup
+          store_uniq = OpenID::CryptUtil.random_string(6, "0123456789")
+          store_namespace = "openid-store-#{store_uniq}:"
+          @store = Memcache.new(::TESTING_MEMCACHE, store_namespace)
+        end
+
+        def test_nonce_cleanup
+        end
+
+        def test_assoc_cleanup
+        end
       end
     end
 

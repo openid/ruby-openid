@@ -12,4 +12,4 @@ esac
 
 HERE=$(dirname $(readlink --canonicalize "$0"))
 REPOROOT=$(dirname "$HERE")
-RUBYLIB="$REPOROOT/lib" $RUBY "$@" "$REPOROOT/admin/runtests.rb"
+TESTING_MEMCACHE="localhost:11211" RUBYLIB="$REPOROOT/lib" $RUBY "$@" "$REPOROOT/admin/runtests.rb"
