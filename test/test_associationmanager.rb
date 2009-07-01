@@ -314,9 +314,9 @@ module OpenID
     # in an unsupported-type response is absent.
     def test_empty_assoc_type
       msg = mk_message({'error' => 'Unsupported type',
-                              'error_code' => 'unsupported-type',
-                              'session_type' => 'new-session-type',
-                            })
+                         'error_code' => 'unsupported-type',
+                         'session_type' => 'new-session-type',
+                       })
 
       assert_log_matches('Unsupported association type',
                          "Server #{@server_url} responded with unsupported "\
@@ -331,9 +331,9 @@ module OpenID
     # in an unsupported-type response is absent.
     def test_empty_session_type
       msg = mk_message({'error' => 'Unsupported type',
-                              'error_code' => 'unsupported-type',
-                              'assoc_type' => 'new-assoc-type',
-                            })
+                         'error_code' => 'unsupported-type',
+                         'assoc_type' => 'new-assoc-type',
+                       })
 
       assert_log_matches('Unsupported association type',
                          "Server #{@server_url} responded with unsupported "\
@@ -352,10 +352,10 @@ module OpenID
         @allowed_types = [['assoc_bogus', 'session_bogus']]
       }
       msg = mk_message({'error' => 'Unsupported type',
-                              'error_code' => 'unsupported-type',
-                              'assoc_type' => 'not-allowed',
-                              'session_type' => 'not-allowed',
-                            })
+                         'error_code' => 'unsupported-type',
+                         'assoc_type' => 'not-allowed',
+                         'session_type' => 'not-allowed',
+                       })
 
       assert_log_matches('Unsupported association type',
                          'Server sent unsupported session/association type:') {
@@ -367,10 +367,10 @@ module OpenID
     # retry to get an association with the new preferred type.
     def test_unsupported_with_retry
       msg = mk_message({'error' => 'Unsupported type',
-                              'error_code' => 'unsupported-type',
-                              'assoc_type' => 'HMAC-SHA1',
-                              'session_type' => 'DH-SHA1',
-                            })
+                         'error_code' => 'unsupported-type',
+                         'assoc_type' => 'HMAC-SHA1',
+                         'session_type' => 'DH-SHA1',
+                       })
 
       assoc = Association.new('handle', 'secret', Time.now, 10000, 'HMAC-SHA1')
 
@@ -383,10 +383,10 @@ module OpenID
     # retry, but the retry fails and nil is returned instead.
     def test_unsupported_with_retry_and_fail
       msg = mk_message({'error' => 'Unsupported type',
-                              'error_code' => 'unsupported-type',
-                              'assoc_type' => 'HMAC-SHA1',
-                              'session_type' => 'DH-SHA1',
-                            })
+                         'error_code' => 'unsupported-type',
+                         'assoc_type' => 'HMAC-SHA1',
+                         'session_type' => 'DH-SHA1',
+                       })
 
       assert_log_matches('Unsupported association type',
                          "Server #{@server_url} refused") {
