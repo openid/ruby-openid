@@ -143,6 +143,10 @@ module OpenID
               return nil
             end
           end
+        rescue InvalidOpenIDNamespace
+          Util.log("Server #{@server_url} returned a malformed association " \
+                   "response.  Falling back to check_id mode for this request.")
+          return nil
         end
       end
 
