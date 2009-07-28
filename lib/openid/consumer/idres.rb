@@ -115,7 +115,7 @@ module OpenID
           require_fields = basic_fields + ['op_endpoint']
           require_sigs = basic_sig_fields +
             ['response_nonce', 'claimed_id', 'assoc_handle', 'op_endpoint']
-        when OPENID1_NS
+        when OPENID1_NS, OPENID11_NS
           require_fields = basic_fields + ['identity']
           require_sigs = basic_sig_fields
         else
@@ -276,7 +276,7 @@ module OpenID
 
       def check_nonce
         case openid_namespace
-        when OPENID1_NS
+        when OPENID1_NS, OPENID11_NS
           nonce =
             @message.get_arg(BARE_NS, Consumer.openid1_return_to_nonce_name)
 
@@ -309,7 +309,7 @@ module OpenID
       def verify_discovery_results
         begin
           case openid_namespace
-          when OPENID1_NS
+          when OPENID1_NS, OPENID11_NS
             verify_discovery_results_openid1
           when OPENID2_NS
             verify_discovery_results_openid2

@@ -61,6 +61,7 @@ module OpenID
         # test all missing fields for OpenID 1 and 2
         1.times do
           [["openid1", OPENID1_NS, OPENID1_FIELDS],
+           ["openid1", OPENID11_NS, OPENID1_FIELDS],
            ["openid2", OPENID2_NS, OPENID2_FIELDS],
           ].each do |ver, ns, all_fields|
             all_fields.each do |field|
@@ -81,6 +82,7 @@ module OpenID
         # Test all missing signed for OpenID 1 and 2
         1.times do
           [["openid1", OPENID1_NS, OPENID1_FIELDS, OPENID1_SIGNED],
+           ["openid1", OPENID11_NS, OPENID1_FIELDS, OPENID1_SIGNED],
            ["openid2", OPENID2_NS, OPENID2_FIELDS, OPENID2_SIGNED],
           ].each do |ver, ns, all_fields, signed_fields|
             signed_fields.each do |signed_field|
@@ -139,6 +141,14 @@ module OpenID
 
         def test_success_openid1
           msg = mkMsg(OPENID1_NS, OPENID1_FIELDS, OPENID1_SIGNED)
+          idres = IdResHandler.new(msg, nil)
+          assert_nothing_raised {
+            idres.send(:check_for_fields)
+          }
+        end
+
+        def test_success_openid1_1
+          msg = mkMsg(OPENID11_NS, OPENID1_FIELDS, OPENID1_SIGNED)
           idres = IdResHandler.new(msg, nil)
           assert_nothing_raised {
             idres.send(:check_for_fields)
@@ -499,13 +509,23 @@ module OpenID
         end
 
         def test_openid1_success
-          assert_nothing_raised {
-            call_check_nonce({'rp_nonce' => @nonce}, true)
-          }
+          [{},
+           {'openid.ns' => OPENID1_NS},
+           {'openid.ns' => OPENID11_NS}
+          ].each do |args|
+            assert_nothing_raised {
+              call_check_nonce({'rp_nonce' => @nonce}.merge(args), true)
+            }
+          end
         end
 
         def test_openid1_missing
-          assert_protocol_error('Nonce missing') { call_check_nonce({}) }
+          [{},
+           {'openid.ns' => OPENID1_NS},
+           {'openid.ns' => OPENID11_NS}
+          ].each do |args|
+            assert_protocol_error('Nonce missing') { call_check_nonce(args) }
+          end
         end
 
         def test_openid2_ignore_rp_nonce
@@ -523,9 +543,14 @@ module OpenID
         end
 
         def test_openid1_ignore_response_nonce
-          assert_protocol_error('Nonce missing') {
-            call_check_nonce({'openid.response_nonce' => @nonce})
-          }
+          [{},
+           {'openid.ns' => OPENID1_NS},
+           {'openid.ns' => OPENID11_NS}
+          ].each do |args|
+            assert_protocol_error('Nonce missing') {
+              call_check_nonce({'openid.response_nonce' => @nonce}.merge(args))
+            }
+          end
         end
 
         def test_no_store
@@ -587,37 +612,38 @@ module OpenID
         end
 
         def test_openid1_fallback_1_0
-          claimed_id = 'http://claimed.id/'
-          @endpoint = nil
-          resp_mesg = Message.from_openid_args({
-            'ns' => OPENID1_NS,
-            'identity' => claimed_id,
-            })
+          [OPENID1_NS, OPENID11_NS].each do |openid1_ns|
+            claimed_id = 'http://claimed.id/'
+            @endpoint = nil
+            resp_mesg = Message.from_openid_args({
+              'ns' => openid1_ns,
+              'identity' => claimed_id,
+              })
 
-          # Pass the OpenID 1 claimed_id this way since we're passing
-          # None for the endpoint.
-          resp_mesg.set_arg(BARE_NS, 'openid1_claimed_id', claimed_id)
+            # Pass the OpenID 1 claimed_id this way since we're
+            # passing None for the endpoint.
+            resp_mesg.set_arg(BARE_NS, 'openid1_claimed_id', claimed_id)
 
-          # We expect the OpenID 1 discovery verification to try
-          # matching the discovered endpoint against the 1.1 type and
-          # fall back to 1.0.
-          expected_endpoint = OpenIDServiceEndpoint.new
-          expected_endpoint.type_uris = [OPENID_1_0_TYPE]
-          expected_endpoint.local_id = nil
-          expected_endpoint.claimed_id = claimed_id
-  
-          hacked_discover = Proc.new {
-            |_claimed_id| ['unused', [expected_endpoint]]
-          }
-          idres = IdResHandler.new(resp_mesg, nil, nil, @endpoint)
-          assert_log_matches('Performing discovery') {
-            OpenID.with_method_overridden(:discover, hacked_discover) {
-              idres.send(:verify_discovery_results)
+            # We expect the OpenID 1 discovery verification to try
+            # matching the discovered endpoint against the 1.1 type
+            # and fall back to 1.0.
+            expected_endpoint = OpenIDServiceEndpoint.new
+            expected_endpoint.type_uris = [OPENID_1_0_TYPE]
+            expected_endpoint.local_id = nil
+            expected_endpoint.claimed_id = claimed_id
+
+            hacked_discover = Proc.new {
+              |_claimed_id| ['unused', [expected_endpoint]]
             }
-          }
-          actual_endpoint = idres.instance_variable_get(:@endpoint)
-          assert_equal(actual_endpoint, expected_endpoint)
-
+            idres = IdResHandler.new(resp_mesg, nil, nil, @endpoint)
+            assert_log_matches('Performing discovery') {
+              OpenID.with_method_overridden(:discover, hacked_discover) {
+                idres.send(:verify_discovery_results)
+              }
+            }
+            actual_endpoint = idres.instance_variable_get(:@endpoint)
+            assert_equal(actual_endpoint, expected_endpoint)
+          end
         end
 
         def test_openid2_no_op_endpoint
@@ -708,6 +734,21 @@ module OpenID
             idres.send(:verify_discovery_single, @endpoint, to_match)
           }
           assert(e.to_s =~ /different subjects/)
+        end
+
+        def test_openid1_1_verify_discovery_single_no_server_url
+          idres = IdResHandler.new(nil, nil)
+          @endpoint.local_id = 'my identity'
+          @endpoint.claimed_id = 'http://i-am-sam/'
+          @endpoint.server_url = 'Phone Home'
+          @endpoint.type_uris = [OPENID_1_1_TYPE]
+
+          to_match = @endpoint.dup
+          to_match.claimed_id = 'http://i-am-sam/'
+          to_match.type_uris = [OPENID_1_1_TYPE]
+          to_match.server_url = nil
+
+          idres.send(:verify_discovery_single, @endpoint, to_match)
         end
 
         def test_openid2_use_pre_discovered

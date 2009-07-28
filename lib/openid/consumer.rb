@@ -376,7 +376,7 @@ module OpenID
 
     def complete_id_res(message, current_url)
       if message.is_openid1
-        setup_url = message.get_arg(OPENID1_NS, 'user_setup_url')
+        setup_url = message.get_arg(OPENID_NS, 'user_setup_url')
         if !setup_url.nil?
           return SetupNeededResponse.new(last_requested_endpoint, setup_url)
         end

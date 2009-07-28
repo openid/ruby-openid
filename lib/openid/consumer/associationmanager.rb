@@ -246,7 +246,7 @@ module OpenID
       def get_openid1_session_type(assoc_response)
         # If it's an OpenID 1 message, allow session_type to default
         # to nil (which signifies "no-encryption")
-        session_type = assoc_response.get_arg(OPENID1_NS, 'session_type')
+        session_type = assoc_response.get_arg(OPENID_NS, 'session_type')
 
         # Handle the differences between no-encryption association
         # respones in OpenID 1 and 2:
