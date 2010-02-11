@@ -4,8 +4,15 @@ require "digest/sha2"
 begin
   require "digest/hmac"
 rescue LoadError
-  require "hmac/sha1"
-  require "hmac/sha2"
+  begin
+    # Try loading the ruby-hmac files if they exist
+    require "hmac-sha1"
+    require "hmac-sha2"
+  rescue LoadError
+    # Nothing exists use included hmac files
+    require "hmac/sha1"
+    require "hmac/sha2"
+  end
 end
 
 module OpenID
