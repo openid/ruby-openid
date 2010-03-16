@@ -48,18 +48,17 @@ look at the library itself if there's anything you don't understand in
 the examples.
 
 ==Homepage
-http://openidenabled.com/ruby-openid/
+http://github.com/openid/ruby-openid
 
 See also:
 http://openid.net/
-http://openidenabled.com/
 
 ==Community
 Discussion regarding the Ruby OpenID library and other JanRain OpenID
 libraries takes place on the the OpenID mailing list on
-openidenabled.com.
+openid.net.
 
-http://lists.openidenabled.com/mailman/listinfo/dev
+http://openid.net/developers/dev-mailing-lists/
 
 Please join this list to discuss, ask implementation questions, report
 bugs, etc.  Also check out the openid channel on the freenode IRC
