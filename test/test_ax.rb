@@ -371,7 +371,28 @@ module OpenID
         ax_req = FetchRequest.from_openid_request(openid_req)
         assert(ax_req.nil?)
       end
-
+      
+      def test_from_openid_request_wrong_ax_mode
+        uri = 'http://under.the.sea/'
+        name = 'ext0'
+        value = 'snarfblat'
+        
+        message = OpenID::Message.from_openid_args({
+                                               'mode' => 'id_res',
+                                               'ns' => OPENID2_NS,
+                                               'ns.ax' => AXMessage::NS_URI,
+                                               'ax.update_url' => 'http://example.com/realm/update_path',
+                                               'ax.mode' => 'store_request',
+                                               'ax.type.' + name => uri,
+                                               'ax.count.' + name => '1',
+                                               'ax.value.' + name + '.1' => value
+                                             })
+        openid_req = Server::OpenIDRequest.new
+        openid_req.message = message
+        ax_req = FetchRequest.from_openid_request(openid_req)
+        assert(ax_req.nil?)
+      end
+      
       def test_openid_update_url_verification_error
         openid_req_msg = Message.from_openid_args({
                                                     'mode' => 'checkid_setup',
@@ -602,7 +623,28 @@ module OpenID
         }
         assert_equal(eargs, @msg.get_extension_args)
       end
-
+      
+      def test_from_openid_request_wrong_ax_mode
+        uri = 'http://under.the.sea/'
+        name = 'ext0'
+        value = 'snarfblat'
+        
+        message = OpenID::Message.from_openid_args({
+                                               'mode' => 'id_res',
+                                               'ns' => OPENID2_NS,
+                                               'ns.ax' => AXMessage::NS_URI,
+                                               'ax.update_url' => 'http://example.com/realm/update_path',
+                                               'ax.mode' => 'fetch_request',
+                                               'ax.type.' + name => uri,
+                                               'ax.count.' + name => '1',
+                                               'ax.value.' + name + '.1' => value
+                                             })
+        openid_req = Server::OpenIDRequest.new
+        openid_req.message = message
+        ax_req = StoreRequest.from_openid_request(openid_req)
+        assert(ax_req.nil?)
+      end
+      
       def test_get_extension_args_nonempty
         @msg.set_values(@type_a, ['foo','bar'])
         aliases = NamespaceMap.new

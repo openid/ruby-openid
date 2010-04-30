@@ -110,10 +110,12 @@ module OpenID
     class FetchRequest < AXMessage
       attr_reader :requested_attributes
       attr_accessor :update_url
+      
+      MODE = 'fetch_request'
 
       def initialize(update_url = nil)
         super()
-        @mode = 'fetch_request'
+        @mode = MODE
         @requested_attributes = {}
         @update_url = update_url
       end
@@ -180,7 +182,7 @@ module OpenID
       def self.from_openid_request(oidreq)
         message = oidreq.message
         ax_args = message.get_args(NS_URI)
-        return nil if ax_args == {}
+        return nil if ax_args == {} or ax_args['mode'] != MODE
         req = new
         req.parse_extension_args(ax_args)
 
@@ -467,11 +469,26 @@ module OpenID
 
     # A store request attribute exchange message representation
     class StoreRequest < KeyValueMessage
+      
+      MODE = 'store_request'
+      
       def initialize
         super
-        @mode = 'store_request'
+        @mode = MODE
       end
-
+      
+      # Extract a StoreRequest from an OpenID message
+      # message: OpenID::Message
+      # return a StoreRequest or nil if AX arguments are not present
+      def self.from_openid_request(oidreq)
+        message = oidreq.message 
+        ax_args = message.get_args(NS_URI)
+        return nil if ax_args.empty? or ax_args['mode'] != MODE
+        req = new
+        req.parse_extension_args(ax_args)
+        req
+      end
+      
       def get_extension_args(aliases=nil)
         ax_args = new_args
         kv_args = _get_extension_kv_args(aliases)
@@ -499,7 +516,13 @@ module OpenID
         end
         @error_message = error_message
       end
-
+      
+      def self.from_success_response(success_response)
+        resp = nil
+        ax_args = success_response.message.get_args(NS_URI)
+        resp = ax_args.key?('error') ? new(false, ax_args['error']) : new
+      end
+      
       def succeeded?
         @mode == SUCCESS_MODE
       end
