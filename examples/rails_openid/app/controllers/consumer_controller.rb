@@ -46,7 +46,7 @@ class ConsumerController < ApplicationController
       oidreq.return_to_args['force_post']='x'*2048
     end
     return_to = url_for :action => 'complete', :only_path => false
-    realm = url_for :action => 'index', :only_path => false
+    realm = url_for :action => 'index', :id => nil, :only_path => false
     
     if oidreq.send_redirect?(realm, return_to, params[:immediate])
       redirect_to oidreq.redirect_url(realm, return_to, params[:immediate])
