@@ -421,8 +421,7 @@ module OpenID
     iname = self.normalize_xri(iname)
 
     begin
-      canonical_id, services = Yadis::XRI::ProxyResolver.new().query(
-            iname, OpenIDServiceEndpoint::OPENID_TYPE_URIS)
+      canonical_id, services = Yadis::XRI::ProxyResolver.new().query( iname )
 
       if canonical_id.nil?
         raise Yadis::XRDSError.new(sprintf('No CanonicalID found for XRI %s', iname))
