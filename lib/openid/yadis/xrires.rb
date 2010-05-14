@@ -42,34 +42,27 @@ module OpenID
           return XRI.append_args(hxri, args)
         end
 
-        def query(xri, service_types)
+        def query(xri)
           # these can be query args or http headers, needn't be both.
           # headers = {'Accept' => 'application/xrds+xml;sep=true'}
           canonicalID = nil
 
-          services = service_types.collect { |service_type|
-            url = self.query_url(xri, service_type)
+          url = self.query_url(xri)
             begin
               response = OpenID.fetch(url)
             rescue
-              raise XRIHTTPError, ["Could not fetch #{xri}", $!]
+              raise XRIHTTPError, "Could not fetch #{xri}, #{$!}"
             end
             raise XRIHTTPError, "Could not fetch #{xri}" if response.nil?
 
             xrds = Yadis::parseXRDS(response.body)
             canonicalID = Yadis::get_canonical_id(xri, xrds)
 
-            Yadis::services(xrds) unless xrds.nil?
-          }
+          return canonicalID, Yadis::services(xrds)
           # TODO:
           #  * If we do get hits for multiple service_types, we're almost
           #    certainly going to have duplicated service entries and
           #    broken priority ordering.
-          services = services.inject([]) { |flatter, some_services|
-            flatter += some_services unless some_services.nil?
-          }
-
-          return canonicalID, services
         end
       end
 
