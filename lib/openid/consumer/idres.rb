@@ -492,10 +492,10 @@ module OpenID
                                 "#{endpoint.claimed_id}")
         end
 
-        if to_match.get_local_id != endpoint.get_local_id
-          raise ProtocolError, ("local_id mismatch. Expected "\
-                                "#{to_match.get_local_id}, got "\
-                                "#{endpoint.get_local_id}")
+        if to_match.claimed_id != endpoint.claimed_id
+          raise ProtocolError, ("claimed_id mismatch. Expected "\
+                                "#{to_match.claimed_id}, got "\
+                                "#{endpoint.claimed_id}")
         end
 
         # If the server URL is nil, this must be an OpenID 1
@@ -512,7 +512,7 @@ module OpenID
             "`to_match' endpoint."
           end
         elsif to_match.server_url != endpoint.server_url
-          raise ProtocolError, ("OP Endpoint mismatch. Expected"\
+          raise ProtocolError, ("OP Endpoint mismatch. Expected "\
                                 "#{to_match.server_url}, got "\
                                 "#{endpoint.server_url}")
         end
