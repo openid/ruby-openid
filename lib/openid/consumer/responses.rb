@@ -83,7 +83,7 @@ module OpenID
       # Return the specified signed field if available, otherwise
       # return default
       def get_signed(ns_uri, ns_key, default=nil)
-        if singed?(ns_uri, ns_key)
+        if signed?(ns_uri, ns_key)
           return @message.get_arg(ns_uri, ns_key, default)
         else
           return default
