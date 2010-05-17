@@ -18,7 +18,7 @@ module OpenID
 
     [^>]*>.*?<\/script>
 
-  /mixu 
+  /mix
 
   def OpenID.openid_unescape(s)
     s.gsub('&amp;','&').gsub('&lt;','<').gsub('&gt;','>').gsub('&quot;','"')
