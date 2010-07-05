@@ -205,6 +205,8 @@ module OpenID
             conn.request_post(url.request_uri, body, headers)
           end
         }
+      rescue Timeout::Error => why
+        raise FetchingError, "Error fetching #{url}: #{why}"
       rescue RuntimeError => why
         raise why
       rescue OpenSSL::SSL::SSLError => why
@@ -212,8 +214,6 @@ module OpenID
       rescue FetchingError => why
         raise why
       rescue Exception => why
-        # Things we've caught here include a Timeout::Error, which descends
-        # from SignalException.
         raise FetchingError, "Error fetching #{url}: #{why}"
       end
 
