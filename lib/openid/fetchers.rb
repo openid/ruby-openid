@@ -205,6 +205,7 @@ module OpenID
             conn.request_post(url.request_uri, body, headers)
           end
         }
+        setup_encoding(response)
       rescue Timeout::Error => why
         raise FetchingError, "Error fetching #{url}: #{why}"
       rescue RuntimeError => why
@@ -232,6 +233,25 @@ module OpenID
         end
       else
         return HTTPResponse._from_net_response(response, unparsed_url)
+      end
+    end
+
+    private
+    def setup_encoding(response)
+      return unless defined?(::Encoding::ASCII_8BIT)
+      charset = response.type_params["charset"]
+      return if charset.nil?
+      encoding = nil
+      begin
+        encoding = Encoding.find(charset)
+      rescue ArgumentError
+      end
+      encoding ||= Encoding::ASCII_8BIT
+      body = response.body
+      if body.respond_to?(:force_encoding)
+        body.force_encoding(encoding)
+      else
+        body.set_encoding(encoding)
       end
     end
   end

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require 'test/unit'
 require 'net/http'
 require 'webrick'
@@ -112,7 +114,22 @@ class FetcherTestCase < Test::Unit::TestCase
       assert_block("Fetched too many times.") { @_redirect_counter < 10 }
     }
   end
-  
+
+  UTF8_PAGE_CONTENT = <<-EOHTML
+<html>
+  <head><title>UTF-8</title></head>
+  <body>こんにちは</body>
+</html>
+EOHTML
+  def _utf8_page
+    lambda { |req, resp|
+      resp['Content-Type'] = "text/html; charset=utf-8"
+      body = UTF8_PAGE_CONTENT.dup
+      body.force_encoding("ASCII-8BIT") if body.respond_to?(:force_encoding)
+      resp.body = body
+    }
+  end
+
   def setup
     @fetcher = OpenID::StandardFetcher.new
     @logfile = StringIO.new
@@ -138,6 +155,7 @@ class FetcherTestCase < Test::Unit::TestCase
       }
       @server.mount_proc('/post', _require_post)
       @server.mount_proc('/redirect_loop', _redirect_loop)
+      @server.mount_proc('/utf8_page', _utf8_page)
       @server.start
     }
     @uri = _uri_build
@@ -209,6 +227,15 @@ class FetcherTestCase < Test::Unit::TestCase
     assert_raise(OpenID::HTTPRedirectLimitReached) {
       @fetcher.fetch(uri)
     }
+  end
+
+  def test_utf8_page
+    uri = _uri_build('/utf8_page')
+    response = @fetcher.fetch(uri)
+    assert_equal(UTF8_PAGE_CONTENT, response.body)
+    if response.body.respond_to?(:encoding)
+      assert_equal(Encoding::UTF_8, response.body.encoding)
+    end
   end
 
   def test_cases
