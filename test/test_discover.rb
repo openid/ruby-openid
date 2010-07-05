@@ -369,6 +369,20 @@ module OpenID
       }
     end
 
+    def test_html_utf8
+      utf8_html = read_data_file('test_discover/openid_utf8.html', false)
+      utf8_html.force_encoding("UTF-8") if utf8_html.respond_to?(:force_encoding)
+      services = _discover('text/html', utf8_html, 1)
+
+      _checkService(services[0],
+                    "http://www.myopenid.com/server",
+                    @id_url,
+                    'http://smoker.myopenid.com/',
+                    nil,
+                    ['1.1'],
+                    false)
+    end
+
     def test_yadisEmpty
       services = _discover('application/xrds+xml',
                            read_data_file('test_discover/yadis_0entries.xml', false),
