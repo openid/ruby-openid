@@ -134,7 +134,7 @@ module OpenID
     end
 
     def ==(other)
-      (other.class == self.class and 
+      (other.class == self.class and
        other.handle == self.handle and
        other.secret == self.secret and
 
