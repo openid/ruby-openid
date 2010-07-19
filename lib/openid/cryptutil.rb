@@ -100,5 +100,16 @@ module OpenID
     def CryptUtil.base64_to_num(s)
       return binary_to_num(OpenID::Util.from_base64(s))
     end
+
+    def CryptUtil.const_eq(s1, s2)
+      if s1.length != s2.length
+        return false
+      end
+      result = true
+      s1.length.times do |i|
+        result &= (s1[i] == s2[i])
+      end
+      return result
+    end
   end
 end
