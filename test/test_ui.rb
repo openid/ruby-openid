@@ -8,7 +8,7 @@ module OpenID
     class UIRequestTestCase < Test::Unit::TestCase
 
       def setup
-        @req = UI::Request.new 
+        @req = UI::Request.new
       end
 
       def test_construct
