@@ -39,7 +39,7 @@ module OpenID
         return oauth_req
       end
 
-      # Set UI extention parameters
+      # Set UI extension parameters
       def parse_extension_args(args)
         @lang = args["lang"]
         @icon = args["icon"]
