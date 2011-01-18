@@ -17,9 +17,9 @@ module OpenID
         assert_nil @req.lang
         assert_equal 'ui', @req.ns_alias
 
-        req2 = UI::Request.new("popup", "http://sample.com/favicon.png", "ja-JP")
+        req2 = UI::Request.new("popup", true, "ja-JP")
         assert_equal "popup", req2.mode
-        assert_equal "http://sample.com/favicon.png", req2.icon
+        assert_equal true, req2.icon
         assert_equal "ja-JP", req2.lang
       end
 
@@ -29,8 +29,8 @@ module OpenID
       end
 
       def test_add_icon
-        @req.icon = "http://sample.com/favicon.png"
-        assert_equal "http://sample.com/favicon.png", @req.icon
+        @req.icon = true
+        assert_equal true, @req.icon
       end
 
       def test_add_lang
@@ -42,17 +42,17 @@ module OpenID
         assert_equal({}, @req.get_extension_args)
         @req.mode = "popup"
         assert_equal({'mode' => 'popup'}, @req.get_extension_args)
-        @req.icon = "http://sample.com/favicon.png"
-        assert_equal({'mode' => 'popup', 'icon' => 'http://sample.com/favicon.png'}, @req.get_extension_args)
+        @req.icon = true
+        assert_equal({'mode' => 'popup', 'icon' => true}, @req.get_extension_args)
         @req.lang = "ja-JP"
-        assert_equal({'mode' => 'popup', 'icon' => 'http://sample.com/favicon.png', 'lang' => 'ja-JP'}, @req.get_extension_args)
+        assert_equal({'mode' => 'popup', 'icon' => true, 'lang' => 'ja-JP'}, @req.get_extension_args)
       end
 
       def test_parse_extension_args
-        args = {'mode' => 'popup', 'icon' => 'http://sample.com/favicon.png', 'lang' => 'ja-JP'}
+        args = {'mode' => 'popup', 'icon' => true, 'lang' => 'ja-JP'}
         @req.parse_extension_args args
         assert_equal "popup", @req.mode
-        assert_equal "http://sample.com/favicon.png", @req.icon
+        assert_equal true, @req.icon
         assert_equal "ja-JP", @req.lang
       end
 
@@ -69,14 +69,14 @@ module OpenID
           'ns' => OPENID2_NS,
           'ns.ui' => UI::NS_URI,
           'ui.mode' => 'popup',
-          'ui.icon' => "http://sample.com/favicon.png",
+          'ui.icon' => true,
           'ui.lang' => 'ja-JP'
         )
         oid_req = Server::OpenIDRequest.new
         oid_req.message = openid_req_msg
         req = UI::Request.from_openid_request oid_req
         assert_equal "popup", req.mode
-        assert_equal "http://sample.com/favicon.png", req.icon
+        assert_equal true, req.icon
         assert_equal "ja-JP", req.lang
       end
 
