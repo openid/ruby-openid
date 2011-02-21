@@ -30,7 +30,7 @@ module OpenID
           # that off again for the QXRI.  This is under discussion for
           # XRI Resolution WD 11.
           qxri = XRI.to_uri_normal(xri)[6..-1]
-          hxri = @proxy_url + qxri
+          hxri = @proxy_url + CGI::escape( qxri )
           args = {'_xrd_r' => 'application/xrds+xml'}
           if service_type
             args['_xrd_t'] = service_type
@@ -53,9 +53,10 @@ module OpenID
             rescue
               raise XRIHTTPError, "Could not fetch #{xri}, #{$!}"
             end
-            raise XRIHTTPError, "Could not fetch #{xri}" if response.nil?
+          raise XRIHTTPError, "Fetching #{xri} returned nothing" if response.nil?
 
             xrds = Yadis::parseXRDS(response.body)
+          raise XRIHTTPError, "Fetching #{xri} did not return an XRDS" if xrds.nil?
             canonicalID = Yadis::get_canonical_id(xri, xrds)
 
           return canonicalID, Yadis::services(xrds)
