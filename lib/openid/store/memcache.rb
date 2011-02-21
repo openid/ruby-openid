@@ -21,7 +21,7 @@ module OpenID
         serialized = serialize(association)
         [nil, association.handle].each do |handle|
           key = assoc_key(server_url, handle)
-          @cache_client.write(key, serialized, :expires_in => association.lifetime.seconds)
+          @cache_client.write(key, serialized, :expires_in => association.lifetime.seconds.to_i)
         end
       end
 
@@ -63,7 +63,7 @@ module OpenID
         ts = timestamp.to_s # base 10 seconds since epoch
         nonce_key = key_prefix + 'N' + server_url + '|' + ts + '|' + salt
         result = @cache_client.read(nonce_key)
-        @cache_client.write(nonce_key, nonce_key, :expires_in => (Nonce.skew + 5))
+        @cache_client.write(nonce_key, nonce_key, :expires_in => (Nonce.skew() + 5))
         result.nil?
       end
 
