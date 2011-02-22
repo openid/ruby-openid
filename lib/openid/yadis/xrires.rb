@@ -13,7 +13,7 @@ module OpenID
 
       class ProxyResolver
 
-        DEFAULT_PROXY = 'http://proxy.xri.net/'
+        DEFAULT_PROXY ||= 'http://proxy.xri.net/'
 
         def initialize(proxy_url=nil)
           if proxy_url
