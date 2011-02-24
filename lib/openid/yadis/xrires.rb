@@ -31,13 +31,8 @@ module OpenID
           # XRI Resolution WD 11.
           qxri = XRI.to_uri_normal(xri)[6..-1]
           hxri = @proxy_url + CGI::escape( qxri )
-          args = {'_xrd_r' => 'application/xrds+xml'}
-          if service_type
-            args['_xrd_t'] = service_type
-          else
-            # don't perform service endpoint selection
-            args['_xrd_r'] += ';sep=false'
-          end
+          args = {'_xrd_r' => 'application/xrds+xml'}          
+          args['_xrd_t'] = service_type if service_type
 
           return XRI.append_args(hxri, args)
         end
@@ -45,25 +40,20 @@ module OpenID
         def query(xri)
           # these can be query args or http headers, needn't be both.
           # headers = {'Accept' => 'application/xrds+xml;sep=true'}
-          canonicalID = nil
 
           url = self.query_url(xri)
-            begin
-              response = OpenID.fetch(url)
-            rescue
-              raise XRIHTTPError, "Could not fetch #{xri}, #{$!}"
-            end
+          begin
+            response = OpenID.fetch(url)
+          rescue
+            raise XRIHTTPError, "Could not fetch #{xri}, #{$!}"
+          end
           raise XRIHTTPError, "Fetching #{xri} returned nothing" if response.nil?
 
-            xrds = Yadis::parseXRDS(response.body)
+          xrds = Yadis::parseXRDS(response.body)
           raise XRIHTTPError, "Fetching #{xri} did not return an XRDS" if xrds.nil?
-            canonicalID = Yadis::get_canonical_id(xri, xrds)
+          canonicalID = Yadis::get_canonical_id(xri, xrds)
 
           return canonicalID, Yadis::services(xrds)
-          # TODO:
-          #  * If we do get hits for multiple service_types, we're almost
-          #    certainly going to have duplicated service entries and
-          #    broken priority ordering.
         end
       end
 
