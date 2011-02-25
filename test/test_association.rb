@@ -1,5 +1,6 @@
 require "test/unit"
 require "openid/association"
+require 'testutil'
 
 module OpenID
   class AssociationTestCase < Test::Unit::TestCase
