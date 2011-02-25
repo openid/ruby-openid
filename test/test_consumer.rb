@@ -182,9 +182,11 @@ module OpenID
         end
 
         def test_setup_needed_openid2
-          args = {'openid.ns' => OPENID2_NS, 'openid.mode' => 'setup_needed'}
+          setup_url = 'http://setup.url/'
+          args = {'openid.ns' => OPENID2_NS, 'openid.mode' => 'setup_needed', 'openid.user_setup_url' => setup_url}
           response = @consumer.complete(args, nil)
           assert_equal(SETUP_NEEDED, response.status)
+          assert_equal(setup_url, response.setup_url)
         end
 
         def test_idres_setup_needed_openid1
@@ -195,6 +197,7 @@ module OpenID
           }
           response = @consumer.complete(args, nil)
           assert_equal(SETUP_NEEDED, response.status)
+          assert_equal(setup_url, response.setup_url)
         end
 
         def test_error
