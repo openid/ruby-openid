@@ -902,6 +902,7 @@ module OpenID
         'openid.identity' => 'http://bogus.example.invalid:port/',
         'openid.assoc_handle' => 'FLUB',
         'openid.return_to' => 'Neverland',
+        'openid.ax.value.fullname' => "Bob&Smith'"
       }
 
       @action_url = 'scheme://host:port/path?query'
