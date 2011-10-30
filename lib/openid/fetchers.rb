@@ -111,7 +111,7 @@ module OpenID
     @fetcher = StandardFetcher.new(proxy_uri.host, proxy_uri.port,
                                    proxy_uri.user, proxy_uri.password)
   end
-  
+
   class StandardFetcher
 
     USER_AGENT = "ruby-openid/#{OpenID::VERSION} (#{RUBY_PLATFORM})"
