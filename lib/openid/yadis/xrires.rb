@@ -80,7 +80,7 @@ module OpenID
           sep = '?'
         end
 
-        return url + sep + XRI.urlencode(args)
+        return rstripped + sep + XRI.urlencode(args)
       end
 
     end
