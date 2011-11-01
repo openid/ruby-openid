@@ -68,14 +68,11 @@ module OpenID
       def self.append_args(url, args)
         return url if args.length == 0
 
-        # rstrip question marks
-        rstripped = url.dup
-        while rstripped[-1].chr == '?'
-          rstripped = rstripped[0...rstripped.length-1]
-        end
+        # strip all trailing question marks
+        rstripped = url.dup.sub(/\?+\z/, '').sub(/(%3F)+\z/, '')
 
-        if rstripped.index('?')
-          sep = '&'
+        if rstripped.include?('?') or rstripped.include?('%3F')
+          sep = ( rstripped[-1] == '&' ? '' : '&' )
         else
           sep = '?'
         end
