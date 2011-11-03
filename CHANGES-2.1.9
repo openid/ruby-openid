@@ -1,0 +1,18 @@
+Changes in ruby-openid 2.1.9
+
+* added Gemfile and Rakefile. Tests are easily run with
+  $ rake test
+
+* Renamed the gemspec file and fixed a deprecation warning about "SPEC"
+
+* restructured the test directory to match current practices
+
+* fixed SEGFAULT in lib/openid/dh.rb running in Ruby 1.9.2-290
+
+* fixed bugs in lib/openid/yadis/xrires.rb. Tests were failing.
+
+* fixed problem in Rails 3 with example consumer code handing Rails path_parameters to Consumer.complete
+  examples/rails_openid/app/controllers/consumer_controller.rb
+  Existing clients migrating to Rails 3 need to match this change:
+    parameters = params.reject{ |k,v| request.path_parameters[k.to_sym] } # params keys are String; path_parameters keys are Symbol
+  See: https://rails.lighthouseapp.com/projects/8994/tickets/3738-breaking-change-in-requestpath_parameters
