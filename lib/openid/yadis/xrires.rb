@@ -31,7 +31,7 @@ module OpenID
           # XRI Resolution WD 11.
           qxri = XRI.to_uri_normal(xri)[6..-1]
           hxri = @proxy_url + CGI::escape( qxri )
-          args = {'_xrd_r' => 'application/xrds+xml'}          
+          args = {'_xrd_r' => 'application/xrds+xml'}
           args['_xrd_t'] = service_type if service_type
 
           return XRI.append_args(hxri, args)
@@ -54,6 +54,10 @@ module OpenID
           canonicalID = Yadis::get_canonical_id(xri, xrds)
 
           return canonicalID, Yadis::services(xrds)
+          # TODO:
+          #  * If we do get hits for multiple service_types, we're almost
+          #    certainly going to have duplicated service entries and
+          #    broken priority ordering.
         end
       end
 

@@ -125,7 +125,7 @@ module OpenID
         raise ProtocolError, "#{message} has no sig."
       end
       calculated_sig = get_message_signature(message)
-      return calculated_sig == message_sig
+      return CryptUtil.const_eq(calculated_sig, message_sig)
     end
 
     # Get the signature for this message
@@ -134,7 +134,7 @@ module OpenID
     end
 
     def ==(other)
-      (other.class == self.class and 
+      (other.class == self.class and
        other.handle == self.handle and
        other.secret == self.secret and
 
