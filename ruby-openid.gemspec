@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["openid@janrain.com", "mike.mell@nthwave.net"]
   s.homepage    = 'https://github.com/mmell/ruby-openid'
   s.summary     = 'A library for consuming and serving OpenID identities.'
-  s.description = %q{TODO: Write a gem description}
+  s.description = s.summary
 
   s.rubyforge_project = "ruby-openid"
 
