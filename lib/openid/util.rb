@@ -13,6 +13,9 @@ module OpenID
   # exception type, so if you want to catch all exceptions raised by
   # the library, you can catch OpenIDError
   class OpenIDError < StandardError
+    def initialize(*msgs)
+      super(msgs.join(', '))
+    end
   end
 
   module Util
