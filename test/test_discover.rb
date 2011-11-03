@@ -1,8 +1,4 @@
-
-require 'testutil'
-require 'util'
-
-require 'test/unit'
+require 'test_helper'
 require 'openid/fetchers'
 require 'openid/yadis/discovery'
 require 'openid/consumer/discovery'
@@ -48,7 +44,7 @@ module OpenID
       @responses.each { |response_set|
         @url = response_set[0].final_url
         OpenID.fetcher = SimpleMockFetcher.new(self, response_set)
-      
+
         expected_status = response_set[-1].code
         begin
           OpenID.discover(@url)
@@ -228,7 +224,7 @@ module OpenID
 #   def readDataFile(filename):
 #     module_directory = os.path.dirname(os.path.abspath(__file__))
 #     filename = os.path.join(
-#         module_directory, 'data', 'test_discover', filename)
+#         module_directory, 'yadis_data', 'test_discover', filename)
 #     return file(filename).read()
 
   class TestDiscovery < BaseTestDiscovery

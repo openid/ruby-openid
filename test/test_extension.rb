@@ -1,6 +1,6 @@
+require 'test_helper'
 require 'openid/extension'
 require 'openid/message'
-require 'test/unit'
 
 module OpenID
   class DummyExtension < OpenID::Extension
@@ -29,7 +29,7 @@ module OpenID
        assert_equal(DummyExtension::TEST_ALIAS,
                     namespaces.get_alias(DummyExtension::TEST_URI))
      end
- 
+
      def test_OpenID2
        oid2_msg = Message.new(OPENID2_NS)
        ext = DummyExtension.new

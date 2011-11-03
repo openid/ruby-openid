@@ -1,7 +1,6 @@
-require 'test/unit'
+require "test_helper"
 require 'openid/kvform'
 require 'openid/util'
-require 'util'
 
 include OpenID
 

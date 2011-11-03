@@ -1,10 +1,4 @@
-require 'test/unit'
-require 'openid/store/interface'
-require 'openid/store/filesystem'
-require 'openid/store/memcache'
-require 'openid/store/memory'
-require 'openid/util'
-require 'openid/store/nonce'
+require "test_helper"
 require 'openid/association'
 
 module OpenID
@@ -120,7 +114,7 @@ module OpenID
         ret_assoc = @store.get_association(server_url, nil)
         unexpected = [assoc2.handle, assoc3.handle]
         assert(ret_assoc.nil? || !unexpected.member?(ret_assoc.handle),
-               ret_assoc)
+               ret_assoc.to_s)
 
         _check_retrieve(server_url, assoc.handle, assoc)
         _check_retrieve(server_url, assoc2.handle, nil)

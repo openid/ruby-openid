@@ -1,3 +1,4 @@
+require 'test_helper'
 require 'openid/extensions/oauth'
 require 'openid/message'
 require 'openid/server'
@@ -8,7 +9,7 @@ module OpenID
   module OAuthTest
     class OAuthRequestTestCase < Test::Unit::TestCase
       def setup
-        @req = OAuth::Request.new 
+        @req = OAuth::Request.new
       end
 
       def test_construct
@@ -137,7 +138,7 @@ module OpenID
       end
 
       def test_from_success_response
-        
+
         openid_req_msg = Message.from_openid_args({
           'mode' => 'id_res',
           'ns' => OPENID2_NS,

@@ -1,5 +1,4 @@
-
-require 'test/unit'
+require "test_helper"
 require 'openid/yadis/accept'
 require 'openid/extras'
 require 'openid/util'

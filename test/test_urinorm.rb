@@ -1,7 +1,6 @@
-require 'test/unit'
+require "test_helper"
 
 require "openid/urinorm"
-require "testutil"
 
 class URINormTestCase < Test::Unit::TestCase
   include OpenID::TestDataMixin

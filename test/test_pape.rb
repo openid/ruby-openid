@@ -1,3 +1,4 @@
+require 'test_helper'
 require 'openid/extensions/pape'
 require 'openid/message'
 require 'openid/server'
@@ -170,11 +171,11 @@ module OpenID
         assert_equal(nil, @req.auth_time)
         assert_equal([], @req.auth_policies)
       end
-      
+
       def test_parse_extension_args_strict_bogus1
         args = {'auth_policies' => 'http://foo http://bar',
                 'auth_time' => 'this one time'}
-        assert_raises(ArgumentError) { 
+        assert_raises(ArgumentError) {
           @req.parse_extension_args(args, true)
         }
       end
@@ -183,11 +184,11 @@ module OpenID
         args = {'auth_policies' => 'http://foo http://bar',
                 'auth_time' => '1983-11-05T12:30:24Z',
                 'nist_auth_level' => 'some'}
-        assert_raises(ArgumentError) { 
+        assert_raises(ArgumentError) {
           @req.parse_extension_args(args, true)
         }
       end
-      
+
       def test_parse_extension_args_strict_good
         args = {'auth_policies' => 'http://foo http://bar',
                 'auth_time' => '2007-10-11T05:25:18Z',
@@ -208,9 +209,9 @@ module OpenID
         assert_equal(nil, @req.nist_auth_level)
       end
 
-      
+
       def test_from_success_response
-        
+
         openid_req_msg = Message.from_openid_args({
           'mode' => 'id_res',
           'ns' => OPENID2_NS,

@@ -1,8 +1,7 @@
+require 'test_helper'
+require 'support/test_util'
 require "openid/consumer/checkid_request"
 require "openid/message"
-require "test/unit"
-require "testutil"
-require "util"
 
 module OpenID
   class Consumer

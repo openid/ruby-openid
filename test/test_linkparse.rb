@@ -1,5 +1,4 @@
-require 'test/unit'
-require 'testutil'
+require "test_helper"
 require 'openid/consumer/html_parse'
 
 class LinkParseTestCase < Test::Unit::TestCase
@@ -85,7 +84,7 @@ class LinkParseTestCase < Test::Unit::TestCase
         end
       }
       links = OpenID::parse_link_attrs(html)
-      
+
       found = links.dup
       expected = expected_links.dup
       while(fl = found.shift)

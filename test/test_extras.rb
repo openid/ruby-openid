@@ -1,4 +1,4 @@
-require 'test/unit'
+require "test_helper"
 require 'openid/extras'
 
 class StartsWithTestCase < Test::Unit::TestCase

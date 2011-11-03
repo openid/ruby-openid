@@ -1,18 +1,16 @@
-
-require 'test/unit'
+require "test_helper"
 require 'uri'
-require 'testutil'
 
 require 'openid/yadis/discovery'
 require 'openid/fetchers'
 require 'openid/util'
-require 'discoverdata'
+require 'support/yadis_data'
 
 module OpenID
 
   module YadisDiscovery
     include FetcherMixin
-    include DiscoverData
+    include YadisData
 
     STATUS_HEADER_RE = /Status: (\d+) .*?$/m
 
@@ -34,7 +32,7 @@ module OpenID
     end
 
     class TestFetcher
-      include DiscoverData
+      include YadisData
 
       def initialize(base_url)
         @base_url = base_url
@@ -94,7 +92,7 @@ module OpenID
     end
 
     class DiscoveryTestCase
-      include DiscoverData
+      include YadisData
       include FetcherMixin
 
       def initialize(testcase, input_name, id_name, result_name, success)
@@ -172,7 +170,7 @@ module OpenID
       include FetcherMixin
 
       def test_yadis_discovery
-        DiscoverData::TESTLIST.each { |success, input_name, id_name, result_name|
+        YadisData::TESTLIST.each { |success, input_name, id_name, result_name|
           test = DiscoveryTestCase.new(self, input_name, id_name, result_name, success)
           test.runCustomTest
         }
