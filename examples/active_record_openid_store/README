@@ -46,7 +46,8 @@ task in your app's Rakefile like so:
 
   desc 'GC OpenID store'
   task :gc_openid_store => :environment do
-    ActiveRecordOpenIDStore.new.cleanup
+    require 'openid_ar_store'
+    ActiveRecordStore.new.cleanup
   end
 
 Run it by typing:
