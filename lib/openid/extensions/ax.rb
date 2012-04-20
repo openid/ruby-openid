@@ -296,12 +296,21 @@ module OpenID
         @data.each{|type_uri, values|
           name = aliases.add(type_uri)
           ax_args['type.'+name] = type_uri
-          ax_args['count.'+name] = values.size.to_s
+          if values.size > 1
+            ax_args['count.'+name] = values.size.to_s
 
-          values.each_with_index{|value, i|
-            key = "value.#{name}.#{i+1}"
-            ax_args[key] = value
-          }
+            values.each_with_index{|value, i|
+              key = "value.#{name}.#{i+1}"
+              ax_args[key] = value
+            }
+            # for attributes with only a single value, use a
+            # nice shortcut to only show the value w/o the count
+          else 
+            values.each do |value|
+              key = "value.#{name}"
+              ax_args[key] = value
+            end
+          end
         }
         return ax_args
       end
@@ -381,11 +390,17 @@ module OpenID
     # A fetch_response attribute exchange message
     class FetchResponse < KeyValueMessage
       attr_reader :update_url
+      # Use the aliases variable to manually add alias names in the response.
+      # They'll be returned to the client in the format: 
+      #   openid.ax.type.email=http://openid.net/schema/contact/internet/email
+      #   openid.ax.value.email=guy@example.com
+      attr_accessor :aliases
 
       def initialize(update_url = nil)
         super()
         @mode = 'fetch_response'
         @update_url = update_url
+        @aliases = NamespaceMap.new
       end
 
       # Serialize this object into arguments in the attribute
@@ -394,7 +409,6 @@ module OpenID
       # validated against this request, and empty responses for requested
       # fields with no data will be sent.
       def get_extension_args(request = nil)
-        aliases = NamespaceMap.new
         zero_value_types = []
 
         if request
@@ -412,9 +426,9 @@ module OpenID
             # Copy the aliases from the request so that reading
             # the response in light of the request is easier
             if attr_info.ns_alias.nil?
-              aliases.add(attr_info.type_uri)
+              @aliases.add(attr_info.type_uri)
             else
-              aliases.add_alias(attr_info.type_uri, attr_info.ns_alias)
+              @aliases.add_alias(attr_info.type_uri, attr_info.ns_alias)
             end
             values = @data[attr_info.type_uri]
             if values.empty? # @data defaults to []
@@ -426,14 +440,14 @@ module OpenID
           }
         end
 
-        kv_args = _get_extension_kv_args(aliases)
+        kv_args = _get_extension_kv_args(@aliases)
 
         # Add the KV args into the response with the args that are
         # unique to the fetch_response
         ax_args = new_args
 
         zero_value_types.each{|attr_info|
-          name = aliases.get_alias(attr_info.type_uri)
+          name = @aliases.get_alias(attr_info.type_uri)
           kv_args['type.' + name] = attr_info.type_uri
           kv_args['count.' + name] = '0'
         }
