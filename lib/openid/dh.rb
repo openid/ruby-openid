@@ -56,13 +56,11 @@ module OpenID
           "Inputs were #{s.inspect} and #{t.inspect}"
       end
 
-      if String.method_defined? :bytes
-        s.bytes.zip(t.bytes).map{|sb,tb| sb^tb}.pack('C*')
-      else
-        indices = 0...(s.length)
-        chrs = indices.collect {|i| (s[i]^t[i]).chr}
-        chrs.join("")
-      end
+      s.unpack('C*').zip(
+        t.unpack('C*')
+      ).map {
+        |sb, tb| sb^tb
+      }.pack('C*')
     end
 
     # This code is taken from this post:

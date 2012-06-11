@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
+require "test_helper"
 
-require 'test/unit'
 require 'net/http'
 require 'webrick'
-
-require 'testutil'
-require 'util'
-
 require 'openid/fetchers'
-
 require 'stringio'
 
 begin
@@ -402,17 +397,12 @@ EOF
 
   def test_fetchingerror
     f = OpenID::StandardFetcher.new
-
     f.extend(OpenID::InstanceDefExtension)
-    f.instance_def(:make_connection) do |uri|
-      TimeoutConnection.new
-    end
-
     assert_raise(OpenID::FetchingError) {
-      f.fetch("https://bogus.com/")
+      f.fetch("https://bogus2010.com/")
     }
   end
-  
+
   class TestingException < OpenID::FetchingError; end
 
   class NoSSLSupportConnection
@@ -543,7 +533,7 @@ class ProxyTest < Test::Unit::TestCase
   def test_proxy_env
     ENV['http_proxy'] = 'http://127.0.0.1:3128/'
     OpenID.fetcher_use_env_http_proxy
-    
+
     # make_http just to give us something with readable attributes to inspect.
     conn = OpenID.fetcher.make_http(URI.parse('http://127.0.0.2'))
     assert_equal('127.0.0.1', conn.proxy_address)

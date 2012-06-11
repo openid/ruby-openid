@@ -1,6 +1,5 @@
-require 'test/unit'
+require "test_helper"
 require "openid/yadis/parsehtml"
-require "testutil"
 
 module OpenID
   class ParseHTMLTestCase < Test::Unit::TestCase

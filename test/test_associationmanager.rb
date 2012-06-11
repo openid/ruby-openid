@@ -1,3 +1,5 @@
+require 'test_helper'
+require 'support/test_util'
 require "openid/consumer/associationmanager"
 require "openid/association"
 require "openid/dh"
@@ -5,8 +7,6 @@ require "openid/util"
 require "openid/cryptutil"
 require "openid/message"
 require "openid/store/memory"
-require "test/unit"
-require "util"
 require "time"
 
 module OpenID

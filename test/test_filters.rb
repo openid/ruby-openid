@@ -1,5 +1,4 @@
-
-require 'test/unit'
+require "test_helper"
 require 'openid/yadis/filters'
 
 module OpenID
@@ -166,7 +165,7 @@ module OpenID
     def test_parts_nil
       result = Yadis.make_filter(nil)
       assert(result.is_a?(Yadis::TransformFilterMaker),
-             result)
+             result.to_s)
     end
 
     def test_parts_array
@@ -175,7 +174,7 @@ module OpenID
 
       result = Yadis.make_filter([e1, e2])
       assert(result.is_a?(Yadis::TransformFilterMaker),
-             result)
+             result.to_s)
       assert(result.filter_procs[0] == e1.method('from_basic_service_endpoint'))
       assert(result.filter_procs[1] == e2.method('from_basic_service_endpoint'))
     end
@@ -184,7 +183,7 @@ module OpenID
       e = Yadis::BasicServiceEndpoint.new(nil, [], nil, nil)
       result = Yadis.make_filter(e)
       assert(result.is_a?(Yadis::TransformFilterMaker),
-             result)
+             result.to_s)
     end
   end
 
@@ -208,7 +207,7 @@ module OpenID
       # from_basic_service_endpoint on the endpoint
       filter = result.filter_procs[0]
       assert(filter == e.method('from_basic_service_endpoint'),
-             filter)
+             filter.to_s)
     end
 
     def test_single_proc

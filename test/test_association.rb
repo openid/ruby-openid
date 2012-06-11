@@ -1,4 +1,5 @@
-require "test/unit"
+require 'test_helper'
+require 'support/test_util'
 require "openid/association"
 
 module OpenID

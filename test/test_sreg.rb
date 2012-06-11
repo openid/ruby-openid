@@ -1,7 +1,7 @@
+require "test_helper"
 require 'openid/extensions/sreg'
 require 'openid/message'
 require 'openid/server'
-require 'test/unit'
 
 module OpenID
   module SReg
@@ -71,7 +71,7 @@ module OpenID
           @openid1 = false
           @namespaces = NamespaceMap.new
         end
-        
+
         def is_openid1
           return @openid1
         end
@@ -95,7 +95,7 @@ module OpenID
           assert_equal('sreg', @msg.namespaces.get_alias(ns_uri))
           assert_equal(NS_URI, ns_uri)
         end
-        
+
         def test_openid1defined_1_0
           @msg.openid1 = true
           @msg.namespaces.add(NS_URI_1_0)
@@ -117,7 +117,7 @@ module OpenID
             }
           }
         end
-        
+
         def test_openid1_defined_badly
           @msg.openid1 = true
           @msg.namespaces.add_alias('http://invalid/', 'sreg')
@@ -182,7 +182,7 @@ module OpenID
         end
 
         def test_from_openid_request_ns_1_0
-          message = Message.from_openid_args({'ns.sreg' => NS_URI_1_0, 
+          message = Message.from_openid_args({'ns.sreg' => NS_URI_1_0,
                                                "sreg.required" => "nickname"})
           openid_req = Server::OpenIDRequest.new
           openid_req.message = message
@@ -214,7 +214,7 @@ module OpenID
           req.parse_extension_args({'required' => 'stuff'})
           assert_equal([], req.required)
         end
-        
+
         def test_parse_extension_args_strict
           req = Request.new
           assert_raises(ArgumentError) {
@@ -351,7 +351,7 @@ module OpenID
           req.request_fields(fields)
           assert_equal(fields, req.optional)
           assert_equal([], req.required)
-          
+
           # By default, adding the same fields over again has no effect
           req.request_fields(fields)
           assert_equal(fields, req.optional)
@@ -439,7 +439,7 @@ module OpenID
                                              })
           success_resp = DummySuccessResponse.new(message, {})
           sreg_resp = Response.from_success_response(success_resp, false)
-          assert_equal({'nickname' => 'The Mad Stork'}, 
+          assert_equal({'nickname' => 'The Mad Stork'},
                        sreg_resp.get_extension_args)
         end
       end

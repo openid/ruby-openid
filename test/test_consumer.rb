@@ -1,6 +1,6 @@
+require 'test_helper'
+require 'support/test_util'
 require "openid/consumer"
-require "test/unit"
-require "testutil"
 
 module OpenID
   class Consumer

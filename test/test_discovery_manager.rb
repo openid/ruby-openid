@@ -1,9 +1,6 @@
-
-require 'test/unit'
+require "test_helper"
 require 'openid/consumer/discovery_manager'
 require 'openid/extras'
-
-require 'testutil'
 
 module OpenID
   class TestDiscoveredServices < Test::Unit::TestCase
@@ -41,7 +38,7 @@ module OpenID
       @disco_services.next
       assert(@disco_services.started?)
       @disco_services.next
-      assert(@disco_services.started?) 
+      assert(@disco_services.started?)
       @disco_services.next
       assert(!@disco_services.started?)
     end

@@ -13,7 +13,7 @@ module OpenID
 
       class ProxyResolver
 
-        DEFAULT_PROXY = 'http://proxy.xri.net/'
+        DEFAULT_PROXY ||= 'http://proxy.xri.net/'
 
         def initialize(proxy_url=nil)
           if proxy_url
@@ -30,14 +30,9 @@ module OpenID
           # that off again for the QXRI.  This is under discussion for
           # XRI Resolution WD 11.
           qxri = XRI.to_uri_normal(xri)[6..-1]
-          hxri = @proxy_url + qxri
+          hxri = @proxy_url + CGI::escape( qxri )
           args = {'_xrd_r' => 'application/xrds+xml'}
-          if service_type
-            args['_xrd_t'] = service_type
-          else
-            # don't perform service endpoint selection
-            args['_xrd_r'] += ';sep=false'
-          end
+          args['_xrd_t'] = service_type if service_type
 
           return XRI.append_args(hxri, args)
         end
@@ -45,18 +40,18 @@ module OpenID
         def query(xri)
           # these can be query args or http headers, needn't be both.
           # headers = {'Accept' => 'application/xrds+xml;sep=true'}
-          canonicalID = nil
 
           url = self.query_url(xri)
-            begin
-              response = OpenID.fetch(url)
-            rescue
-              raise XRIHTTPError, "Could not fetch #{xri}, #{$!}"
-            end
-            raise XRIHTTPError, "Could not fetch #{xri}" if response.nil?
+          begin
+            response = OpenID.fetch(url)
+          rescue
+            raise XRIHTTPError, "Could not fetch #{xri}, #{$!}"
+          end
+          raise XRIHTTPError, "Fetching #{xri} returned nothing" if response.nil?
 
-            xrds = Yadis::parseXRDS(response.body)
-            canonicalID = Yadis::get_canonical_id(xri, xrds)
+          xrds = Yadis::parseXRDS(response.body)
+          raise XRIHTTPError, "Fetching #{xri} did not return an XRDS" if xrds.nil?
+          canonicalID = Yadis::get_canonical_id(xri, xrds)
 
           return canonicalID, Yadis::services(xrds)
           # TODO:
@@ -77,19 +72,16 @@ module OpenID
       def self.append_args(url, args)
         return url if args.length == 0
 
-        # rstrip question marks
-        rstripped = url.dup
-        while rstripped[-1].chr == '?'
-          rstripped = rstripped[0...rstripped.length-1]
-        end
+        # strip all trailing question marks
+        rstripped = url.dup.sub(/\?+\z/, '').sub(/(%3F)+\z/, '')
 
-        if rstripped.index('?')
-          sep = '&'
+        if rstripped.include?('?') or rstripped.include?('%3F')
+          sep = ( rstripped[-1] == '&' ? '' : '&' )
         else
           sep = '?'
         end
 
-        return url + sep + XRI.urlencode(args)
+        return rstripped + sep + XRI.urlencode(args)
       end
 
     end

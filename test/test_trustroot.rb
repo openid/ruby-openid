@@ -1,7 +1,5 @@
-require 'test/unit'
+require "test_helper"
 require 'openid/trustroot'
-
-require "testutil"
 
 class TrustRootTest < Test::Unit::TestCase
   include OpenID::TestDataMixin
@@ -10,11 +8,11 @@ class TrustRootTest < Test::Unit::TestCase
     tr = OpenID::TrustRoot::TrustRoot.parse(case_)
     if sanity == 'sane'
       assert(! tr.nil?)
-      assert(tr.sane?, [case_, desc])
-      assert(OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc])
+      assert(tr.sane?)
+      assert(OpenID::TrustRoot::TrustRoot.check_sanity(case_))
     elsif sanity == 'insane'
-      assert(!tr.sane?, [case_, desc])
-      assert(!OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc])
+      assert(!tr.sane?)
+      assert(!OpenID::TrustRoot::TrustRoot.check_sanity(case_))
     else
       assert(tr.nil?, case_)
     end
@@ -24,10 +22,10 @@ class TrustRootTest < Test::Unit::TestCase
     tr = OpenID::TrustRoot::TrustRoot.parse(trust_root)
     actual_match = tr.validate_url(url)
     if expected_match
-      assert(actual_match, [trust_root, url])
+      assert(actual_match)
       assert(OpenID::TrustRoot::TrustRoot.check_url(trust_root, url))
     else
-      assert(!actual_match, [expected_match, actual_match, trust_root, url])
+      assert(!actual_match)
       assert(!OpenID::TrustRoot::TrustRoot.check_url(trust_root, url))
     end
   end
@@ -56,7 +54,7 @@ class TrustRootTest < Test::Unit::TestCase
     top = head.strip()
     gdat = dat.split('-' * 40 + "\n").collect { |i| i.strip() }
     assert(gdat[0] == '')
-    assert(gdat.length == (grps.length * 2 + 1), [gdat, grps])
+    assert(gdat.length == (grps.length * 2 + 1), "length match failed: gdat #{gdat}, grps #{grps}")
     i = 1
     grps.each { |x|
       n, desc = gdat[i].split(': ')
@@ -107,7 +105,7 @@ class TrustRootTest < Test::Unit::TestCase
       trust_root, expected_disco_url = case_
       tr = OpenID::TrustRoot::TrustRoot.parse(trust_root)
       actual_disco_url = tr.build_discovery_url()
-      assert(actual_disco_url == expected_disco_url, case_ + [actual_disco_url])
+      assert(actual_disco_url == expected_disco_url)
     }
   end
 end

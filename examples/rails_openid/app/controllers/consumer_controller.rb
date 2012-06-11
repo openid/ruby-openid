@@ -47,7 +47,7 @@ class ConsumerController < ApplicationController
     end
     return_to = url_for :action => 'complete', :only_path => false
     realm = url_for :action => 'index', :id => nil, :only_path => false
-    
+
     if oidreq.send_redirect?(realm, return_to, params[:immediate])
       redirect_to oidreq.redirect_url(realm, return_to, params[:immediate])
     else
@@ -58,7 +58,10 @@ class ConsumerController < ApplicationController
   def complete
     # FIXME - url_for some action is not necessarily the current URL.
     current_url = url_for(:action => 'complete', :only_path => false)
-    parameters = params.reject{|k,v|request.path_parameters[k]}
+    parameters = params.reject { |k,v|
+      # params keys are String; Rails 3.1 path_parameters keys are Symbol
+      request.path_parameters[k.to_sym]
+    }
     oidresp = consumer.complete(parameters, current_url)
     case oidresp.status
     when OpenID::Consumer::FAILURE

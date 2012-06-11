@@ -1,8 +1,6 @@
-
-require 'test/unit'
+require "test_helper"
 require 'openid/yadis/xrds'
 
-require 'testutil'
 
 module OpenID
   module Yadis

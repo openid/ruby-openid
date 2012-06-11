@@ -1,5 +1,4 @@
-
-require 'test/unit'
+require "test_helper"
 require 'openid/yadis/xrires'
 
 module OpenID
@@ -27,6 +26,10 @@ module OpenID
         @servicetype_enc = 'xri%3A%2F%2F%2Bi-service%2A%28%2Bforwarding%29%2A%28%24v%2A1.0%29'
       end
 
+      def unesc(s)
+        CGI::unescape(s)
+      end
+
       def test_proxy_url
         st = @servicetype
         ste = @servicetype_enc
@@ -34,17 +37,17 @@ module OpenID
         pqu = @proxy.method('query_url')
         h = @proxy_url
 
-        assert_equal(h + '=foo?' + args_esc, pqu.call('=foo', st))
-        assert_equal(h + '=foo/bar?baz&' + args_esc,
-                     pqu.call('=foo/bar?baz', st))
-        assert_equal(h + '=foo/bar?baz=quux&' + args_esc,
-                     pqu.call('=foo/bar?baz=quux', st))
-        assert_equal(h + '=foo/bar?mi=fa&so=la&' + args_esc,
-                     pqu.call('=foo/bar?mi=fa&so=la', st))
+        assert_equal(unesc(h + '=foo?' + args_esc), unesc(pqu.call('=foo', st)))
+        assert_equal(unesc(h + '=foo/bar?baz&' + args_esc),
+                     unesc(pqu.call('=foo/bar?baz', st)))
+        assert_equal(unesc(h + '=foo/bar?baz=quux&' + args_esc),
+                     unesc(pqu.call('=foo/bar?baz=quux', st)))
+        assert_equal(unesc(h + '=foo/bar?mi=fa&so=la&' + args_esc),
+                     unesc(pqu.call('=foo/bar?mi=fa&so=la', st)))
 
         # With no service endpoint selection.
         args_esc = "_xrd_r=application%2Fxrds%2Bxml%3Bsep%3Dfalse"
-        assert_equal(h + '=foo?' + args_esc, pqu.call('=foo', nil))
+        assert_equal(unesc(h + '=foo?' + args_esc), unesc(pqu.call('=foo', nil)))
       end
 
       def test_proxy_url_qmarks
@@ -54,9 +57,10 @@ module OpenID
         pqu = @proxy.method('query_url')
         h = @proxy_url
 
-        assert_equal(h + '=foo/bar??' + args_esc, pqu.call('=foo/bar?', st))
-        assert_equal(h + '=foo/bar????' + args_esc,
-                     pqu.call('=foo/bar???', st))
+        assert_equal(unesc(h + '=foo/bar?' + args_esc),
+                     unesc(pqu.call('=foo/bar??', st)))
+        assert_equal(unesc(h + '=foo/bar?' + args_esc),
+                     unesc(pqu.call('=foo/bar???', st)))
       end
     end
   end

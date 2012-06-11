@@ -7,10 +7,10 @@ require 'openid/util'
 
 module OpenID
 
-  module DiscoverData
+  module YadisData
 
     include TestDataMixin
-    include Util
+    include TestUtil
 
     TESTLIST = [
                 # success,  input_name,          id_name,            result_name
