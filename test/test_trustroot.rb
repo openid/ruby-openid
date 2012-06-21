@@ -1,7 +1,6 @@
 require 'test/unit'
+require 'testutil'
 require 'openid/trustroot'
-
-require "testutil"
 
 class TrustRootTest < Test::Unit::TestCase
   include OpenID::TestDataMixin
@@ -9,14 +8,14 @@ class TrustRootTest < Test::Unit::TestCase
   def _test_sanity(case_, sanity, desc)
     tr = OpenID::TrustRoot::TrustRoot.parse(case_)
     if sanity == 'sane'
-      assert(! tr.nil?)
-      assert(tr.sane?, [case_, desc])
-      assert(OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc])
+      assert !tr.nil?
+      assert tr.sane?, [case_, desc].join(' ')
+      assert OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc].join(' ')
     elsif sanity == 'insane'
-      assert(!tr.sane?, [case_, desc])
-      assert(!OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc])
+      assert !tr.sane?, [case_, desc].join(' ')
+      assert !OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc].join(' ')
     else
-      assert(tr.nil?, case_)
+      assert tr.nil?, case_
     end
   end
 
@@ -24,11 +23,11 @@ class TrustRootTest < Test::Unit::TestCase
     tr = OpenID::TrustRoot::TrustRoot.parse(trust_root)
     actual_match = tr.validate_url(url)
     if expected_match
-      assert(actual_match, [trust_root, url])
-      assert(OpenID::TrustRoot::TrustRoot.check_url(trust_root, url))
+      assert actual_match, [trust_root, url].join(' ')
+      assert OpenID::TrustRoot::TrustRoot.check_url(trust_root, url)
     else
-      assert(!actual_match, [expected_match, actual_match, trust_root, url])
-      assert(!OpenID::TrustRoot::TrustRoot.check_url(trust_root, url))
+      assert !actual_match, [expected_match, actual_match, trust_root, url].join(' ')
+      assert !OpenID::TrustRoot::TrustRoot.check_url(trust_root, url)
     end
   end
 
@@ -55,8 +54,8 @@ class TrustRootTest < Test::Unit::TestCase
     tests = []
     top = head.strip()
     gdat = dat.split('-' * 40 + "\n").collect { |i| i.strip() }
-    assert(gdat[0] == '')
-    assert(gdat.length == (grps.length * 2 + 1), [gdat, grps])
+    assert gdat[0] == ''
+    assert gdat.length == (grps.length * 2 + 1)
     i = 1
     grps.each { |x|
       n, desc = gdat[i].split(': ')
@@ -107,7 +106,7 @@ class TrustRootTest < Test::Unit::TestCase
       trust_root, expected_disco_url = case_
       tr = OpenID::TrustRoot::TrustRoot.parse(trust_root)
       actual_disco_url = tr.build_discovery_url()
-      assert(actual_disco_url == expected_disco_url, case_ + [actual_disco_url])
+      assert actual_disco_url == expected_disco_url
     }
   end
 end

@@ -1,6 +1,6 @@
+require "test/unit"
 require "openid/consumer/checkid_request"
 require "openid/message"
-require "test/unit"
 require "testutil"
 require "util"
 

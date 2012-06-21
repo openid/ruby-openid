@@ -1,9 +1,7 @@
 # last synced with Python openid.test.test_message on 6/29/2007.
-
 require 'test/unit'
 require 'util'
 require 'openid/message'
-
 require 'rexml/document'
 
 module OpenID

@@ -1,6 +1,5 @@
-# coding: ASCII-8BIT
-require 'test/unit'
-
+# encoding: ASCII-8BIT
+require "test/unit"
 require "openid/util"
 
 module OpenID

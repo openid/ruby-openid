@@ -1,8 +1,8 @@
+require "test/unit"
+require "testutil"
 require "openid/kvpost"
 require "openid/kvform"
 require "openid/message"
-require "test/unit"
-require 'testutil'
 
 module OpenID
   class KVPostTestCase < Test::Unit::TestCase

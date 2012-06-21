@@ -119,8 +119,7 @@ module OpenID
 
         ret_assoc = @store.get_association(server_url, nil)
         unexpected = [assoc2.handle, assoc3.handle]
-        assert(ret_assoc.nil? || !unexpected.member?(ret_assoc.handle),
-               ret_assoc)
+        assert ret_assoc.nil? || !unexpected.member?(ret_assoc.handle)
 
         _check_retrieve(server_url, assoc.handle, assoc)
         _check_retrieve(server_url, assoc2.handle, nil)

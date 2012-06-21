@@ -1,6 +1,6 @@
-require "openid/consumer"
 require "test/unit"
 require "testutil"
+require "openid/consumer"
 
 module OpenID
   class Consumer

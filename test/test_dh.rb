@@ -1,6 +1,6 @@
 require 'test/unit'
-require 'openid/dh'
 require 'testutil'
+require 'openid/dh'
 
 module OpenID
   class DiffieHellmanExposed < OpenID::DiffieHellman

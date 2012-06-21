@@ -1,4 +1,3 @@
-
 require 'test/unit'
 require 'openid/yadis/xrires'
 
@@ -30,33 +29,47 @@ module OpenID
       def test_proxy_url
         st = @servicetype
         ste = @servicetype_enc
-        args_esc = "_xrd_r=application%2Fxrds%2Bxml&_xrd_t=" + ste
+        args_esc = ["_xrd_r=application%2Fxrds%2Bxml", "_xrd_t=#{ste}"]
         pqu = @proxy.method('query_url')
         h = @proxy_url
 
-        assert_equal(h + '=foo?' + args_esc, pqu.call('=foo', st))
-        assert_equal(h + '=foo/bar?baz&' + args_esc,
-                     pqu.call('=foo/bar?baz', st))
-        assert_equal(h + '=foo/bar?baz=quux&' + args_esc,
-                     pqu.call('=foo/bar?baz=quux', st))
-        assert_equal(h + '=foo/bar?mi=fa&so=la&' + args_esc,
-                     pqu.call('=foo/bar?mi=fa&so=la', st))
+        assert_match h + '=foo?', pqu.call('=foo', st)
+        assert_match args_esc[0], pqu.call('=foo', st)
+        assert_match args_esc[1], pqu.call('=foo', st)
+
+        assert_match h + '=foo/bar?baz&', pqu.call('=foo/bar?baz', st)
+        assert_match args_esc[0], pqu.call('=foo/bar?baz', st)
+        assert_match args_esc[1], pqu.call('=foo/bar?baz', st)
+
+        assert_match h + '=foo/bar?baz=quux&', pqu.call('=foo/bar?baz=quux', st)
+        assert_match args_esc[0], pqu.call('=foo/bar?baz=quux', st)
+        assert_match args_esc[1], pqu.call('=foo/bar?baz=quux', st)
+
+        assert_match h + '=foo/bar?mi=fa&so=la&', pqu.call('=foo/bar?mi=fa&so=la', st)
+        assert_match args_esc[0], pqu.call('=foo/bar?mi=fa&so=la', st)
+        assert_match args_esc[1], pqu.call('=foo/bar?mi=fa&so=la', st)
 
         # With no service endpoint selection.
         args_esc = "_xrd_r=application%2Fxrds%2Bxml%3Bsep%3Dfalse"
-        assert_equal(h + '=foo?' + args_esc, pqu.call('=foo', nil))
+
+        assert_match h + '=foo?', pqu.call('=foo', nil)
+        assert_match args_esc, pqu.call('=foo', nil)
       end
 
       def test_proxy_url_qmarks
         st = @servicetype
         ste = @servicetype_enc
-        args_esc = "_xrd_r=application%2Fxrds%2Bxml&_xrd_t=" + ste
+        args_esc = ["_xrd_r=application%2Fxrds%2Bxml", "_xrd_t=#{ste}"]
         pqu = @proxy.method('query_url')
         h = @proxy_url
 
-        assert_equal(h + '=foo/bar??' + args_esc, pqu.call('=foo/bar?', st))
-        assert_equal(h + '=foo/bar????' + args_esc,
-                     pqu.call('=foo/bar???', st))
+        assert_match h + '=foo/bar??', pqu.call('=foo/bar?', st)
+        assert_match args_esc[0], pqu.call('=foo/bar?', st)
+        assert_match args_esc[1], pqu.call('=foo/bar?', st)
+
+        assert_match h + '=foo/bar????', pqu.call('=foo/bar???', st)
+        assert_match args_esc[0], pqu.call('=foo/bar???', st)
+        assert_match args_esc[1], pqu.call('=foo/bar???', st)
       end
     end
   end

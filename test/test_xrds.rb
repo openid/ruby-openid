@@ -1,8 +1,6 @@
-
 require 'test/unit'
-require 'openid/yadis/xrds'
-
 require 'testutil'
+require 'openid/yadis/xrds'
 
 module OpenID
   module Yadis
@@ -16,8 +14,8 @@ module OpenID
 
       XRDS_DATA_DIR = TEST_DATA_DIR.join('test_xrds')
 
-      def read_data_file(filename)
-        super(filename, false, XRDS_DATA_DIR)
+      def read_xrds_data_file(filename)
+        read_data_file(filename, false, XRDS_DATA_DIR)
       end
     end
 
@@ -26,12 +24,12 @@ module OpenID
 
       # Check that parsing succeeds at all.
       def test_parse
-        result = Yadis.parseXRDS(read_data_file(XRD_FILE))
+        result = Yadis.parseXRDS(read_xrds_data_file(XRD_FILE))
         assert_not_nil result
       end
 
       def test_parse_no_xrds_xml
-        xmldoc = read_data_file(NOXRDS_FILE)
+        xmldoc = read_xrds_data_file(NOXRDS_FILE)
         assert_raise(Yadis::XRDSError) {
           Yadis.parseXRDS(xmldoc)
         }
@@ -44,8 +42,8 @@ module OpenID
       end
 
       def test_is_xrds
-        isnt = REXML::Document.new(read_data_file(NOXRDS_FILE))
-        should_be = Yadis.parseXRDS(read_data_file(XRD_FILE))
+        isnt = REXML::Document.new(read_xrds_data_file(NOXRDS_FILE))
+        should_be = Yadis.parseXRDS(read_xrds_data_file(XRD_FILE))
         assert_equal false, Yadis::is_xrds?(isnt)
         assert Yadis::is_xrds?(should_be)
       end
@@ -56,7 +54,7 @@ module OpenID
 
       # XXX: Test to make sure this really gets the _right_ XRD.
       def test_get_xrd
-        doc = Yadis.parseXRDS(read_data_file(XRD_FILE))
+        doc = Yadis.parseXRDS(read_xrds_data_file(XRD_FILE))
         result = Yadis::get_yadis_xrd(doc)
         assert_not_nil result
         assert_equal 'XRD', result.name
@@ -64,7 +62,7 @@ module OpenID
       end
 
       def test_no_xrd
-        xmldoc = read_data_file(NOXRD_FILE)
+        xmldoc = read_xrds_data_file(NOXRD_FILE)
         doc = Yadis.parseXRDS(xmldoc)
         assert_raise(Yadis::XRDSError) {
           Yadis.get_yadis_xrd(doc)
@@ -76,7 +74,7 @@ module OpenID
       include XRDSTestMixin
 
       def test_get_xrd
-        doc = Yadis.parseXRDS(read_data_file(XRD_FILE))
+        doc = Yadis.parseXRDS(read_xrds_data_file(XRD_FILE))
         count = 0
         result = Yadis::each_service(doc) { |e|
           assert_equal 'Service', e.name
@@ -87,7 +85,7 @@ module OpenID
       end
 
       def test_no_xrd
-        xmldoc = read_data_file(NOXRD_FILE)
+        xmldoc = read_xrds_data_file(NOXRD_FILE)
         doc = Yadis.parseXRDS(xmldoc)
         assert_raise(Yadis::XRDSError) {
           Yadis.each_service(doc)
@@ -95,7 +93,7 @@ module OpenID
       end
 
       def test_equal_j3h
-        doc = Yadis.parseXRDS(read_data_file('=j3h.2007.11.14.xrds'))
+        doc = Yadis.parseXRDS(read_xrds_data_file('=j3h.2007.11.14.xrds'))
         count = 0
         result = Yadis::each_service(doc) { |e|
           assert_equal 'Service', e.name
@@ -161,7 +159,7 @@ END
       include XRDSTestMixin
 
       def test_multisegment_xri
-        xmldoc = Yadis.parseXRDS(read_data_file('subsegments.xrds'))
+        xmldoc = Yadis.parseXRDS(read_xrds_data_file('subsegments.xrds'))
         result = Yadis.get_canonical_id('xri://=nishitani*masaki', xmldoc)
       end
     end
