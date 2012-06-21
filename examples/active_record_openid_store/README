@@ -44,9 +44,11 @@ You may garbage collect unused nonces and expired associations using
 the gc instance method of ActiveRecordOpenIDStore.  Hook it up to a
 task in your app's Rakefile like so:
 
-  desc 'GC OpenID store'
+  desc 'GC OpenID store, deleting expired nonces and associations'
   task :gc_openid_store => :environment do
-    ActiveRecordOpenIDStore.new.cleanup
+    require 'openid_ar_store'
+    nonces, associations = ActiveRecordStore.new.cleanup
+    puts "Deleted #{nonces} nonces, #{associations} associations"
   end
 
 Run it by typing:
