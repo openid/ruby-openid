@@ -8,6 +8,7 @@ require "openid/message"
 require "openid/store/memory"
 require "util"
 require "time"
+require 'testutil'
 
 module OpenID
   class DHAssocSessionTest < Test::Unit::TestCase
