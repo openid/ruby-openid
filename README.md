@@ -27,7 +27,8 @@ Check the installation:
 
     $ irb
     irb> require 'rubygems'
-    irb> require_gem 'ruby-openid'
+    => false
+    irb> gem 'ruby-openid'
     => true
 
 The library is known to work with Ruby 1.8.4 on Unix, Max OSX and

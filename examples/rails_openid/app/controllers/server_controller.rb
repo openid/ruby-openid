@@ -1,16 +1,10 @@
 require 'pathname'
 
-# load the openid library, first trying rubygems
-#begin
-#  require "rubygems"
-#  require_gem "ruby-openid", ">= 1.0"
-#rescue LoadError
 require "openid"
 require "openid/consumer/discovery"
 require 'openid/extensions/sreg'
 require 'openid/extensions/pape'
 require 'openid/store/filesystem'
-#end
 
 class ServerController < ApplicationController
 
