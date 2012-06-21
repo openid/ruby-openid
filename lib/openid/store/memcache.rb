@@ -63,7 +63,11 @@ module OpenID
         ts = timestamp.to_s # base 10 seconds since epoch
         nonce_key = key_prefix + 'N' + server_url + '|' + ts + '|' + salt
         result = @cache_client.add(nonce_key, '', expiry(Nonce.skew + 5))
-        return !!(result =~ /^STORED/)
+        if result.is_a? String
+          return !!(result =~ /^STORED/)
+        else
+          return result == true
+        end
       end
 
       def assoc_key(server_url, assoc_handle=nil)
@@ -87,7 +91,11 @@ module OpenID
 
       def delete(key)
         result = @cache_client.delete(key)
-        return !!(result =~ /^DELETED/)
+        if result.is_a? String
+          return !!(result =~ /^DELETED/)
+        else
+          return result == true
+        end
       end
 
       def serialize(assoc)
