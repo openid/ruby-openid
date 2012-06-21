@@ -288,7 +288,7 @@ module OpenID
       markup += ">\n"
 
       to_post_args.each { |k,v|
-        markup += "<input type='hidden' name='#{k}' value='#{v}' />\n"
+        markup += "<input type='hidden' name='#{k}' value='#{OpenID::Util.html_encode(v)}' />\n"
       }
       markup += "<input type='submit' value='#{submit_text}' />\n"
       markup += "\n</form>"
