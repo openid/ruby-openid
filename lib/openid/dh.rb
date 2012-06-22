@@ -57,7 +57,7 @@ module OpenID
       end
 
       if String.method_defined? :bytes
-        s.bytes.zip(t.bytes).map{|sb,tb| sb^tb}.pack('C*')
+        s.bytes.to_a.zip(t.bytes.to_a).map{|sb,tb| sb^tb}.pack('C*')
       else
         indices = 0...(s.length)
         chrs = indices.collect {|i| (s[i]^t[i]).chr}

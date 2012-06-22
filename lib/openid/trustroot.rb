@@ -210,6 +210,7 @@ module OpenID
         return nil if parts.nil?
 
         proto, host, port, path = parts
+        return nil if host[0] == '.'
 
         # check for URI fragment
         if path and !path.index('#').nil?

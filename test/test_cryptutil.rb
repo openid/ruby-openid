@@ -1,5 +1,5 @@
 # coding: ASCII-8BIT
-require 'test/unit'
+require "test/unit"
 require "openid/cryptutil"
 require "pathname"
 

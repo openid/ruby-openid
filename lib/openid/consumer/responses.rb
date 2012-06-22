@@ -139,6 +139,8 @@ module OpenID
     class SetupNeededResponse
       include Response
       STATUS = SETUP_NEEDED
+
+      attr_reader :setup_url
       def initialize(endpoint, setup_url)
         @endpoint = endpoint
         @setup_url = setup_url

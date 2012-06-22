@@ -1,4 +1,3 @@
-
 require 'test/unit'
 require 'openid/consumer/discovery'
 require 'openid/yadis/services'

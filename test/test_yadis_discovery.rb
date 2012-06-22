@@ -1,8 +1,6 @@
-
 require 'test/unit'
-require 'uri'
 require 'testutil'
-
+require 'uri'
 require 'openid/yadis/discovery'
 require 'openid/fetchers'
 require 'openid/util'

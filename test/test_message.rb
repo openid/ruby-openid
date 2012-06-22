@@ -1,9 +1,7 @@
 # last synced with Python openid.test.test_message on 6/29/2007.
-
 require 'test/unit'
 require 'util'
 require 'openid/message'
-
 require 'rexml/document'
 
 module OpenID
@@ -902,6 +900,7 @@ module OpenID
         'openid.identity' => 'http://bogus.example.invalid:port/',
         'openid.assoc_handle' => 'FLUB',
         'openid.return_to' => 'Neverland',
+        'openid.ax.value.fullname' => "Bob&Smith'"
       }
 
       @action_url = 'scheme://host:port/path?query'

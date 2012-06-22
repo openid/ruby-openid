@@ -1,6 +1,8 @@
-
-require 'test/unit'
-require 'openid/yadis/filters'
+require "test/unit"
+require "testutil"
+require "rexml/document"
+require "openid/yadis/xrds"
+require "openid/yadis/filters"
 
 module OpenID
   class BasicServiceEndpointTest < Test::Unit::TestCase
@@ -12,8 +14,7 @@ module OpenID
 
       no_types_endpoint = Yadis::BasicServiceEndpoint.new(yadis_url, [], nil, nil)
 
-      some_types_endpoint = Yadis::BasicServiceEndpoint.new(yadis_url, types,
-                                                            nil, nil)
+      some_types_endpoint = Yadis::BasicServiceEndpoint.new(yadis_url, types, nil, nil)
 
       assert(no_types_endpoint.match_types([]) == [])
       assert(no_types_endpoint.match_types(["urn:absent"]) == [])
@@ -158,15 +159,14 @@ module OpenID
                    ]
 
       cf = Yadis::CompoundFilter.new(subfilters)
-      assert(cf.get_service_endpoints("unused", "unused") == all)
+      assert cf.get_service_endpoints("unused", "unused") == all
     end
   end
 
   class MakeFilterTest < Test::Unit::TestCase
     def test_parts_nil
       result = Yadis.make_filter(nil)
-      assert(result.is_a?(Yadis::TransformFilterMaker),
-             result)
+      assert result.is_a?(Yadis::TransformFilterMaker)
     end
 
     def test_parts_array
@@ -174,53 +174,49 @@ module OpenID
       e2 = Yadis::BasicServiceEndpoint.new(nil, [], nil, nil)
 
       result = Yadis.make_filter([e1, e2])
-      assert(result.is_a?(Yadis::TransformFilterMaker),
-             result)
-      assert(result.filter_procs[0] == e1.method('from_basic_service_endpoint'))
-      assert(result.filter_procs[1] == e2.method('from_basic_service_endpoint'))
+      assert result.is_a?(Yadis::TransformFilterMaker)
+      assert result.filter_procs[0] == e1.method('from_basic_service_endpoint')
+      assert result.filter_procs[1] == e2.method('from_basic_service_endpoint')
     end
 
     def test_parts_single
       e = Yadis::BasicServiceEndpoint.new(nil, [], nil, nil)
       result = Yadis.make_filter(e)
-      assert(result.is_a?(Yadis::TransformFilterMaker),
-             result)
+      assert result.is_a?(Yadis::TransformFilterMaker)
     end
   end
 
   class MakeCompoundFilterTest < Test::Unit::TestCase
     def test_no_filters
       result = Yadis.mk_compound_filter([])
-      assert(result.subfilters == [])
+      assert result.subfilters == []
     end
 
     def test_single_transform_filter
       f = Yadis::TransformFilterMaker.new([])
-      assert(Yadis.mk_compound_filter([f]) == f)
+      assert_equal f, Yadis.mk_compound_filter([f])
     end
 
     def test_single_endpoint
       e = Yadis::BasicServiceEndpoint.new(nil, [], nil, nil)
       result = Yadis.mk_compound_filter([e])
-      assert(result.is_a?(Yadis::TransformFilterMaker))
+      assert result.is_a?(Yadis::TransformFilterMaker)
 
       # Expect the transform filter to call
       # from_basic_service_endpoint on the endpoint
       filter = result.filter_procs[0]
-      assert(filter == e.method('from_basic_service_endpoint'),
-             filter)
+      assert_equal filter, e.method('from_basic_service_endpoint')
     end
 
     def test_single_proc
       # Create a proc that just returns nil for any endpoint
       p = Proc.new { |endpoint| nil }
       result = Yadis.mk_compound_filter([p])
-      assert(result.is_a?(Yadis::TransformFilterMaker))
+      assert result.is_a?(Yadis::TransformFilterMaker)
 
       # Expect the transform filter to call
       # from_basic_service_endpoint on the endpoint
-      filter = result.filter_procs[0]
-      assert(filter == p)
+      assert_equal result.filter_procs[0], p
     end
 
     def test_multiple_filters_same_type
@@ -231,8 +227,8 @@ module OpenID
       # from f1 and f2.
       result = Yadis.mk_compound_filter([f1, f2])
 
-      assert(result.is_a?(Yadis::CompoundFilter))
-      assert(result.subfilters == [f1, f2])
+      assert result.is_a?(Yadis::CompoundFilter)
+      assert result.subfilters == [f1, f2]
     end
 
     def test_multiple_filters_different_type
@@ -247,14 +243,12 @@ module OpenID
       # from f1 and f2.
       result = Yadis.mk_compound_filter([f1, f2, f3, f4])
 
-      assert(result.is_a?(Yadis::CompoundFilter))
+      assert result.is_a?(Yadis::CompoundFilter)
 
-      assert(result.subfilters[0] == f1)
-      assert(result.subfilters[1].filter_procs[0] ==
-             e.method('from_basic_service_endpoint'))
-      assert(result.subfilters[2].filter_procs[0] ==
-             f2.method('from_basic_service_endpoint'))
-      assert(result.subfilters[2].filter_procs[1] == f3)
+      assert result.subfilters[0] == f1
+      assert result.subfilters[1].filter_procs[0] == e.method('from_basic_service_endpoint')
+      assert result.subfilters[2].filter_procs[0] == f2.method('from_basic_service_endpoint')
+      assert result.subfilters[2].filter_procs[1] == f3
     end
 
     def test_filter_type_error

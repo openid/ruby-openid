@@ -1,3 +1,7 @@
+require 'test/unit'
+require 'testutil'
+require 'util'
+require 'uri'
 require 'openid/server'
 require 'openid/cryptutil'
 require 'openid/association'
@@ -6,11 +10,6 @@ require 'openid/message'
 require 'openid/store/memory'
 require 'openid/dh'
 require 'openid/consumer/associationmanager'
-require 'util'
-require "testutil"
-
-require 'test/unit'
-require 'uri'
 
 # In general, if you edit or add tests here, try to move in the
 # direction of testing smaller units.  For testing the external
@@ -208,7 +207,7 @@ module OpenID
       begin
         result = @decode.call(args)
       rescue ArgumentError => err
-        assert(!err.to_s.index('values').nil?, err)
+        assert !err.to_s.index('values').nil?
       else
         flunk("Expected ArgumentError, but got result #{result}")
       end
@@ -1008,7 +1007,7 @@ module OpenID
       assert(webresponse.headers.has_key?('location'))
       location = webresponse.headers['location']
       query = Util.parse_query(URI::parse(location).query)
-      assert(!query.has_key?('openid.sig'), response.fields.to_post_args())
+      assert !query.has_key?('openid.sig')
     end
 
     def test_assocReply
@@ -1530,7 +1529,7 @@ module OpenID
                    {'blue' => 'star',
                      'mode' => 'id_res',
                    })
-      
+
       assert_equal(@response.fields.get_args(namespace),
                    {'bright' => 'potato'})
     end
@@ -1613,7 +1612,7 @@ module OpenID
       r = @request.answer(@signatory)
       assert_equal({'is_valid' => 'false'},
                    r.fields.get_args(OPENID_NS))
-      
+
     end
 
     def test_replay
@@ -1750,7 +1749,7 @@ module OpenID
                            invalid_s1,
                            invalid_s1_2,
                           ]
-            
+
       bad_request_argss.each { |request_args|
         message = Message.from_post_args(request_args)
         assert_raise(Server::ProtocolError) {
@@ -2299,8 +2298,7 @@ module OpenID
         verified = @signatory.verify(assoc_handle, signed)
       }
 
-      assert(!verified)
-      #assert(@messages)
+      assert !verified
     end
 
     def test_verifyAssocMismatch
@@ -2322,16 +2320,14 @@ module OpenID
         verified = @signatory.verify(assoc_handle, signed)
       }
 
-      assert(!verified)
-      #assert(@messages)
+      assert !verified
     end
 
     def test_getAssoc
       assoc_handle = makeAssoc(true)
       assoc = @signatory.get_association(assoc_handle, true)
-      assert(assoc)
-      assert_equal(assoc.handle, assoc_handle)
-      # @failIf(@messages, @messages)
+      assert assoc
+      assert_equal assoc.handle, assoc_handle
     end
 
     def test_getAssocExpired
@@ -2340,8 +2336,7 @@ module OpenID
       silence_logging {
         assoc = @signatory.get_association(assoc_handle, true)
       }
-      assert(!assoc, assoc)
-      # assert(@messages)
+      assert !assoc
     end
 
     def test_getAssocInvalid
@@ -2428,7 +2423,7 @@ module OpenID
                     'openid.assoc_type' => 'HMAC-SHA1'}
       areq = @server.decode_request(assoc_args)
       aresp = @server.handle_request(areq)
-      
+
       amess = aresp.fields
       assert(amess.is_openid1)
       ahandle = amess.get_arg(OPENID_NS, 'assoc_handle')
@@ -2441,7 +2436,7 @@ module OpenID
                       'openid.return_to' => 'http://example.com/openid/consumer',
                       'openid.assoc_handle' => ahandle,
                       'openid.identity' => 'http://foo.com/'}
-      
+
       cireq = @server.decode_request(checkid_args)
       ciresp = cireq.answer(true)
 
@@ -2449,7 +2444,7 @@ module OpenID
 
       assert_equal(assoc.get_message_signature(signed_resp.fields),
                    signed_resp.fields.get_arg(OPENID_NS, 'sig'))
-                   
+
       assert(assoc.check_message_signature(signed_resp.fields))
     end
 
