@@ -236,7 +236,7 @@ module OpenID
           if @@FILENAME_ALLOWED.index(c)
             filename_chunks << c
           else
-            filename_chunks << sprintf("_%02X", c[0])
+            filename_chunks << sprintf("_%02X", c.bytes.first)
           end
         end
         filename_chunks.join("")
