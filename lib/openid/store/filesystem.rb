@@ -13,10 +13,9 @@ module OpenID
 
       # Create a Filesystem store instance, putting all data in +directory+.
       def initialize(directory)
-        p_dir = Pathname.new(directory)
-        @nonce_dir = p_dir.join('nonces')
-        @association_dir = p_dir.join('associations')
-        @temp_dir = p_dir.join('temp')
+        @nonce_dir = File.join(directory, 'nonces')
+        @association_dir = File.join(directory, 'associations')
+        @temp_dir = File.join(directory, 'temp')
 
         self.ensure_dir(@nonce_dir)
         self.ensure_dir(@association_dir)
@@ -40,7 +39,7 @@ module OpenID
           handle_hash = ''
         end
         filename = [proto,domain,url_hash,handle_hash].join('-')
-        @association_dir.join(filename)
+        File.join(@association_dir, filename)
       end
 
       # Store an association in the assoc directory
@@ -155,7 +154,7 @@ module OpenID
 
         nonce_fn = '%08x-%s-%s-%s-%s'%[timestamp, proto, domain, url_hash, salt_hash]
 
-        filename = @nonce_dir.join(nonce_fn)
+        filename = File.join(@nonce_dir, nonce_fn)
 
         begin
           fd = File.new(filename, File::CREAT | File::EXCL | File::WRONLY, 0200)
@@ -174,7 +173,7 @@ module OpenID
       end
 
       def cleanup_associations
-        association_filenames = Dir[@association_dir.join("*").to_s]
+        association_filenames = Dir[File.join(@association_dir, "*")]
         count = 0
         association_filenames.each do |af|
           begin
@@ -204,7 +203,7 @@ module OpenID
       end
 
       def cleanup_nonces
-        nonces = Dir[@nonce_dir.join("*").to_s]
+        nonces = Dir[File.join(@nonce_dir, "*")]
         now = Time.now.to_i
 
         count = 0
