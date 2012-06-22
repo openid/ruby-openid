@@ -27,6 +27,13 @@ module OpenID
       attr_accessor :ns_alias, :mode, :ns_uri
 
       NS_URI = 'http://openid.net/srv/ax/1.0'
+
+      begin
+        Message.register_namespace_alias(NS_URI, 'ax')
+      rescue NamespaceAliasRegistrationError => e
+        Util.log(e)
+      end
+
       def initialize
         @ns_alias = 'ax'
         @ns_uri = NS_URI
