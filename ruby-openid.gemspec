@@ -1,21 +1,25 @@
-require 'rubygems'
+# -*- encoding: utf-8 -*-
+require File.expand_path('../lib/openid/version', __FILE__)
 
-SPEC = Gem::Specification.new do |s|
-  s.name = `cat admin/library-name`.strip
-#  s.version = `darcs changes --tags= | awk '$1 == "tagged" { print $2 }' | head -n 1`.strip
-  s.version = '2.1.8'
+Gem::Specification.new do |s|
+  s.name = 'ruby-openid'
   s.author = 'JanRain, Inc'
   s.email = 'openid@janrain.com'
-  s.homepage = 'http://github.com/openid/ruby-openid'
-  s.platform = Gem::Platform::RUBY
+  s.homepage = 'https://github.com/openid/ruby-openid'
   s.summary = 'A library for consuming and serving OpenID identities.'
+  s.version = OpenID::VERSION
+
+  # Files
   files = Dir.glob("{examples,lib,test}/**/*")
   files << 'NOTICE' << 'CHANGELOG'
   s.files = files.delete_if {|f| f.include?('_darcs') || f.include?('admin')}
-  s.require_path = 'lib'
+  s.require_paths = ['lib']
   s.autorequire = 'openid'
-  s.test_file = 'admin/runtests.rb'
+  s.executables = s.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  s.test_files = s.files.grep(%r{^(test|spec|features)/})
+
+  # RDoc
   s.has_rdoc = true
-  s.extra_rdoc_files = ['README','INSTALL','LICENSE','UPGRADE']
-  s.rdoc_options << '--main' << 'README'
+  s.extra_rdoc_files = ['README.md','INSTALL','LICENSE','UPGRADE']
+  s.rdoc_options << '--main' << 'README.md'
 end
