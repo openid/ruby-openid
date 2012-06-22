@@ -573,7 +573,7 @@ module OpenID
         assert_raises(Error) { @msg.get_single(@type_a) }
       end
 
-      def test_from_success_response
+      def test_from_unsigned_success_response
         uri = 'http://under.the.sea/'
         name = 'ext0'
         value = 'snarfblat'
@@ -586,7 +586,7 @@ module OpenID
                                                'ax.mode' => 'fetch_response',
                                                'ax.type.' + name => uri,
                                                'ax.count.' + name => '1',
-                                               'ax.value.' + name + '.1' => value,
+                                               'ax.value.' + name + '.1' => value
                                              })
 
         e = OpenID::OpenIDServiceEndpoint.new()
@@ -598,7 +598,55 @@ module OpenID
         assert_equal(values, [value])
       end
 
-      def test_from_success_response_empty
+      def test_from_signed_success_response
+        uri = 'http://under.the.sea/'
+        name = 'ext0'
+        value = 'snarfblat'
+        oid_fields = {
+          'mode' => 'id_res',
+          'ns' => OPENID2_NS,
+          'ns.ax' => AXMessage::NS_URI,
+          'ax.update_url' => 'http://example.com/realm/update_path',
+          'ax.mode' => 'fetch_response',
+          'ax.type.' + name => uri,
+          'ax.count.' + name => '1',
+          'ax.value.' + name + '.1' => value
+        }
+        signed_fields = oid_fields.keys.map{|f| "openid.#{f}"}
+
+        m = OpenID::Message.from_openid_args(oid_fields)
+        e = OpenID::OpenIDServiceEndpoint.new()
+        resp = OpenID::Consumer::SuccessResponse.new(e, m, signed_fields)
+
+        ax_resp = FetchResponse.from_success_response(resp, true)
+
+        values = ax_resp[uri]
+        assert_equal(values, [value])
+      end
+
+      def test_from_signed_success_response_with_unsigned_attributes
+        uri = 'http://under.the.sea/'
+        name = 'ext0'
+        value = 'snarfblat'
+
+        m = OpenID::Message.from_openid_args({
+                                               'mode' => 'id_res',
+                                               'ns' => OPENID2_NS,
+                                               'ns.ax' => AXMessage::NS_URI,
+                                               'ax.update_url' => 'http://example.com/realm/update_path',
+                                               'ax.mode' => 'fetch_response',
+                                               'ax.type.' + name => uri,
+                                               'ax.count.' + name => '1',
+                                               'ax.value.' + name + '.1' => value
+                                             })
+
+        e = OpenID::OpenIDServiceEndpoint.new()
+        resp = OpenID::Consumer::SuccessResponse.new(e, m, [])
+
+        assert_nil FetchResponse.from_success_response(resp, true)
+      end
+
+      def test_from_empty_success_response
         e = OpenID::OpenIDServiceEndpoint.new()
         m = OpenID::Message.from_openid_args({'mode' => 'id_res'})
         resp = OpenID::Consumer::SuccessResponse.new(e, m, [])

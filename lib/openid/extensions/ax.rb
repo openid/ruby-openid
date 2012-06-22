@@ -38,7 +38,7 @@ module OpenID
       # Raise an exception if the mode in the attribute exchange
       # arguments does not match what is expected for this class.
       def check_mode(ax_args)
-        actual_mode = ax_args['mode']
+        actual_mode = ax_args ? ax_args['mode'] : nil
         if actual_mode != @mode
           raise Error, "Expected mode #{mode.inspect}, got #{actual_mode.inspect}"
         end
@@ -110,7 +110,7 @@ module OpenID
     class FetchRequest < AXMessage
       attr_reader :requested_attributes
       attr_accessor :update_url
-      
+
       MODE = 'fetch_request'
 
       def initialize(update_url = nil)
@@ -137,7 +137,7 @@ module OpenID
         aliases = NamespaceMap.new
         required = []
         if_available = []
-        ax_args = new_args 
+        ax_args = new_args
         @requested_attributes.each{|type_uri, attribute|
           if attribute.ns_alias
             name = aliases.add_alias(type_uri, attribute.ns_alias)
@@ -328,7 +328,7 @@ module OpenID
           if count_s.nil?
             value = ax_args['value.'+name]
             if value.nil?
-              raise IndexError, "Missing #{'value.'+name} in FetchResponse" 
+              raise IndexError, "Missing #{'value.'+name} in FetchResponse"
             elsif value.empty?
               values = []
             else
@@ -365,7 +365,7 @@ module OpenID
       def get(type_uri)
         @data[type_uri]
       end
-      
+
       # retrieve the list of values for this attribute
       def [](type_uri)
         @data[type_uri]
@@ -469,26 +469,26 @@ module OpenID
 
     # A store request attribute exchange message representation
     class StoreRequest < KeyValueMessage
-      
+
       MODE = 'store_request'
-      
+
       def initialize
         super
         @mode = MODE
       end
-      
+
       # Extract a StoreRequest from an OpenID message
       # message: OpenID::Message
       # return a StoreRequest or nil if AX arguments are not present
       def self.from_openid_request(oidreq)
-        message = oidreq.message 
+        message = oidreq.message
         ax_args = message.get_args(NS_URI)
         return nil if ax_args.empty? or ax_args['mode'] != MODE
         req = new
         req.parse_extension_args(ax_args)
         req
       end
-      
+
       def get_extension_args(aliases=nil)
         ax_args = new_args
         kv_args = _get_extension_kv_args(aliases)
@@ -516,13 +516,13 @@ module OpenID
         end
         @error_message = error_message
       end
-      
+
       def self.from_success_response(success_response)
         resp = nil
         ax_args = success_response.message.get_args(NS_URI)
         resp = ax_args.key?('error') ? new(false, ax_args['error']) : new
       end
-      
+
       def succeeded?
         @mode == SUCCESS_MODE
       end
