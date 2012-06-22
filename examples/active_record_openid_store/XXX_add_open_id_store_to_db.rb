@@ -2,7 +2,7 @@
 class AddOpenIdStoreToDb < ActiveRecord::Migration
   def self.up
     create_table "open_id_associations", :force => true do |t|
-      t.column "server_url", :binary, :null => false
+      t.column "server_url", :string, :null => false
       t.column "handle", :string, :null => false
       t.column "secret", :binary, :null => false
       t.column "issued", :integer, :null => false
