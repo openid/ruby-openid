@@ -486,6 +486,7 @@ module OpenID
       def setup
         @msg = FetchResponse.new
         @value_a = 'commodity'
+        @value_a1 = 'value2'
         @type_a = 'http://blood.transfusion/'
         @name_a = 'george'
         @request_update_url = 'http://some.url.that.is.awesome/'
@@ -538,16 +539,36 @@ module OpenID
         assert_equal(eargs, @msg.get_extension_args(req))
       end
 
-      def test_get_extension_args_some_request
+      def test_get_extension_args_single_value_response
+        # Single values do NOT have a count, and 
+        # do not use the array extension
         eargs = {
           'mode' => 'fetch_response',
           'type.' + @name_a => @type_a,
-          'value.' + @name_a + '.1' => @value_a,
-          'count.' + @name_a =>  '1'
+          'value.' + @name_a  => @value_a
         }
         req = FetchRequest.new
         req.add(AttrInfo.new(@type_a, @name_a))
         @msg.add_value(@type_a, @value_a)
+        assert_equal(eargs, @msg.get_extension_args(req))
+      end
+
+      def test_get_extension_args_array_value_response
+        # Multiple array values add the count, and array index
+        # to each value
+        eargs = {
+          'mode' => 'fetch_response',
+          'type.' + @name_a => @type_a,
+          'value.' + @name_a + ".1" => @value_a,
+          'value.' + @name_a + ".2" => @value_a1,
+          'count.' + @name_a => '2'
+        }
+        req = FetchRequest.new
+        # Specify that this URI should have a count of 2
+        req.add(AttrInfo.new(@type_a, @name_a, true, 2))
+        # Push both values onto the array
+        @msg.add_value(@type_a, @value_a)
+        @msg.add_value(@type_a, @value_a1)
         assert_equal(eargs, @msg.get_extension_args(req))
       end
 

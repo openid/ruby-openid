@@ -434,6 +434,7 @@ module OpenID
             if values.empty? # @data defaults to []
               zero_value_types << attr_info
             end
+
             if attr_info.count != UNLIMITED_VALUES and attr_info.count < values.size
               raise Error, "More than the number of requested values were specified for #{attr_info.type_uri.inspect}"
             end
