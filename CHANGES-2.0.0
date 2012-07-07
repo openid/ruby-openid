@@ -1,0 +1,36 @@
+
+* API Changes
+  * PAPE (Provider Authentication Policy Extension) module
+      * Updated extension for specification draft 2
+      * PAPE::Request::from_success_response returns nil if PAPE
+        response arguments were not signed
+  * Added functions to generate request/response HTML forms with
+    auto-submission javascript
+      * Consumer (relying party) API:
+        Auth_OpenID_AuthRequest::htmlMarkup
+      * Server API: Auth_OpenID_OpenIDResponse::toHTML
+  * Removed Rails login generator
+  * SReg::Response::from_success_response returns nil when no signed
+    arguments were found
+
+* New Features
+  * Fetchers now only read/request first megabyte of response
+
+* Bug fixes
+  * NOT NULL constraints to tables created by ActiveRecordStore
+  * check_authentication requests: copy entire response, not just
+    signed fields.  Fixes missing namespace in check_authentication
+    requests
+  * OpenID 1 association requests no longer explicitly set
+    no-encryption session type
+  * Improved HTML parsing
+  * AssociationRequest::answer: include session_type in
+    no-encryption assoc responses
+  * normalize return_to URL before performing return_to verification
+  * OpenID::Consumer::IdResHandler.verify_discovery_results_openid1:
+    fall back to OpenID 1.0 type if 1.1 endpoint cannot be found
+  * StandardFetcher now includes a timeout setting
+  * Handle blank content types in
+    OpenID::Yadis::DiscoveryResult.where_is_yadis?
+  * Properly convert timestamps to ints before storing in DB, and vise
+    versa
