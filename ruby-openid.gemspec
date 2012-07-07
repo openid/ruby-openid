@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
 
   # Files
   files = Dir.glob("{examples,lib,test}/**/*")
-  files << 'NOTICE' << 'CHANGELOG'
+  files << 'NOTICE' << 'CHANGELOG.md'
   s.files = files.delete_if {|f| f.include?('_darcs') || f.include?('admin')}
   s.require_paths = ['lib']
   s.autorequire = 'openid'
@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
 
   # RDoc
   s.has_rdoc = true
-  s.extra_rdoc_files = ['README.md','INSTALL','LICENSE','UPGRADE']
+  s.extra_rdoc_files = ['README.md', 'INSTALL.md', 'LICENSE', 'UPGRADE.md']
   s.rdoc_options << '--main' << 'README.md'
 end
