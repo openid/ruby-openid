@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/openid/ruby-openid'
   s.summary = 'A library for consuming and serving OpenID identities.'
   s.version = OpenID::VERSION
+  s.license = "Apache Software License"
 
   # Files
   files = Dir.glob("{examples,lib,test}/**/*")
