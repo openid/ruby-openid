@@ -238,15 +238,15 @@ module OpenID
 
     private
     def setup_encoding(response)
-      return unless defined?(::Encoding::ASCII_8BIT)
-      charset = response.type_params["charset"]
-      return if charset.nil?
-      encoding = nil
+      return unless defined?(Encoding.default_external)
+      return unless charset = response.type_params["charset"]
+
       begin
         encoding = Encoding.find(charset)
       rescue ArgumentError
       end
-      encoding ||= Encoding::ASCII_8BIT
+      encoding ||= Encoding.default_external
+
       body = response.body
       if body.respond_to?(:force_encoding)
         body.force_encoding(encoding)
