@@ -63,7 +63,7 @@ module OpenID
           [["openid1", OPENID1_NS, OPENID1_FIELDS],
            ["openid1", OPENID11_NS, OPENID1_FIELDS],
            ["openid2", OPENID2_NS, OPENID2_FIELDS],
-          ].each do |ver, ns, all_fields|
+          ].each_with_index do |(ver, ns, all_fields), i|
             all_fields.each do |field|
               test = lambda do
                 fields = all_fields.dup
@@ -74,7 +74,7 @@ module OpenID
                   idres.send(:check_for_fields)
                 }
               end
-              define_method("test_#{ver}_check_missing_#{field}", test)
+              define_method("test_#{i}_#{ver}_check_missing_#{field}", test)
             end
           end
         end
@@ -84,7 +84,7 @@ module OpenID
           [["openid1", OPENID1_NS, OPENID1_FIELDS, OPENID1_SIGNED],
            ["openid1", OPENID11_NS, OPENID1_FIELDS, OPENID1_SIGNED],
            ["openid2", OPENID2_NS, OPENID2_FIELDS, OPENID2_SIGNED],
-          ].each do |ver, ns, all_fields, signed_fields|
+          ].each_with_index do |(ver, ns, all_fields, signed_fields), i|
             signed_fields.each do |signed_field|
               test = lambda do
                 fields = signed_fields.dup
@@ -97,7 +97,7 @@ module OpenID
                   idres.send(:check_for_fields)
                 }
               end
-              define_method("test_#{ver}_check_missing_signed_#{signed_field}", test)
+              define_method("test_#{i}_#{ver}_check_missing_signed_#{signed_field}", test)
             end
           end
         end
