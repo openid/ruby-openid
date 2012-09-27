@@ -126,7 +126,28 @@ EOHTML
     }
   end
 
+  def _unencoded_page
+    lambda { |req, resp|
+      resp['Content-Type'] = "text/html"
+      body = "unencoded-body"
+      body.force_encoding("ASCII-8BIT") if body.respond_to?(:force_encoding)
+      resp.body = body
+    }
+  end
+
+  def _badly_encoded_page
+    lambda { |req, resp|
+      resp['Content-Type'] = "text/html; charset=wtf"
+      body = "badly-encoded-body"
+      body.force_encoding("ASCII-8BIT") if body.respond_to?(:force_encoding)
+      resp.body = body
+    }
+  end
+
   def setup
+    if defined?(Encoding.default_external)
+      @encoding_was = Encoding.default_external
+    end
     @fetcher = OpenID::StandardFetcher.new
     @logfile = StringIO.new
     @weblog = WEBrick::Log.new(logfile=@logfile)
@@ -152,6 +173,8 @@ EOHTML
       @server.mount_proc('/post', _require_post)
       @server.mount_proc('/redirect_loop', _redirect_loop)
       @server.mount_proc('/utf8_page', _utf8_page)
+      @server.mount_proc('/unencoded_page', _unencoded_page)
+      @server.mount_proc('/badly_encoded_page', _badly_encoded_page)
       @server.start
     }
     @uri = _uri_build
@@ -168,6 +191,9 @@ EOHTML
   end
 
   def teardown
+    if defined?(Encoding.default_external)
+      Encoding.default_external = @encoding_was
+    end
     @server.shutdown
     # Sleep a little because sometimes this blocks forever.
     @server_thread.join
@@ -231,6 +257,30 @@ EOHTML
     assert_equal(UTF8_PAGE_CONTENT, response.body)
     if response.body.respond_to?(:encoding)
       assert_equal(Encoding::UTF_8, response.body.encoding)
+    end
+  end
+
+  def test_unencoded_page
+    if defined?(Encoding.default_external)
+      Encoding.default_external = Encoding::SHIFT_JIS
+    end
+    uri = _uri_build('/unencoded_page')
+    response = @fetcher.fetch(uri)
+    assert_equal("unencoded-body", response.body)
+    if defined?(Encoding.default_external)
+      assert_equal(Encoding::US_ASCII, response.body.encoding)
+    end
+  end
+
+  def test_badly_encoded_page
+    if defined?(Encoding.default_external)
+      Encoding.default_external = Encoding::SHIFT_JIS
+    end
+    uri = _uri_build('/badly_encoded_page')
+    response = @fetcher.fetch(uri)
+    assert_equal("badly-encoded-body", response.body)
+    if defined?(Encoding.default_external)
+      assert_equal(Encoding::SHIFT_JIS, response.body.encoding)
     end
   end
 
