@@ -88,21 +88,31 @@ module OpenID
     end
 
     def Yadis::parseXRDS(text)
-      if text.nil?
-        raise XRDSError.new("Not an XRDS document.")
-      end
+      disable_entity_expansion do
+        if text.nil?
+          raise XRDSError.new("Not an XRDS document.")
+        end
 
-      begin
-        d = REXML::Document.new(text)
-      rescue RuntimeError => why
-        raise XRDSError.new("Not an XRDS document. Failed to parse XML.")
-      end
+        begin
+          d = REXML::Document.new(text)
+        rescue RuntimeError => why
+          raise XRDSError.new("Not an XRDS document. Failed to parse XML.")
+        end
 
-      if is_xrds?(d)
-        return d
-      else
-        raise XRDSError.new("Not an XRDS document.")
+        if is_xrds?(d)
+          return d
+        else
+          raise XRDSError.new("Not an XRDS document.")
+        end
       end
+    end
+
+    def Yadis::disable_entity_expansion
+      _previous_ = REXML::Document::entity_expansion_limit
+      REXML::Document::entity_expansion_limit = 0
+      yield
+    ensure
+      REXML::Document::entity_expansion_limit = _previous_
     end
 
     def Yadis::is_xrds?(xrds_tree)
