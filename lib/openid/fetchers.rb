@@ -215,8 +215,6 @@ module OpenID
             conn.request_post(url.request_uri, body, headers, &body_size_limitter)
           end
         }
-        response.body = whole_body
-        setup_encoding(response)
       rescue Timeout::Error => why
         raise FetchingError, "Error fetching #{url}: #{why}"
       rescue RuntimeError => why
@@ -243,7 +241,10 @@ module OpenID
           raise FetchingError, "Error encountered in redirect from #{url}: #{why}"
         end
       else
-        return HTTPResponse._from_net_response(response, unparsed_url)
+        response = HTTPResponse._from_net_response(response, unparsed_url)
+        response.body = whole_body
+        setup_encoding(response)
+        return response
       end
     end
 
