@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.2.2
+
+* Limit fetching file size & disable XML entity expansion - be2bab5c21f04735045e071411b349afb790078f
+
+  Avoid DoS attack to RPs using large XRDS / too many XML entity expansion in XRDS.
+
+## 2.2.1
+
+* Make bundle exec rake work - 2100f281172427d1557ebe76afbd24072a22d04f
+* State license in gemspec for automated tools / rubygems.org page - 2d5c3cd8f2476b28d60609822120c79d71919b7b
+* Use default-external encoding instead of ascii for badly encoded pages - a68d2591ac350459c874da10108e6ff5a8c08750
+* Colorize output and reveal tests that never ran - 4b0143f0a3b10060d5f52346954219bba3375039
+
 ## 2.2.0
 
 * Bundler compatibility and bundler gem tasks - 72d551945f9577bf5d0e516c673c648791b0e795
