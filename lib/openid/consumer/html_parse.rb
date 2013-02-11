@@ -34,7 +34,11 @@ module OpenID
 
 
   def OpenID.parse_link_attrs(html)
-    stripped = html.gsub(REMOVED_RE,'')
+    begin
+      stripped = html.gsub(REMOVED_RE,'')
+    rescue ArgumentError
+      stripped = html.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '').gsub(REMOVED_RE,'')
+    end
     parser = HTMLTokenizer.new(stripped)
 
     links = []
