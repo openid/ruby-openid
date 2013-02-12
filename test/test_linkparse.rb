@@ -84,8 +84,8 @@ class LinkParseTestCase < Test::Unit::TestCase
           assert(false, "datafile parsing error: bad header #{h}")
         end
       }
-
-      links = OpenID::parse_link_attrs(html.force_encoding('UTF-8'))
+      html = html.force_encoding('UTF-8') if html.respond_to? :force_encoding
+      links = OpenID::parse_link_attrs(html)
       
       found = links.dup
       expected = expected_links.dup
@@ -100,7 +100,8 @@ class LinkParseTestCase < Test::Unit::TestCase
     assert_equal(numtests, testnum, "Number of tests")
 
     # test handling of invalid UTF-8 byte sequences
-    html = "<html><body>hello joel\255</body></html>".force_encoding("UTF-8")
+    html = "<html><body>hello joel\255</body></html>"
+    html = html.force_encoding('UTF-8') if html.respond_to? :force_encoding
     assert_nothing_raised do 
       OpenID::parse_link_attrs(html)
     end
