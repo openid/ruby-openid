@@ -100,8 +100,11 @@ class LinkParseTestCase < Test::Unit::TestCase
     assert_equal(numtests, testnum, "Number of tests")
 
     # test handling of invalid UTF-8 byte sequences
-    html = "<html><body>hello joel\255</body></html>"
-    html = html.force_encoding('UTF-8') if html.respond_to? :force_encoding
+    if "".respond_to? :force_encoding
+      html = "<html><body>hello joel\255</body></html>".force_encoding('UTF-8') 
+    else
+      html = "<html><body>hello joel\255</body></html>"
+    end
     assert_nothing_raised do 
       OpenID::parse_link_attrs(html)
     end
