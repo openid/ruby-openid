@@ -37,7 +37,7 @@ module OpenID
     begin
       stripped = html.gsub(REMOVED_RE,'')
     rescue ArgumentError
-      stripped = html.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '').gsub(REMOVED_RE,'')
+      stripped = html.encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '').gsub(REMOVED_RE,'')
     end
     parser = HTMLTokenizer.new(stripped)
 
