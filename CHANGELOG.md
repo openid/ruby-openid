@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.3
+
+* Fixed 'invalid byte sequence in UTF-8' error in parse_link_attrs - 0f46921a97677b83b106366c805063105c5e9f20
+* Fixed license information in gemspec - f032e949e1ca9078ab7508d9629398ca2c36980a
+* Update starts/ends_with? to handle nil prefix - beee5e8d1dc24ad55725cfcc720eefba6bdbd279
+
 ## 2.2.2
 
 * Limit fetching file size & disable XML entity expansion - be2bab5c21f04735045e071411b349afb790078f
