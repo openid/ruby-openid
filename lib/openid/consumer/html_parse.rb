@@ -34,7 +34,15 @@ module OpenID
 
 
   def OpenID.parse_link_attrs(html)
-    stripped = html.gsub(REMOVED_RE,'')
+    begin
+      stripped = html.gsub(REMOVED_RE,'')
+    rescue ArgumentError
+      begin
+        stripped = html.encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '').gsub(REMOVED_RE,'')
+      rescue Encoding::UndefinedConversionError #needed for a problem in JRuby where it can't handle the conversion
+        stripped = html.encode('UTF-8', 'ASCII', :invalid => :replace, :undef => :replace, :replace => '').gsub(REMOVED_RE,'')
+      end
+    end
     parser = HTMLTokenizer.new(stripped)
 
     links = []
