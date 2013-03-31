@@ -1,19 +1,6 @@
-# Don't change this file. Configuration is done in config/environment.rb and config/environments/*.rb
+require 'rubygems'
 
-unless defined?(RAILS_ROOT)
-  root_path = File.join(File.dirname(__FILE__), '..')
-  unless RUBY_PLATFORM =~ /mswin32/
-    require 'pathname'
-    root_path = Pathname.new(root_path).cleanpath(true).to_s
-  end
-  RAILS_ROOT = root_path
-end
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 
-if File.directory?("#{RAILS_ROOT}/vendor/rails")
-  require "#{RAILS_ROOT}/vendor/rails/railties/lib/initializer"
-else
-  require 'rubygems'
-  require 'initializer'
-end
-
-Rails::Initializer.run(:set_load_path)
+require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
