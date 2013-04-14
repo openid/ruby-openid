@@ -13,7 +13,7 @@ class URINormTestCase < Test::Unit::TestCase
       case_name = lines.shift.strip
       actual = lines.shift.strip
       expected = lines.shift.strip
-      _newline = lines.shift
+      lines.shift #=> newline
 
       if expected == 'fail'
         begin

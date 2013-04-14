@@ -49,7 +49,6 @@ module OpenID
           resp
         end
       end
-      fetcher = mock_fetcher.new
 
       with_fetcher(mock_fetcher.new) do
         OpenID.make_kv_post(Message.from_openid_args(args), 'http://invalid/')

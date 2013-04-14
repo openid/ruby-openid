@@ -160,7 +160,7 @@ END
 
       def test_multisegment_xri
         xmldoc = Yadis.parseXRDS(read_xrds_data_file('subsegments.xrds'))
-        result = Yadis.get_canonical_id('xri://=nishitani*masaki', xmldoc)
+        Yadis.get_canonical_id('xri://=nishitani*masaki', xmldoc)
       end
     end
   end

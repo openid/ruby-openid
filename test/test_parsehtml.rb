@@ -9,7 +9,6 @@ module OpenID
     def test_parsehtml
       reserved_values = ['None', 'EOF']
       chunks = read_data_file('test1-parsehtml.txt', false).split("\f\n")
-      test_num = 1
 
       chunks.each{|c|
         expected, html = c.split("\n", 2)

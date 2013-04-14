@@ -368,7 +368,7 @@ module OpenID
           end
 
           OpenID.with_method_overridden(:make_kv_post, send_resp) do
-            final_resp = call_check_auth do |idres|
+            call_check_auth do |idres|
               idres.instance_def(:create_check_auth_request) {
                 :req
               }
@@ -389,7 +389,7 @@ module OpenID
 
           OpenID.with_method_overridden(:make_kv_post, send_resp) do
             assert_protocol_error("Testing") do
-              final_resp = call_check_auth do |idres|
+              call_check_auth do |idres|
                 idres.instance_def(:create_check_auth_request) { :req }
                 idres.instance_def(:process_check_auth_response) do |resp|
                   me.assert_equal(:expected_response, resp)
@@ -447,7 +447,7 @@ module OpenID
         end
 
         def test_invalid
-          for is_valid in ['false', 'monkeys']
+          ['false', 'monkeys'].each do
             @message.set_arg(OPENID_NS, 'is_valid', 'false')
             assert_protocol_error("Server #{@server_url} responds") {
               assert_log_matches() { call_process }
@@ -462,7 +462,7 @@ module OpenID
 
         def test_invalid_invalidate
           @message.set_arg(OPENID_NS, 'invalidate_handle', 'cheese')
-          for is_valid in ['false', 'monkeys']
+          ['false', 'monkeys'].each do
             @message.set_arg(OPENID_NS, 'is_valid', 'false')
             assert_protocol_error("Server #{@server_url} responds") {
               assert_log_matches("Received 'invalidate_handle'") {
@@ -870,7 +870,7 @@ module OpenID
 
           idres = IdResHandler.new(nil, nil)
           assert_log_matches() {
-            result = idres.send(:verify_discovery_single, @endpoint, to_match)
+            idres.send(:verify_discovery_single, @endpoint, to_match)
           }
         end
       end
