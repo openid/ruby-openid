@@ -122,7 +122,7 @@ module OpenID
         is_valid = signatory.verify(@assoc_handle, @signed)
         # Now invalidate that assoc_handle so it this checkAuth
         # message cannot be replayed.
-        signatory.invalidate(@assoc_handle, dumb=true)
+        signatory.invalidate(@assoc_handle, true)
         response = OpenIDResponse.new(self)
         valid_str = is_valid ? "true" : "false"
         response.fields.set_arg(OPENID_NS, 'is_valid', valid_str)
@@ -322,7 +322,7 @@ module OpenID
           session_type = message.get_arg(OPENID2_NS, 'session_type')
           if !session_type
             raise ProtocolError.new(message,
-                                    text="session_type missing from request")
+                                    "session_type missing from request")
           end
         end
 
