@@ -121,15 +121,8 @@ module OpenID
           end
         end
 
-        if @assoc
-          message.set_arg(OPENID_NS, 'assoc_handle', @assoc.handle)
-          assoc_log_msg = "with assocication #{@assoc.handle}"
-        else
-          assoc_log_msg = 'using stateless mode.'
-        end
-
         Util.log("Generated #{mode} request to #{@endpoint.server_url} "\
-                 "#{assoc_log_msg}")
+                 "using stateless mode.")
         return message
       end
 
