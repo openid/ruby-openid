@@ -489,7 +489,7 @@ module OpenID
 
   def self.discover(identifier)
     if Yadis::XRI::identifier_scheme(identifier) == :xri
-      normalized_identifier, services = discover_xri(identifier)
+      discover_xri(identifier)
     else
       return discover_uri(identifier)
     end

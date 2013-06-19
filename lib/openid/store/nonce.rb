@@ -37,7 +37,7 @@ module OpenID
     def Nonce.check_timestamp(nonce_str, allowed_skew=nil, now=nil)
       allowed_skew = skew if allowed_skew.nil?
       begin
-        stamp, foo = split_nonce(nonce_str)
+        stamp, _ = split_nonce(nonce_str)
       rescue ArgumentError # bad timestamp
         return false
       end
