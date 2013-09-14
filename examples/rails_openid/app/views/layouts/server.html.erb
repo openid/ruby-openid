@@ -1,5 +1,7 @@
 <html>
-  <head><title>OpenID Server Example</title></head>
+  <head><title>OpenID Server Example</title>
+  <%#= csrf_meta_tags %>
+  </head>
   <style type="text/css">
       * {
         font-family: verdana,sans-serif;
@@ -61,7 +63,7 @@
      </div>
     <% end %>
 
-    <%= @content_for_layout %>
+    <%= yield %>
 
 
   </body>
