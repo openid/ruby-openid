@@ -121,7 +121,6 @@ EOHTML
     lambda { |req, resp|
       resp['Content-Type'] = "text/html; charset=utf-8"
       body = UTF8_PAGE_CONTENT.dup
-      body.force_encoding("ASCII-8BIT") if body.respond_to?(:force_encoding)
       resp.body = body
     }
   end
@@ -130,7 +129,6 @@ EOHTML
     lambda { |req, resp|
       resp['Content-Type'] = "text/html"
       body = "unencoded-body"
-      body.force_encoding("ASCII-8BIT") if body.respond_to?(:force_encoding)
       resp.body = body
     }
   end
@@ -139,7 +137,6 @@ EOHTML
     lambda { |req, resp|
       resp['Content-Type'] = "text/html; charset=wtf"
       body = "badly-encoded-body"
-      body.force_encoding("ASCII-8BIT") if body.respond_to?(:force_encoding)
       resp.body = body
     }
   end
