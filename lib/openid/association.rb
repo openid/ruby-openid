@@ -74,7 +74,7 @@ module OpenID
       Util.assert(data.length == FIELD_ORDER.length)
 
       pairs = FIELD_ORDER.map{|field| [field.to_s, data[field]]}
-      return Util.seq_to_kv(pairs, strict=true)
+      return Util.seq_to_kv(pairs, true)
     end
 
     # The number of seconds until this association expires
