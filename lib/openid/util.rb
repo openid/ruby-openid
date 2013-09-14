@@ -108,8 +108,8 @@ for (var i = 0; i < elements.length; i++) {
 
     ESCAPE_TABLE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#039;' }
     # Modified from ERb's html_encode
-    def Util.html_encode(s)
-      s.to_s.gsub(/[&<>"']/) {|s| ESCAPE_TABLE[s] }
+    def Util.html_encode(str)
+      str.to_s.gsub(/[&<>"']/) {|s| ESCAPE_TABLE[s] }
     end
   end
 

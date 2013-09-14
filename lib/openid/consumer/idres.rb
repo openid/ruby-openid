@@ -296,7 +296,7 @@ module OpenID
 
         begin
           time, extra = Nonce.split_nonce(nonce)
-        rescue ArgumentError => why
+        rescue ArgumentError
           raise ProtocolError, "Malformed nonce: #{nonce.inspect}"
         end
 
