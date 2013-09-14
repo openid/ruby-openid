@@ -382,9 +382,9 @@ module OpenID
     end
 
     def test_yadisEmpty
-      services = _discover('application/xrds+xml',
-                           read_data_file('test_discover/yadis_0entries.xml', false),
-                           0)
+      _discover('application/xrds+xml',
+                read_data_file('test_discover/yadis_0entries.xml', false),
+                0)
     end
 
     def test_htmlEmptyYadis
@@ -517,7 +517,6 @@ module OpenID
       @fetchlog << [url, body, headers]
 
       u = URI::parse(url)
-      proxy_host = u.host
       xri = u.path
       query = u.query
 
@@ -562,7 +561,7 @@ module OpenID
     end
 
     def test_xri
-      user_xri, services = OpenID.discover_xri('=smoker')
+      _, services = OpenID.discover_xri('=smoker')
 
       _checkService(services[0],
                     "http://www.myopenid.com/server",
@@ -584,7 +583,7 @@ module OpenID
     end
 
     def test_xri_normalize
-      user_xri, services = OpenID.discover_xri('xri://=smoker')
+      _, services = OpenID.discover_xri('xri://=smoker')
 
       _checkService(services[0],
                     "http://www.myopenid.com/server",
@@ -607,7 +606,7 @@ module OpenID
 
     def test_xriNoCanonicalID
       silence_logging {
-        user_xri, services = OpenID.discover_xri('=smoker*bad')
+        _, services = OpenID.discover_xri('=smoker*bad')
         assert(services.empty?)
       }
     end
@@ -635,7 +634,7 @@ module OpenID
     end
 
     def test_xri
-      user_xri, services = OpenID.discover_xri('=smoker')
+      _, services = OpenID.discover_xri('=smoker')
       assert(!services.empty?, "Expected services, got zero")
       assert_equal(services[0].server_url,
                    "http://www.livejournal.com/openid/server.bml")

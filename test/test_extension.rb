@@ -42,5 +42,5 @@ module OpenID
        assert_equal(DummyExtension::TEST_ALIAS,
                     namespaces.get_alias(DummyExtension::TEST_URI))
      end
-   end
+  end
 end

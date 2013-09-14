@@ -147,7 +147,7 @@ EOHTML
     end
     @fetcher = OpenID::StandardFetcher.new
     @logfile = StringIO.new
-    @weblog = WEBrick::Log.new(logfile=@logfile)
+    @weblog = WEBrick::Log.new(@logfile)
     @server = WEBrick::HTTPServer.new(:Port => 0,
                                       :Logger => @weblog,
                                       :AccessLog => [])

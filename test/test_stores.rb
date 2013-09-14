@@ -99,7 +99,7 @@ module OpenID
         # More recent, and expires earlier than assoc2 or assoc. Make sure
         # that we're picking the one with the latest issued date and not
         # taking into account the expiration.
-        assoc3 = _gen_assoc(issued=2, lifetime=100)
+        assoc3 = _gen_assoc(issued=2, 100)
         @store.store_association(server_url, assoc3)
 
         _check_retrieve(server_url, nil, assoc3)
@@ -188,7 +188,7 @@ module OpenID
 
         orig_skew = Nonce.skew
         Nonce.skew = 0
-        count = @store.cleanup_nonces
+        @store.cleanup_nonces
         Nonce.skew = 1000000
         ts, salt = Nonce::split_nonce(old_nonce1)
         assert(@store.use_nonce(server_url, ts, salt), "oldnonce1")

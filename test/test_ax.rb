@@ -580,7 +580,6 @@ module OpenID
       end
 
       def test_get_single_success
-        req = FetchRequest.new
         @msg.add_value(@type_a, @value_a)
         assert_equal(@value_a, @msg.get_single(@type_a))
       end

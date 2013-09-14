@@ -14,8 +14,6 @@ module OpenID
 
     STATUS_HEADER_RE = /Status: (\d+) .*?$/m
 
-    four04_pat = "\nContent-Type: text/plain\n\nNo such file %s"
-
     def self.mkResponse(data)
       status_mo = data.scan(STATUS_HEADER_RE)
       headers_str, body = data.split("\n\n", 2)

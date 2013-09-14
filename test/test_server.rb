@@ -56,7 +56,7 @@ module OpenID
         'openid.error' => 'plucky',
       }
 
-      rt_base, result_args = e.encode_to_url.split('?', 2)
+      _, result_args = e.encode_to_url.split('?', 2)
       result_args = Util.parse_query(result_args)
       assert_equal(result_args, expected_args)
     end
@@ -80,7 +80,7 @@ module OpenID
         'openid.error' => 'plucky',
       }
 
-      rt_base, result_args = e.encode_to_url.split('?', 2)
+      _, result_args = e.encode_to_url.split('?', 2)
       result_args = Util.parse_query(result_args)
       assert_equal(result_args, expected_args)
     end
@@ -98,12 +98,6 @@ module OpenID
                                     })
       e = Server::ProtocolError.new(args, "plucky")
       assert(e.has_return_to)
-      expected_args = {
-        'openid.ns' => OPENID2_NS,
-        'openid.mode' => 'error',
-        'openid.error' => 'plucky',
-      }
-
       assert(e.which_encoding == Server::ENCODE_HTML_FORM)
       assert(e.to_form_markup == e.to_message.to_form_markup(
                                                              args.get_arg(OPENID_NS, 'return_to')))
@@ -127,7 +121,7 @@ module OpenID
 
       assert(e.which_encoding == Server::ENCODE_URL)
 
-      rt_base, result_args = e.encode_to_url.split('?', 2)
+      _, result_args = e.encode_to_url.split('?', 2)
       result_args = Util.parse_query(result_args)
       assert_equal(result_args, expected_args)
     end
@@ -661,7 +655,7 @@ module OpenID
       args = {'openid.ns' => 'Vegetables',
               'openid.mode' => 'associate'}
       begin
-        r = @decode.call(args)
+        @decode.call(args)
       rescue Server::ProtocolError => err
         assert(err.openid_message)
         assert(err.to_s.index('Vegetables'))
@@ -1204,9 +1198,8 @@ module OpenID
 
     def test_answerAllowWithNoIdentity
       @request.identity = IDENTIFIER_SELECT
-      selected_id = 'http://anon.unittest/9861'
       assert_raise(ArgumentError) {
-        answer = @request.answer(true, nil, nil)
+        @request.answer(true, nil, nil)
       }
     end
 
@@ -1233,7 +1226,7 @@ module OpenID
       @request.op_endpoint = nil
 
       assert_raise(ArgumentError) {
-        resp = @request.answer(false)
+        @request.answer(false)
       }
     end
 
@@ -1249,7 +1242,7 @@ module OpenID
       url = @request.encode_to_url(server_url)
       assert(url.starts_with?(server_url))
 
-      unused, query = url.split("?", 2)
+      _, query = url.split("?", 2)
       args = Util.parse_query(query)
 
       m = Message.from_post_args(args)
@@ -1447,7 +1440,7 @@ module OpenID
       result = @request.encode_to_url(server_url)
 
       # How to check?  How about a round-trip test.
-      base, result_args = result.split('?', 2)
+      _, result_args = result.split('?', 2)
       result_args = Util.parse_query(result_args)
       message = Message.from_post_args(result_args)
       rebuilt_request = Server::CheckIDRequest.from_message(message,
@@ -1919,16 +1912,6 @@ module OpenID
     end
   end
 
-  class Counter
-    def initialize
-      @count = 0
-    end
-
-    def inc
-      @count += 1
-    end
-  end
-
   class UnhandledError < Exception
   end
 
@@ -1946,7 +1929,7 @@ module OpenID
       request.mode = "monkeymode"
       request.message = Message.new(OPENID1_NS)
       assert_raise(RuntimeError) {
-        webresult = @server.handle_request(request)
+        @server.handle_request(request)
       }
     end
 
@@ -1961,8 +1944,6 @@ module OpenID
     end
 
     def test_dispatch
-      monkeycalled = Counter.new()
-
       @server.extend(InstanceDefExtension)
       @server.instance_def(:openid_monkeymode) do |request|
         raise UnhandledError
@@ -1972,7 +1953,7 @@ module OpenID
       request.mode = "monkeymode"
       request.message = Message.new(OPENID1_NS)
       assert_raise(UnhandledError) {
-        webresult = @server.handle_request(request)
+        @server.handle_request(request)
       }
     end
 
@@ -2060,7 +2041,7 @@ module OpenID
                                        'session_type' => 'no-encryption',
                                      })
 
-        req = Server::AssociateRequest.from_message(m)
+        Server::AssociateRequest.from_message(m)
       }
     end
 
