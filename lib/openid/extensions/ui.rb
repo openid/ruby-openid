@@ -30,13 +30,13 @@ module OpenID
       # checkid_* OpenID message
       # return nil if the extension was not requested.
       def self.from_openid_request(oid_req)
-        oauth_req = new
+        ui_req = new
         args = oid_req.message.get_args(NS_URI)
         if args == {}
           return nil
         end
-        oauth_req.parse_extension_args(args)
-        return oauth_req
+        ui_req.parse_extension_args(args)
+        return ui_req
       end
 
       # Set UI extension parameters
