@@ -1,0 +1,2052 @@
+Connecting to database specified by database.yml
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:22:11 -0700 2013
+
+ActionController::RoutingError (No route matches [GET] "/consumer"):
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (3.3ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:23:00 -0700 2013
+
+LoadError (no such file to load -- openid):
+  app/controllers/consumer_controller.rb:3
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.8ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (13.8ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (31.1ms)
+Connecting to database specified by database.yml
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:23:40 -0700 2013
+Processing by ConsumerController#index as HTML
+Completed 500 Internal Server Error in 24ms
+
+ActionView::MissingTemplate (Missing template consumer/index, application/index with {:handlers=>[:coffee, :erb, :builder], :locale=>[:en], :formats=>[:html]}. Searched in:
+  * "/Users/marcel/.gem/ruby/1.8/gems/ruby-openid-2.2.3/examples/rails_openid/app/views"
+):
+  actionpack (3.2.13) lib/action_view/path_set.rb:58:in `find'
+  actionpack (3.2.13) lib/action_view/lookup_context.rb:109:in `find_template'
+  actionpack (3.2.13) lib/action_view/renderer/abstract_renderer.rb:3:in `__send__'
+  actionpack (3.2.13) lib/action_view/renderer/abstract_renderer.rb:3:in `find_template'
+  actionpack (3.2.13) lib/action_view/renderer/template_renderer.rb:34:in `determine_template'
+  actionpack (3.2.13) lib/action_view/renderer/template_renderer.rb:10:in `render'
+  actionpack (3.2.13) lib/action_view/renderer/renderer.rb:36:in `render_template'
+  actionpack (3.2.13) lib/action_view/renderer/renderer.rb:17:in `render'
+  actionpack (3.2.13) lib/abstract_controller/rendering.rb:110:in `_render_template'
+  actionpack (3.2.13) lib/action_controller/metal/streaming.rb:225:in `_render_template'
+  actionpack (3.2.13) lib/abstract_controller/rendering.rb:103:in `render_to_body'
+  actionpack (3.2.13) lib/action_controller/metal/renderers.rb:28:in `render_to_body'
+  actionpack (3.2.13) lib/action_controller/metal/compatibility.rb:50:in `render_to_body'
+  actionpack (3.2.13) lib/abstract_controller/rendering.rb:88:in `render'
+  actionpack (3.2.13) lib/action_controller/metal/rendering.rb:16:in `render'
+  actionpack (3.2.13) lib/action_controller/metal/instrumentation.rb:40:in `render'
+  activesupport (3.2.13) lib/active_support/core_ext/benchmark.rb:5:in `ms'
+  /opt/local/lib/ruby/1.8/benchmark.rb:308:in `realtime'
+  activesupport (3.2.13) lib/active_support/core_ext/benchmark.rb:5:in `ms'
+  actionpack (3.2.13) lib/action_controller/metal/instrumentation.rb:40:in `render'
+  actionpack (3.2.13) lib/action_controller/metal/instrumentation.rb:83:in `cleanup_view_runtime'
+  activerecord (3.2.13) lib/active_record/railties/controller_runtime.rb:24:in `cleanup_view_runtime'
+  actionpack (3.2.13) lib/action_controller/metal/instrumentation.rb:39:in `render'
+  actionpack (3.2.13) lib/action_controller/metal/implicit_render.rb:10:in `default_render'
+  actionpack (3.2.13) lib/action_controller/metal/implicit_render.rb:5:in `send_action'
+  actionpack (3.2.13) lib/abstract_controller/base.rb:167:in `process_action'
+  actionpack (3.2.13) lib/action_controller/metal/rendering.rb:10:in `process_action'
+  actionpack (3.2.13) lib/abstract_controller/callbacks.rb:18:in `process_action'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:414:in `_run__1789127949__process_action__199225275__callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `__run_callback'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:385:in `_run_process_action_callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (3.2.13) lib/abstract_controller/callbacks.rb:17:in `process_action'
+  actionpack (3.2.13) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (3.2.13) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  activesupport (3.2.13) lib/active_support/notifications.rb:123:in `instrument'
+  activesupport (3.2.13) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (3.2.13) lib/active_support/notifications.rb:123:in `instrument'
+  actionpack (3.2.13) lib/action_controller/metal/instrumentation.rb:29:in `process_action'
+  actionpack (3.2.13) lib/action_controller/metal/params_wrapper.rb:207:in `process_action'
+  activerecord (3.2.13) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (3.2.13) lib/abstract_controller/base.rb:121:in `process'
+  actionpack (3.2.13) lib/abstract_controller/rendering.rb:45:in `process'
+  actionpack (3.2.13) lib/action_controller/metal.rb:203:in `dispatch'
+  actionpack (3.2.13) lib/action_controller/metal/rack_delegation.rb:14:in `dispatch'
+  actionpack (3.2.13) lib/action_controller/metal.rb:246:in `action'
+  actionpack (3.2.13) lib/action_dispatch/routing/route_set.rb:73:in `call'
+  actionpack (3.2.13) lib/action_dispatch/routing/route_set.rb:73:in `dispatch'
+  actionpack (3.2.13) lib/action_dispatch/routing/route_set.rb:36:in `call'
+  journey (1.0.4) lib/journey/router.rb:68:in `call'
+  journey (1.0.4) lib/journey/router.rb:56:in `each'
+  journey (1.0.4) lib/journey/router.rb:56:in `call'
+  actionpack (3.2.13) lib/action_dispatch/routing/route_set.rb:612:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/best_standards_support.rb:17:in `call'
+  rack (1.4.5) lib/rack/etag.rb:23:in `call'
+  rack (1.4.5) lib/rack/conditionalget.rb:25:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/head.rb:14:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/params_parser.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/flash.rb:242:in `call'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:210:in `context'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:205:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/cookies.rb:341:in `call'
+  activerecord (3.2.13) lib/active_record/query_cache.rb:64:in `call'
+  activerecord (3.2.13) lib/active_record/connection_adapters/abstract/connection_pool.rb:479:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `_run__397314981__call__4__callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `__run_callback'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:385:in `_run_call_callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/reloader.rb:65:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/remote_ip.rb:31:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/missing_template.erb within rescues/layout (1.9ms)
+Connecting to database specified by database.yml
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:25:07 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (6.1ms)
+Compiled application.css  (1ms)  (pid 67167)
+Compiled jquery.js  (13ms)  (pid 67167)
+Compiled jquery_ujs.js  (1ms)  (pid 67167)
+Compiled application.js  (113ms)  (pid 67167)
+Completed 200 OK in 426ms (Views: 425.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 05:25:09 -0700 2013
+Served asset /application.css - 200 OK (4ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 05:25:09 -0700 2013
+Served asset /jquery.js - 200 OK (15ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at Sun Mar 31 05:25:09 -0700 2013
+Served asset /jquery_ujs.js - 200 OK (13ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 05:25:09 -0700 2013
+Served asset /application.js - 200 OK (32ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel" for 127.0.0.1 at Sun Mar 31 05:25:22 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/open_id/marcel"}
+Completed 500 Internal Server Error in 2ms
+
+NameError (uninitialized constant ConsumerController::RAILS_ROOT):
+  app/controllers/consumer_controller.rb:116:in `consumer'
+  app/controllers/consumer_controller.rb:23:in `start'
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.8ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (2.1ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (121.5ms)
+Connecting to database specified by database.yml
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel" for 127.0.0.1 at Sun Mar 31 05:26:13 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/open_id/marcel"}
+Redirected to http://localhost:3009/open_id/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582b66%7D%7BvdrbdQ%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete
+Completed 302 Found in 661ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582b69%7D%7BodxU%2BQ%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel&openid.invalidate_handle=%7BHMAC-SHA1%7D%7B51582b66%7D%7BvdrbdQ%3D%3D%7D&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fserver&openid.response_nonce=2013-03-31T12%3A26%3A17ZVVzuGN&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=HHdHfhXu%2FmKVDXkCffxuD%2BYuNeU%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cinvalidate_handle%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned" for 127.0.0.1 at Sun Mar 31 05:26:17 -0700 2013
+Processing by ConsumerController#complete as HTML
+  Parameters: {"openid.sig"=>"HHdHfhXu/mKVDXkCffxuD+YuNeU=", "openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.op_endpoint"=>"http://localhost:3009/open_id/server", "openid.mode"=>"id_res", "openid.response_nonce"=>"2013-03-31T12:26:17ZVVzuGN", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/open_id/marcel", "openid.signed"=>"assoc_handle,claimed_id,identity,invalidate_handle,mode,ns,op_endpoint,response_nonce,return_to,signed", "openid.invalidate_handle"=>"{HMAC-SHA1}{51582b66}{vdrbdQ==}", "openid.assoc_handle"=>"{HMAC-SHA1}{51582b69}{odxU+Q==}", "openid.claimed_id"=>"http://localhost:3009/open_id/marcel"}
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 4ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:26:17 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (14.7ms)
+Completed 200 OK in 59ms (Views: 58.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 05:26:17 -0700 2013
+Served asset /application.js - 304 Not Modified (8ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 05:26:17 -0700 2013
+Served asset /application.css - 304 Not Modified (132ms)
+Connecting to database specified by database.yml
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:30:38 -0700 2013
+
+ActionDispatch::Session::SessionRestoreError (Session contains objects whose class definition isn't available.
+Remember to require the classes for all objects kept in the session.
+(Original exception: uninitialized constant OpenID [NameError])
+):
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:64:in `stale_session_check!'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/cookie_store.rb:48:in `unpacked_cookie_data'
+  rack (1.4.5) lib/rack/session/cookie.rb:107:in `extract_session_id'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:53:in `extract_session_id'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:57:in `stale_session_check!'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:53:in `extract_session_id'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:43:in `send'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:43:in `load_session_id!'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:32:in `[]'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:267:in `current_session_id'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:273:in `session_exists?'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:107:in `send'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:107:in `exists?'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:127:in `load_for_read!'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:64:in `key?'
+  actionpack (3.2.13) lib/action_dispatch/middleware/flash.rb:258:in `call'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:210:in `context'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:205:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/cookies.rb:341:in `call'
+  activerecord (3.2.13) lib/active_record/query_cache.rb:64:in `call'
+  activerecord (3.2.13) lib/active_record/connection_adapters/abstract/connection_pool.rb:479:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `_run__397314981__call__4__callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `__run_callback'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:385:in `_run_call_callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/reloader.rb:65:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/remote_ip.rb:31:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.8ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (4.6ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (23.6ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:30:45 -0700 2013
+
+ActionDispatch::Session::SessionRestoreError (Session contains objects whose class definition isn't available.
+Remember to require the classes for all objects kept in the session.
+(Original exception: uninitialized constant OpenID [NameError])
+):
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:64:in `stale_session_check!'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/cookie_store.rb:48:in `unpacked_cookie_data'
+  rack (1.4.5) lib/rack/session/cookie.rb:107:in `extract_session_id'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:53:in `extract_session_id'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:57:in `stale_session_check!'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:53:in `extract_session_id'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:43:in `send'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:43:in `load_session_id!'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:32:in `[]'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:267:in `current_session_id'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:273:in `session_exists?'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:107:in `send'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:107:in `exists?'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:127:in `load_for_read!'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:64:in `key?'
+  actionpack (3.2.13) lib/action_dispatch/middleware/flash.rb:258:in `call'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:210:in `context'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:205:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/cookies.rb:341:in `call'
+  activerecord (3.2.13) lib/active_record/query_cache.rb:64:in `call'
+  activerecord (3.2.13) lib/active_record/connection_adapters/abstract/connection_pool.rb:479:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `_run__397314981__call__4__callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `__run_callback'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:385:in `_run_call_callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/reloader.rb:65:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/remote_ip.rb:31:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.8ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.1ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (18.9ms)
+Connecting to database specified by database.yml
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:31:30 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (7.0ms)
+Completed 200 OK in 198ms (Views: 197.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 05:31:31 -0700 2013
+Served asset /jquery.js - 304 Not Modified (7ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 05:31:31 -0700 2013
+Served asset /application.css - 304 Not Modified (3ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 05:31:31 -0700 2013
+Served asset /application.js - 304 Not Modified (44ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel" for 127.0.0.1 at Sun Mar 31 05:31:36 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/open_id/marcel"}
+Redirected to http://localhost:3009/open_id/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582b66%7D%7BvdrbdQ%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete
+Completed 302 Found in 65ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582cb5%7D%7B2olQew%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel&openid.invalidate_handle=%7BHMAC-SHA1%7D%7B51582b66%7D%7BvdrbdQ%3D%3D%7D&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fserver&openid.response_nonce=2013-03-31T12%3A31%3A49Z8CDJUo&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=skvSU5yuQsW%2BZwCkDbUbGmtMngc%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cinvalidate_handle%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned" for 127.0.0.1 at Sun Mar 31 05:31:49 -0700 2013
+Processing by ConsumerController#complete as HTML
+  Parameters: {"openid.sig"=>"skvSU5yuQsW+ZwCkDbUbGmtMngc=", "openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.op_endpoint"=>"http://localhost:3009/open_id/server", "openid.mode"=>"id_res", "openid.response_nonce"=>"2013-03-31T12:31:49Z8CDJUo", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/open_id/marcel", "openid.signed"=>"assoc_handle,claimed_id,identity,invalidate_handle,mode,ns,op_endpoint,response_nonce,return_to,signed", "openid.invalidate_handle"=>"{HMAC-SHA1}{51582b66}{vdrbdQ==}", "openid.assoc_handle"=>"{HMAC-SHA1}{51582cb5}{2olQew==}", "openid.claimed_id"=>"http://localhost:3009/open_id/marcel"}
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 65ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:31:49 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (0.7ms)
+Completed 200 OK in 7ms (Views: 6.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 05:31:49 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 05:31:49 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 05:31:49 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+Connecting to database specified by database.yml
+
+
+Started GET "/server" for 127.0.0.1 at Sun Mar 31 05:32:59 -0700 2013
+
+ActionDispatch::Session::SessionRestoreError (Session contains objects whose class definition isn't available.
+Remember to require the classes for all objects kept in the session.
+(Original exception: uninitialized constant OpenID [NameError])
+):
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:64:in `stale_session_check!'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/cookie_store.rb:48:in `unpacked_cookie_data'
+  rack (1.4.5) lib/rack/session/cookie.rb:107:in `extract_session_id'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:53:in `extract_session_id'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:57:in `stale_session_check!'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:53:in `extract_session_id'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:43:in `send'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:43:in `load_session_id!'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:32:in `[]'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:267:in `current_session_id'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:273:in `session_exists?'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:107:in `send'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:107:in `exists?'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:127:in `load_for_read!'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:64:in `key?'
+  actionpack (3.2.13) lib/action_dispatch/middleware/flash.rb:258:in `call'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:210:in `context'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:205:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/cookies.rb:341:in `call'
+  activerecord (3.2.13) lib/active_record/query_cache.rb:64:in `call'
+  activerecord (3.2.13) lib/active_record/connection_adapters/abstract/connection_pool.rb:479:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `_run__397314981__call__4__callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `__run_callback'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:385:in `_run_call_callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/reloader.rb:65:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/remote_ip.rb:31:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.9ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (2.0ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (19.9ms)
+
+
+Started GET "/server" for 127.0.0.1 at Sun Mar 31 05:33:19 -0700 2013
+Processing by ServerController#index as HTML
+  Rendered text template (0.0ms)
+Completed 500 Internal Server Error in 31ms (Views: 25.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server" for 127.0.0.1 at Sun Mar 31 05:33:41 -0700 2013
+Processing by ServerController#index as HTML
+  Rendered text template (0.0ms)
+Completed 500 Internal Server Error in 5ms (Views: 2.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:33:47 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (0.8ms)
+Completed 200 OK in 11ms (Views: 10.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 05:33:47 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 05:33:47 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 05:33:47 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fopen_id%2Fmarcel" for 127.0.0.1 at Sun Mar 31 05:33:57 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/open_id/marcel"}
+
+
+Started GET "/open_id/marcel" for 127.0.0.1 at Sun Mar 31 05:33:57 -0700 2013
+
+ActionController::RoutingError (No route matches [GET] "/open_id/marcel"):
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 38ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:33:57 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (0.7ms)
+Completed 200 OK in 8ms (Views: 8.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 05:33:57 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 05:33:57 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 05:33:57 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fserver" for 127.0.0.1 at Sun Mar 31 05:34:12 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/server"}
+
+
+Started GET "/server" for 127.0.0.1 at Sun Mar 31 05:34:12 -0700 2013
+Processing by ServerController#index as application/xrds+xml
+  Rendered text template (0.0ms)
+Completed 500 Internal Server Error in 5ms (Views: 1.9ms | ActiveRecord: 0.0ms)
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 20ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:34:13 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (0.6ms)
+Completed 200 OK in 11ms (Views: 10.2ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 05:34:13 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 05:34:13 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 05:34:13 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fserver%2Fidp_xrds" for 127.0.0.1 at Sun Mar 31 05:35:31 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/server/idp_xrds"}
+
+
+Started GET "/server/idp_xrds" for 127.0.0.1 at Sun Mar 31 05:35:31 -0700 2013
+Processing by ServerController#idp_xrds as application/xrds+xml
+  Rendered text template (0.0ms)
+Completed 200 OK in 3ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server" for 127.0.0.1 at Sun Mar 31 05:35:32 -0700 2013
+Processing by ServerController#index as */*
+  Parameters: {"openid.mode"=>"associate", "openid.assoc_type"=>"HMAC-SHA1", "openid.session_type"=>"DH-SHA1", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.dh_consumer_public"=>"Ohd6vp/95+pq56SpKTaquSLrgWcVYQwVDbe+KsVnfn/bWAsT2TGS3v7AjwWKx5rfCZauIQ/c55uwMjT5iX5sAQFcNdOVtl5Ue42oFfkHDu01A7xovf2ZUdbw10m0Cl+g0BjDZRBagDShrlvBP3SZDMPvQu4o/04GhA6rChWnaGA="}
+WARNING: Can't verify CSRF token authenticity
+  Rendered text template (0.0ms)
+Completed 200 OK in 40ms (Views: 0.7ms | ActiveRecord: 0.0ms)
+Redirected to http://localhost:3009/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete
+Completed 302 Found in 308ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:35:32 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+  Rendered server/decide.html.erb within layouts/server (1.2ms)
+Completed 200 OK in 21ms (Views: 5.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:37:07 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+  Rendered server/decide.html.erb within layouts/server (2.1ms)
+Completed 200 OK in 18ms (Views: 5.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:37:10 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+  Rendered server/decide.html.erb within layouts/server (1.1ms)
+Completed 200 OK in 16ms (Views: 4.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:38:02 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.0ms)
+Completed 200 OK in 15ms (Views: 8.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:38:11 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.2ms)
+Completed 200 OK in 18ms (Views: 14.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:39:23 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.1ms)
+Completed 200 OK in 8ms (Views: 5.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:39:26 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+Completed 200 OK in 11ms (Views: 4.1ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:39:52 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>"http://localhost:3009/marcel"}
+WARNING: Can't verify CSRF token authenticity
+Completed 500 Internal Server Error in 1ms
+
+NoMethodError (undefined method `identity' for nil:NilClass):
+  app/controllers/server_controller.rb:143:in `decision'
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.7ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.4ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (15.5ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:41:02 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>"http://localhost:3009/marcel"}
+WARNING: Can't verify CSRF token authenticity
+Completed 500 Internal Server Error in 1ms
+
+NoMethodError (undefined method `identity' for nil:NilClass):
+  app/controllers/server_controller.rb:143:in `decision'
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.9ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.2ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (14.4ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:41:56 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>"http://localhost:3009/marcel"}
+WARNING: Can't verify CSRF token authenticity
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 1.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 05:42:11 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (0.8ms)
+Completed 200 OK in 12ms (Views: 10.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 05:42:12 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 05:42:12 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 05:42:12 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fserver%2Fidp_xrds" for 127.0.0.1 at Sun Mar 31 05:42:28 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/server/idp_xrds"}
+
+
+Started GET "/server/idp_xrds" for 127.0.0.1 at Sun Mar 31 05:42:28 -0700 2013
+Processing by ServerController#idp_xrds as application/xrds+xml
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+Redirected to http://localhost:3009/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete
+Completed 302 Found in 31ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:42:28 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+Completed 200 OK in 8ms (Views: 3.8ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:42:36 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>"http://localhost:3009/marcel"}
+WARNING: Can't verify CSRF token authenticity
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:45:38 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+Completed 200 OK in 19ms (Views: 10.1ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:46:02 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+Completed 200 OK in 7ms (Views: 3.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:46:33 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.5ms)
+session: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+Completed 500 Internal Server Error in 10ms
+
+AbstractController::DoubleRenderError (Render and/or redirect were called multiple times in this action. Please note that you may only call render OR redirect, and at most once per action. Also note that neither redirect nor render terminate execution of the action, so if you want to exit an action after redirecting, you need to do something like "redirect_to(...) and return".):
+  app/controllers/server_controller.rb:88:in `show_decision_page'
+  app/controllers/server_controller.rb:45:in `index'
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (2.2ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (5.0ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (25.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:46:47 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+session: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Completed 200 OK in 8ms (Views: 4.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:48:24 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.3ms)
+session: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Completed 200 OK in 15ms (Views: 11.0ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:48:44 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>"http://localhost:3009/marcel"}
+WARNING: Can't verify CSRF token authenticity
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:54:41 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.6ms)
+session: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session size: 804
+Completed 200 OK in 14ms (Views: 5.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:54:59 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+session: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Completed 500 Internal Server Error in 12ms
+
+TypeError (can't dump anonymous module #<Module:0x10225e948>):
+  app/controllers/server_controller.rb:45:in `dump'
+  app/controllers/server_controller.rb:45:in `index'
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.9ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (3.6ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (27.3ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:56:19 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+Completed 200 OK in 8ms (Views: 4.3ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:56:21 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:56:26 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:56:36 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+Completed 200 OK in 8ms (Views: 3.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:56:37 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.5ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+Completed 200 OK in 7ms (Views: 3.1ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:56:44 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:57:14 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 1.4ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:57:35 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 3ms (Views: 2.1ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 05:58:17 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 1.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 05:59:23 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: 0df6cf9c44f69c6a4ab15e8a889cdbfc
+Completed 200 OK in 8ms (Views: 3.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:00:27 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: 0df6cf9c44f69c6a4ab15e8a889cdbfc
+session_id cookie: 
+Completed 200 OK in 8ms (Views: 4.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:00:46 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.9ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: 0df6cf9c44f69c6a4ab15e8a889cdbfc
+session_id cookie: BAh7CSIPc2Vzc2lvbl9pZCIlMGRmNmNmOWM0NGY2OWM2YTRhYjE1ZThhODg5Y2RiZmMiCmhlbGxvIgp3b3JsZCIKZmxhc2hvOiVBY3Rpb25EaXNwYXRjaDo6Rmxhc2g6OkZsYXNoSGFzaAk6DUBmbGFzaGVzewY6C25vdGljZSIvRG8geW91IHRydXN0IHRoaXMgc2l0ZSB3aXRoIHlvdXIgaWRlbnRpdHk/OgpAdXNlZG86CFNldAY6CkBoYXNoewA6DEBjbG9zZWRGOglAbm93MCIQbGFzdF9vaWRyZXFvOiNPcGVuSUQ6OlNlcnZlcjo6Q2hlY2tJRFJlcXVlc3QOOhBAdHJ1c3Rfcm9vdCIjaHR0cDovL2xvY2FsaG9zdDozMDEwL2NvbnN1bWVyOg9AcmV0dXJuX3RvIixodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXIvY29tcGxldGU6DUBtZXNzYWdlbzoUT3BlbklEOjpNZXNzYWdlCDoQQG5hbWVzcGFjZXNvOhlPcGVuSUQ6Ok5hbWVzcGFjZU1hcAg6GEBhbGlhc190b19uYW1lc3BhY2V7BjoTbnVsbF9uYW1lc3BhY2UiJWh0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wOhlAaW1wbGljaXRfbmFtZXNwYWNlc1sAOhhAbmFtZXNwYWNlX3RvX2FsaWFzewYiJWh0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wOxU6E0BvcGVuaWRfbnNfdXJpQBc6CkBhcmdzew1bB0AXIgltb2RlIhJjaGVja2lkX3NldHVwWwdAFyIPY2xhaW1lZF9pZCI3aHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjAvaWRlbnRpZmllcl9zZWxlY3RbBzoTYmFyZV9uYW1lc3BhY2UiC2FjdGlvbiIKaW5kZXhbBzsaIg9jb250cm9sbGVyIgtzZXJ2ZXJbB0AXIhFhc3NvY19oYW5kbGUiJHtITUFDLVNIQTF9ezUxNTgyZDk0fXtjZGtvMWc9PX1bB0AXIg5yZXR1cm5fdG9AE1sHQBciCnJlYWxtQBJbB0AXIg1pZGVudGl0eSI3aHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjAvaWRlbnRpZmllcl9zZWxlY3Q6D0BpbW1lZGlhdGVGOg5AaWRlbnRpdHlAMToSQGFzc29jX2hhbmRsZUAqOhBAY2xhaW1lZF9pZEAhOgpAbW9kZSISY2hlY2tpZF9zZXR1cDoRQG9wX2VuZHBvaW50IiFodHRwOi8vbG9jYWxob3N0OjMwMDkvc2VydmVy--e9977c9d345b7da60a35bbd6b27618a288f54057
+Completed 200 OK in 31ms (Views: 14.7ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:01:27 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+session_id cookie: BAh7CSIPc2Vzc2lvbl9pZCIlMGRmNmNmOWM0NGY2OWM2YTRhYjE1ZThhODg5Y2RiZmMiCmhlbGxvIgp3b3JsZCIQbGFzdF9vaWRyZXFvOiNPcGVuSUQ6OlNlcnZlcjo6Q2hlY2tJRFJlcXVlc3QOOhBAdHJ1c3Rfcm9vdCIjaHR0cDovL2xvY2FsaG9zdDozMDEwL2NvbnN1bWVyOg9AcmV0dXJuX3RvIixodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXIvY29tcGxldGU6DUBtZXNzYWdlbzoUT3BlbklEOjpNZXNzYWdlCDoQQG5hbWVzcGFjZXNvOhlPcGVuSUQ6Ok5hbWVzcGFjZU1hcAg6GEBhbGlhc190b19uYW1lc3BhY2V7BjoTbnVsbF9uYW1lc3BhY2UiJWh0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wOhlAaW1wbGljaXRfbmFtZXNwYWNlc1sAOhhAbmFtZXNwYWNlX3RvX2FsaWFzewYiJWh0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wOw06E0BvcGVuaWRfbnNfdXJpQBE6CkBhcmdzew1bB0ARIgltb2RlIhJjaGVja2lkX3NldHVwWwdAESIPY2xhaW1lZF9pZCI3aHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjAvaWRlbnRpZmllcl9zZWxlY3RbBzoTYmFyZV9uYW1lc3BhY2UiC2FjdGlvbiIKaW5kZXhbBzsSIg9jb250cm9sbGVyIgtzZXJ2ZXJbB0ARIhFhc3NvY19oYW5kbGUiJHtITUFDLVNIQTF9ezUxNTgyZDk0fXtjZGtvMWc9PX1bB0ARIg5yZXR1cm5fdG9ADVsHQBEiCnJlYWxtQAxbB0ARIg1pZGVudGl0eSI3aHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjAvaWRlbnRpZmllcl9zZWxlY3Q6D0BpbW1lZGlhdGVGOg5AaWRlbnRpdHlAKzoSQGFzc29jX2hhbmRsZUAkOhBAY2xhaW1lZF9pZEAbOgpAbW9kZSISY2hlY2tpZF9zZXR1cDoRQG9wX2VuZHBvaW50IiFodHRwOi8vbG9jYWxob3N0OjMwMDkvc2VydmVyIgpmbGFzaG86JUFjdGlvbkRpc3BhdGNoOjpGbGFzaDo6Rmxhc2hIYXNoCToNQGZsYXNoZXN7BjoLbm90aWNlIi9EbyB5b3UgdHJ1c3QgdGhpcyBzaXRlIHdpdGggeW91ciBpZGVudGl0eT86CkB1c2VkbzoIU2V0BjoKQGhhc2h7ADoMQGNsb3NlZEY6CUBub3cw--097664684a5b4ec726b2e9621c60066bdffa2b08
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:01:46 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+session_id cookie: BAh7BzoQbGFzdF9vaWRyZXEwIg9zZXNzaW9uX2lkIiViMjkzOWYzZGM1MGUzZGVhN2MzMjQwODgwMzk4ZDRlZg==--5c9b11469badcabaca82548d4d506f6b7b1e834f
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:07:21 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.2ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: d50d3dd624bc8ca8e44f1203c96a8f93
+session_id cookie: BAh7BzoQbGFzdF9vaWRyZXEwIg9zZXNzaW9uX2lkIiVkNTBkM2RkNjI0YmM4Y2E4ZTQ0ZjEyMDNjOTZhOGY5Mw==--4184fd96c6f41491285b5f6c1e96b4b72e28c2f8
+Completed 200 OK in 10ms (Views: 4.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:07:33 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (157.0ms)
+Completed 500 Internal Server Error in 166ms
+
+ActionView::Template::Error (undefined local variable or method `form_authenticity_token_field' for #<#<Class:0x103647298>:0x10358a698>):
+    1: <form method="post" action="<%= url_for :controller => 'server', :action => 'decision' %>">
+    2:   <%= form_authenticity_token_field %>
+    3: 
+    4: <table>
+    5:   <tr><td>Site:</td><td><%= @oidreq.trust_root %></td></tr>
+  app/views/server/decide.html.erb:2:in `_app_views_server_decide_html_erb___1096845836_2175551400'
+  app/controllers/server_controller.rb:92:in `show_decision_page'
+  app/controllers/server_controller.rb:43:in `index'
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.8ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (2.3ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/template_error.erb within rescues/layout (15.6ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:09:13 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (42.6ms)
+Completed 500 Internal Server Error in 49ms
+
+ActionView::Template::Error (undefined local variable or method `form_authenticity_param' for #<#<Class:0x103647298>:0x103920618>):
+    1: <form method="post" action="<%= url_for :controller => 'server', :action => 'decision' %>">
+    2:   <input type="hidden" name="<%= form_authenticity_param %>" value="<%= form_authenticity_token %>">
+    3: 
+    4: <table>
+    5:   <tr><td>Site:</td><td><%= @oidreq.trust_root %></td></tr>
+  app/views/server/decide.html.erb:2:in `_app_views_server_decide_html_erb___1096845836_2177422820'
+  app/controllers/server_controller.rb:92:in `show_decision_page'
+  app/controllers/server_controller.rb:43:in `index'
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (3.1ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.6ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/template_error.erb within rescues/layout (20.9ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:10:58 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.0ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: d50d3dd624bc8ca8e44f1203c96a8f93
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMTVIMWQ0bEVzMnA4Qjd0enZHTXNIZXRLOUtPcTZCbFl4UFN6dyt2SFJTckE9Ig9zZXNzaW9uX2lkIiVkNTBkM2RkNjI0YmM4Y2E4ZTQ0ZjEyMDNjOTZhOGY5MyIKaGVsbG8iCndvcmxkIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7DToTQG9wZW5pZF9uc191cmlAEzoKQGFyZ3N7DVsHQBMiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0ATIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxIiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBMiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBMiDnJldHVybl90b0APWwdAEyIKcmVhbG1ADlsHQBMiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAtOhJAYXNzb2NfaGFuZGxlQCY6EEBjbGFpbWVkX2lkQB06CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXIiCmZsYXNobzolQWN0aW9uRGlzcGF0Y2g6OkZsYXNoOjpGbGFzaEhhc2gJOg1AZmxhc2hlc3sGOgtub3RpY2UiL0RvIHlvdSB0cnVzdCB0aGlzIHNpdGUgd2l0aCB5b3VyIGlkZW50aXR5PzoKQHVzZWRvOghTZXQGOgpAaGFzaHsAOgxAY2xvc2VkRjoJQG5vdzA=--0b12a84d3b56c065d035566362e3e9374de86039
+Completed 200 OK in 8ms (Views: 4.8ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:11:00 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMTVIMWQ0bEVzMnA4Qjd0enZHTXNIZXRLOUtPcTZCbFl4UFN6dyt2SFJTckE9Ig9zZXNzaW9uX2lkIiVkNTBkM2RkNjI0YmM4Y2E4ZTQ0ZjEyMDNjOTZhOGY5MyIKaGVsbG8iCndvcmxkIgpmbGFzaG86JUFjdGlvbkRpc3BhdGNoOjpGbGFzaDo6Rmxhc2hIYXNoCToNQGZsYXNoZXN7BjoLbm90aWNlIi9EbyB5b3UgdHJ1c3QgdGhpcyBzaXRlIHdpdGggeW91ciBpZGVudGl0eT86CkB1c2VkbzoIU2V0BjoKQGhhc2h7ADoMQGNsb3NlZEY6CUBub3cwIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7FToTQG9wZW5pZF9uc191cmlAGToKQGFyZ3N7DVsHQBkiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0AZIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxoiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBkiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBkiDnJldHVybl90b0AVWwdAGSIKcmVhbG1AFFsHQBkiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAzOhJAYXNzb2NfaGFuZGxlQCw6EEBjbGFpbWVkX2lkQCM6CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXI=--efe18d78f0dd5ccfbb16f8706b35781d95ffead8
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:11:03 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: b0111bc499a041f6669c0cffd50c4854
+session_id cookie: BAh7BzoQbGFzdF9vaWRyZXEwIg9zZXNzaW9uX2lkIiViMDExMWJjNDk5YTA0MWY2NjY5YzBjZmZkNTBjNDg1NA==--73c5bfc2bb790437f2b141aaf0c20cd6cc426da7
+Completed 200 OK in 9ms (Views: 3.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:11:05 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.8ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: b0111bc499a041f6669c0cffd50c4854
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMURlelQzMjdHQk9aRUdxakRaM2pjeTFjY3ZsRmN0eHJQdUF2UGJLWUg3WTA9Ig9zZXNzaW9uX2lkIiViMDExMWJjNDk5YTA0MWY2NjY5YzBjZmZkNTBjNDg1NCIKaGVsbG8iCndvcmxkIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7DToTQG9wZW5pZF9uc191cmlAEzoKQGFyZ3N7DVsHQBMiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0ATIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxIiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBMiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBMiDnJldHVybl90b0APWwdAEyIKcmVhbG1ADlsHQBMiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAtOhJAYXNzb2NfaGFuZGxlQCY6EEBjbGFpbWVkX2lkQB06CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXIiCmZsYXNobzolQWN0aW9uRGlzcGF0Y2g6OkZsYXNoOjpGbGFzaEhhc2gJOg1AZmxhc2hlc3sGOgtub3RpY2UiL0RvIHlvdSB0cnVzdCB0aGlzIHNpdGUgd2l0aCB5b3VyIGlkZW50aXR5PzoKQHVzZWRvOghTZXQGOgpAaGFzaHsAOgxAY2xvc2VkRjoJQG5vdzA=--4aa0ecdd65e5219704711e40c58139be1348db1f
+Completed 200 OK in 10ms (Views: 5.1ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:11:06 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMURlelQzMjdHQk9aRUdxakRaM2pjeTFjY3ZsRmN0eHJQdUF2UGJLWUg3WTA9Ig9zZXNzaW9uX2lkIiViMDExMWJjNDk5YTA0MWY2NjY5YzBjZmZkNTBjNDg1NCIKaGVsbG8iCndvcmxkIgpmbGFzaG86JUFjdGlvbkRpc3BhdGNoOjpGbGFzaDo6Rmxhc2hIYXNoCToNQGZsYXNoZXN7BjoLbm90aWNlIi9EbyB5b3UgdHJ1c3QgdGhpcyBzaXRlIHdpdGggeW91ciBpZGVudGl0eT86CkB1c2VkbzoIU2V0BjoKQGhhc2h7ADoMQGNsb3NlZEY6CUBub3cwIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7FToTQG9wZW5pZF9uc191cmlAGToKQGFyZ3N7DVsHQBkiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0AZIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxoiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBkiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBkiDnJldHVybl90b0AVWwdAGSIKcmVhbG1AFFsHQBkiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAzOhJAYXNzb2NfaGFuZGxlQCw6EEBjbGFpbWVkX2lkQCM6CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXI=--2e2b7c25a4b12809bc26063679446f2ea9bb0c95
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:11:40 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+session_id cookie: BAh7BzoQbGFzdF9vaWRyZXEwIg9zZXNzaW9uX2lkIiVkZTEzMjgwMDA5ZGU5NGQ1NjkzYWExNjUxNDFmMWYyNQ==--fb03aa366527aebbe8dd7fd9a6be3905ea7690b6
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 4ms (Views: 1.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:11:42 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: 396fcb58d8777c7f869bf8084e96482c
+session_id cookie: BAh7BzoQbGFzdF9vaWRyZXEwIg9zZXNzaW9uX2lkIiUzOTZmY2I1OGQ4Nzc3YzdmODY5YmY4MDg0ZTk2NDgyYw==--48268edfcda33e221ff56a92f7c2cc30efd4951a
+Completed 200 OK in 14ms (Views: 5.4ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:11:43 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMVBONjA1NXlibkNzaWJEZ1pTZ0k5KzEwZStoVXdRZUpPYU5FYzRlL3J0MW89Ig9zZXNzaW9uX2lkIiUzOTZmY2I1OGQ4Nzc3YzdmODY5YmY4MDg0ZTk2NDgyYyIKaGVsbG8iCndvcmxkIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7DToTQG9wZW5pZF9uc191cmlAEzoKQGFyZ3N7DVsHQBMiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0ATIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxIiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBMiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBMiDnJldHVybl90b0APWwdAEyIKcmVhbG1ADlsHQBMiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAtOhJAYXNzb2NfaGFuZGxlQCY6EEBjbGFpbWVkX2lkQB06CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXIiCmZsYXNobzolQWN0aW9uRGlzcGF0Y2g6OkZsYXNoOjpGbGFzaEhhc2gJOg1AZmxhc2hlc3sGOgtub3RpY2UiL0RvIHlvdSB0cnVzdCB0aGlzIHNpdGUgd2l0aCB5b3VyIGlkZW50aXR5PzoKQHVzZWRvOghTZXQGOgpAaGFzaHsAOgxAY2xvc2VkRjoJQG5vdzA=--9d8e44ba14ab5c85a086e860ea1481f71067e88f
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:12:51 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.0ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: 2c66ed926ccfe2103c298469eb4818f8
+session_id cookie: BAh7BzoQbGFzdF9vaWRyZXEwIg9zZXNzaW9uX2lkIiUyYzY2ZWQ5MjZjY2ZlMjEwM2MyOTg0NjllYjQ4MThmOA==--6457aa16715de946fb9167e165af7f022d49cd5f
+Completed 200 OK in 7ms (Views: 3.8ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:12:53 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"_token"=>"rLGwlRuk0Zz/nS165br3PrN5Zre3xpwKpSsHGDqntog=", "yes"=>"yes", "id_to_send"=>""}
+WARNING: Can't verify CSRF token authenticity
+session_id: 
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMXJMR3dsUnVrMFp6L25TMTY1YnIzUHJONVpyZTN4cHdLcFNzSEdEcW50b2c9Ig9zZXNzaW9uX2lkIiUyYzY2ZWQ5MjZjY2ZlMjEwM2MyOTg0NjllYjQ4MThmOCIKaGVsbG8iCndvcmxkIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7DToTQG9wZW5pZF9uc191cmlAEzoKQGFyZ3N7DVsHQBMiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0ATIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxIiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBMiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBMiDnJldHVybl90b0APWwdAEyIKcmVhbG1ADlsHQBMiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAtOhJAYXNzb2NfaGFuZGxlQCY6EEBjbGFpbWVkX2lkQB06CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXIiCmZsYXNobzolQWN0aW9uRGlzcGF0Y2g6OkZsYXNoOjpGbGFzaEhhc2gJOg1AZmxhc2hlc3sGOgtub3RpY2UiL0RvIHlvdSB0cnVzdCB0aGlzIHNpdGUgd2l0aCB5b3VyIGlkZW50aXR5PzoKQHVzZWRvOghTZXQGOgpAaGFzaHsAOgxAY2xvc2VkRjoJQG5vdzA=--f8ed02db84ccf0f80fc1bd2f0f4095cbc249caac
+hello: 
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:15:54 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.7ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: ff4ab3c2833d6324f1fcc3a4de587fe1
+session_id cookie: BAh7BzoQbGFzdF9vaWRyZXEwIg9zZXNzaW9uX2lkIiVmZjRhYjNjMjgzM2Q2MzI0ZjFmY2MzYTRkZTU4N2ZlMQ==--0b1f7487ae5567045e91d39d107132c75a1e1c59
+Completed 200 OK in 45ms (Views: 40.8ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:15:55 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"jgWPOedLngI1CoE4miIBy3FprrZr/xYlHnBoTWn9fOc=", "yes"=>"yes", "id_to_send"=>""}
+session_id: ff4ab3c2833d6324f1fcc3a4de587fe1
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMWpnV1BPZWRMbmdJMUNvRTRtaUlCeTNGcHJyWnIveFlsSG5Cb1RXbjlmT2M9Ig9zZXNzaW9uX2lkIiVmZjRhYjNjMjgzM2Q2MzI0ZjFmY2MzYTRkZTU4N2ZlMSIKaGVsbG8iCndvcmxkIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7DToTQG9wZW5pZF9uc191cmlAEzoKQGFyZ3N7DVsHQBMiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0ATIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxIiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBMiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBMiDnJldHVybl90b0APWwdAEyIKcmVhbG1ADlsHQBMiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAtOhJAYXNzb2NfaGFuZGxlQCY6EEBjbGFpbWVkX2lkQB06CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXIiCmZsYXNobzolQWN0aW9uRGlzcGF0Y2g6OkZsYXNoOjpGbGFzaEhhc2gJOg1AZmxhc2hlc3sGOgtub3RpY2UiL0RvIHlvdSB0cnVzdCB0aGlzIHNpdGUgd2l0aCB5b3VyIGlkZW50aXR5PzoKQHVzZWRvOghTZXQGOgpAaGFzaHsAOgxAY2xvc2VkRjoJQG5vdzA=--9a1ec542115a344418fdc5587685b73737444aef
+hello: world
+last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.7ms)
+Completed 200 OK in 5ms (Views: 4.4ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:15:58 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"jgWPOedLngI1CoE4miIBy3FprrZr/xYlHnBoTWn9fOc=", "yes"=>"yes", "id_to_send"=>""}
+session_id: ff4ab3c2833d6324f1fcc3a4de587fe1
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMWpnV1BPZWRMbmdJMUNvRTRtaUlCeTNGcHJyWnIveFlsSG5Cb1RXbjlmT2M9Ig9zZXNzaW9uX2lkIiVmZjRhYjNjMjgzM2Q2MzI0ZjFmY2MzYTRkZTU4N2ZlMSIKaGVsbG8iCndvcmxkIgpmbGFzaG86JUFjdGlvbkRpc3BhdGNoOjpGbGFzaDo6Rmxhc2hIYXNoCToNQGZsYXNoZXN7BjoLbm90aWNlIlZZb3UgbXVzdCBlbnRlciBhIHVzZXJuYW1lIHRvIGluIG9yZGVyIHRvIHNlbmQgYW4gaWRlbnRpZmllciB0byB0aGUgUmVseWluZyBQYXJ0eS46CkB1c2VkbzoIU2V0BjoKQGhhc2h7ADoMQGNsb3NlZEY6CUBub3cwIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7FToKQGFyZ3N7DVsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHQBkiD2NsYWltZWRfaWQiN2h0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wL2lkZW50aWZpZXJfc2VsZWN0WwdAGSIJbW9kZSISY2hlY2tpZF9zZXR1cFsHOxkiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBkiDnJldHVybl90b0AVWwdAGSIRYXNzb2NfaGFuZGxlIiR7SE1BQy1TSEExfXs1MTU4MmQ5NH17Y2RrbzFnPT19WwdAGSINaWRlbnRpdHkiN2h0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wL2lkZW50aWZpZXJfc2VsZWN0WwdAGSIKcmVhbG1AFDoTQG9wZW5pZF9uc191cmlAGToPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAxOhJAYXNzb2NfaGFuZGxlQC46EUBvcF9lbmRwb2ludCIhaHR0cDovL2xvY2FsaG9zdDozMDA5L3NlcnZlcjoKQG1vZGUiEmNoZWNraWRfc2V0dXA6EEBjbGFpbWVkX2lkQCM=--d18faa6ccd17ce34ee9d7d0cc67cfa3b8e5589c1
+hello: world
+last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.8ms)
+Completed 200 OK in 6ms (Views: 5.0ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:16:23 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"jgWPOedLngI1CoE4miIBy3FprrZr/xYlHnBoTWn9fOc=", "yes"=>"yes", "id_to_send"=>""}
+session_id: ff4ab3c2833d6324f1fcc3a4de587fe1
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMWpnV1BPZWRMbmdJMUNvRTRtaUlCeTNGcHJyWnIveFlsSG5Cb1RXbjlmT2M9Ig9zZXNzaW9uX2lkIiVmZjRhYjNjMjgzM2Q2MzI0ZjFmY2MzYTRkZTU4N2ZlMSIKaGVsbG8iCndvcmxkIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7DToTQG9wZW5pZF9uc191cmlAEzoKQGFyZ3N7DVsHQBMiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0ATIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxIiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBMiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBMiDnJldHVybl90b0APWwdAEyIKcmVhbG1ADlsHQBMiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAtOhJAYXNzb2NfaGFuZGxlQCY6EEBjbGFpbWVkX2lkQB06CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXIiCmZsYXNobzolQWN0aW9uRGlzcGF0Y2g6OkZsYXNoOjpGbGFzaEhhc2gJOg1AZmxhc2hlc3sGOgtub3RpY2UiVllvdSBtdXN0IGVudGVyIGEgdXNlcm5hbWUgdG8gaW4gb3JkZXIgdG8gc2VuZCBhbiBpZGVudGlmaWVyIHRvIHRoZSBSZWx5aW5nIFBhcnR5LjoKQHVzZWRvOghTZXQGOgpAaGFzaHsAOgxAY2xvc2VkRjoJQG5vdzA=--755060a8760641df75a8c6ce57f0e8e076a90b57
+hello: world
+last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+Completed 200 OK in 7ms (Views: 4.4ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:16:27 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"jgWPOedLngI1CoE4miIBy3FprrZr/xYlHnBoTWn9fOc=", "yes"=>"yes", "id_to_send"=>""}
+session_id: ff4ab3c2833d6324f1fcc3a4de587fe1
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMWpnV1BPZWRMbmdJMUNvRTRtaUlCeTNGcHJyWnIveFlsSG5Cb1RXbjlmT2M9Ig9zZXNzaW9uX2lkIiVmZjRhYjNjMjgzM2Q2MzI0ZjFmY2MzYTRkZTU4N2ZlMSIKaGVsbG8iCndvcmxkIgpmbGFzaG86JUFjdGlvbkRpc3BhdGNoOjpGbGFzaDo6Rmxhc2hIYXNoCToNQGZsYXNoZXN7BjoLbm90aWNlIlZZb3UgbXVzdCBlbnRlciBhIHVzZXJuYW1lIHRvIGluIG9yZGVyIHRvIHNlbmQgYW4gaWRlbnRpZmllciB0byB0aGUgUmVseWluZyBQYXJ0eS46CkB1c2VkbzoIU2V0BjoKQGhhc2h7ADoMQGNsb3NlZEY6CUBub3cwIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7FToKQGFyZ3N7DVsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHQBkiD2NsYWltZWRfaWQiN2h0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wL2lkZW50aWZpZXJfc2VsZWN0WwdAGSIJbW9kZSISY2hlY2tpZF9zZXR1cFsHOxkiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBkiDnJldHVybl90b0AVWwdAGSIRYXNzb2NfaGFuZGxlIiR7SE1BQy1TSEExfXs1MTU4MmQ5NH17Y2RrbzFnPT19WwdAGSINaWRlbnRpdHkiN2h0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wL2lkZW50aWZpZXJfc2VsZWN0WwdAGSIKcmVhbG1AFDoTQG9wZW5pZF9uc191cmlAGToPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAxOhJAYXNzb2NfaGFuZGxlQC46EUBvcF9lbmRwb2ludCIhaHR0cDovL2xvY2FsaG9zdDozMDA5L3NlcnZlcjoKQG1vZGUiEmNoZWNraWRfc2V0dXA6EEBjbGFpbWVkX2lkQCM=--d18faa6ccd17ce34ee9d7d0cc67cfa3b8e5589c1
+hello: world
+last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (0.6ms)
+Completed 200 OK in 4ms (Views: 3.1ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:16:32 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"jgWPOedLngI1CoE4miIBy3FprrZr/xYlHnBoTWn9fOc=", "yes"=>"yes", "id_to_send"=>"http://localhost:3009/marcel"}
+session_id: ff4ab3c2833d6324f1fcc3a4de587fe1
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMWpnV1BPZWRMbmdJMUNvRTRtaUlCeTNGcHJyWnIveFlsSG5Cb1RXbjlmT2M9Ig9zZXNzaW9uX2lkIiVmZjRhYjNjMjgzM2Q2MzI0ZjFmY2MzYTRkZTU4N2ZlMSIKaGVsbG8iCndvcmxkIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7DToTQG9wZW5pZF9uc191cmlAEzoKQGFyZ3N7DVsHQBMiCW1vZGUiEmNoZWNraWRfc2V0dXBbB0ATIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOxIiD2NvbnRyb2xsZXIiC3NlcnZlclsHQBMiEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQBMiDnJldHVybl90b0APWwdAEyIKcmVhbG1ADlsHQBMiDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUAtOhJAYXNzb2NfaGFuZGxlQCY6EEBjbGFpbWVkX2lkQB06CkBtb2RlIhJjaGVja2lkX3NldHVwOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXIiCmZsYXNobzolQWN0aW9uRGlzcGF0Y2g6OkZsYXNoOjpGbGFzaEhhc2gJOg1AZmxhc2hlc3sGOgtub3RpY2UiVllvdSBtdXN0IGVudGVyIGEgdXNlcm5hbWUgdG8gaW4gb3JkZXIgdG8gc2VuZCBhbiBpZGVudGlmaWVyIHRvIHRoZSBSZWx5aW5nIFBhcnR5LjoKQHVzZWRvOghTZXQGOgpAaGFzaHsAOgxAY2xvc2VkRjoJQG5vdzA=--755060a8760641df75a8c6ce57f0e8e076a90b57
+hello: world
+last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Redirected to http://localhost:3010/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A16%3A32ZBnQWSS&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=nk5Cd60iCeaC5tEfTFXeq8bJxkM%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned
+Completed 302 Found in 50ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A16%3A32ZBnQWSS&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=nk5Cd60iCeaC5tEfTFXeq8bJxkM%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned" for 127.0.0.1 at Sun Mar 31 06:16:32 -0700 2013
+Processing by ConsumerController#complete as HTML
+  Parameters: {"openid.sig"=>"nk5Cd60iCeaC5tEfTFXeq8bJxkM=", "openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.op_endpoint"=>"http://localhost:3009/server", "openid.mode"=>"id_res", "openid.response_nonce"=>"2013-03-31T13:16:32ZBnQWSS", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/user/http://localhost:3009/marcel", "openid.signed"=>"assoc_handle,claimed_id,identity,mode,ns,op_endpoint,response_nonce,return_to,signed", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.claimed_id"=>"http://localhost:3009/user/http://localhost:3009/marcel"}
+
+
+Started GET "/user/http://localhost:3009/marcel" for 127.0.0.1 at Sun Mar 31 06:16:32 -0700 2013
+
+ActionController::RoutingError (No route matches [GET] "/user/http:/localhost:3009/marcel"):
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 103ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 06:16:32 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (1.3ms)
+Completed 200 OK in 229ms (Views: 219.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 06:16:32 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 06:16:32 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 06:16:32 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:16:53 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"jgWPOedLngI1CoE4miIBy3FprrZr/xYlHnBoTWn9fOc=", "yes"=>"yes", "id_to_send"=>"marcel"}
+session_id: ff4ab3c2833d6324f1fcc3a4de587fe1
+session_id cookie: BAh7CyIQX2NzcmZfdG9rZW4iMWpnV1BPZWRMbmdJMUNvRTRtaUlCeTNGcHJyWnIveFlsSG5Cb1RXbjlmT2M9Ig9zZXNzaW9uX2lkIiVmZjRhYjNjMjgzM2Q2MzI0ZjFmY2MzYTRkZTU4N2ZlMSINdXNlcm5hbWUiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9tYXJjZWwiCmhlbGxvIgp3b3JsZCIKZmxhc2hvOiVBY3Rpb25EaXNwYXRjaDo6Rmxhc2g6OkZsYXNoSGFzaAk6DUBmbGFzaGVzewY6CmVycm9yIgGaVmVyaWZpY2F0aW9uIGZhaWxlZDogSFRUUCBSZXNwb25zZSBzdGF0dXMgZnJvbSBpZGVudGl0eSBVUkwgaG9zdCBpcyBub3QgIjIwMCIuR290IHN0YXR1cyAiNDA0IiBmb3IgaHR0cDovL2xvY2FsaG9zdDozMDA5L3VzZXIvaHR0cDovL2xvY2FsaG9zdDozMDA5L21hcmNlbDoKQHVzZWRvOghTZXQGOgpAaGFzaHsGOwdUOgxAY2xvc2VkRjoJQG5vdzAiDmFwcHJvdmFsc1sGIiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI=--419dee51ac0f7222ab6c721397583a987665e92b
+hello: world
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:16:57 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"jgWPOedLngI1CoE4miIBy3FprrZr/xYlHnBoTWn9fOc=", "yes"=>"yes", "id_to_send"=>""}
+session_id: ff4ab3c2833d6324f1fcc3a4de587fe1
+session_id cookie: BAh7CiIQX2NzcmZfdG9rZW4iMWpnV1BPZWRMbmdJMUNvRTRtaUlCeTNGcHJyWnIveFlsSG5Cb1RXbjlmT2M9Ig11c2VybmFtZSIhaHR0cDovL2xvY2FsaG9zdDozMDA5L21hcmNlbCIPc2Vzc2lvbl9pZCIlZmY0YWIzYzI4MzNkNjMyNGYxZmNjM2E0ZGU1ODdmZTEiCmhlbGxvIgp3b3JsZCIOYXBwcm92YWxzWwYiI2h0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lcg==--793b2103b83a8f1f36926f105f4f81683d9f5a7f
+hello: world
+last_oidreq: 
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:17:08 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+Redirected to http://localhost:3010/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A17%3A08ZUxQiz5&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=4HAQxaR%2B5Mujm5aHJjPjV8E6kPo%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned
+Completed 302 Found in 196ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A17%3A08ZUxQiz5&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=4HAQxaR%2B5Mujm5aHJjPjV8E6kPo%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned" for 127.0.0.1 at Sun Mar 31 06:17:09 -0700 2013
+Processing by ConsumerController#complete as HTML
+  Parameters: {"openid.sig"=>"4HAQxaR+5Mujm5aHJjPjV8E6kPo=", "openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.op_endpoint"=>"http://localhost:3009/server", "openid.mode"=>"id_res", "openid.response_nonce"=>"2013-03-31T13:17:08ZUxQiz5", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/user/http://localhost:3009/marcel", "openid.signed"=>"assoc_handle,claimed_id,identity,mode,ns,op_endpoint,response_nonce,return_to,signed", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.claimed_id"=>"http://localhost:3009/user/http://localhost:3009/marcel"}
+
+
+Started GET "/user/http://localhost:3009/marcel" for 127.0.0.1 at Sun Mar 31 06:17:09 -0700 2013
+
+ActionController::RoutingError (No route matches [GET] "/user/http:/localhost:3009/marcel"):
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (3.2ms)
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 70ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 06:17:09 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (1.1ms)
+Completed 200 OK in 21ms (Views: 17.4ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 06:17:09 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 06:17:09 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 06:17:09 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:17:16 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+Redirected to http://localhost:3010/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A17%3A16ZE1EQft&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=EBYQ%2BmvGOdl6C1fW2uvPjRS3XMk%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned
+Completed 302 Found in 25ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A17%3A16ZE1EQft&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=EBYQ%2BmvGOdl6C1fW2uvPjRS3XMk%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned" for 127.0.0.1 at Sun Mar 31 06:17:16 -0700 2013
+Processing by ConsumerController#complete as HTML
+  Parameters: {"openid.sig"=>"EBYQ+mvGOdl6C1fW2uvPjRS3XMk=", "openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.op_endpoint"=>"http://localhost:3009/server", "openid.mode"=>"id_res", "openid.response_nonce"=>"2013-03-31T13:17:16ZE1EQft", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/user/http://localhost:3009/marcel", "openid.signed"=>"assoc_handle,claimed_id,identity,mode,ns,op_endpoint,response_nonce,return_to,signed", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.claimed_id"=>"http://localhost:3009/user/http://localhost:3009/marcel"}
+
+
+Started GET "/user/http://localhost:3009/marcel" for 127.0.0.1 at Sun Mar 31 06:17:16 -0700 2013
+
+ActionController::RoutingError (No route matches [GET] "/user/http:/localhost:3009/marcel"):
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 62ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 06:17:16 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 06:17:16 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 06:17:16 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fserver%2Fidp_xrds" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/server/idp_xrds"}
+
+
+Started GET "/server/idp_xrds" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+Processing by ServerController#idp_xrds as application/xrds+xml
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+Redirected to http://localhost:3009/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete
+Completed 302 Found in 60ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+Redirected to http://localhost:3010/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A17%3A26Z1eD29V&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=MXD7sDIZw8q8tsYYlj%2FAsSmIHTg%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned
+Completed 302 Found in 27ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fhttp%3A%2F%2Flocalhost%3A3009%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A17%3A26Z1eD29V&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=MXD7sDIZw8q8tsYYlj%2FAsSmIHTg%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+Processing by ConsumerController#complete as HTML
+  Parameters: {"openid.sig"=>"MXD7sDIZw8q8tsYYlj/AsSmIHTg=", "openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.op_endpoint"=>"http://localhost:3009/server", "openid.mode"=>"id_res", "openid.response_nonce"=>"2013-03-31T13:17:26Z1eD29V", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/user/http://localhost:3009/marcel", "openid.signed"=>"assoc_handle,claimed_id,identity,mode,ns,op_endpoint,response_nonce,return_to,signed", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.claimed_id"=>"http://localhost:3009/user/http://localhost:3009/marcel"}
+
+
+Started GET "/user/http://localhost:3009/marcel" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+
+ActionController::RoutingError (No route matches [GET] "/user/http:/localhost:3009/marcel"):
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 61ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (0.8ms)
+Completed 200 OK in 11ms (Views: 10.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 06:17:26 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 06:17:59 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (0.7ms)
+Completed 200 OK in 10ms (Views: 9.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 06:17:59 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 06:17:59 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 06:17:59 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fserver%2Fidp_xrds" for 127.0.0.1 at Sun Mar 31 06:18:07 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/server/idp_xrds"}
+
+
+Started GET "/server/idp_xrds" for 127.0.0.1 at Sun Mar 31 06:18:07 -0700 2013
+Processing by ServerController#idp_xrds as application/xrds+xml
+  Rendered text template (0.0ms)
+Completed 200 OK in 2ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+Redirected to http://localhost:3009/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete
+Completed 302 Found in 26ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:18:07 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://specs.openid.net/auth/2.0/identifier_select", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://specs.openid.net/auth/2.0/identifier_select"}
+The user hasn't logged in
+oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (6.2ms)
+session last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+session last_oidreq size: 804
+session_id: d6218bef503e314e9d7332aad45fbbc9
+session_id cookie: BAh7CSIQX2NzcmZfdG9rZW4iMXlHVTJMb2V0MUZ0ZEZRUVcyZityYkJtTFVBZWkxT0lJczNpRUE5cmpUQms9Ii5PcGVuSUQ6OkNvbnN1bWVyOjpsYXN0X3JlcXVlc3RlZF9lbmRwb2ludG86Ik9wZW5JRDo6T3BlbklEU2VydmljZUVuZHBvaW50DDoSQGNhbm9uaWNhbF9pZDA6EEBjbGFpbWVkX2lkMDoOQGxvY2FsX2lkMDoYQGRpc3BsYXlfaWRlbnRpZmllcjA6D0B0eXBlX3VyaXNbBiIsaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjAvc2VydmVyOhBAdXNlZF95YWRpc1Q6EEBzZXJ2ZXJfdXJsIiFodHRwOi8vbG9jYWxob3N0OjMwMDkvc2VydmVyIg9zZXNzaW9uX2lkIiVkNjIxOGJlZjUwM2UzMTRlOWQ3MzMyYWFkNDVmYmJjOSI9T3BlbklEOjpDb25zdW1lcjo6RGlzY292ZXJlZFNlcnZpY2VzOjpPcGVuSUQ6OkNvbnN1bWVyOjpvOilPcGVuSUQ6OkNvbnN1bWVyOjpEaXNjb3ZlcmVkU2VydmljZXMJOhJAc3RhcnRpbmdfdXJsIipodHRwOi8vbG9jYWxob3N0OjMwMDkvc2VydmVyL2lkcF94cmRzOg9AeWFkaXNfdXJsIipodHRwOi8vbG9jYWxob3N0OjMwMDkvc2VydmVyL2lkcF94cmRzOg1AY3VycmVudEAJOg5Ac2VydmljZXNbAA==--41e24383267c05452a1bcd365b2ce4c9c5156926
+Completed 200 OK in 24ms (Views: 16.2ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:18:11 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"yGU2Loet1FtdFQQW2f+rbBmLUAei1OIIs3iEA9rjTBk=", "yes"=>"yes", "id_to_send"=>"marcel"}
+session_id: d6218bef503e314e9d7332aad45fbbc9
+session_id cookie: BAh7DCIuT3BlbklEOjpDb25zdW1lcjo6bGFzdF9yZXF1ZXN0ZWRfZW5kcG9pbnRvOiJPcGVuSUQ6Ok9wZW5JRFNlcnZpY2VFbmRwb2ludAw6DkBsb2NhbF9pZDA6GEBkaXNwbGF5X2lkZW50aWZpZXIwOg9AdHlwZV91cmlzWwYiLGh0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wL3NlcnZlcjoQQHVzZWRfeWFkaXNUOhBAc2VydmVyX3VybCIhaHR0cDovL2xvY2FsaG9zdDozMDA5L3NlcnZlcjoSQGNhbm9uaWNhbF9pZDA6EEBjbGFpbWVkX2lkMCIQX2NzcmZfdG9rZW4iMXlHVTJMb2V0MUZ0ZEZRUVcyZityYkJtTFVBZWkxT0lJczNpRUE5cmpUQms9Ig9zZXNzaW9uX2lkIiVkNjIxOGJlZjUwM2UzMTRlOWQ3MzMyYWFkNDVmYmJjOSIKaGVsbG8iCndvcmxkIj1PcGVuSUQ6OkNvbnN1bWVyOjpEaXNjb3ZlcmVkU2VydmljZXM6Ok9wZW5JRDo6Q29uc3VtZXI6Om86KU9wZW5JRDo6Q29uc3VtZXI6OkRpc2NvdmVyZWRTZXJ2aWNlcwk6D0B5YWRpc191cmwiKmh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXIvaWRwX3hyZHM6DkBzZXJ2aWNlc1sAOhJAc3RhcnRpbmdfdXJsIipodHRwOi8vbG9jYWxob3N0OjMwMDkvc2VydmVyL2lkcF94cmRzOg1AY3VycmVudEAHIhBsYXN0X29pZHJlcW86I09wZW5JRDo6U2VydmVyOjpDaGVja0lEUmVxdWVzdA46EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6D0ByZXR1cm5fdG8iLGh0dHA6Ly9sb2NhbGhvc3Q6MzAxMC9jb25zdW1lci9jb21wbGV0ZToNQG1lc3NhZ2VvOhRPcGVuSUQ6Ok1lc3NhZ2UIOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQGFsaWFzX3RvX25hbWVzcGFjZXsGOhNudWxsX25hbWVzcGFjZSIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6GEBuYW1lc3BhY2VfdG9fYWxpYXN7BiIlaHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA7GjoTQG9wZW5pZF9uc191cmlAHToKQGFyZ3N7DVsHQB0iCW1vZGUiEmNoZWNraWRfc2V0dXBbB0AdIg9jbGFpbWVkX2lkIjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdFsHOhNiYXJlX25hbWVzcGFjZSILYWN0aW9uIgppbmRleFsHOx8iD2NvbnRyb2xsZXIiC3NlcnZlclsHQB0iEWFzc29jX2hhbmRsZSIke0hNQUMtU0hBMX17NTE1ODJkOTR9e2Nka28xZz09fVsHQB0iDnJldHVybl90b0AZWwdAHSIKcmVhbG1AGFsHQB0iDWlkZW50aXR5IjdodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMC9pZGVudGlmaWVyX3NlbGVjdDoPQGltbWVkaWF0ZUY6DkBpZGVudGl0eUA3OhJAYXNzb2NfaGFuZGxlQDA7DEAnOgpAbW9kZSISY2hlY2tpZF9zZXR1cDoRQG9wX2VuZHBvaW50IiFodHRwOi8vbG9jYWxob3N0OjMwMDkvc2VydmVyIgpmbGFzaG86JUFjdGlvbkRpc3BhdGNoOjpGbGFzaDo6Rmxhc2hIYXNoCToNQGZsYXNoZXN7BjoLbm90aWNlIi9EbyB5b3UgdHJ1c3QgdGhpcyBzaXRlIHdpdGggeW91ciBpZGVudGl0eT86CkB1c2VkbzoIU2V0BjoKQGhhc2h7ADoMQGNsb3NlZEY6CUBub3cw--279369ace44ed4ba1137444c001224c933b254aa
+hello: world
+last_oidreq: <OpenID::Server::CheckIDRequest id:http://specs.openid.net/auth/2.0/identifier_select im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Redirected to http://localhost:3010/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A18%3A11ZrhmBhZ&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=VeJwgcmZ8yfGmhLFDsQnLFt4E%2FA%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned
+Completed 302 Found in 14ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A18%3A11ZrhmBhZ&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=VeJwgcmZ8yfGmhLFDsQnLFt4E%2FA%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned" for 127.0.0.1 at Sun Mar 31 06:18:11 -0700 2013
+Processing by ConsumerController#complete as HTML
+  Parameters: {"openid.sig"=>"VeJwgcmZ8yfGmhLFDsQnLFt4E/A=", "openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.op_endpoint"=>"http://localhost:3009/server", "openid.mode"=>"id_res", "openid.response_nonce"=>"2013-03-31T13:18:11ZrhmBhZ", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/user/marcel", "openid.signed"=>"assoc_handle,claimed_id,identity,mode,ns,op_endpoint,response_nonce,return_to,signed", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.claimed_id"=>"http://localhost:3009/user/marcel"}
+
+
+Started GET "/user/marcel" for 127.0.0.1 at Sun Mar 31 06:18:11 -0700 2013
+
+ActionController::RoutingError (No route matches [GET] "/user/marcel"):
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.7ms)
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 42ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 06:18:11 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (0.8ms)
+Completed 200 OK in 7ms (Views: 6.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 06:18:11 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 06:18:11 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 06:18:11 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/rails.png" for 127.0.0.1 at Sun Mar 31 06:24:32 -0700 2013
+
+NameError (undefined local variable or method `map' for #<ActionDispatch::Routing::Mapper:0x10347ebc8>):
+  config/routes.rb:2
+  config/routes.rb:1
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.7ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (1.1ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (18.2ms)
+
+
+Started GET "/" for 127.0.0.1 at Sun Mar 31 06:24:41 -0700 2013
+
+ActionController::RoutingError (No route matches [GET] "/"):
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+Connecting to database specified by database.yml
+Connecting to database specified by database.yml
+Connecting to database specified by database.yml
+Connecting to database specified by database.yml
+
+
+Started GET "/" for 127.0.0.1 at Sun Mar 31 06:28:03 -0700 2013
+
+ActionDispatch::Session::SessionRestoreError (Session contains objects whose class definition isn't available.
+Remember to require the classes for all objects kept in the session.
+(Original exception: uninitialized constant OpenID [NameError])
+):
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:64:in `stale_session_check!'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/cookie_store.rb:48:in `unpacked_cookie_data'
+  rack (1.4.5) lib/rack/session/cookie.rb:107:in `extract_session_id'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:53:in `extract_session_id'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:57:in `stale_session_check!'
+  actionpack (3.2.13) lib/action_dispatch/middleware/session/abstract_store.rb:53:in `extract_session_id'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:43:in `send'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:43:in `load_session_id!'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:32:in `[]'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:267:in `current_session_id'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:273:in `session_exists?'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:107:in `send'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:107:in `exists?'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:127:in `load_for_read!'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:64:in `key?'
+  actionpack (3.2.13) lib/action_dispatch/middleware/flash.rb:258:in `call'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:210:in `context'
+  rack (1.4.5) lib/rack/session/abstract/id.rb:205:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/cookies.rb:341:in `call'
+  activerecord (3.2.13) lib/active_record/query_cache.rb:64:in `call'
+  activerecord (3.2.13) lib/active_record/connection_adapters/abstract/connection_pool.rb:479:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `_run__397314981__call__4__callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:405:in `__run_callback'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:385:in `_run_call_callbacks'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `send'
+  activesupport (3.2.13) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (3.2.13) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/reloader.rb:65:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/remote_ip.rb:31:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/debug_exceptions.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/show_exceptions.rb:56:in `call'
+  railties (3.2.13) lib/rails/rack/logger.rb:32:in `call_app'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  activesupport (3.2.13) lib/active_support/tagged_logging.rb:22:in `tagged'
+  railties (3.2.13) lib/rails/rack/logger.rb:16:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/request_id.rb:22:in `call'
+  rack (1.4.5) lib/rack/methodoverride.rb:21:in `call'
+  rack (1.4.5) lib/rack/runtime.rb:17:in `call'
+  activesupport (3.2.13) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+  rack (1.4.5) lib/rack/lock.rb:15:in `call'
+  actionpack (3.2.13) lib/action_dispatch/middleware/static.rb:63:in `call'
+  railties (3.2.13) lib/rails/engine.rb:479:in `call'
+  railties (3.2.13) lib/rails/application.rb:223:in `call'
+  rack (1.4.5) lib/rack/content_length.rb:14:in `call'
+  railties (3.2.13) lib/rails/rack/log_tailer.rb:17:in `call'
+  rack (1.4.5) lib/rack/handler/webrick.rb:59:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  rack (1.4.5) lib/rack/handler/webrick.rb:13:in `run'
+  rack (1.4.5) lib/rack/server.rb:268:in `start'
+  railties (3.2.13) lib/rails/commands/server.rb:70:in `start'
+  railties (3.2.13) lib/rails/commands.rb:55
+  railties (3.2.13) lib/rails/commands.rb:50:in `tap'
+  railties (3.2.13) lib/rails/commands.rb:50
+  script/rails:6:in `require'
+  script/rails:6
+
+
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_trace.erb (1.6ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/_request_and_response.erb (2.3ms)
+  Rendered /Users/marcel/.gem/ruby/1.8/gems/actionpack-3.2.13/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (27.7ms)
+
+
+Started GET "/" for 127.0.0.1 at Sun Mar 31 06:28:16 -0700 2013
+Processing by LoginController#index as HTML
+  Rendered login/index.html.erb within layouts/server (1.4ms)
+Completed 200 OK in 188ms (Views: 169.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/user/marcel" for 127.0.0.1 at Sun Mar 31 06:28:31 -0700 2013
+Processing by ServerController#user_page as HTML
+  Parameters: {"username"=>"marcel"}
+  Rendered text template (0.0ms)
+Completed 200 OK in 32ms (Views: 29.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/user/marcel" for 127.0.0.1 at Sun Mar 31 06:28:53 -0700 2013
+Processing by ServerController#user_page as HTML
+  Parameters: {"username"=>"marcel"}
+  Rendered text template (0.0ms)
+Completed 200 OK in 3ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 06:29:00 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/consumer/start?openid_identifier=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel" for 127.0.0.1 at Sun Mar 31 06:29:10 -0700 2013
+Processing by ConsumerController#start as HTML
+  Parameters: {"openid_identifier"=>"http://localhost:3009/user/marcel"}
+
+
+Started GET "/user/marcel" for 127.0.0.1 at Sun Mar 31 06:29:10 -0700 2013
+Processing by ServerController#user_page as application/xrds+xml
+  Parameters: {"username"=>"marcel"}
+  Rendered text template (0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+Redirected to http://localhost:3009/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete
+Completed 302 Found in 157ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/server?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=http%3A%2F%2Flocalhost%3A3010%2Fconsumer&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete" for 127.0.0.1 at Sun Mar 31 06:29:10 -0700 2013
+Processing by ServerController#index as HTML
+  Parameters: {"openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.mode"=>"checkid_setup", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/user/marcel", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.realm"=>"http://localhost:3010/consumer", "openid.claimed_id"=>"http://localhost:3009/user/marcel"}
+Setting last_oidreq to <OpenID::Server::CheckIDRequest id:http://localhost:3009/user/marcel im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Rendering decide template!
+  Rendered server/decide.html.erb within layouts/server (1.2ms)
+Completed 200 OK in 7ms (Views: 3.8ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/server/decision" for 127.0.0.1 at Sun Mar 31 06:29:15 -0700 2013
+Processing by ServerController#decision as HTML
+  Parameters: {"authenticity_token"=>"5AZtwrdNxknr4gvSZ1lKzmmJqX+iJdHapyEW/jkB90M=", "yes"=>"yes"}
+session_id: a0903f7e5c643a4e0ee0334fcb19b4c6
+session_id cookie: BAh7CyIuT3BlbklEOjpDb25zdW1lcjo6bGFzdF9yZXF1ZXN0ZWRfZW5kcG9pbnRvOiJPcGVuSUQ6Ok9wZW5JRFNlcnZpY2VFbmRwb2ludAw6DkBsb2NhbF9pZDA6GEBkaXNwbGF5X2lkZW50aWZpZXIwOg9AdHlwZV91cmlzWwgiLGh0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wL3NpZ25vbiIhaHR0cDovL29wZW5pZC5uZXQvc2lnbm9uLzEuMCIfaHR0cDovL29wZW5pZC5uZXQvc3JlZy8xLjA6EEB1c2VkX3lhZGlzVDoQQHNlcnZlcl91cmwiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXI6EkBjYW5vbmljYWxfaWQwOhBAY2xhaW1lZF9pZCImaHR0cDovL2xvY2FsaG9zdDozMDA5L3VzZXIvbWFyY2VsIhBfY3NyZl90b2tlbiIxNUFadHdyZE54a25yNGd2U1oxbEt6bW1KcVgraUpkSGFweUVXL2prQjkwTT0iD3Nlc3Npb25faWQiJWEwOTAzZjdlNWM2NDNhNGUwZWUwMzM0ZmNiMTliNGM2Ij1PcGVuSUQ6OkNvbnN1bWVyOjpEaXNjb3ZlcmVkU2VydmljZXM6Ok9wZW5JRDo6Q29uc3VtZXI6Om86KU9wZW5JRDo6Q29uc3VtZXI6OkRpc2NvdmVyZWRTZXJ2aWNlcwk6DkBzZXJ2aWNlc1sAOg1AY3VycmVudEAHOg9AeWFkaXNfdXJsIiZodHRwOi8vbG9jYWxob3N0OjMwMDkvdXNlci9tYXJjZWw6EkBzdGFydGluZ191cmwiJmh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS91c2VyL21hcmNlbCIQbGFzdF9vaWRyZXFvOiNPcGVuSUQ6OlNlcnZlcjo6Q2hlY2tJRFJlcXVlc3QOOhFAb3BfZW5kcG9pbnQiIWh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS9zZXJ2ZXI6EEB0cnVzdF9yb290IiNodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXI6DUBtZXNzYWdlbzoUT3BlbklEOjpNZXNzYWdlCDoTQG9wZW5pZF9uc191cmkiJWh0dHA6Ly9zcGVjcy5vcGVuaWQubmV0L2F1dGgvMi4wOhBAbmFtZXNwYWNlc286GU9wZW5JRDo6TmFtZXNwYWNlTWFwCDoYQG5hbWVzcGFjZV90b19hbGlhc3sGIiVodHRwOi8vc3BlY3Mub3BlbmlkLm5ldC9hdXRoLzIuMDoTbnVsbF9uYW1lc3BhY2U6GEBhbGlhc190b19uYW1lc3BhY2V7BjsbQBw6GUBpbXBsaWNpdF9uYW1lc3BhY2VzWwA6CkBhcmdzew1bB0AcIgltb2RlIhJjaGVja2lkX3NldHVwWwdAHCIPY2xhaW1lZF9pZCImaHR0cDovL2xvY2FsaG9zdDozMDA5L3VzZXIvbWFyY2VsWwc6E2JhcmVfbmFtZXNwYWNlIg9jb250cm9sbGVyIgtzZXJ2ZXJbBzsfIgthY3Rpb24iCmluZGV4WwdAHCIRYXNzb2NfaGFuZGxlIiR7SE1BQy1TSEExfXs1MTU4MmQ5NH17Y2RrbzFnPT19WwdAHCIOcmV0dXJuX3RvIixodHRwOi8vbG9jYWxob3N0OjMwMTAvY29uc3VtZXIvY29tcGxldGVbB0AcIgpyZWFsbUAaWwdAHCINaWRlbnRpdHkiJmh0dHA6Ly9sb2NhbGhvc3Q6MzAwOS91c2VyL21hcmNlbDoPQHJldHVybl90b0A0OhJAYXNzb2NfaGFuZGxlQDE6D0BpbW1lZGlhdGVGOg5AaWRlbnRpdHlAOToKQG1vZGUiEmNoZWNraWRfc2V0dXA7DEAoIgpmbGFzaG86JUFjdGlvbkRpc3BhdGNoOjpGbGFzaDo6Rmxhc2hIYXNoCToNQGZsYXNoZXN7BjoLbm90aWNlIi9EbyB5b3UgdHJ1c3QgdGhpcyBzaXRlIHdpdGggeW91ciBpZGVudGl0eT86CkB1c2VkbzoIU2V0BjoKQGhhc2h7ADoMQGNsb3NlZEY6CUBub3cw--12967a41bad9d491f50492d6caaaef2b33acb4f6
+hello: 
+last_oidreq: <OpenID::Server::CheckIDRequest id:http://localhost:3009/user/marcel im:false tr:http://localhost:3010/consumer ah:{HMAC-SHA1}{51582d94}{cdko1g==}>
+Redirected to http://localhost:3010/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A29%3A15Zsn1mhg&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=XUa1u9njJyD6Ji1pcDegIvvLCpI%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned
+Completed 302 Found in 13ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer/complete?openid.assoc_handle=%7BHMAC-SHA1%7D%7B51582d94%7D%7Bcdko1g%3D%3D%7D&openid.claimed_id=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.identity=http%3A%2F%2Flocalhost%3A3009%2Fuser%2Fmarcel&openid.mode=id_res&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.op_endpoint=http%3A%2F%2Flocalhost%3A3009%2Fserver&openid.response_nonce=2013-03-31T13%3A29%3A15Zsn1mhg&openid.return_to=http%3A%2F%2Flocalhost%3A3010%2Fconsumer%2Fcomplete&openid.sig=XUa1u9njJyD6Ji1pcDegIvvLCpI%3D&openid.signed=assoc_handle%2Cclaimed_id%2Cidentity%2Cmode%2Cns%2Cop_endpoint%2Cresponse_nonce%2Creturn_to%2Csigned" for 127.0.0.1 at Sun Mar 31 06:29:15 -0700 2013
+Processing by ConsumerController#complete as HTML
+  Parameters: {"openid.sig"=>"XUa1u9njJyD6Ji1pcDegIvvLCpI=", "openid.return_to"=>"http://localhost:3010/consumer/complete", "openid.op_endpoint"=>"http://localhost:3009/server", "openid.mode"=>"id_res", "openid.response_nonce"=>"2013-03-31T13:29:15Zsn1mhg", "openid.ns"=>"http://specs.openid.net/auth/2.0", "openid.identity"=>"http://localhost:3009/user/marcel", "openid.signed"=>"assoc_handle,claimed_id,identity,mode,ns,op_endpoint,response_nonce,return_to,signed", "openid.assoc_handle"=>"{HMAC-SHA1}{51582d94}{cdko1g==}", "openid.claimed_id"=>"http://localhost:3009/user/marcel"}
+Redirected to http://localhost:3010/consumer
+Completed 302 Found in 12ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/consumer" for 127.0.0.1 at Sun Mar 31 06:29:15 -0700 2013
+Processing by ConsumerController#index as HTML
+  Rendered consumer/index.html.erb within layouts/application (1.4ms)
+Completed 200 OK in 9ms (Views: 8.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sun Mar 31 06:29:15 -0700 2013
+Served asset /application.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sun Mar 31 06:29:15 -0700 2013
+Served asset /application.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sun Mar 31 06:29:15 -0700 2013
+Served asset /jquery.js - 304 Not Modified (0ms)

@@ -1,4 +1,5 @@
 <form method="post" action="<%= url_for :controller => 'server', :action => 'decision' %>">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
 <table>
   <tr><td>Site:</td><td><%= @oidreq.trust_root %></td></tr>
