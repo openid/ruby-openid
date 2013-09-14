@@ -750,7 +750,7 @@ module OpenID
     end
 
     def setup_dh
-      sess, message = @assoc_manager.send(:create_associate_request,
+      sess, _ = @assoc_manager.send(:create_associate_request,
                                           'HMAC-SHA1', 'DH-SHA1')
 
       server_dh = DiffieHellman.new

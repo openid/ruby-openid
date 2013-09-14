@@ -482,7 +482,7 @@ module OpenID
         begin
           obj.parse_extension_args(ax_args)
           return obj
-        rescue Error => e
+        rescue Error
           return nil
         end
       end

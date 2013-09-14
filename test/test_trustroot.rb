@@ -44,7 +44,7 @@ class TrustRootTest < Test::Unit::TestCase
     }
 
     getTests([true, false], mh, mdat).each { |tc|
-      match, desc, case_ = tc
+      match, _, case_ = tc
       trust_root, url = case_.split()
       _test_match(trust_root, url, match)
     }

@@ -127,19 +127,19 @@ module OpenID
     end
 
     def test_get_arg_bare
-      get_arg_tests(ns=BARE_NS, key='foo')
+      get_arg_tests(BARE_NS, 'foo')
     end
 
     def test_get_arg_ns1
-      get_arg_tests(ns=OPENID1_NS, key='foo')
+      get_arg_tests(OPENID1_NS, 'foo')
     end
 
     def test_get_arg_ns2
-      get_arg_tests(ns=OPENID2_NS, key='foo')
+      get_arg_tests(OPENID2_NS, 'foo')
     end
 
     def test_get_arg_ns3
-      get_arg_tests(ns='urn:nothing-significant', key='foo')
+      get_arg_tests('urn:nothing-significant', 'foo')
     end
 
     def test_get_args
@@ -296,8 +296,7 @@ module OpenID
 
     def test_get_aliased_arg_with_ns_default
       @m = Message.from_post_args({})
-      assert_equal('monkeys!', @m.get_aliased_arg('ns.invalid',
-                                                  default="monkeys!"))
+      assert_equal('monkeys!', @m.get_aliased_arg('ns.invalid', "monkeys!"))
     end
 
     def test_to_post_args
@@ -391,23 +390,23 @@ module OpenID
     end
 
     def test_get_arg_bare
-      get_arg_tests(ns=BARE_NS, key='mode')
+      get_arg_tests(BARE_NS, 'mode')
     end
 
     def test_get_arg_ns
-      get_arg_tests(ns=OPENID_NS, key='mode', expected='error')
+      get_arg_tests(OPENID_NS, 'mode', 'error')
     end
 
     def test_get_arg_ns1
-      get_arg_tests(ns=OPENID1_NS, key='mode', expected='error')
+      get_arg_tests(OPENID1_NS, 'mode', 'error')
     end
 
     def test_get_arg_ns2
-      get_arg_tests(ns=OPENID2_NS, key='mode')
+      get_arg_tests(OPENID2_NS, 'mode')
     end
 
     def test_get_arg_ns3
-      get_arg_tests(ns='urn:nothing-significant', key='mode')
+      get_arg_tests('urn:nothing-significant', 'mode')
     end
 
     def test_get_args

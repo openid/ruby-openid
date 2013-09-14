@@ -56,10 +56,6 @@ module OpenID
       type_uris = ["urn:type1", "urn:type2"]
       element = make_service_element(type_uris, [uri])
 
-      data = [
-              [type_uris, uri, element],
-             ]
-
       filters = [Proc.new { |endpoint|
                    if endpoint.service_element == element
                      endpoint
