@@ -275,8 +275,7 @@ module OpenID
       def initialize
         super()
         @mode = nil
-        @data = {}
-        @data.default = []
+        @data = Hash.new { |hash, key| hash[key] = [] }
       end
 
       # Add a single value for the given attribute type to the

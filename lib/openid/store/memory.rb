@@ -9,8 +9,7 @@ module OpenID
     class Memory < Interface
 
       def initialize
-        @associations = {}
-        @associations.default = {}
+        @associations = Hash.new { |hash, key| hash[key] = {} }
         @nonces = {}
       end
 
