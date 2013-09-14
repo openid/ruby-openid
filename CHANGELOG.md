@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.3.0
+
+* Deprecated Ruby 1.8 support - 0694bebc83de0313cfef73a5d0ffd9a293ae71a0
+* Fixed encoding errors in test suite - 7ac8e3978f9c733bd5ee8d6b742b515b5427ded2
+* Be aware when using Hash or Array as default value for unknown Hash keys - #58
+* Stop overwriting String#starts_with? and String#ends_with? if defined - #55
+* Ignore Associations For OpenID2 (Google's Security Bug Fix) - #53
+* Change "oauth" to "ui" in variable name in the UI extension - #52
+* Eliminating runtime warnings - #50 #56
+* Upgrade example Rails provider/consumer app to Rails 3 - #49
+
 ## 2.2.3
 
 * Fixed 'invalid byte sequence in UTF-8' error in parse_link_attrs - 0f46921a97677b83b106366c805063105c5e9f20
