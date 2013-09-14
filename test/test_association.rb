@@ -77,10 +77,9 @@ module OpenID
        ['HMAC-SHA1', "\xe0\x1bv\x04\xf1G\xc0\xbb\x7f\x9a\x8b"\
                      "\xe9\xbc\xee}\\\xe5\xbb7*"],
       ].each do |assoc_type, expected|
-        assoc = Association.from_expires_in(3600, "handle", 'very_secret',
-                                            assoc_type)
+        assoc = Association.from_expires_in(3600, "handle", 'very_secret', assoc_type)
         sig = assoc.sign(pairs)
-        assert_equal(sig, expected)
+        assert_equal(expected, sig.force_encoding("UTF-8"))
 
         m = Message.new(OPENID2_NS)
         pairs.each { |k, v|

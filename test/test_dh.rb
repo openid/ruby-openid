@@ -27,7 +27,7 @@ module OpenID
        ["\xff",   "\x0f",   "\xf0"  ],
       ].each do |input1, input2, expected|
         actual = DiffieHellmanExposed.strxor_for_testing(input1, input2)
-        assert_equal(expected, actual)
+        assert_equal(expected, actual.force_encoding("UTF-8"))
       end
     end
 

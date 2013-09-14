@@ -183,7 +183,7 @@ EOHTML
 
   def _uri_build(path='/')
     u = URI::HTTP.build({
-                          :host => @server.config[:ServerName],
+                          :host => "localhost",
                           :port => @server.config[:Port],
                           :path => path,
                         })
@@ -268,7 +268,7 @@ EOHTML
     response = @fetcher.fetch(uri)
     assert_equal("unencoded-body", response.body)
     if defined?(Encoding.default_external)
-      assert_equal(Encoding::US_ASCII, response.body.encoding)
+      assert_equal(Encoding::UTF_8, response.body.encoding)
     end
   end
 
