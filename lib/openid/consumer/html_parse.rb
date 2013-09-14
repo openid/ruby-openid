@@ -39,7 +39,9 @@ module OpenID
     rescue ArgumentError
       begin
         stripped = html.encode('UTF-8', 'binary', :invalid => :replace, :undef => :replace, :replace => '').gsub(REMOVED_RE,'')
-      rescue Encoding::UndefinedConversionError #needed for a problem in JRuby where it can't handle the conversion
+      rescue Encoding::UndefinedConversionError, Encoding::ConverterNotFoundError
+        # needed for a problem in JRuby where it can't handle the conversion.
+        # see details here: https://github.com/jruby/jruby/issues/829
         stripped = html.encode('UTF-8', 'ASCII', :invalid => :replace, :undef => :replace, :replace => '').gsub(REMOVED_RE,'')
       end
     end
