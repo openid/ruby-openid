@@ -121,7 +121,7 @@ module OpenID
           end
         end
 
-        if @assoc
+        if @assoc && (message.is_openid1 || !['checkid_setup', 'checkid_immediate'].include?(mode))
           message.set_arg(OPENID_NS, 'assoc_handle', @assoc.handle)
           assoc_log_msg = "with assocication #{@assoc.handle}"
         else
