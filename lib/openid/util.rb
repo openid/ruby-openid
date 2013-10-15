@@ -2,8 +2,6 @@ require "cgi"
 require "uri"
 require "logger"
 
-require "openid/extras"
-
 # See OpenID::Consumer or OpenID::Server modules, as well as the store classes
 module OpenID
   class AssertionError < Exception

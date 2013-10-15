@@ -2,7 +2,6 @@
 require 'uri'
 require 'openid/yadis/constants'
 require 'openid/yadis/discovery'
-require 'openid/extras'
 require 'openid/util'
 
 module OpenID

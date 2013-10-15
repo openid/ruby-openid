@@ -1,6 +1,5 @@
 require 'test/unit'
 require 'openid/consumer/discovery_manager'
-require 'openid/extras'
 require 'testutil'
 
 module OpenID
