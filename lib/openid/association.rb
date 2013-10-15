@@ -165,7 +165,7 @@ module OpenID
 
       signed_list = []
       message_keys.each { |k|
-        if k.starts_with?('openid.')
+        if k.start_with?('openid.')
           signed_list << k[7..-1]
         end
       }

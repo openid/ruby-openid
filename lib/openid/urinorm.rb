@@ -40,15 +40,15 @@ module OpenID
       result_segments = []
 
       while path.length > 0
-        if path.starts_with?('../')
+        if path.start_with?('../')
           path = path[3..-1]
-        elsif path.starts_with?('./')
+        elsif path.start_with?('./')
           path = path[2..-1]
-        elsif path.starts_with?('/./')
+        elsif path.start_with?('/./')
           path = path[2..-1]
         elsif path == '/.'
           path = '/'
-        elsif path.starts_with?('/../')
+        elsif path.start_with?('/../')
           path = path[3..-1]
           result_segments.pop if result_segments.length > 0
         elsif path == '/..'

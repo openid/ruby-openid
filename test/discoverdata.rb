@@ -105,7 +105,7 @@ module OpenID
 
       ctype = nil
       header_lines.each { |header_line|
-        if header_line.starts_with?('Content-Type:')
+        if header_line.start_with?('Content-Type:')
           _, ctype = header_line.split(':', 2)
           ctype = ctype.strip()
           break

@@ -315,7 +315,7 @@ module OpenID
             return false
           end
         elsif ((@host != '') and
-               (!host.ends_with?('.' + @host)) and
+               (!host.end_with?('.' + @host)) and
                (host != @host))
           return false
         end

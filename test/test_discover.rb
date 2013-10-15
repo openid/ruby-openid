@@ -526,7 +526,7 @@ module OpenID
                                 "mean to do that.")
       end
 
-      if xri.starts_with?('/')
+      if xri.start_with?('/')
         xri = xri[1..-1]
       end
 
