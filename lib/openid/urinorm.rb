@@ -1,7 +1,5 @@
 require 'uri'
 
-require "openid/extras"
-
 module OpenID
 
   module URINorm

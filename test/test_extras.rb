@@ -1,5 +1,4 @@
 require 'test/unit'
-require 'openid/extras'
 
 class StartsWithTestCase < Test::Unit::TestCase
     def test_starts_with
