@@ -247,6 +247,19 @@ module OpenID
           @message.get_aliased_arg(k, NO_DEFAULT)
         }
 
+        message_params = @message.instance_variable_get(:@args)
+
+        if message_params[["http://specs.openid.net/auth/2.0", "response_nonce"]]
+          message_params[["http://specs.openid.net/auth/2.0", "response_nonce"]].gsub!(" ", "+")
+        end
+
+        if message_params[["http://specs.openid.net/auth/2.0", "sig"]]
+          message_params[["http://specs.openid.net/auth/2.0", "sig"]].gsub!(" ", "+")
+        end
+
+        @message.instance_variable_set(:@args, message_params)
+
+
         ca_message = @message.copy
         ca_message.set_arg(OPENID_NS, 'mode', 'check_authentication')
 
