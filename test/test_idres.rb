@@ -421,6 +421,25 @@ module OpenID
           assert_equal(expected, ca_msg)
         end
 
+        def test_create_check_auth_request_removes_spaces
+          @message = Message.from_post_args({
+              'openid.mode' => 'id_res',
+              'openid.identity' => '=example',
+              'openid.sig' => "1234 567",
+              'openid.response_nonce' => "1234 567",
+              'openid.assoc_handle' => @assoc.handle,
+              'openid.signed' => 'mode,identity,assoc_handle,signed',
+              'frobboz' => 'banzit',
+              })
+
+          ca_msg = call_idres_method(:create_check_auth_request) {}
+
+          expected = @message.copy
+          expected.set_arg(OPENID_NS, 'mode', 'check_authentication')
+          expected.set_arg(OPENID_NS, 'sig', '1234+567')
+          expected.set_arg(OPENID_NS, 'response_nonce', '1234+567')
+          assert_equal(expected, ca_msg)
+        end
       end
 
       class CheckAuthResponseTest < Test::Unit::TestCase
