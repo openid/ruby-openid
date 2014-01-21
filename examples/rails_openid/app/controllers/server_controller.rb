@@ -207,8 +207,7 @@ EOS
 </xrds:XRDS>
 EOS
 
-    response.headers['content-type'] = 'application/xrds+xml'
-    render :text => yadis
+    render :text => yadis, :content_type => 'application/xrds+xml'
   end
 
   def add_sreg(oidreq, oidresp)
