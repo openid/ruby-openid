@@ -94,7 +94,7 @@ module OpenID
         if result.is_a? String
           return !!(result =~ /^DELETED/)
         else
-          return result == true
+          return !!(result)
         end
       end
 
