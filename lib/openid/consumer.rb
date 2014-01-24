@@ -7,6 +7,7 @@ require "openid/consumer/discovery"
 require "openid/message"
 require "openid/yadis/discovery"
 require "openid/store/nonce"
+require "openid/serializer"
 
 module OpenID
   # OpenID support for Relying Parties (aka Consumers).
@@ -297,11 +298,17 @@ module OpenID
     protected
 
     def session_get(name)
-      @session[session_key(name)]
+      value = @session[session_key(name)]
+
+      if value.is_a?(Array) # new serialized format
+        Serializer.deserialize(*value)
+      else # deprecated object format
+        value
+      end
     end
 
     def session_set(name, val)
-      @session[session_key(name)] = val
+      @session[session_key(name)] = Serializer.serialize(val)
     end
 
     def session_key(suffix)

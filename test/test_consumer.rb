@@ -6,14 +6,24 @@ module OpenID
   class Consumer
     module TestConsumer
       class TestLastEndpoint < Test::Unit::TestCase
+        def all_instance_variables(object)
+          object.instance_variables.map { |v| [v.to_s, object.instance_variable_get(v)] }
+        end
+
         def test_set_get
+          stored = OpenID::OpenIDServiceEndpoint.new
+          stored.server_url = "test"
           session = {}
+
           consumer = Consumer.new(session, nil)
-          consumer.send(:last_requested_endpoint=, :endpoint)
+          consumer.send(:last_requested_endpoint=, stored)
+
           ep = consumer.send(:last_requested_endpoint)
-          assert_equal(:endpoint, ep)
+          assert_equal(all_instance_variables(stored), all_instance_variables(ep))
+
           ep = consumer.send(:last_requested_endpoint)
-          assert_equal(:endpoint, ep)
+          assert_equal(all_instance_variables(stored), all_instance_variables(ep))
+
           consumer.send(:cleanup_last_requested_endpoint)
           ep = consumer.send(:last_requested_endpoint)
           assert_equal(nil, ep)
@@ -110,7 +120,7 @@ module OpenID
           result = consumer.begin_without_discovery(@service, @anonymous)
           assert(result.instance_of?(CheckIDRequest))
           assert_equal(@anonymous, result.anonymous)
-          assert_equal(@service, consumer.send(:last_requested_endpoint))
+          assert_equal(@service.claimed_id, consumer.send(:last_requested_endpoint).claimed_id)
           assert_equal(result.instance_variable_get(:@assoc), @assoc)
           return result
         end
