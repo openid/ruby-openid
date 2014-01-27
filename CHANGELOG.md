@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.0
+
+* Allow expecting a parameter to be nil during return_to verification - 708e992ab3e6c26d478283fc11faa6a0a74bfec0
+* Serialize to objects that can be stored as json - db1d8f7b171a333dec4e861fe0fa53ac1d98b188
+* Fixed missing XRDS HTTP header in sample provider - dc15fa07fd59fdcf46d659cce34c6ef7a6768fde
+
 ## 2.3.0
 
 * Deprecated Ruby 1.8 support - 0694bebc83de0313cfef73a5d0ffd9a293ae71a0
