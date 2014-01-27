@@ -55,16 +55,6 @@ module OpenID
       @display_identifier = nil
     end
 
-    def serialize
-      instance_variables.map { |v| [v.to_s, instance_variable_get(v)] }
-    end
-
-    def self.deserialize(data)
-      instance = new
-      data.each { |k,v| instance.instance_variable_set(k,v) }
-      instance
-    end
-
     def display_identifier
       return @display_identifier if @display_identifier
 
