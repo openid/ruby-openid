@@ -160,7 +160,7 @@ module OpenID
         query = @message.to_post_args
         return_to_parsed_query.each_pair do |rt_key, rt_val|
           msg_val = query[rt_key]
-          if msg_val.nil?
+          if msg_val.nil? && !rt_val.nil?
             raise ProtocolError, "Message missing return_to argument '#{rt_key}'"
           elsif msg_val != rt_val
             raise ProtocolError, ("Parameter '#{rt_key}' value "\
