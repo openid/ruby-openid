@@ -66,7 +66,7 @@ module OpenID
         if result.is_a? String
           return !!(result =~ /^STORED/)
         else
-          return result == true
+          return !!(result)
         end
       end
 
