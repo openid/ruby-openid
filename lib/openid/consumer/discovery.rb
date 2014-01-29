@@ -55,20 +55,10 @@ module OpenID
       @display_identifier = nil
     end
 
-    def serialize
-      instance_variables.map { |v| [v.to_s, instance_variable_get(v)] }
-    end
-
-    def self.deserialize(data)
-      instance = new
-      data.each { |k,v| instance.instance_variable_set(k,v) }
-      instance
-    end
-
     def display_identifier
       return @display_identifier if @display_identifier
 
-      return @claimed_id if @claimed_id.nil?
+      return @claimed_id if @claimed_id.nil? 
 
       begin
         parsed_identifier = URI.parse(@claimed_id)
@@ -386,7 +376,7 @@ module OpenID
     #
     # @param uri: normalized identity URL
     # @type uri: str
-    #
+    # 
     # @return: (claimed_id, services)
     # @rtype: (str, list(OpenIDServiceEndpoint))
     #
