@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.5.0
+
+* Revert json serialization - 8dc60e553369df2300ebb4b83a29618aff643c2c
+  See https://github.com/openid/ruby-openid/pull/73
+
 ## 2.4.0
 
 * Allow expecting a parameter to be nil during return_to verification - 708e992ab3e6c26d478283fc11faa6a0a74bfec0
