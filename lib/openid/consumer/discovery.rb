@@ -58,7 +58,7 @@ module OpenID
     def display_identifier
       return @display_identifier if @display_identifier
 
-      return @claimed_id if @claimed_id.nil?
+      return @claimed_id if @claimed_id.nil? 
 
       begin
         parsed_identifier = URI.parse(@claimed_id)
@@ -376,7 +376,7 @@ module OpenID
     #
     # @param uri: normalized identity URL
     # @type uri: str
-    #
+    # 
     # @return: (claimed_id, services)
     # @rtype: (str, list(OpenIDServiceEndpoint))
     #
