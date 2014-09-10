@@ -2,6 +2,7 @@ require "openid/consumer/idres.rb"
 require "openid/consumer/checkid_request.rb"
 require "openid/consumer/associationmanager.rb"
 require "openid/consumer/responses.rb"
+require "openid/consumer/session"
 require "openid/consumer/discovery_manager"
 require "openid/consumer/discovery"
 require "openid/message"
@@ -189,7 +190,8 @@ module OpenID
     #
     # store: an object that implements the interface in Store.
     def initialize(session, store)
-      @session = session
+      @origin_session = session
+      @session = Session.new(session, OpenID::OpenIDServiceEndpoint)
       @store = store
       @session_key_prefix = 'OpenID::Consumer::'
     end
@@ -321,7 +323,7 @@ module OpenID
     end
 
     def discovery_manager(openid_identifier)
-      DiscoveryManager.new(@session, openid_identifier, @session_key_prefix)
+      DiscoveryManager.new(@origin_session, openid_identifier, @session_key_prefix)
     end
 
     def cleanup_session
