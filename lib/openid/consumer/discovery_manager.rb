@@ -30,11 +30,14 @@ module OpenID
       end
 
       def to_session_value
+        services = @services.map{|s| s.respond_to?(:to_session_value) ? s.to_session_value : s }
+        current_val = @current.respond_to?(:to_session_value) ? @current.to_session_value : @current
+
         {
           'starting_url' => @starting_url,
           'yadis_url' => @yadis_url,
-          'services' => @services,
-          'current' => @current
+          'services' => services,
+          'current' => current_val
         }
       end
 
