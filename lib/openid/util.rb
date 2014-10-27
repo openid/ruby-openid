@@ -47,7 +47,14 @@ module OpenID
     def Util.urlencode(args)
       a = []
       args.each do |key, val|
-        val = '' unless val
+        if val.nil?
+          val = '' 
+        elsif !!val == val
+          #it's boolean let's convert it to string representation
+          # or else CGI::escape won't like it
+          val = val.to_s
+        end  
+
         a << (CGI::escape(key) + "=" + CGI::escape(val))
       end
       a.join("&")
