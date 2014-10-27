@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.6.0
+
+* More safely build filenames - 1c4a90630b183e7572b8ab5f2e3a3e0c0fecd2c7
+  See https://github.com/openid/ruby-openid/pull/80
+* The session serializer of Rails4.1 is json - b44a1eb511dec3be25a07930121bc80cacec0f1c
+* Handle boolean value to fix signature issue - d65076269b77754da7db6e4b189edeeb9201600d
+  See https://github.com/openid/ruby-openid/pull/76
+
 ## 2.5.0
 
 * Revert json serialization - 8dc60e553369df2300ebb4b83a29618aff643c2c
