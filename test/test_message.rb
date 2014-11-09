@@ -1,5 +1,5 @@
 # last synced with Python openid.test.test_message on 6/29/2007.
-require 'test/unit'
+require 'minitest/autorun'
 require 'util'
 require 'openid/message'
 require 'rexml/document'
@@ -14,7 +14,7 @@ module OpenID
 
       if expected.nil?
         assert_equal(@m.get_arg(ns, key, :a_default), :a_default)
-        assert_raise(Message::KeyNotFound) { @m.get_arg(ns, key, NO_DEFAULT) }
+        assert_raises(Message::KeyNotFound) { @m.get_arg(ns, key, NO_DEFAULT) }
       else
         assert_equal(@m.get_arg(ns, key, :a_default), expected)
         assert_equal(@m.get_arg(ns, key, NO_DEFAULT), expected)
@@ -24,7 +24,7 @@ module OpenID
 
   end
 
-  class EmptyMessageTestCase < Test::Unit::TestCase
+  class EmptyMessageTestCase < Minitest::Test
     include GetArgsMixin
 
     def setup
@@ -77,7 +77,7 @@ module OpenID
     end
 
     def test_get_key_openid
-      assert_raise(UndefinedOpenIDNamespace) {
+      assert_raises(UndefinedOpenIDNamespace) {
         @m.get_key(OPENID_NS, nil)
       }
     end
@@ -99,7 +99,7 @@ module OpenID
     end
 
     def test_has_key
-      assert_raise(UndefinedOpenIDNamespace) {
+      assert_raises(UndefinedOpenIDNamespace) {
         @m.has_key?(OPENID_NS, 'foo')
       }
     end
@@ -121,7 +121,7 @@ module OpenID
     end
 
     def test_get_arg
-      assert_raise(UndefinedOpenIDNamespace) {
+      assert_raises(UndefinedOpenIDNamespace) {
         @m.get_args(OPENID_NS)
       }
     end
@@ -143,7 +143,7 @@ module OpenID
     end
 
     def test_get_args
-      assert_raise(UndefinedOpenIDNamespace) {
+      assert_raises(UndefinedOpenIDNamespace) {
         @m.get_args(OPENID_NS)
       }
     end
@@ -165,7 +165,7 @@ module OpenID
     end
 
     def test_update_args
-      assert_raise(UndefinedOpenIDNamespace) {
+      assert_raises(UndefinedOpenIDNamespace) {
         @m.update_args(OPENID_NS, {'does not'=>'matter'})
       }
     end
@@ -194,7 +194,7 @@ module OpenID
     end
 
     def test_set_arg
-      assert_raise(UndefinedOpenIDNamespace) {
+      assert_raises(UndefinedOpenIDNamespace) {
         @m.set_arg(OPENID_NS,'does not','matter')
       }
     end
@@ -221,7 +221,7 @@ module OpenID
     end
 
     def test_del_arg
-      assert_raise(UndefinedOpenIDNamespace) {
+      assert_raises(UndefinedOpenIDNamespace) {
         @m.set_arg(OPENID_NS, 'does not', 'matter')
       }
     end
@@ -253,13 +253,13 @@ module OpenID
     end
 
     def test_set_openid_namespace
-      assert_raise(InvalidOpenIDNamespace) {
+      assert_raises(InvalidOpenIDNamespace) {
         @m.set_openid_namespace('http://invalid/', false)
       }
     end
   end
 
-  class OpenID1MessageTest < Test::Unit::TestCase
+  class OpenID1MessageTest < Minitest::Test
     include GetArgsMixin
 
     def setup
@@ -497,7 +497,7 @@ module OpenID
 
     def test_equal
       assert_equal(Message.new, Message.new)
-      assert_not_equal(Message.new, nil)
+      refute_equal(Message.new, nil)
     end
 
     def test_from_openid_args_undefined_ns
@@ -520,7 +520,7 @@ module OpenID
     end
   end
 
-  class OpenID1ExplicitMessageTest < Test::Unit::TestCase
+  class OpenID1ExplicitMessageTest < Minitest::Test
     # XXX - check to make sure the test suite will get built the way this
     # expects.
     def setup
@@ -586,7 +586,7 @@ module OpenID
 
   end
 
-  class OpenID2MessageTest < Test::Unit::TestCase
+  class OpenID2MessageTest < Minitest::Test
     include TestUtil
 
     def setup
@@ -837,7 +837,7 @@ module OpenID
         # .fromPostArgs covers .fromPostArgs, .fromOpenIDArgs,
         # ._fromOpenIDArgs, and .fromOpenIDArgs (since it calls
         # .fromPostArgs).
-        assert_raise(AssertionError) {
+        assert_raises(AssertionError) {
           Message.from_post_args(args)
         }
       }
@@ -877,7 +877,7 @@ module OpenID
     end
 
     def test_argList
-      assert_raise(ArgumentError) {
+      assert_raises(ArgumentError) {
         Message.from_post_args({'arg' => [1, 2, 3]})
       }
     end
@@ -891,7 +891,7 @@ module OpenID
     end
   end
 
-  class MessageTest < Test::Unit::TestCase
+  class MessageTest < Minitest::Test
     def setup
       @postargs = {
         'openid.ns' => OPENID2_NS,
@@ -1042,7 +1042,7 @@ module OpenID
     end
   end
 
-  class NamespaceMapTestCase < Test::Unit::TestCase
+  class NamespaceMapTestCase < Minitest::Test
 
     def test_onealias
       nsm = NamespaceMap.new

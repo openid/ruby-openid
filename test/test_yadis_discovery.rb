@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'uri'
 require 'openid/yadis/discovery'
@@ -78,12 +78,12 @@ module OpenID
       end
     end
 
-    class TestSecondGet < Test::Unit::TestCase
+    class TestSecondGet < Minitest::Test
       include FetcherMixin
 
       def test_404
         uri = "http://something.unittest/"
-        assert_raise(DiscoveryFailure) {
+        assert_raises(DiscoveryFailure) {
           with_fetcher(MockFetcher.new) { Yadis.discover(uri) }
         }
       end
@@ -120,7 +120,7 @@ module OpenID
         setup
 
         if @expected.respond_to?("ancestors") and @expected.ancestors.member?(DiscoveryFailure)
-          @testcase.assert_raise(DiscoveryFailure) {
+          @testcase.assert_raises(DiscoveryFailure) {
             do_discovery
           }
         else
@@ -164,7 +164,7 @@ module OpenID
       end
     end
 
-    class TestYadisDiscovery < Test::Unit::TestCase
+    class TestYadisDiscovery < Minitest::Test
       include FetcherMixin
 
       def test_yadis_discovery

@@ -1,8 +1,8 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'openid/trustroot'
 
-class TrustRootTest < Test::Unit::TestCase
+class TrustRootTest < Minitest::Test
   include OpenID::TestDataMixin
 
   def _test_sanity(case_, sanity, desc)

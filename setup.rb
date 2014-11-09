@@ -1416,10 +1416,7 @@ class Installer
       return
     end
     $stderr.puts 'Running tests...' if verbose?
-    require 'test/unit'
-    runner = Test::Unit::AutoRunner.new(true)
-    runner.to_run << TESTDIR
-    runner.run
+    Dir.glob './test/**/test_*.rb', &method(:require)
   end
 
   #

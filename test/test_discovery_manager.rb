@@ -1,10 +1,10 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/consumer/discovery_manager'
 require 'openid/extras'
 require 'testutil'
 
 module OpenID
-  class TestDiscoveredServices < Test::Unit::TestCase
+  class TestDiscoveredServices < Minitest::Test
     def setup
       @starting_url = "http://starting.url.com/"
       @yadis_url = "http://starting.url.com/xrds"
@@ -64,7 +64,7 @@ module OpenID
     end
   end
 
-  class TestDiscoveryManager < Test::Unit::TestCase
+  class TestDiscoveryManager < Minitest::Test
     def setup
       session = {}
       @session = OpenID::Consumer::Session.new(session, OpenID::Consumer::DiscoveredServices)
@@ -198,7 +198,7 @@ module OpenID
 
       # Calling create_manager with a preexisting manager should
       # result in StandardError.
-      assert_raise(StandardError) {
+      assert_raises(StandardError) {
         @manager.create_manager(@yadis_url, services)
       }
 

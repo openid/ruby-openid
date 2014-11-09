@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'openid/yadis/xrds'
 
@@ -19,24 +19,24 @@ module OpenID
       end
     end
 
-    class ParseXRDSTestCase < Test::Unit::TestCase
+    class ParseXRDSTestCase < Minitest::Test
       include XRDSTestMixin
 
       # Check that parsing succeeds at all.
       def test_parse
         result = Yadis.parseXRDS(read_xrds_data_file(XRD_FILE))
-        assert_not_nil result
+        refute_nil result
       end
 
       def test_parse_no_xrds_xml
         xmldoc = read_xrds_data_file(NOXRDS_FILE)
-        assert_raise(Yadis::XRDSError) {
+        assert_raises(Yadis::XRDSError) {
           Yadis.parseXRDS(xmldoc)
         }
       end
 
       def test_parse_no_xrds_empty
-        assert_raise(Yadis::XRDSError) {
+        assert_raises(Yadis::XRDSError) {
           Yadis.parseXRDS('')
         }
       end
@@ -49,14 +49,14 @@ module OpenID
       end
     end
 
-    class GetYadisXRDTestCase < Test::Unit::TestCase
+    class GetYadisXRDTestCase < Minitest::Test
       include XRDSTestMixin
 
       # XXX: Test to make sure this really gets the _right_ XRD.
       def test_get_xrd
         doc = Yadis.parseXRDS(read_xrds_data_file(XRD_FILE))
         result = Yadis::get_yadis_xrd(doc)
-        assert_not_nil result
+        refute_nil result
         assert_equal 'XRD', result.name
         assert_equal Yadis::XRD_NS_2_0, result.namespace
       end
@@ -64,13 +64,13 @@ module OpenID
       def test_no_xrd
         xmldoc = read_xrds_data_file(NOXRD_FILE)
         doc = Yadis.parseXRDS(xmldoc)
-        assert_raise(Yadis::XRDSError) {
+        assert_raises(Yadis::XRDSError) {
           Yadis.get_yadis_xrd(doc)
         }
       end
     end
 
-    class EachServiceTestCase < Test::Unit::TestCase
+    class EachServiceTestCase < Minitest::Test
       include XRDSTestMixin
 
       def test_get_xrd
@@ -80,14 +80,14 @@ module OpenID
           assert_equal 'Service', e.name
           count += 1
         }
-        assert_not_nil result
+        refute_nil result
         assert_equal 5, count
       end
 
       def test_no_xrd
         xmldoc = read_xrds_data_file(NOXRD_FILE)
         doc = Yadis.parseXRDS(xmldoc)
-        assert_raise(Yadis::XRDSError) {
+        assert_raises(Yadis::XRDSError) {
           Yadis.each_service(doc)
         }
       end
@@ -99,14 +99,14 @@ module OpenID
           assert_equal 'Service', e.name
           count += 1
         }
-        assert_not_nil result
+        refute_nil result
         assert_equal 2, count
       end
     end
 
     # XXX: test prioSort!
 
-    class ExpandServiceTestCase < Test::Unit::TestCase
+    class ExpandServiceTestCase < Minitest::Test
       @@service_xml = <<END
 <Service>
 <Type>urn://foo</Type>
@@ -133,7 +133,7 @@ END
       end
     end
 
-    class PrioSortTestCase < Test::Unit::TestCase
+    class PrioSortTestCase < Minitest::Test
       def new_uri(priority)
         e = REXML::Element.new("URI")
         e.add_attribute("priority", priority.to_s) unless e.nil?
@@ -155,7 +155,7 @@ END
       end
     end
 
-    class GetCanonicalIDTestCase < Test::Unit::TestCase
+    class GetCanonicalIDTestCase < Minitest::Test
       include XRDSTestMixin
 
       def test_multisegment_xri

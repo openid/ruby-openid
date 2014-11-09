@@ -1,11 +1,11 @@
 require 'openid/extensions/ui'
 require 'openid/message'
 require 'openid/server'
-require 'test/unit'
+require 'minitest/autorun'
 
 module OpenID
   module UITest
-    class UIRequestTestCase < Test::Unit::TestCase
+    class UIRequestTestCase < Minitest::Test
 
       def setup
         @req = UI::Request.new

@@ -1,9 +1,9 @@
 # encoding: ASCII-8BIT
-require "test/unit"
+require "minitest/autorun"
 require "openid/util"
 
 module OpenID
-  class UtilTestCase < Test::Unit::TestCase
+  class UtilTestCase < Minitest::Test
 
     def test_base64
       cases = [

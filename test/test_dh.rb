@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'openid/dh'
 
@@ -9,7 +9,7 @@ module OpenID
     end
   end
 
-  class DiffieHellmanTestCase < Test::Unit::TestCase
+  class DiffieHellmanTestCase < Minitest::Test
     include OpenID::TestDataMixin
 
     NUL = "\x00"

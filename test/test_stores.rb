@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/store/interface'
 require 'openid/store/filesystem'
 require 'openid/store/memcache'
@@ -214,7 +214,7 @@ module OpenID
       end
     end
 
-    class FileStoreTestCase < Test::Unit::TestCase
+    class FileStoreTestCase < Minitest::Test
       include StoreTestCase
 
       def setup
@@ -227,7 +227,7 @@ module OpenID
       end
     end
 
-    class MemoryStoreTestCase < Test::Unit::TestCase
+    class MemoryStoreTestCase < Minitest::Test
       include StoreTestCase
 
       def setup
@@ -239,7 +239,7 @@ module OpenID
       ::TESTING_MEMCACHE
     rescue NameError
     else
-      class MemcacheStoreTestCase < Test::Unit::TestCase
+      class MemcacheStoreTestCase < Minitest::Test
         include StoreTestCase
         def setup
           store_uniq = OpenID::CryptUtil.random_string(6, "0123456789")
@@ -255,38 +255,38 @@ module OpenID
       end
     end
 
-    class AbstractStoreTestCase < Test::Unit::TestCase
+    class AbstractStoreTestCase < Minitest::Test
       def test_abstract_class
         # the abstract made concrete
         abc = Interface.new()
         server_url = "http://server.com/"
         association = OpenID::Association.new("foo", "bar", Time.now, Time.now + 10, "dummy")
 
-        assert_raise(NotImplementedError) {
+        assert_raises(NotImplementedError) {
           abc.store_association(server_url, association)
         }
 
-        assert_raise(NotImplementedError) {
+        assert_raises(NotImplementedError) {
           abc.get_association(server_url)
         }
 
-        assert_raise(NotImplementedError) {
+        assert_raises(NotImplementedError) {
           abc.remove_association(server_url, association.handle)
         }
 
-        assert_raise(NotImplementedError) {
+        assert_raises(NotImplementedError) {
           abc.use_nonce(server_url, Time.now.to_i, "foo")
         }
 
-        assert_raise(NotImplementedError) {
+        assert_raises(NotImplementedError) {
           abc.cleanup_nonces()
         }
 
-        assert_raise(NotImplementedError) {
+        assert_raises(NotImplementedError) {
           abc.cleanup_associations()
         }
 
-        assert_raise(NotImplementedError) {
+        assert_raises(NotImplementedError) {
           abc.cleanup()
         }
 
