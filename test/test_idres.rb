@@ -906,6 +906,7 @@ module OpenID
       class DiscoverAndVerifyTest < Minitest::Test
         include ProtocolErrorMixin
         include TestUtil
+        OpenID.extend(OverrideMethodMixin)
 
         def test_no_services
           me = self
