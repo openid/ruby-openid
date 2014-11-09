@@ -244,7 +244,7 @@ EOHTML
     @_redirect_counter = 0
     uri = _uri_build('/redirect_loop')
     assert_raises(OpenID::HTTPRedirectLimitReached) {
-      @fetcher.fetch(uri, redirect_limit=0)
+      @fetcher.fetch(uri, body=nil, headers=nil, redirect_limit=0)
     }
   end
 
