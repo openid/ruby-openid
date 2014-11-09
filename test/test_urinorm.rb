@@ -1,8 +1,8 @@
-require "test/unit"
+require "minitest/autorun"
 require "testutil"
 require "openid/urinorm"
 
-class URINormTestCase < Test::Unit::TestCase
+class URINormTestCase < Minitest::Test
   include OpenID::TestDataMixin
 
   def test_normalize

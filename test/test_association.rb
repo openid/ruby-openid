@@ -1,8 +1,8 @@
-require "test/unit"
+require "minitest/autorun"
 require "openid/association"
 
 module OpenID
-  class AssociationTestCase < Test::Unit::TestCase
+  class AssociationTestCase < Minitest::Test
     def setup
       # Use this funny way of getting a time so that it does not have
       # fractional seconds, and so can be serialized exactly using our
@@ -202,7 +202,7 @@ module OpenID
     end
   end
 
-  class AssociationNegotiatorTestCase < Test::Unit::TestCase
+  class AssociationNegotiatorTestCase < Minitest::Test
     def assert_equal_under(item1, item2)
       val1 = yield(item1)
       val2 = yield(item2)

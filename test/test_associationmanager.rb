@@ -1,4 +1,4 @@
-require "test/unit"
+require "minitest/autorun"
 require "openid/consumer/associationmanager"
 require "openid/association"
 require "openid/dh"
@@ -10,14 +10,12 @@ require "util"
 require "time"
 
 module OpenID
-  class DHAssocSessionTest < Test::Unit::TestCase
+  class DHAssocSessionTest < Minitest::Test
     def test_sha1_get_request
       # Initialized without an explicit DH gets defaults
       sess = Consumer::DiffieHellmanSHA1Session.new
       assert_equal(['dh_consumer_public'], sess.get_request.keys)
-      assert_nothing_raised do
-        Util::from_base64(sess.get_request['dh_consumer_public'])
-      end
+      Util::from_base64(sess.get_request['dh_consumer_public'])
     end
 
     def test_sha1_get_request_custom_dh
@@ -28,9 +26,7 @@ module OpenID
                    req.keys.sort)
       assert_equal(dh.modulus, CryptUtil.base64_to_num(req['dh_modulus']))
       assert_equal(dh.generator, CryptUtil.base64_to_num(req['dh_gen']))
-      assert_nothing_raised do
-        Util::from_base64(req['dh_consumer_public'])
-      end
+      Util::from_base64(req['dh_consumer_public'])
     end
   end
 
@@ -102,7 +98,7 @@ module OpenID
     end
   end
 
-  class TestConsumerOpenID1DHSHA1 < Test::Unit::TestCase
+  class TestConsumerOpenID1DHSHA1 < Minitest::Test
     include TestDiffieHellmanResponseParametersMixin
     class << self
       attr_reader :session_cls, :message_namespace
@@ -112,7 +108,7 @@ module OpenID
     @message_namespace = OPENID1_NS
   end
 
-  class TestConsumerOpenID2DHSHA1 < Test::Unit::TestCase
+  class TestConsumerOpenID2DHSHA1 < Minitest::Test
     include TestDiffieHellmanResponseParametersMixin
     class << self
       attr_reader :session_cls, :message_namespace
@@ -122,7 +118,7 @@ module OpenID
     @message_namespace = OPENID2_NS
   end
 
-  class TestConsumerOpenID2DHSHA256 < Test::Unit::TestCase
+  class TestConsumerOpenID2DHSHA256 < Minitest::Test
     include TestDiffieHellmanResponseParametersMixin
     class << self
       attr_reader :session_cls, :message_namespace
@@ -132,7 +128,7 @@ module OpenID
     @message_namespace = OPENID2_NS
   end
 
-  class TestConsumerNoEncryptionSession < Test::Unit::TestCase
+  class TestConsumerNoEncryptionSession < Minitest::Test
     def setup
       @sess = Consumer::NoEncryptionSession.new
     end
@@ -149,7 +145,7 @@ module OpenID
     end
   end
 
-  class TestCreateAssociationRequest < Test::Unit::TestCase
+  class TestCreateAssociationRequest < Minitest::Test
     def setup
       @server_url = 'http://invalid/'
       @assoc_manager = Consumer::AssociationManager.new(nil, @server_url)
@@ -203,7 +199,7 @@ module OpenID
 
       # This is a random base-64 value, so just check that it's
       # present.
-      assert_not_nil(args.get_arg(OPENID1_NS, 'dh_consumer_public'))
+      refute_nil(args.get_arg(OPENID1_NS, 'dh_consumer_public'))
       args.del_arg(OPENID1_NS, 'dh_consumer_public')
 
       # OK, session_type is set here and not for no-encryption
@@ -216,7 +212,7 @@ module OpenID
     end
   end
 
-  class TestAssociationManagerExpiresIn < Test::Unit::TestCase
+  class TestAssociationManagerExpiresIn < Minitest::Test
     def expires_in_msg(val)
       msg = Message.from_openid_args({'expires_in' => val})
       Consumer::AssociationManager.extract_expires_in(msg)
@@ -248,7 +244,7 @@ module OpenID
     end
   end
 
-  class TestAssociationManagerCreateSession < Test::Unit::TestCase
+  class TestAssociationManagerCreateSession < Minitest::Test
     def test_invalid
       assert_raises(ArgumentError) {
         Consumer::AssociationManager.create_session('monkeys')
@@ -292,7 +288,7 @@ module OpenID
 
   # Test the session type negotiation behavior of an OpenID 2
   # consumer.
-  class TestOpenID2SessionNegotiation < Test::Unit::TestCase
+  class TestOpenID2SessionNegotiation < Minitest::Test
     include NegotiationTestMixin
 
     Compat = false
@@ -413,7 +409,7 @@ module OpenID
   # oidutil.log.  See the calls to self.failUnlessLogMatches.  Some of
   # these tests pass openid2-style messages to the openid 1
   # association processing logic to be sure it ignores the extra data.
-  class TestOpenID1SessionNegotiation < Test::Unit::TestCase
+  class TestOpenID1SessionNegotiation < Minitest::Test
     include NegotiationTestMixin
 
     Compat = true
@@ -498,7 +494,7 @@ module OpenID
   end
 
 
-  class TestExtractAssociation < Test::Unit::TestCase
+  class TestExtractAssociation < Minitest::Test
     include ProtocolErrorMixin
 
     # An OpenID associate response (without the namespace)
@@ -619,7 +615,7 @@ module OpenID
     end
   end
 
-  class GetOpenIDSessionTypeTest < Test::Unit::TestCase
+  class GetOpenIDSessionTypeTest < Minitest::Test
     include TestUtil
 
     SERVER_URL = 'http://invalid/'
@@ -666,7 +662,7 @@ module OpenID
     end
   end
 
-  class ExtractAssociationTest < Test::Unit::TestCase
+  class ExtractAssociationTest < Minitest::Test
     include ProtocolErrorMixin
 
     SERVER_URL = 'http://invalid/'
@@ -740,7 +736,7 @@ module OpenID
     end
   end
 
-  class TestExtractAssociationDiffieHellman < Test::Unit::TestCase
+  class TestExtractAssociationDiffieHellman < Minitest::Test
     include ProtocolErrorMixin
 
     SECRET = 'x' * 20
@@ -799,7 +795,7 @@ module OpenID
     end
   end
 
-  class TestAssocManagerGetAssociation < Test::Unit::TestCase
+  class TestAssocManagerGetAssociation < Minitest::Test
     include FetcherMixin
     include TestUtil
 
@@ -859,7 +855,7 @@ module OpenID
     end
   end
 
-  class TestAssocManagerRequestAssociation < Test::Unit::TestCase
+  class TestAssocManagerRequestAssociation < Minitest::Test
     include FetcherMixin
     include TestUtil
 

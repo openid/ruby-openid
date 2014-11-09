@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/extensions/pape'
 require 'openid/message'
 require 'openid/server'
@@ -6,7 +6,7 @@ require 'openid/consumer/responses'
 
 module OpenID
   module PAPETest
-    class PapeRequestTestCase < Test::Unit::TestCase
+    class PapeRequestTestCase < Minitest::Test
       def setup
         @req = PAPE::Request.new
       end
@@ -103,7 +103,7 @@ module OpenID
 
     end
 
-    class PapeResponseTestCase < Test::Unit::TestCase
+    class PapeResponseTestCase < Minitest::Test
       def setup
         @req = PAPE::Response.new
       end

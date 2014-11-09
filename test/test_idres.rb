@@ -1,4 +1,4 @@
-require "test/unit"
+require "minitest/autorun"
 require "testutil"
 require "util"
 require "openid/consumer/idres"
@@ -18,7 +18,7 @@ module OpenID
         end
       end
 
-      class CheckForFieldsTest < Test::Unit::TestCase
+      class CheckForFieldsTest < Minitest::Test
         include ProtocolErrorMixin
 
         BASE_FIELDS = ['return_to', 'assoc_handle', 'sig', 'signed']
@@ -142,21 +142,17 @@ module OpenID
         def test_success_openid1
           msg = mkMsg(OPENID1_NS, OPENID1_FIELDS, OPENID1_SIGNED)
           idres = IdResHandler.new(msg, nil)
-          assert_nothing_raised {
-            idres.send(:check_for_fields)
-          }
+          idres.send(:check_for_fields)
         end
 
         def test_success_openid1_1
           msg = mkMsg(OPENID11_NS, OPENID1_FIELDS, OPENID1_SIGNED)
           idres = IdResHandler.new(msg, nil)
-          assert_nothing_raised {
-            idres.send(:check_for_fields)
-          }
+          idres.send(:check_for_fields)
         end
       end
 
-      class ReturnToArgsTest < Test::Unit::TestCase
+      class ReturnToArgsTest < Minitest::Test
         include OpenID::ProtocolErrorMixin
 
         def check_return_to_args(query)
@@ -175,13 +171,11 @@ module OpenID
         end
 
         def test_return_to_args_okay
-          assert_nothing_raised {
-            check_return_to_args({
-              'openid.mode' => 'id_res',
-              'openid.return_to' => 'http://example.com/?foo=bar',
-              'foo' => 'bar',
-              })
-          }
+          check_return_to_args({
+            'openid.mode' => 'id_res',
+            'openid.return_to' => 'http://example.com/?foo=bar',
+            'foo' => 'bar',
+            })
         end
 
         def test_unexpected_arg_okay
@@ -206,7 +200,7 @@ module OpenID
         end
       end
 
-      class ReturnToVerifyTest < Test::Unit::TestCase
+      class ReturnToVerifyTest < Minitest::Test
         def test_bad_return_to
           return_to = "http://some.url/path?foo=bar"
 
@@ -250,9 +244,7 @@ module OpenID
             args['openid.return_to'] = return_to
             msg = Message.from_post_args(args)
             idres = IdResHandler.new(msg, base)
-            assert_nothing_raised {
-              idres.send(:verify_return_to)
-            }
+            idres.send(:verify_return_to)
           end
         end
       end
@@ -264,7 +256,7 @@ module OpenID
         end
       end
 
-      class CheckSigTest < Test::Unit::TestCase
+      class CheckSigTest < Minitest::Test
         include ProtocolErrorMixin
         include TestUtil
 
@@ -301,9 +293,7 @@ module OpenID
         end
 
         def test_sign_good
-          assert_nothing_raised {
-            call_check_sig(&method(:no_check_auth))
-          }
+          call_check_sig(&method(:no_check_auth))
         end
 
         def test_bad_sig
@@ -423,7 +413,7 @@ module OpenID
 
       end
 
-      class CheckAuthResponseTest < Test::Unit::TestCase
+      class CheckAuthResponseTest < Minitest::Test
         include TestUtil
         include ProtocolErrorMixin
 
@@ -482,7 +472,7 @@ module OpenID
         end
       end
 
-      class NonceTest < Test::Unit::TestCase
+      class NonceTest < Minitest::Test
         include TestUtil
         include ProtocolErrorMixin
 
@@ -513,9 +503,7 @@ module OpenID
            {'openid.ns' => OPENID1_NS},
            {'openid.ns' => OPENID11_NS}
           ].each do |args|
-            assert_nothing_raised {
-              call_check_nonce({'rp_nonce' => @nonce}.merge(args), true)
-            }
+            call_check_nonce({'rp_nonce' => @nonce}.merge(args), true)
           end
         end
 
@@ -536,10 +524,8 @@ module OpenID
         end
 
         def test_openid2_success
-          assert_nothing_raised {
-            call_check_nonce({'openid.response_nonce' => @nonce,
-                               'openid.ns' => OPENID2_NS}, true)
-          }
+          call_check_nonce({'openid.response_nonce' => @nonce,
+                             'openid.ns' => OPENID2_NS}, true)
         end
 
         def test_openid1_ignore_response_nonce
@@ -555,9 +541,7 @@ module OpenID
 
         def test_no_store
           @store = nil
-          assert_nothing_raised {
-            call_check_nonce({'rp_nonce' => @nonce})
-          }
+          call_check_nonce({'rp_nonce' => @nonce})
         end
 
         def test_already_used
@@ -573,7 +557,7 @@ module OpenID
         end
       end
 
-      class DiscoveryVerificationTest < Test::Unit::TestCase
+      class DiscoveryVerificationTest < Minitest::Test
         include ProtocolErrorMixin
         include TestUtil
 
@@ -875,7 +859,7 @@ module OpenID
         end
       end
 
-      class IdResTopLevelTest < Test::Unit::TestCase
+      class IdResTopLevelTest < Minitest::Test
         def test_id_res
           endpoint = OpenIDServiceEndpoint.new
           endpoint.server_url = 'http://invalid/server'
@@ -919,7 +903,7 @@ module OpenID
       end
 
 
-      class DiscoverAndVerifyTest < Test::Unit::TestCase
+      class DiscoverAndVerifyTest < Minitest::Test
         include ProtocolErrorMixin
         include TestUtil
 
@@ -942,7 +926,7 @@ module OpenID
         end
       end
 
-      class VerifyDiscoveredServicesTest < Test::Unit::TestCase
+      class VerifyDiscoveredServicesTest < Minitest::Test
         include ProtocolErrorMixin
         include TestUtil
 

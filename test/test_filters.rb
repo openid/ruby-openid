@@ -1,11 +1,11 @@
-require "test/unit"
+require "minitest/autorun"
 require "testutil"
 require "rexml/document"
 require "openid/yadis/xrds"
 require "openid/yadis/filters"
 
 module OpenID
-  class BasicServiceEndpointTest < Test::Unit::TestCase
+  class BasicServiceEndpointTest < Minitest::Test
     def test_match_types
       # Make sure the match_types operation returns the expected
       # results with various inputs.
@@ -39,7 +39,7 @@ module OpenID
     end
   end
 
-  class TransformFilterMakerTest < Test::Unit::TestCase
+  class TransformFilterMakerTest < Minitest::Test
     def make_service_element(types, uris)
       service = REXML::Element.new('Service')
       types.each { |type_text|
@@ -143,7 +143,7 @@ module OpenID
     end
   end
 
-  class CompoundFilterTest < Test::Unit::TestCase
+  class CompoundFilterTest < Minitest::Test
     def test_get_service_endpoints
       first = ["bogus", "test"]
       second = ["third"]
@@ -159,7 +159,7 @@ module OpenID
     end
   end
 
-  class MakeFilterTest < Test::Unit::TestCase
+  class MakeFilterTest < Minitest::Test
     def test_parts_nil
       result = Yadis.make_filter(nil)
       assert result.is_a?(Yadis::TransformFilterMaker)
@@ -182,7 +182,7 @@ module OpenID
     end
   end
 
-  class MakeCompoundFilterTest < Test::Unit::TestCase
+  class MakeCompoundFilterTest < Minitest::Test
     def test_no_filters
       result = Yadis.mk_compound_filter([])
       assert result.subfilters == []
@@ -251,7 +251,7 @@ module OpenID
       # Pass various non-filter objects and make sure the filter
       # machinery explodes.
       [nil, ["bogus"], [1], [nil, "bogus"]].each { |thing|
-        assert_raise(TypeError) {
+        assert_raises(TypeError) {
           Yadis.mk_compound_filter(thing)
         }
       }

@@ -1,11 +1,11 @@
-require "test/unit"
+require "minitest/autorun"
 require "testutil"
 require "openid/kvpost"
 require "openid/kvform"
 require "openid/message"
 
 module OpenID
-  class KVPostTestCase < Test::Unit::TestCase
+  class KVPostTestCase < Minitest::Test
     include FetcherMixin
 
     def mk_resp(status, resp_hash)

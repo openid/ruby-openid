@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/extensions/ax'
 require 'openid/message'
 require 'openid/consumer/responses'
@@ -23,7 +23,7 @@ module OpenID
       end
     end
 
-    class AXMessageTest < Test::Unit::TestCase
+    class AXMessageTest < Minitest::Test
       def setup
         @bax = BogusAXMessage.new
       end
@@ -38,7 +38,7 @@ module OpenID
       end
     end
 
-    class AttrInfoTest < Test::Unit::TestCase
+    class AttrInfoTest < Minitest::Test
       def test_construct
         assert_raises(ArgumentError) { AttrInfo.new }
         type_uri = 'uri geller'
@@ -51,7 +51,7 @@ module OpenID
       end
     end
 
-    class ToTypeURIsTest < Test::Unit::TestCase
+    class ToTypeURIsTest < Minitest::Test
       def setup
         @aliases = NamespaceMap.new
       end
@@ -91,7 +91,7 @@ module OpenID
       end
     end
 
-    class ParseAXValuesTest < Test::Unit::TestCase
+    class ParseAXValuesTest < Minitest::Test
       def ax_values(ax_args, expected_args)
         msg = KeyValueMessage.new
         msg.parse_extension_args(ax_args)
@@ -221,7 +221,7 @@ module OpenID
       end
     end
 
-    class FetchRequestTest < Test::Unit::TestCase
+    class FetchRequestTest < Minitest::Test
       def setup
         @msg = FetchRequest.new
         @type_a = 'http://janrain.example.com/a'
@@ -483,7 +483,7 @@ module OpenID
       end
     end
 
-    class FetchResponseTest < Test::Unit::TestCase
+    class FetchResponseTest < Minitest::Test
       def setup
         @msg = FetchResponse.new
         @value_a = 'commodity'
@@ -675,7 +675,7 @@ module OpenID
       end
     end
 
-    class StoreRequestTest < Test::Unit::TestCase
+    class StoreRequestTest < Minitest::Test
       def setup
         @msg = StoreRequest.new
         @type_a = 'http://oranges.are.for/'
@@ -729,7 +729,7 @@ module OpenID
       end
     end
 
-    class StoreResponseTest < Test::Unit::TestCase
+    class StoreResponseTest < Minitest::Test
       def test_success
         msg = StoreResponse.new
         assert(msg.succeeded?)

@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/yadis/xrires'
 
 module OpenID
@@ -18,7 +18,7 @@ module OpenID
       end
     end
 
-    class ProxyQueryTestCase < Test::Unit::TestCase
+    class ProxyQueryTestCase < Minitest::Test
       def setup
         @proxy_url = 'http://xri.example.com/'
         @proxy = XRI::ProxyResolver.new(@proxy_url)

@@ -1,4 +1,4 @@
-require "test/unit"
+require "minitest/autorun"
 require "openid/consumer/checkid_request"
 require "openid/message"
 require "testutil"
@@ -135,7 +135,7 @@ module OpenID
         end
       end
 
-      class TestCheckIDRequestOpenID2 < Test::Unit::TestCase
+      class TestCheckIDRequestOpenID2 < Minitest::Test
         include CheckIDTestMixin
 
         def immediate
@@ -167,8 +167,8 @@ module OpenID
         # OpenID Checkid_Requests should be able to set 'anonymous' to true.
         def test_set_anonymous_works_for_openid2
           assert(@checkid_req.message.is_openid2)
-          assert_nothing_raised {@checkid_req.anonymous = true}
-          assert_nothing_raised {@checkid_req.anonymous = false}
+          @checkid_req.anonymous = true
+          @checkid_req.anonymous = false
         end
 
         def test_user_anonymous_ignores_identfier
@@ -207,7 +207,7 @@ module OpenID
         end
       end
 
-      class TestCheckIDRequestOpenID1 < Test::Unit::TestCase
+      class TestCheckIDRequestOpenID1 < Minitest::Test
         include CheckIDTestMixin
 
         def immediate
@@ -248,9 +248,7 @@ module OpenID
           assert_raises(ArgumentError) {
             @checkid_req.anonymous = true
           }
-          assert_nothing_raised{
-            @checkid_req.anonymous = false
-          }
+          @checkid_req.anonymous = false
         end
 
         # Identfier select SHOULD NOT be sent, but this pathway is in

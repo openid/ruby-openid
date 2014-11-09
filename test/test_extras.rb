@@ -1,7 +1,7 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/extras'
 
-class StartsWithTestCase < Test::Unit::TestCase
+class StartsWithTestCase < Minitest::Test
     def test_starts_with
         [["anything", ""],
          ["something else", ""],

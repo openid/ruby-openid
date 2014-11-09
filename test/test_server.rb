@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'util'
 require 'uri'
@@ -39,7 +39,7 @@ module OpenID
     end
   end
 
-  class TestProtocolError < Test::Unit::TestCase
+  class TestProtocolError < Minitest::Test
     def test_browserWithReturnTo
       return_to = "http://rp.unittest/consumer"
       # will be a ProtocolError raised by Decode or
@@ -151,7 +151,7 @@ module OpenID
     end
   end
 
-  class TestDecode < Test::Unit::TestCase
+  class TestDecode < Minitest::Test
     def setup
       @claimed_id = 'http://de.legating.de.coder.unittest/'
       @id_url = "http://decoder.am.unittest/"
@@ -175,7 +175,7 @@ module OpenID
         'pony' => 'spotted',
         'sreg.mutant_power' => 'decaffinator',
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -185,7 +185,7 @@ module OpenID
         'openid.mode' => 'twos-compliment',
         'openid.pants' => 'zippered',
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -242,7 +242,7 @@ module OpenID
         'openid.claimed_id' => @id_url,
         'openid.assoc_handle' => @assoc_handle,
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         m = Message.from_post_args(args)
         Server::CheckIDRequest.from_message(m, @op_endpoint)
       }
@@ -333,7 +333,7 @@ module OpenID
         'openid.return_to' => @rt_url,
         'openid.realm' => @tr_url,
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -364,7 +364,7 @@ module OpenID
         'openid.assoc_handle' => @assoc_handle,
         'openid.trust_root' => @tr_url,
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -385,15 +385,15 @@ module OpenID
       req = @decode.call(args)
       assert(req.is_a?(Server::CheckIDRequest))
 
-      assert_raise(Server::NoReturnToError) {
+      assert_raises(Server::NoReturnToError) {
         req.answer(false)
       }
 
-      assert_raise(Server::NoReturnToError) {
+      assert_raises(Server::NoReturnToError) {
         req.encode_to_url('bogus')
       }
 
-      assert_raise(Server::NoReturnToError) {
+      assert_raises(Server::NoReturnToError) {
         req.cancel_url
       }
     end
@@ -408,7 +408,7 @@ module OpenID
         'openid.identity' => @id_url,
         'openid.assoc_handle' => @assoc_handle,
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -447,7 +447,7 @@ module OpenID
     end
 
     def test_checkidSetupUntrustedReturn_Constructor
-      assert_raise(Server::UntrustedReturnURL) {
+      assert_raises(Server::UntrustedReturnURL) {
         Server::CheckIDRequest.new(@id_url, @rt_url, nil,
                                    'http://not-the-return-place.unittest/',
                                    false, @assoc_handle)
@@ -455,7 +455,7 @@ module OpenID
     end
 
     def test_checkidSetupMalformedReturnURL_Constructor
-      assert_raise(Server::MalformedReturnURL) {
+      assert_raises(Server::MalformedReturnURL) {
         Server::CheckIDRequest.new(@id_url, 'bogus://return.url', nil,
                                    'http://trustroot.com/',
                                    false, @assoc_handle)
@@ -488,7 +488,7 @@ module OpenID
         'openid.bar' => 'signedval2',
         'openid.baz' => 'unsigned',
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -531,7 +531,7 @@ module OpenID
         'openid.session_type' => 'DH-SHA1',
       }
       # Using DH-SHA1 without supplying dh_consumer_public is an error.
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -542,7 +542,7 @@ module OpenID
         'openid.session_type' => 'DH-SHA1',
         'openid.dh_consumer_public' => "donkeydonkeydonkey",
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -577,7 +577,7 @@ module OpenID
         'openid.dh_modulus' => 'pizza',
         'openid.dh_gen' => 'gnocchi',
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -589,7 +589,7 @@ module OpenID
         'openid.dh_consumer_public' => "Rzup9265tw==",
         'openid.dh_modulus' => 'pizza',
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -601,7 +601,7 @@ module OpenID
         'openid.dh_consumer_public' => "Rzup9265tw==",
         'openid.dh_gen' => 'pizza',
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -625,7 +625,7 @@ module OpenID
         'openid.session_type' => 'FLCL6',
         'openid.dh_consumer_public' => "YQ==\n",
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -646,7 +646,7 @@ module OpenID
         'openid.session_type' => 'DH-SHA1',
         'openid.dh_consumer_public' => "my public keeey",
       }
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @decode.call(args)
       }
     end
@@ -675,7 +675,7 @@ module OpenID
     end
   end
 
-  class TestEncode < Test::Unit::TestCase
+  class TestEncode < Minitest::Test
     def setup
       @encoder = Server::Encoder.new
       @encode = @encoder.method('encode')
@@ -906,7 +906,7 @@ module OpenID
                                       'openid.identity' => 'http://limu.unittest/',
                                     })
       e = Server::ProtocolError.new(args, "wet paint")
-      assert_raise(Server::EncodingError) {
+      assert_raises(Server::EncodingError) {
         @encode.call(e)
       }
     end
@@ -924,7 +924,7 @@ module OpenID
     end
   end
 
-  class TestSigningEncode < Test::Unit::TestCase
+  class TestSigningEncode < Minitest::Test
     def setup
       @_dumb_key = Server::Signatory._dumb_key
       @_normal_key = Server::Signatory._normal_key
@@ -981,7 +981,7 @@ module OpenID
 
     def test_forgotStore
       @encoder.signatory = nil
-      assert_raise(ArgumentError) {
+      assert_raises(ArgumentError) {
         @encode.call(@response)
       }
     end
@@ -1019,13 +1019,13 @@ module OpenID
 
     def test_alreadySigned
       @response.fields.set_arg(OPENID_NS, 'sig', 'priorSig==')
-      assert_raise(Server::AlreadySigned) {
+      assert_raises(Server::AlreadySigned) {
         @encode.call(@response)
       }
     end
   end
 
-  class TestCheckID < Test::Unit::TestCase
+  class TestCheckID < Minitest::Test
     def setup
       @op_endpoint = 'http://endpoint.unittest/'
       @store = Store::Memory.new()
@@ -1184,7 +1184,7 @@ module OpenID
       @request.identity = nil
       # XXX - Check on this, I think this behavior is legal in OpenID
       # 2.0?
-      assert_raise(ArgumentError) {
+      assert_raises(ArgumentError) {
         @request.answer(true, nil, "=V")
       }
     end
@@ -1198,7 +1198,7 @@ module OpenID
 
     def test_answerAllowWithNoIdentity
       @request.identity = IDENTIFIER_SELECT
-      assert_raise(ArgumentError) {
+      assert_raises(ArgumentError) {
         @request.answer(true, nil, nil)
       }
     end
@@ -1225,7 +1225,7 @@ module OpenID
       @request.mode = 'checkid_immediate'
       @request.op_endpoint = nil
 
-      assert_raise(ArgumentError) {
+      assert_raises(ArgumentError) {
         @request.answer(false)
       }
     end
@@ -1272,7 +1272,7 @@ module OpenID
       @request.identity = IDENTIFIER_SELECT
       selected_id = 'http://anon.unittest/9861'
       claimed_id = 'http://monkeyhat.unittest/'
-      assert_raise(Server::VersionError) {
+      assert_raises(Server::VersionError) {
         @request.answer(true, nil, selected_id, claimed_id)
       }
     end
@@ -1280,7 +1280,7 @@ module OpenID
     def test_answerAllowWithAnotherIdentity
       # XXX - Check on this, I think this behavior is legal in OpenID
       # 2.0?
-      assert_raise(ArgumentError){
+      assert_raises(ArgumentError){
         @request.answer(true, nil, "http://pebbles.unittest/")
       }
     end
@@ -1288,14 +1288,14 @@ module OpenID
     def test_answerAllowNoIdentityOpenID1
       @request.message = Message.new(OPENID1_NS)
       @request.identity = nil
-      assert_raise(ArgumentError) {
+      assert_raises(ArgumentError) {
         @request.answer(true, nil, nil)
       }
     end
 
     def test_answerAllowForgotEndpoint
       @request.op_endpoint = nil
-      assert_raise(RuntimeError) {
+      assert_raises(RuntimeError) {
         @request.answer(true)
       }
     end
@@ -1307,7 +1307,7 @@ module OpenID
       msg.set_arg(OPENID_NS, 'mode', 'checkid_setup')
       msg.set_arg(OPENID_NS, 'assoc_handle', 'bogus')
 
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         Server::CheckIDRequest.from_message(msg, @server)
       }
     end
@@ -1318,7 +1318,7 @@ module OpenID
       msg.set_arg(OPENID_NS, 'return_to', 'http://invalid:8000/rt')
       msg.set_arg(OPENID_NS, 'claimed_id', 'https://example.myopenid.com')
 
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         Server::CheckIDRequest.from_message(msg, @server)
       }
     end
@@ -1329,7 +1329,7 @@ module OpenID
       msg.set_arg(OPENID_NS, 'return_to', 'http://invalid:8000/rt')
       msg.set_arg(OPENID_NS, 'identity', 'https://example.myopenid.com')
 
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         Server::CheckIDRequest.from_message(msg, @server)
       }
     end
@@ -1466,7 +1466,7 @@ module OpenID
     def test_getCancelURLimmed
       @request.mode = 'checkid_immediate'
       @request.immediate = true
-      assert_raise(ArgumentError) {
+      assert_raises(ArgumentError) {
         @request.cancel_url
       }
     end
@@ -1497,7 +1497,7 @@ module OpenID
     end
   end
 
-  class TestCheckIDExtension < Test::Unit::TestCase
+  class TestCheckIDExtension < Minitest::Test
 
     def setup
       @op_endpoint = 'http://endpoint.unittest/ext'
@@ -1574,7 +1574,7 @@ module OpenID
     end
   end
 
-  class TestCheckAuth < Test::Unit::TestCase
+  class TestCheckAuth < Minitest::Test
     def setup
       @assoc_handle = 'mooooooooo'
       @message = Message.from_post_args({
@@ -1644,7 +1644,7 @@ module OpenID
     end
   end
 
-  class TestAssociate < Test::Unit::TestCase
+  class TestAssociate < Minitest::Test
     # TODO: test DH with non-default values for modulus and gen.
     # (important to do because we actually had it broken for a while.)
 
@@ -1720,7 +1720,7 @@ module OpenID
 
       bad_request_argss.each { |request_args|
         message = Message.from_post_args(request_args)
-        assert_raise(Server::ProtocolError) {
+        assert_raises(Server::ProtocolError) {
           Server::AssociateRequest.from_message(message)
         }
       }
@@ -1745,7 +1745,7 @@ module OpenID
 
       bad_request_argss.each { |request_args|
         message = Message.from_post_args(request_args)
-        assert_raise(Server::ProtocolError) {
+        assert_raises(Server::ProtocolError) {
           Server::AssociateRequest.from_message(message)
         }
       }
@@ -1906,7 +1906,7 @@ module OpenID
       # the request was an OpenID 1 request.
       m = Message.new(OPENID1_NS)
 
-      assert_raise(Server::ProtocolError) {
+      assert_raises(Server::ProtocolError) {
         @request.answer_unsupported(m)
       }
     end
@@ -1915,7 +1915,7 @@ module OpenID
   class UnhandledError < Exception
   end
 
-  class TestServer < Test::Unit::TestCase
+  class TestServer < Minitest::Test
     include TestUtil
 
     def setup
@@ -1928,7 +1928,7 @@ module OpenID
       request = Server::OpenIDRequest.new()
       request.mode = "monkeymode"
       request.message = Message.new(OPENID1_NS)
-      assert_raise(RuntimeError) {
+      assert_raises(RuntimeError) {
         @server.handle_request(request)
       }
     end
@@ -1952,7 +1952,7 @@ module OpenID
       request = Server::OpenIDRequest.new()
       request.mode = "monkeymode"
       request.message = Message.new(OPENID1_NS)
-      assert_raise(UnhandledError) {
+      assert_raises(UnhandledError) {
         @server.handle_request(request)
       }
     end
@@ -2071,7 +2071,7 @@ module OpenID
     attr_accessor :assoc_handle, :namespace
   end
 
-  class TestSignatory < Test::Unit::TestCase
+  class TestSignatory < Minitest::Test
     include TestUtil
 
     def setup
@@ -2393,7 +2393,7 @@ module OpenID
     end
   end
 
-  class RunthroughTestCase < Test::Unit::TestCase
+  class RunthroughTestCase < Minitest::Test
     def setup
       @store = Store::Memory.new
       @server = Server::Server.new(@store, "http://example.com/openid/server")

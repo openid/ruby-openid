@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'openid/yadis/accept'
 require 'openid/extras'
@@ -6,7 +6,7 @@ require 'openid/util'
 
 module OpenID
 
-  class AcceptTest < Test::Unit::TestCase
+  class AcceptTest < Minitest::Test
     include TestDataMixin
 
     def getTestData()
@@ -154,7 +154,7 @@ module OpenID
       ].each { |input, expected_header|
 
         if expected_header.nil?
-          assert_raise(ArgumentError) {
+          assert_raises(ArgumentError) {
             Yadis.generate_accept_header(*input)
           }
         else

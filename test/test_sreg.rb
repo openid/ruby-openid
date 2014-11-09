@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/extensions/sreg'
 require 'openid/message'
 require 'openid/server'
@@ -17,7 +17,7 @@ module OpenID
         'language'=>'en-us',
       }
 
-      class SRegTest < Test::Unit::TestCase
+      class SRegTest < Minitest::Test
 
         def test_is11
           assert_equal(NS_URI, NS_URI_1_1)
@@ -78,7 +78,7 @@ module OpenID
 
       end
 
-      class GetNSTest < Test::Unit::TestCase
+      class GetNSTest < Minitest::Test
         def setup
           @msg = FakeMessage.new
         end
@@ -149,7 +149,7 @@ module OpenID
 
       end
 
-      class SRegRequestTest < Test::Unit::TestCase
+      class SRegRequestTest < Minitest::Test
         def test_construct_empty
           req = Request.new
           assert_equal([], req.optional)
@@ -413,7 +413,7 @@ module OpenID
       end
 
 
-      class SRegResponseTest < Test::Unit::TestCase
+      class SRegResponseTest < Minitest::Test
         def test_construct
           resp = Response.new(SOME_DATA)
           assert_equal(SOME_DATA, resp.get_extension_args)
@@ -444,7 +444,7 @@ module OpenID
         end
       end
 
-      class SendFieldsTest < Test::Unit::TestCase
+      class SendFieldsTest < Minitest::Test
         # class SendFieldsTest < Object
         def test_send_fields
           # create a request message with simple reg fields
