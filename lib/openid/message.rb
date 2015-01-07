@@ -254,7 +254,7 @@ module OpenID
       post_args = self.to_post_args
       kvargs = {}
       post_args.each { |k,v|
-        if !k.starts_with?('openid.')
+        if !k.start_with?('openid.')
           raise ArgumentError, "This message can only be encoded as a POST, because it contains arguments that are not prefixed with 'openid.'"
         else
           kvargs[k[7..-1]] = v

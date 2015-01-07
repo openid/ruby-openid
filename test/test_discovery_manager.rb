@@ -1,6 +1,5 @@
 require 'minitest/autorun'
 require 'openid/consumer/discovery_manager'
-require 'openid/extras'
 require 'testutil'
 
 module OpenID
@@ -234,7 +233,7 @@ module OpenID
     end
 
     def test_session_key
-      assert(@manager.session_key.ends_with?(
+      assert(@manager.session_key.end_with?(
                @manager.instance_variable_get("@session_key_suffix")))
     end
 

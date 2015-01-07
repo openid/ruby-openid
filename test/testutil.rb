@@ -59,7 +59,7 @@ module OpenID
       rescue ProtocolError => why
         message = "Expected prefix #{str_prefix.inspect}, got "\
                   "#{why.message.inspect}"
-        assert(why.message.starts_with?(str_prefix), message)
+        assert(why.message.start_with?(str_prefix), message)
       else
         fail("Expected ProtocolError. Got #{result.inspect}")
       end

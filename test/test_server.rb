@@ -826,7 +826,7 @@ module OpenID
       assert(webresponse.headers.member?('location'))
 
       location = webresponse.headers['location']
-      assert(location.starts_with?(request.return_to),
+      assert(location.start_with?(request.return_to),
              sprintf("%s does not start with %s",
                      location, request.return_to))
       # argh.
@@ -1240,7 +1240,7 @@ module OpenID
       server_url = "http://server.com/server"
 
       url = @request.encode_to_url(server_url)
-      assert(url.starts_with?(server_url))
+      assert(url.start_with?(server_url))
 
       _, query = url.split("?", 2)
       args = Util.parse_query(query)
@@ -1423,7 +1423,7 @@ module OpenID
       assert_equal('id_res', answer.fields.get_arg(OPENID_NS, 'mode'))
 
       usu = answer.fields.get_arg(OPENID_NS, 'user_setup_url', '')
-      assert(usu.starts_with?(server_url))
+      assert(usu.start_with?(server_url))
       expected_substr = 'openid.claimed_id=http%3A%2F%2Fclaimed-id.test%2F'
       assert(!usu.index(expected_substr).nil?, usu)
     end

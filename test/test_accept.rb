@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'testutil'
 require 'openid/yadis/accept'
-require 'openid/extras'
 require 'openid/util'
 
 module OpenID
@@ -30,7 +29,7 @@ module OpenID
       chunk = []
       lines.each { |lineno, line|
         stripped = line.strip()
-        if (stripped == '') or stripped.starts_with?('#')
+        if (stripped == '') or stripped.start_with?('#')
           if chunk.length > 0
             chunks << chunk
             chunk = []
