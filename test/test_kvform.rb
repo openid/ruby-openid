@@ -1,11 +1,11 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/kvform'
 require 'openid/util'
 require 'util'
 
 include OpenID
 
-class KVFormTests < Test::Unit::TestCase
+class KVFormTests < Minitest::Test
   include OpenID::TestUtil
 
   def test_kvdict
@@ -57,7 +57,7 @@ class KVFormTests < Test::Unit::TestCase
       # Strict mode should raise KVFormError instead of logging
       # messages
       if warnings > 0
-        assert_raise(KVFormError) do
+        assert_raises(KVFormError) do
           Util.kv_to_seq(kv, true)
         end
       end
@@ -120,7 +120,7 @@ class KVFormTests < Test::Unit::TestCase
       # Strict mode should raise KVFormError instead of logging
       # messages
       if warnings > 0
-        assert_raise(KVFormError) do
+        assert_raises(KVFormError) do
           Util.seq_to_kv(seq, true)
         end
       end
@@ -151,7 +151,7 @@ class KVFormTests < Test::Unit::TestCase
   def _run_kvexcTest(case_)
     seq = case_
 
-    assert_raise(KVFormError) do
+    assert_raises(KVFormError) do
       Util.seq_to_kv(seq)
     end
   end

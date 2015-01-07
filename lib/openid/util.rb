@@ -45,7 +45,14 @@ module OpenID
     def Util.urlencode(args)
       a = []
       args.each do |key, val|
-        val = '' unless val
+        if val.nil?
+          val = '' 
+        elsif !!val == val
+          #it's boolean let's convert it to string representation
+          # or else CGI::escape won't like it
+          val = val.to_s
+        end  
+
         a << (CGI::escape(key) + "=" + CGI::escape(val))
       end
       a.join("&")
@@ -106,8 +113,8 @@ for (var i = 0; i < elements.length; i++) {
 
     ESCAPE_TABLE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#039;' }
     # Modified from ERb's html_encode
-    def Util.html_encode(s)
-      s.to_s.gsub(/[&<>"']/) {|s| ESCAPE_TABLE[s] }
+    def Util.html_encode(str)
+      str.to_s.gsub(/[&<>"']/) {|s| ESCAPE_TABLE[s] }
     end
   end
 

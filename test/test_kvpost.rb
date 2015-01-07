@@ -1,11 +1,11 @@
-require "test/unit"
+require "minitest/autorun"
 require "testutil"
 require "openid/kvpost"
 require "openid/kvform"
 require "openid/message"
 
 module OpenID
-  class KVPostTestCase < Test::Unit::TestCase
+  class KVPostTestCase < Minitest::Test
     include FetcherMixin
 
     def mk_resp(status, resp_hash)
@@ -49,7 +49,6 @@ module OpenID
           resp
         end
       end
-      fetcher = mock_fetcher.new
 
       with_fetcher(mock_fetcher.new) do
         OpenID.make_kv_post(Message.from_openid_args(args), 'http://invalid/')

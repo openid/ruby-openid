@@ -1,6 +1,6 @@
-require 'test/unit'
+require 'minitest/autorun'
 
-class StartsWithTestCase < Test::Unit::TestCase
+class StartsWithTestCase < Minitest::Test
     def test_starts_with
         [["anything", ""],
          ["something else", ""],

@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/extension'
 require 'openid/message'
 
@@ -16,7 +16,7 @@ module OpenID
     end
   end
 
-  class ToMessageTest < Test::Unit::TestCase
+  class ToMessageTest < Minitest::Test
      def test_OpenID1
        oid1_msg = Message.new(OPENID1_NS)
        ext = DummyExtension.new
@@ -42,5 +42,5 @@ module OpenID
        assert_equal(DummyExtension::TEST_ALIAS,
                     namespaces.get_alias(DummyExtension::TEST_URI))
      end
-   end
+  end
 end

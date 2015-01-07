@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/consumer/discovery'
 require 'openid/yadis/services'
 
@@ -143,7 +143,7 @@ EOF
     end
   end
 
-  class OpenIDYadisTests < Test::Unit::TestCase
+  class OpenIDYadisTests < Minitest::Test
     def test_openid_yadis
       data = []
 

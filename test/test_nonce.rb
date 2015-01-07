@@ -1,8 +1,8 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/store/nonce'
 
 module OpenID
-  class NonceTestCase < Test::Unit::TestCase
+  class NonceTestCase < Minitest::Test
 
      NONCE_RE = /\A\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ/
 

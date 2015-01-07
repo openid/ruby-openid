@@ -1,11 +1,11 @@
-require "test/unit"
+require "minitest/autorun"
 require "openid/consumer/discovery"
 require "openid/consumer/responses"
 
 module OpenID
   class Consumer
     module TestResponses
-      class TestSuccessResponse < Test::Unit::TestCase
+      class TestSuccessResponse < Minitest::Test
         def setup
           @endpoint = OpenIDServiceEndpoint.new
           @endpoint.claimed_id = 'identity_url'

@@ -1,9 +1,9 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/consumer/discovery_manager'
 require 'testutil'
 
 module OpenID
-  class TestDiscoveredServices < Test::Unit::TestCase
+  class TestDiscoveredServices < Minitest::Test
     def setup
       @starting_url = "http://starting.url.com/"
       @yadis_url = "http://starting.url.com/xrds"
@@ -63,13 +63,14 @@ module OpenID
     end
   end
 
-  class TestDiscoveryManager < Test::Unit::TestCase
+  class TestDiscoveryManager < Minitest::Test
     def setup
-      @session = {}
+      session = {}
+      @session = OpenID::Consumer::Session.new(session, OpenID::Consumer::DiscoveredServices)
       @url = "http://unittest.com/"
       @key_suffix = "testing"
       @yadis_url = "http://unittest.com/xrds"
-      @manager = PassthroughDiscoveryManager.new(@session, @url, @key_suffix)
+      @manager = PassthroughDiscoveryManager.new(session, @url, @key_suffix)
       @key = @manager.session_key
     end
 
@@ -99,7 +100,8 @@ module OpenID
       # services in @disco.
       assert_equal(@manager.get_next_service, "two")
       assert_equal(@manager.get_next_service, "three")
-      assert_equal(@session[@key], disco)
+      disco = @session[@key]
+      assert_equal(disco.current, "three")
 
       # The manager is exhausted and should be deleted and a new one
       # should be created.
@@ -135,8 +137,8 @@ module OpenID
       assert_equal(@manager.cleanup, nil)
       assert_equal(@session[@key], nil)
 
-      @session[@key] = disco
       disco.next
+      @session[@key] = disco
       assert_equal(@manager.cleanup, "one")
       assert_equal(@session[@key], nil)
 
@@ -187,14 +189,15 @@ module OpenID
       returned_disco = @manager.create_manager(@yadis_url, services)
 
       stored_disco = @session[@key]
+      assert_equal(stored_disco, returned_disco)
+
       assert(stored_disco.for_url?(@yadis_url))
       assert_equal(stored_disco.next, "created")
 
-      assert_equal(stored_disco, returned_disco)
 
       # Calling create_manager with a preexisting manager should
       # result in StandardError.
-      assert_raise(StandardError) {
+      assert_raises(StandardError) {
         @manager.create_manager(@yadis_url, services)
       }
 

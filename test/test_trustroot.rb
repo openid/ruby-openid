@@ -1,8 +1,8 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'openid/trustroot'
 
-class TrustRootTest < Test::Unit::TestCase
+class TrustRootTest < Minitest::Test
   include OpenID::TestDataMixin
 
   def _test_sanity(case_, sanity, desc)
@@ -44,7 +44,7 @@ class TrustRootTest < Test::Unit::TestCase
     }
 
     getTests([true, false], mh, mdat).each { |tc|
-      match, desc, case_ = tc
+      match, _, case_ = tc
       trust_root, url = case_.split()
       _test_match(trust_root, url, match)
     }

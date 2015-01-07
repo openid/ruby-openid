@@ -1,11 +1,11 @@
-require "test/unit"
+require "minitest/autorun"
 require "testutil"
 require "openid/consumer"
 
 module OpenID
   class Consumer
     module TestConsumer
-      class TestLastEndpoint < Test::Unit::TestCase
+      class TestLastEndpoint < Minitest::Test
         def test_set_get
           session = {}
           consumer = Consumer.new(session, nil)
@@ -20,7 +20,7 @@ module OpenID
         end
       end
 
-      class TestBegin < Test::Unit::TestCase
+      class TestBegin < Minitest::Test
         attr_accessor :user_input, :anonymous, :services,
           :discovered_identifier, :checkid_request, :service
 
@@ -79,7 +79,7 @@ module OpenID
         end
       end
 
-      class TestBeginWithoutDiscovery < Test::Unit::TestCase
+      class TestBeginWithoutDiscovery < Minitest::Test
         attr_reader :assoc
         def setup
           @session = {}
@@ -154,7 +154,7 @@ module OpenID
         end
       end
 
-      class TestComplete < Test::Unit::TestCase
+      class TestComplete < Minitest::Test
         def setup
           @session = {}
           @consumer = Consumer.new(@session, nil)

@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'openid/dh'
 
@@ -9,7 +9,7 @@ module OpenID
     end
   end
 
-  class DiffieHellmanTestCase < Test::Unit::TestCase
+  class DiffieHellmanTestCase < Minitest::Test
     include OpenID::TestDataMixin
 
     NUL = "\x00"
@@ -27,7 +27,7 @@ module OpenID
        ["\xff",   "\x0f",   "\xf0"  ],
       ].each do |input1, input2, expected|
         actual = DiffieHellmanExposed.strxor_for_testing(input1, input2)
-        assert_equal(expected, actual)
+        assert_equal(expected.force_encoding("UTF-8"), actual.force_encoding("UTF-8"))
       end
     end
 

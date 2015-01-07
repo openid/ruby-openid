@@ -1,8 +1,8 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'openid/consumer/html_parse'
 
-class LinkParseTestCase < Test::Unit::TestCase
+class LinkParseTestCase < Minitest::Test
   include OpenID::TestDataMixin
 
   def attr_cmp(expected, found)
@@ -105,9 +105,7 @@ class LinkParseTestCase < Test::Unit::TestCase
     else
       html = "<html><body>hello joel\255</body></html>"
     end
-    assert_nothing_raised do 
-      OpenID::parse_link_attrs(html)
-    end
+    OpenID::parse_link_attrs(html)
 
   end
 end

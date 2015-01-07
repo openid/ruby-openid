@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'testutil'
 require 'util'
 require 'openid/fetchers'
@@ -26,7 +26,7 @@ module OpenID
     end
   end
 
-  class TestDiscoveryFailure < Test::Unit::TestCase
+  class TestDiscoveryFailure < Minitest::Test
     def initialize(*args)
       super(*args)
 
@@ -80,7 +80,7 @@ module OpenID
     # Custom exception just to make sure it's not handled differently
   end
 
-  class TestFetchException < Test::Unit::TestCase
+  class TestFetchException < Minitest::Test
     # Discovery should only raise DiscoveryFailure
 
     def initialize(*args)
@@ -107,7 +107,7 @@ module OpenID
 
   ### Tests for openid.consumer.discover.discover
 
-  class TestNormalization < Test::Unit::TestCase
+  class TestNormalization < Minitest::Test
     def test_addingProtocol
       f = ErrorRaisingFetcher.new(RuntimeError.new())
       OpenID.fetcher = f
@@ -152,7 +152,7 @@ module OpenID
     end
   end
 
-  class BaseTestDiscovery < Test::Unit::TestCase
+  class BaseTestDiscovery < Minitest::Test
     attr_accessor :id_url, :fetcher_class
 
     def initialize(*args)
@@ -247,7 +247,7 @@ module OpenID
     end
 
     def test_404
-      assert_raise(DiscoveryFailure) {
+      assert_raises(DiscoveryFailure) {
         OpenID.discover(@id_url + '/404')
       }
     end
@@ -382,9 +382,9 @@ module OpenID
     end
 
     def test_yadisEmpty
-      services = _discover('application/xrds+xml',
-                           read_data_file('test_discover/yadis_0entries.xml', false),
-                           0)
+      _discover('application/xrds+xml',
+                read_data_file('test_discover/yadis_0entries.xml', false),
+                0)
     end
 
     def test_htmlEmptyYadis
@@ -475,7 +475,7 @@ module OpenID
     end
 
     def test_yadis2BadLocalID
-      assert_raise(DiscoveryFailure) {
+      assert_raises(DiscoveryFailure) {
         _discover('application/xrds+xml',
                   read_data_file('test_discover/yadis_2_bad_local_id.xml', false),
                   1)
@@ -497,7 +497,7 @@ module OpenID
     end
 
     def test_yadis1And2BadLocalID
-      assert_raise(DiscoveryFailure) {
+      assert_raises(DiscoveryFailure) {
         _discover('application/xrds+xml',
                   read_data_file('test_discover/openid_1_and_2_xrds_bad_delegate.xml', false),
                   1)
@@ -517,7 +517,6 @@ module OpenID
       @fetchlog << [url, body, headers]
 
       u = URI::parse(url)
-      proxy_host = u.host
       xri = u.path
       query = u.query
 
@@ -562,7 +561,7 @@ module OpenID
     end
 
     def test_xri
-      user_xri, services = OpenID.discover_xri('=smoker')
+      _, services = OpenID.discover_xri('=smoker')
 
       _checkService(services[0],
                     "http://www.myopenid.com/server",
@@ -584,7 +583,7 @@ module OpenID
     end
 
     def test_xri_normalize
-      user_xri, services = OpenID.discover_xri('xri://=smoker')
+      _, services = OpenID.discover_xri('xri://=smoker')
 
       _checkService(services[0],
                     "http://www.myopenid.com/server",
@@ -607,7 +606,7 @@ module OpenID
 
     def test_xriNoCanonicalID
       silence_logging {
-        user_xri, services = OpenID.discover_xri('=smoker*bad')
+        _, services = OpenID.discover_xri('=smoker*bad')
         assert(services.empty?)
       }
     end
@@ -635,14 +634,14 @@ module OpenID
     end
 
     def test_xri
-      user_xri, services = OpenID.discover_xri('=smoker')
+      _, services = OpenID.discover_xri('=smoker')
       assert(!services.empty?, "Expected services, got zero")
       assert_equal(services[0].server_url,
                    "http://www.livejournal.com/openid/server.bml")
     end
   end
 
-  class TestPreferredNamespace < Test::Unit::TestCase
+  class TestPreferredNamespace < Minitest::Test
     def initialize(*args)
       super(*args)
 
@@ -671,7 +670,7 @@ module OpenID
     end
   end
 
-  class TestIsOPIdentifier < Test::Unit::TestCase
+  class TestIsOPIdentifier < Minitest::Test
     def setup
       @endpoint = OpenIDServiceEndpoint.new()
     end
@@ -714,7 +713,7 @@ module OpenID
     end
   end
 
-  class TestFromOPEndpointURL < Test::Unit::TestCase
+  class TestFromOPEndpointURL < Minitest::Test
     def setup
       @op_endpoint_url = 'http://example.com/op/endpoint'
       @endpoint = OpenIDServiceEndpoint.from_op_endpoint_url(@op_endpoint_url)
@@ -742,7 +741,7 @@ module OpenID
     end
   end
 
-  class TestDiscoverFunction < Test::Unit::TestCase
+  class TestDiscoverFunction < Minitest::Test
     def test_discover_function
       # XXX these were all different tests in python, but they're
       # combined here so I only have to use with_method_overridden
@@ -768,7 +767,7 @@ module OpenID
     end
   end
 
-  class TestEndpointSupportsType < Test::Unit::TestCase
+  class TestEndpointSupportsType < Minitest::Test
     def setup
       @endpoint = OpenIDServiceEndpoint.new()
     end
@@ -831,7 +830,7 @@ module OpenID
     end
   end
 
-  class TestEndpointDisplayIdentifier < Test::Unit::TestCase
+  class TestEndpointDisplayIdentifier < Minitest::Test
     def test_strip_fragment
       @endpoint = OpenIDServiceEndpoint.new()
       @endpoint.claimed_id = 'http://recycled.invalid/#123'
@@ -840,9 +839,9 @@ module OpenID
   end
 
 
-  class TestNormalizeURL < Test::Unit::TestCase
+  class TestNormalizeURL < Minitest::Test
     def test_no_host
-      assert_raise(DiscoveryFailure) {
+      assert_raises(DiscoveryFailure) {
         OpenID::normalize_url('http:///too-many.invalid/slashes')
       }
     end

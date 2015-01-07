@@ -1,15 +1,14 @@
-require "test/unit"
+require "minitest/autorun"
 require "testutil"
 require "openid/yadis/parsehtml"
 
 module OpenID
-  class ParseHTMLTestCase < Test::Unit::TestCase
+  class ParseHTMLTestCase < Minitest::Test
     include OpenID::TestDataMixin
 
     def test_parsehtml
       reserved_values = ['None', 'EOF']
       chunks = read_data_file('test1-parsehtml.txt', false).split("\f\n")
-      test_num = 1
 
       chunks.each{|c|
         expected, html = c.split("\n", 2)
@@ -28,7 +27,7 @@ module OpenID
   end
 
   # the HTML tokenizer test
-  class TC_TestHTMLTokenizer < Test::Unit::TestCase
+  class TC_TestHTMLTokenizer < Minitest::Test
     def test_bad_link
       toke = HTMLTokenizer.new("<p><a href=http://bad.com/link>foo</a></p>")
       assert("http://bad.com/link" == toke.getTag("a").attr_hash['href'])

@@ -136,6 +136,24 @@ module OpenID
       end
     end
 
+    def to_session_value
+      Hash[*(instance_variables.map{|name| [name, instance_variable_get(name)] }.flatten(1))]
+    end
+
+    def ==(other)
+      to_session_value == other.to_session_value
+    end
+
+    def self.from_session_value(value)
+      return value unless value.is_a?(Hash)
+
+      self.new.tap do |endpoint|
+        value.each do |name, val|
+          endpoint.instance_variable_set(name, val)
+        end
+      end
+    end
+
     def self.from_basic_service_endpoint(endpoint)
       # Create a new instance of this class from the endpoint object
       # passed in.
@@ -489,7 +507,7 @@ module OpenID
 
   def self.discover(identifier)
     if Yadis::XRI::identifier_scheme(identifier) == :xri
-      normalized_identifier, services = discover_xri(identifier)
+      discover_xri(identifier)
     else
       return discover_uri(identifier)
     end

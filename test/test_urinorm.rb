@@ -1,8 +1,8 @@
-require "test/unit"
+require "minitest/autorun"
 require "testutil"
 require "openid/urinorm"
 
-class URINormTestCase < Test::Unit::TestCase
+class URINormTestCase < Minitest::Test
   include OpenID::TestDataMixin
 
   def test_normalize
@@ -13,7 +13,7 @@ class URINormTestCase < Test::Unit::TestCase
       case_name = lines.shift.strip
       actual = lines.shift.strip
       expected = lines.shift.strip
-      _newline = lines.shift
+      lines.shift #=> newline
 
       if expected == 'fail'
         begin

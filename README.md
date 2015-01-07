@@ -33,8 +33,7 @@ Check the installation:
     irb> gem 'ruby-openid'
     => true
 
-The library is known to work with Ruby 1.8.4 on Unix, Max OSX and
-Win32. Examples have been tested with Rails 1 to 3.
+The library is known to work with Ruby 1.9.2 and above on Unix, Max OS X and Win32.
 
 ## Getting Started
 

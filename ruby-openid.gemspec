@@ -23,4 +23,6 @@ Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = ['README.md', 'INSTALL.md', 'LICENSE', 'UPGRADE.md']
   s.rdoc_options << '--main' << 'README.md'
+
+  s.add_development_dependency 'minitest', '>= 5'
 end

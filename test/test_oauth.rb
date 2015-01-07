@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'openid/extensions/oauth'
 require 'openid/message'
 require 'openid/server'
@@ -7,7 +7,7 @@ require 'openid/consumer/discovery'
 
 module OpenID
   module OAuthTest
-    class OAuthRequestTestCase < Test::Unit::TestCase
+    class OAuthRequestTestCase < Minitest::Test
       def setup
         @req = OAuth::Request.new
       end
@@ -92,7 +92,7 @@ module OpenID
 
     end
 
-    class OAuthResponseTestCase < Test::Unit::TestCase
+    class OAuthResponseTestCase < Minitest::Test
       def setup
         @req = OAuth::Response.new
       end

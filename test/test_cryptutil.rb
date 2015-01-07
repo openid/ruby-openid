@@ -1,9 +1,9 @@
 # coding: ASCII-8BIT
-require "test/unit"
+require "minitest/autorun"
 require "openid/cryptutil"
 require "pathname"
 
-class CryptUtilTestCase < Test::Unit::TestCase
+class CryptUtilTestCase < Minitest::Test
   BIG = 2 ** 256
 
   def test_rand
@@ -16,7 +16,7 @@ class CryptUtilTestCase < Test::Unit::TestCase
     b = OpenID::CryptUtil.rand(BIG)
     assert(a.is_a?(Bignum))
     assert(b.is_a?(Bignum))
-    assert_not_equal(a, b)
+    refute_equal(a, b)
   end
 
   def test_rand_doesnt_depend_on_srand
@@ -24,7 +24,7 @@ class CryptUtilTestCase < Test::Unit::TestCase
     a = OpenID::CryptUtil.rand(BIG)
     Kernel.srand(1)
     b = OpenID::CryptUtil.rand(BIG)
-    assert_not_equal(a, b)
+    refute_equal(a, b)
   end
 
   def test_random_binary_convert
@@ -89,7 +89,7 @@ class CryptUtilTestCase < Test::Unit::TestCase
     assert_equal(42, s1.length)
     s2 = OpenID::CryptUtil.random_string(42)
     assert_equal(42, s2.length)
-    assert_not_equal(s1, s2)
+    refute_equal(s1, s2)
   end
 
   def test_randomstring_population

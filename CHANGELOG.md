@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.6.0
+
+* More safely build filenames - 1c4a90630b183e7572b8ab5f2e3a3e0c0fecd2c7
+  See https://github.com/openid/ruby-openid/pull/80
+* The session serializer of Rails4.1 is json - b44a1eb511dec3be25a07930121bc80cacec0f1c
+* Handle boolean value to fix signature issue - d65076269b77754da7db6e4b189edeeb9201600d
+  See https://github.com/openid/ruby-openid/pull/76
+
+## 2.5.0
+
+* Revert json serialization - 8dc60e553369df2300ebb4b83a29618aff643c2c
+  See https://github.com/openid/ruby-openid/pull/73
+
+## 2.4.0
+
+* Allow expecting a parameter to be nil during return_to verification - 708e992ab3e6c26d478283fc11faa6a0a74bfec0
+* Serialize to objects that can be stored as json - db1d8f7b171a333dec4e861fe0fa53ac1d98b188
+* Fixed missing XRDS HTTP header in sample provider - dc15fa07fd59fdcf46d659cce34c6ef7a6768fde
+
+## 2.3.0
+
+* Deprecated Ruby 1.8 support - 0694bebc83de0313cfef73a5d0ffd9a293ae71a0
+* Fixed encoding errors in test suite - 7ac8e3978f9c733bd5ee8d6b742b515b5427ded2
+* Be aware when using Hash or Array as default value for unknown Hash keys - #58
+* Stop overwriting String#starts_with? and String#ends_with? if defined - #55
+* Ignore Associations For OpenID2 (Google's Security Bug Fix) - #53
+* Change "oauth" to "ui" in variable name in the UI extension - #52
+* Eliminating runtime warnings - #50 #56
+* Upgrade example Rails provider/consumer app to Rails 3 - #49
+
 ## 2.2.3
 
 * Fixed 'invalid byte sequence in UTF-8' error in parse_link_attrs - 0f46921a97677b83b106366c805063105c5e9f20
