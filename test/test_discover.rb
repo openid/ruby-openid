@@ -746,13 +746,9 @@ module OpenID
       # XXX these were all different tests in python, but they're
       # combined here so I only have to use with_method_overridden
       # once.
-      discoverXRI = Proc.new { |identifier|
-        return 'XRI'
-      }
+      discoverXRI = Proc.new { |identifier| 'XRI' }
 
-      discoverURI = Proc.new { |identifier|
-        return 'URI'
-      }
+      discoverURI = Proc.new { |identifier| 'URI' }
 
       OpenID.extend(OverrideMethodMixin)
 
