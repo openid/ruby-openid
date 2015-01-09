@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require 'openid/consumer/discovery_manager'
+require 'openid/consumer'
 require 'testutil'
 
 module OpenID

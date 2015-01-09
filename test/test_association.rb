@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "openid/association"
+require "openid/protocolerror"
 
 module OpenID
   class AssociationTestCase < Minitest::Test
