@@ -178,7 +178,7 @@ module OpenID
         end
 
         begin
-          parsed = URI::parse(url)
+          parsed = URI::DEFAULT_PARSER.parse(url)
         rescue URI::InvalidURIError
           return nil
         end
