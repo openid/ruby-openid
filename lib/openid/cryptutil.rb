@@ -37,7 +37,9 @@ module OpenID
     end
 
     def CryptUtil.hmac_sha1(key, text)
-      if Digest.const_defined? :HMAC, false
+      if defined?(OpenSSL) && OpenSSL.const_defined?(:HMAC) && OpenSSL::HMAC.respond_to?(:digest)
+        OpenSSL::HMAC.digest("sha1", key, text)
+      elsif Digest.const_defined? :HMAC, false
         Digest::HMAC.new(key,Digest::SHA1).update(text).digest
       else
         return HMAC::SHA1.digest(key, text)
@@ -49,7 +51,9 @@ module OpenID
     end
 
     def CryptUtil.hmac_sha256(key, text)
-      if Digest.const_defined? :HMAC, false
+      if defined?(OpenSSL) && OpenSSL.const_defined?(:HMAC) && OpenSSL::HMAC.respond_to?(:digest)
+        OpenSSL::HMAC.digest("sha256", key, text)
+      elsif Digest.const_defined? :HMAC, false
         Digest::HMAC.new(key,Digest::SHA256).update(text).digest
       else
         return HMAC::SHA256.digest(key, text)
