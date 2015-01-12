@@ -174,7 +174,7 @@ module OpenID
         begin
           url = URINorm.urinorm(url)
         rescue URI::InvalidURIError
-          nil
+          return nil
         end
 
         begin
@@ -210,7 +210,7 @@ module OpenID
         return nil if parts.nil?
 
         proto, host, port, path = parts
-        return nil if host[0] == '.'
+        return nil if host[0] == '.' || host.include?('*')
 
         # check for URI fragment
         if path and !path.index('#').nil?

@@ -12,7 +12,7 @@ class TrustRootTest < Minitest::Test
       assert tr.sane?, [case_, desc].join(' ')
       assert OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc].join(' ')
     elsif sanity == 'insane'
-      assert !tr.sane?, [case_, desc].join(' ')
+      assert tr.nil? || !tr.sane?, [case_, desc].join(' ')
       assert !OpenID::TrustRoot::TrustRoot.check_sanity(case_), [case_, desc].join(' ')
     else
       assert tr.nil?, case_
