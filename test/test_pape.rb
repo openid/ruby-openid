@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'openid/extensions/pape'
 require 'openid/message'
 require 'openid/server'
-require 'openid/consumer/responses'
+require 'openid/consumer'
 
 module OpenID
   module PAPETest
