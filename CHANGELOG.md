@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.7.0
+
+* Use RFC 2396 compatible URI parser for trustroot - 7c84ec9ced3ccbdad575e02dbfa81e53b52f909e
+  See https://github.com/openid/ruby-openid/pull/85
+* Use HMAC from OpenSSL rather than Digest - ce2e30d7ff3308f17ef7d8c19d6f4752f76c9c40
+  See https://github.com/openid/ruby-openid/pull/84
+* Check if OpenSSL is loaded - 751e55820d958ee781f5abb466a576d83ddde6fd
+
 ## 2.6.0
 
 * More safely build filenames - 1c4a90630b183e7572b8ab5f2e3a3e0c0fecd2c7
