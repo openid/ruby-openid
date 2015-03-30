@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'openid/store/interface'
 require 'openid/store/filesystem'
 require 'openid/store/memcache'
+require 'openid/store/redis'
 require 'openid/store/memory'
 require 'openid/util'
 require 'openid/store/nonce'
@@ -252,6 +253,25 @@ module OpenID
 
         def test_assoc_cleanup
         end
+      end
+    end
+
+    class RedisStoreTestCase < Minitest::Test
+      include StoreTestCase
+      def setup
+        require "redis"
+
+        ::Redis.current = ::Redis.new(url: "redis://127.0.0.1:11001/1")
+
+        ::Redis.current.flushdb
+
+        @store = OpenID::Store::Redis.new
+      end
+
+      def test_nonce_cleanup
+      end
+
+      def test_assoc_cleanup
       end
     end
 
