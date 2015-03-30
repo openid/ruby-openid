@@ -261,7 +261,7 @@ module OpenID
       def setup
         require "redis"
 
-        ::Redis.current = ::Redis.new(url: "redis://127.0.0.1:11001/1")
+        ::Redis.current = ::Redis.new(url: ENV["REDIS_URL"])
 
         ::Redis.current.flushdb
 
