@@ -1,5 +1,7 @@
 # Ruby OpenID
 
+[![Join the chat at https://gitter.im/openid/ruby-openid](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openid/ruby-openid?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A Ruby library for verifying and serving OpenID identities.
 
 [![Build Status](https://secure.travis-ci.org/openid/ruby-openid.png)](http://travis-ci.org/openid/ruby-openid)
