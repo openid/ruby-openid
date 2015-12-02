@@ -28,6 +28,28 @@ module OpenID
       def empty?
         @services.empty?
       end
+
+      def session_encode
+        {
+          "starting_url" => @starting_url,
+          "yadis_url" => @yadis_url,
+          "services" => @services,
+          "current" => @current
+        }
+      end
+
+      def self.session_decode(value)
+        return value unless value.is_a?(Hash)
+
+        services = new(
+          value["starting_url"],
+          value["yadis_url"],
+          value["services"].collect { |service| OpenIDServiceEndpoint.session_decode(service) }
+        )
+        services.instance_variable_set(:@current, OpenIDServiceEndpoint.session_decode(value["current"]))
+
+        services
+      end
     end
 
     # Manages calling discovery and tracking which endpoints have
@@ -35,8 +57,7 @@ module OpenID
     class DiscoveryManager
       def initialize(session, url, session_key_suffix=nil)
         @url = url
-
-        @session = session
+        @session = OpenID::SessionProxy.new(session, DiscoveredServices)
         @session_key_suffix = session_key_suffix || 'auth'
       end
 

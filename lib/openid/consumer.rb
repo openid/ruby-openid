@@ -7,6 +7,7 @@ require "openid/consumer/discovery"
 require "openid/message"
 require "openid/yadis/discovery"
 require "openid/store/nonce"
+require "openid/session_proxy"
 
 module OpenID
   # OpenID support for Relying Parties (aka Consumers).
@@ -190,6 +191,7 @@ module OpenID
     # store: an object that implements the interface in Store.
     def initialize(session, store)
       @session = session
+      @endpoint_session_proxy = SessionProxy.new(@session, OpenIDServiceEndpoint)
       @store = store
       @session_key_prefix = 'OpenID::Consumer::'
     end
@@ -296,28 +298,20 @@ module OpenID
 
     protected
 
-    def session_get(name)
-      @session[session_key(name)]
-    end
-
-    def session_set(name, val)
-      @session[session_key(name)] = val
-    end
-
     def session_key(suffix)
       @session_key_prefix + suffix
     end
 
     def last_requested_endpoint
-      session_get('last_requested_endpoint')
+      @endpoint_session_proxy[session_key('last_requested_endpoint')]
     end
 
     def last_requested_endpoint=(endpoint)
-      session_set('last_requested_endpoint', endpoint)
+      @endpoint_session_proxy[session_key('last_requested_endpoint')] = endpoint
     end
 
     def cleanup_last_requested_endpoint
-      @session[session_key('last_requested_endpoint')] = nil
+      @endpoint_session_proxy[session_key('last_requested_endpoint')] = nil
     end
 
     def discovery_manager(openid_identifier)

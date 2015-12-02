@@ -12,6 +12,7 @@ require 'openid/yadis/services'
 require 'openid/yadis/filters'
 require 'openid/consumer/html_parse'
 require 'openid/yadis/xrires'
+require 'openid/session_proxy'
 
 module OpenID
 
@@ -55,10 +56,32 @@ module OpenID
       @display_identifier = nil
     end
 
+    def session_encode
+      {
+        "claimed_id" => @claimed_id,
+        "server_url"=> @server_url,
+        "type_uris" => @type_uris,
+        "local_id" => @local_id,
+        "canonical_id" => @canonical_id,
+        "used_yadis" => @used_yadis,
+        "display_identifier" => @display_identifier
+      }
+    end
+
+    def self.session_decode(value)
+      return value unless value.is_a?(Hash)
+
+      endpoint = new
+      value.each do |k, v|
+        endpoint.instance_variable_set("@#{k}".to_sym, v)
+      end
+      endpoint
+    end
+
     def display_identifier
       return @display_identifier if @display_identifier
 
-      return @claimed_id if @claimed_id.nil? 
+      return @claimed_id if @claimed_id.nil?
 
       begin
         parsed_identifier = URI.parse(@claimed_id)
@@ -376,7 +399,7 @@ module OpenID
     #
     # @param uri: normalized identity URL
     # @type uri: str
-    # 
+    #
     # @return: (claimed_id, services)
     # @rtype: (str, list(OpenIDServiceEndpoint))
     #
