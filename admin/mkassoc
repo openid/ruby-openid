@@ -1,11 +1,16 @@
 #!/usr/bin/env ruby
 
 require "openid/consumer/associationmanager"
-require "openid/store/memstore"
+require "openid/store/memory"
 
-store = OpenID::MemoryStore.new
+store = OpenID::Store::Memory.new
 ARGV.each do |server_url|
-  mgr = OpenID::Consumer::AssociationManager.new(store, URI.parse(server_url))
+  unless URI::regexp =~ server_url
+    puts "`#{server_url}` will be skipped for invalid URI format."
+    next
+  end
+
+  mgr = OpenID::Consumer::AssociationManager.new(store, server_url)
   puts '=' * 50
   puts "Server: #{server_url}"
   puts mgr.get_association.serialize
