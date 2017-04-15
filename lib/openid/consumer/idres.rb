@@ -247,6 +247,17 @@ module OpenID
           @message.get_aliased_arg(k, NO_DEFAULT)
         }
 
+        message_params = @message.instance_variable_get(:@args)
+
+        message_params.each do |key, value|
+          if (key[1] == "response_nonce" || key[1] == "sig") && value
+            value.gsub!(" ", "+")
+          end
+        end
+
+        @message.instance_variable_set(:@args, message_params)
+
+
         ca_message = @message.copy
         ca_message.set_arg(OPENID_NS, 'mode', 'check_authentication')
 

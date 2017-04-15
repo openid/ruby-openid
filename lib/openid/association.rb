@@ -123,6 +123,8 @@ module OpenID
       message_sig = message.get_arg(OPENID_NS, 'sig')
       if message_sig.nil?
         raise ProtocolError, "#{message} has no sig."
+      else
+        message_sig.gsub!(" ", "+")
       end
       calculated_sig = get_message_signature(message)
       return CryptUtil.const_eq(calculated_sig, message_sig)

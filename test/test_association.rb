@@ -201,6 +201,26 @@ module OpenID
 
       assert(assoc.check_message_signature(m))
     end
+
+    def test_message_sig_has_no_spaces
+      m = Message.new(OPENID2_NS)
+      m.update_args(OPENID2_NS, {'mode' => 'id_res',
+                      'identifier' => '=example',
+                      'signed' => 'mode',
+                      'sig' => "12345 1234",
+                    })
+      assoc = Association.from_expires_in(3600, '{sha1}', 'very_secret',
+                                          "HMAC-SHA1")
+
+      # We don't care about calculated sig, we're regressing message_sig
+      class << assoc
+        def get_message_signature(message)
+          "12345+1234"
+        end
+      end
+
+      assert(assoc.check_message_signature(m))
+    end
   end
 
   class AssociationNegotiatorTestCase < Minitest::Test
