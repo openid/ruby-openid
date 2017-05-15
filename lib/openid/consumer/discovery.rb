@@ -450,7 +450,7 @@ module OpenID
       services.each { |service_element|
         endpoints += flt.get_service_endpoints(iname, service_element)
       }
-    rescue Yadis::XRDSError => why
+    rescue Yadis::XRDSError, Yadis::XRI::XRIHTTPError => why
       Util.log('xrds error on ' + iname + ': ' + why.to_s)
     end
 
