@@ -9,3 +9,6 @@ rvm:
   - jruby-head
   - jruby-19mode
   - rbx
+
+before_install:
+  - "gem install bundler"
