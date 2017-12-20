@@ -117,7 +117,7 @@ module OpenID
     USER_AGENT = "ruby-openid/#{OpenID::VERSION} (#{RUBY_PLATFORM})"
 
     REDIRECT_LIMIT = 5
-    TIMEOUT = 60
+    TIMEOUT = ENV['RUBY_OPENID_FETCHER_TIMEOUT'] || 60
 
     attr_accessor :ca_file
     attr_accessor :timeout
