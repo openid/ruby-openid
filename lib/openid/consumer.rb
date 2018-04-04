@@ -139,7 +139,7 @@ module OpenID
   #
   # Add an OpenID login field somewhere on your site.  When an OpenID
   # is entered in that field and the form is submitted, it should make
-  # a request to the your site which includes that OpenID URL.
+  # a request to the site that includes that OpenID URL.
   #
   # First, the application should instantiate a Consumer with a
   # session for per-user state and store for shared state using the
