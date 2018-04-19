@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.8.0
+
+* Fix `admin/mkassoc` script.
+  See https://github.com/openid/ruby-openid/pull/103
+* Allow spcifying timeout for `OpenID::StandardFetcher` in environment variables.
+  See https://github.com/openid/ruby-openid/pull/109
+* Fixed some documentation.
+  See https://github.com/openid/ruby-openid/pull/111
+* Fixed example server.
+  See https://github.com/openid/ruby-openid/pull/91
+* Fixed tests.
+  See https://github.com/openid/ruby-openid/pull/86
+* Misc. changes to the CI setup.
+  See
+  - https://github.com/openid/ruby-openid/pull/110
+  - https://github.com/openid/ruby-openid/pull/108
+  - https://github.com/openid/ruby-openid/pull/107
+
 ## 2.7.0
 
 * Use RFC 2396 compatible URI parser for trustroot - 7c84ec9ced3ccbdad575e02dbfa81e53b52f909e
