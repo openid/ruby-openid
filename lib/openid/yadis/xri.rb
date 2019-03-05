@@ -1,4 +1,3 @@
-require 'openid/yadis/xrds'
 require 'openid/fetchers'
 
 module OpenID

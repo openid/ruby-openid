@@ -1,6 +1,6 @@
 require 'net/http'
-require 'openid'
 require 'openid/util'
+require 'openid/version'
 
 begin
   require 'net/https'
