@@ -304,7 +304,7 @@ module OpenID
     # server error or is otherwise undecipherable.
     def test_bad_response
       assert_log_matches('Server error when requesting an association') {
-        assert_equal(call_negotiate([mk_message({})]), nil)
+        assert_nil(call_negotiate([mk_message({})]))
       }
     end
 
@@ -320,7 +320,7 @@ module OpenID
                          "Server #{@server_url} responded with unsupported "\
                          "association session but did not supply a fallback."
                          ) {
-        assert_equal(call_negotiate([msg]), nil)
+        assert_nil(call_negotiate([msg]))
       }
 
     end
@@ -337,7 +337,7 @@ module OpenID
                          "Server #{@server_url} responded with unsupported "\
                          "association session but did not supply a fallback."
                          ) {
-        assert_equal(call_negotiate([msg]), nil)
+        assert_nil(call_negotiate([msg]))
       }
     end
 
@@ -357,7 +357,7 @@ module OpenID
 
       assert_log_matches('Unsupported association type',
                          'Server sent unsupported session/association type:') {
-        assert_equal(call_negotiate([msg], negotiator), nil)
+        assert_nil(call_negotiate([msg], negotiator))
       }
     end
 
@@ -388,7 +388,7 @@ module OpenID
 
       assert_log_matches('Unsupported association type',
                          "Server #{@server_url} refused") {
-        assert_equal(call_negotiate([msg, msg]), nil)
+        assert_nil(call_negotiate([msg, msg]))
       }
     end
 
@@ -424,7 +424,7 @@ module OpenID
     def test_bad_response
       assert_log_matches('Server error when requesting an association') {
         response = call_negotiate([mk_message({})])
-        assert_equal(nil, response)
+        assert_nil(response)
       }
     end
 
@@ -436,7 +436,7 @@ module OpenID
 
       assert_log_matches('Server error when requesting an association') {
         response = call_negotiate([msg])
-        assert_equal(nil, response)
+        assert_nil(response)
       }
     end
 
@@ -448,7 +448,7 @@ module OpenID
 
       assert_log_matches('Server error when requesting an association') {
         response = call_negotiate([msg])
-        assert_equal(nil, response)
+        assert_nil(response)
       }
     end
 
@@ -466,7 +466,7 @@ module OpenID
 
       assert_log_matches('Server error when requesting an association') {
         response = call_negotiate([msg])
-        assert_equal(nil, response)
+        assert_nil(response)
       }
     end
 
@@ -482,7 +482,7 @@ module OpenID
 
       assert_log_matches('Server error when requesting an association') {
         response = call_negotiate([msg, assoc])
-        assert_equal(nil, response)
+        assert_nil(response)
       }
     end
 
@@ -818,13 +818,13 @@ module OpenID
 
     def test_not_in_store_no_response
       set_negotiate_response(nil)
-      assert_equal(nil, @assoc_manager.get_association)
+      assert_nil(@assoc_manager.get_association)
     end
 
     def test_not_in_store_negotiate_assoc
       # Not stored beforehand:
       stored_assoc = @store.get_association(@server_url, @assoc.handle)
-      assert_equal(nil, stored_assoc)
+      assert_nil(stored_assoc)
 
       # Returned from associate call:
       set_negotiate_response(@assoc)
@@ -898,7 +898,7 @@ module OpenID
     def test_missing_fields
       @message.del_arg(OPENID_NS, 'assoc_type')
       assert_log_matches('Missing required par') {
-        assert_equal(nil, make_request)
+        assert_nil(make_request)
       }
     end
 
@@ -907,7 +907,7 @@ module OpenID
     def test_protocol_error
       @message.set_arg(OPENID_NS, 'expires_in', 'goats')
       assert_log_matches('Protocol error processing') {
-        assert_equal(nil, make_request)
+        assert_nil(make_request)
       }
     end
   end

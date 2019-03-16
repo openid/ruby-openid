@@ -201,7 +201,7 @@ module OpenID
       def test_no_content_type
         with_fetcher(NoContentTypeFetcher.new) do
           result = Yadis.discover("http://bogus")
-          assert_equal(nil, result.content_type)
+          assert_nil(result.content_type)
         end
       end
 

@@ -47,7 +47,7 @@ module OpenID
         assert_equal(type_uri, ainfo.type_uri)
         assert_equal(1, ainfo.count)
         assert_equal(false, ainfo.required)
-        assert_equal(nil, ainfo.ns_alias)
+        assert_nil(ainfo.ns_alias)
       end
     end
 
@@ -234,7 +234,7 @@ module OpenID
 
       def test_construct
         assert_equal({}, @msg.requested_attributes)
-        assert_equal(nil, @msg.update_url)
+        assert_nil(@msg.update_url)
 
         msg = FetchRequest.new('hailstorm')
         assert_equal({}, msg.requested_attributes)
@@ -494,7 +494,7 @@ module OpenID
       end
 
       def test_construct
-        assert_equal(nil, @msg.update_url)
+        assert_nil(@msg.update_url)
         assert_equal({}, @msg.data)
       end
 
@@ -541,7 +541,7 @@ module OpenID
       end
 
       def test_get_extension_args_single_value_response
-        # Single values do NOT have a count, and 
+        # Single values do NOT have a count, and
         # do not use the array extension
         eargs = {
           'mode' => 'fetch_response',
@@ -585,7 +585,7 @@ module OpenID
       end
 
       def test_get_single_none
-        assert_equal(nil, @msg.get_single(@type_a))
+        assert_nil(@msg.get_single(@type_a))
       end
 
       def test_get_single_extra

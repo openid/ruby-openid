@@ -55,7 +55,7 @@ module OpenID
           # Not all args in this NS are signed, so expect nil when
           # asking for them.
           utargs = resp.extension_response('urn:unittest', true)
-          assert_equal(nil, utargs)
+          assert_nil(utargs)
         end
       end
     end

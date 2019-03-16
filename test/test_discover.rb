@@ -724,8 +724,8 @@ module OpenID
     end
 
     def test_noIdentifiers
-      assert_equal(@endpoint.get_local_id, nil)
-      assert_equal(@endpoint.claimed_id, nil)
+      assert_nil(@endpoint.get_local_id)
+      assert_nil(@endpoint.claimed_id)
     end
 
     def test_compatibility
@@ -733,7 +733,7 @@ module OpenID
     end
 
     def test_canonical_id
-      assert_equal(@endpoint.canonical_id, nil)
+      assert_nil(@endpoint.canonical_id)
     end
 
     def test_serverURL
