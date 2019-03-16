@@ -44,4 +44,4 @@ Go into the test directory and execute the `runtests.rb` script.
 * Run `consumer.rb` in the examples directory.
 * Get started writing your own consumer using OpenID::Consumer
 * Write your own server with `OpenID::Server`
-* Use the `OpenIDLoginGenerator`! Read `example/README` for more info.
+* Use the `OpenIDLoginGenerator`! Read `example/README.md` for more info.
