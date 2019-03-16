@@ -2,7 +2,7 @@
 
 A Ruby library for verifying and serving OpenID identities.
 
-[![Build Status](https://secure.travis-ci.org/openid/ruby-openid.png)](http://travis-ci.org/openid/ruby-openid)
+[![Build Status](https://secure.travis-ci.org/openid/ruby-openid.svg)](http://travis-ci.org/openid/ruby-openid)
 
 ## Features
 
