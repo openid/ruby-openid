@@ -539,9 +539,8 @@ module OpenID
       end
 
       def self.from_success_response(success_response)
-        resp = nil
         ax_args = success_response.message.get_args(NS_URI)
-        resp = ax_args.key?('error') ? new(false, ax_args['error']) : new
+        ax_args.key?('error') ? new(false, ax_args['error']) : new
       end
 
       def succeeded?
