@@ -55,8 +55,8 @@ the examples.
 
 ## Homepage
 
-  * [GitHub](http://github.com/openid/ruby-openid)
-  * [Website](http://openid.net/)
+  * GitHub repository: [openid/ruby-openid](http://github.com/openid/ruby-openid)
+  * Homepage: [OpenID.net](http://openid.net/)
 
 ## Community
 
@@ -74,7 +74,7 @@ hesitate to send it to us: [How to contribute](http://openidenabled.com/contribu
 
 Copyright 2006-2012, JanRain, Inc.
 
-Contact openid@janrain.com or visit the [OpenID channel on pibb.com](http://pibb.com/go/openid).
+Contact openid@janrain.com.
 
 ## License
 
