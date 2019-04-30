@@ -4,7 +4,7 @@
 
 * Fix `admin/mkassoc` script.
   See https://github.com/openid/ruby-openid/pull/103
-* Allow spcifying timeout for `OpenID::StandardFetcher` in environment variables.
+* Allow specifying timeout for `OpenID::StandardFetcher` in environment variables.
   See https://github.com/openid/ruby-openid/pull/109
 * Fixed some documentation.
   See https://github.com/openid/ruby-openid/pull/111
