@@ -230,7 +230,7 @@ module OpenID
       # create a safe filename from a url
       def filename_escape(s)
         s = '' if s.nil?
-        filename_chunks = s.each_char.flat_map {|c|
+        s.each_char.flat_map {|c|
           @@FILENAME_ALLOWED.include?(c) ? c : c.bytes.map {|b|
             "_%02X" % b
           }

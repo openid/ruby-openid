@@ -21,8 +21,8 @@ module OpenID
       assert_equal(@disco_services.next, @services[1])
       assert_equal(@disco_services.current, @services[1])
 
-      assert_equal(@disco_services.next, nil)
-      assert_equal(@disco_services.current, nil)
+      assert_nil(@disco_services.next)
+      assert_nil(@disco_services.current)
     end
 
     def test_for_url
@@ -84,7 +84,7 @@ module OpenID
     end
 
     def test_get_next_service
-      assert_equal(@session[@key], nil)
+      assert_nil(@session[@key])
 
       next_service = @manager.get_next_service {
         [@yadis_url, ["one", "two", "three"]]
@@ -123,24 +123,24 @@ module OpenID
         ["unused", []]
       }
 
-      assert_equal(result, nil)
+      assert_nil(result)
     end
 
     def test_cleanup
       # With no preexisting manager, cleanup() returns nil.
-      assert_equal(@manager.cleanup, nil)
+      assert_nil(@manager.cleanup)
 
       # With a manager, it returns the manager's current service.
       disco = Consumer::DiscoveredServices.new(@url, @yadis_url, ["one", "two"])
 
       @session[@key] = disco
-      assert_equal(@manager.cleanup, nil)
-      assert_equal(@session[@key], nil)
+      assert_nil(@manager.cleanup)
+      assert_nil(@session[@key])
 
       disco.next
       @session[@key] = disco
       assert_equal(@manager.cleanup, "one")
-      assert_equal(@session[@key], nil)
+      assert_nil(@session[@key])
 
       # The force parameter should be passed through to get_manager
       # and destroy_manager.
@@ -178,7 +178,7 @@ module OpenID
       disco2 = Consumer::DiscoveredServices.new("http://not.this.url.com/",
                                                 "http://other.yadis.url/", ["one"])
       @session[@key] = disco2
-      assert_equal(@manager.get_manager, nil)
+      assert_nil(@manager.get_manager)
       assert_equal(@manager.get_manager(true), disco2)
     end
 

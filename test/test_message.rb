@@ -10,12 +10,14 @@ module OpenID
     # Tests a standard set of behaviors of Message.get_arg with
     # variations on handling defaults.
     def get_arg_tests(ns, key, expected=nil)
-      assert_equal(expected, @m.get_arg(ns, key))
-
       if expected.nil?
+        assert_nil(@m.get_arg(ns, key))
+
         assert_equal(@m.get_arg(ns, key, :a_default), :a_default)
         assert_raises(Message::KeyNotFound) { @m.get_arg(ns, key, NO_DEFAULT) }
       else
+        assert_equal(expected, @m.get_arg(ns, key))
+
         assert_equal(@m.get_arg(ns, key, :a_default), expected)
         assert_equal(@m.get_arg(ns, key, NO_DEFAULT), expected)
       end
@@ -73,7 +75,7 @@ module OpenID
     end
 
     def test_get_openid
-      assert_equal(nil, @m.get_openid_namespace)
+      assert_nil(@m.get_openid_namespace)
     end
 
     def test_get_key_openid
@@ -87,15 +89,15 @@ module OpenID
     end
 
     def test_get_key_ns1
-      assert_equal(nil, @m.get_key(OPENID1_NS, 'foo'))
+      assert_nil(@m.get_key(OPENID1_NS, 'foo'))
     end
 
     def test_get_key_ns2
-      assert_equal(nil, @m.get_key(OPENID2_NS, 'foo'))
+      assert_nil(@m.get_key(OPENID2_NS, 'foo'))
     end
 
     def test_get_key_ns3
-      assert_equal(nil, @m.get_key('urn:something-special', 'foo'))
+      assert_nil(@m.get_key('urn:something-special', 'foo'))
     end
 
     def test_has_key
@@ -202,7 +204,7 @@ module OpenID
     def _test_set_arg_ns(ns)
       key = 'Camper Van Beethoven'
       value = 'David Lowery'
-      assert_equal(nil, @m.get_arg(ns, key))
+      assert_nil(@m.get_arg(ns, key))
       @m.set_arg(ns, key, value)
       assert_equal(value, @m.get_arg(ns, key))
     end
@@ -228,7 +230,7 @@ module OpenID
 
     def _test_del_arg_ns(ns)
       key = 'Fleeting Joys'
-      assert_equal(nil, @m.del_arg(ns, key))
+      assert_nil(@m.del_arg(ns, key))
     end
 
     def test_del_arg_bare
@@ -362,11 +364,11 @@ module OpenID
     end
 
     def test_get_key_ns2
-      assert_equal(nil, @m.get_key(OPENID2_NS, 'mode'))
+      assert_nil(@m.get_key(OPENID2_NS, 'mode'))
     end
 
     def test_get_key_ns3
-      assert_equal(nil, @m.get_key('urn:xxx', 'mode'))
+      assert_nil(@m.get_key('urn:xxx', 'mode'))
     end
 
     def test_has_key
@@ -461,7 +463,7 @@ module OpenID
     def _test_set_arg_ns(ns)
       key = 'awesometown'
       value = 'funny'
-      assert_equal(nil, @m.get_arg(ns,key))
+      assert_nil(@m.get_arg(ns,key))
       @m.set_arg(ns, key, value)
       assert_equal(value, @m.get_arg(ns,key))
     end
@@ -478,7 +480,7 @@ module OpenID
       @m.set_arg(ns, key, value)
       assert_equal(value, @m.get_arg(ns,key))
       @m.del_arg(ns,key)
-      assert_equal(nil, @m.get_arg(ns,key))
+      assert_nil(@m.get_arg(ns,key))
     end
 
     def test_del_arg; _test_del_arg_ns(OPENID_NS); end
@@ -702,7 +704,7 @@ module OpenID
     end
 
     def test_get_key_ns1
-      assert_equal(nil, @m.get_key(OPENID1_NS, 'mode'))
+      assert_nil(@m.get_key(OPENID1_NS, 'mode'))
     end
 
     def test_get_key_ns2
@@ -710,7 +712,7 @@ module OpenID
     end
 
     def test_get_key_ns3
-      assert_equal(nil, @m.get_key('urn:xxx', 'mode'))
+      assert_nil(@m.get_key('urn:xxx', 'mode'))
     end
 
     def test_has_key_openid
@@ -739,11 +741,11 @@ module OpenID
     end
 
     def test_get_arg_bare
-      assert_equal(nil, @m.get_arg(BARE_NS,'mode'))
+      assert_nil(@m.get_arg(BARE_NS,'mode'))
     end
 
     def test_get_arg_ns1
-      assert_equal(nil, @m.get_arg(OPENID1_NS,'mode'))
+      assert_nil(@m.get_arg(OPENID1_NS,'mode'))
     end
 
     def test_get_arg_ns2
@@ -751,7 +753,7 @@ module OpenID
     end
 
     def test_get_arg_ns3
-      assert_equal(nil, @m.get_arg('urn:bananastand','mode'))
+      assert_nil(@m.get_arg('urn:bananastand','mode'))
     end
 
     def test_get_args_openid
@@ -813,7 +815,7 @@ module OpenID
     def _test_set_arg_ns(ns)
       key = "logan's"
       value = "run"
-      assert_equal(nil, @m.get_arg(ns,key))
+      assert_nil(@m.get_arg(ns,key))
       @m.set_arg(ns, key, value)
       assert_equal(value, @m.get_arg(ns,key))
     end
@@ -851,11 +853,11 @@ module OpenID
     def _test_del_arg_ns(ns)
       key = 'no'
       value = 'socks'
-      assert_equal(nil, @m.get_arg(ns, key))
+      assert_nil(@m.get_arg(ns, key))
       @m.set_arg(ns, key, value)
       assert_equal(value, @m.get_arg(ns, key))
       @m.del_arg(ns, key)
-      assert_equal(nil, @m.get_arg(ns, key))
+      assert_nil(@m.get_arg(ns, key))
     end
 
     def test_del_arg_openid; _test_del_arg_ns(OPENID_NS); end

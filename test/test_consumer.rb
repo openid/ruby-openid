@@ -16,7 +16,7 @@ module OpenID
           assert_equal(:endpoint, ep)
           consumer.send(:cleanup_last_requested_endpoint)
           ep = consumer.send(:last_requested_endpoint)
-          assert_equal(nil, ep)
+          assert_nil(ep)
         end
       end
 

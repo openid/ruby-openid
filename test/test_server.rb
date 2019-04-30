@@ -142,7 +142,7 @@ module OpenID
     def test_no_message
       e = Server::ProtocolError.new(nil, "no message")
       assert(e.get_return_to.nil?)
-      assert_equal(e.which_encoding, nil)
+      assert_nil(e.which_encoding)
     end
 
     def test_which_encoding_no_message
@@ -167,7 +167,7 @@ module OpenID
     def test_none
       args = {}
       r = @decode.call(args)
-      assert_equal(r, nil)
+      assert_nil(r)
     end
 
     def test_irrelevant
@@ -350,7 +350,7 @@ module OpenID
       assert(r.is_a?(Server::CheckIDRequest))
       assert_equal(r.mode, "checkid_setup")
       assert_equal(r.immediate, false)
-      assert_equal(r.identity, nil)
+      assert_nil(r.identity)
       assert_equal(r.trust_root, @tr_url)
       assert_equal(r.return_to, @rt_url)
     end
@@ -1896,9 +1896,9 @@ module OpenID
       response = @request.answer_unsupported(message)
       rfg = lambda { |f| response.fields.get_arg(OPENID_NS, f) }
       assert_equal(rfg.call('error_code'), 'unsupported-type')
-      assert_equal(rfg.call('assoc_type'), nil)
+      assert_nil(rfg.call('assoc_type'))
       assert_equal(rfg.call('error'), message)
-      assert_equal(rfg.call('session_type'), nil)
+      assert_nil(rfg.call('session_type'))
     end
 
     def test_openid1_unsupported_explode
@@ -2323,8 +2323,7 @@ module OpenID
     def test_getAssocInvalid
       ah = 'no-such-handle'
       silence_logging {
-        assert_equal(
-                     @signatory.get_association(ah, false), nil)
+        assert_nil(@signatory.get_association(ah, false))
       }
       # assert(!@messages, @messages)
     end
@@ -2333,8 +2332,7 @@ module OpenID
       # getAssociation(dumb=False) cannot get a dumb assoc
       assoc_handle = makeAssoc(true)
       silence_logging {
-        assert_equal(
-                     @signatory.get_association(assoc_handle, false), nil)
+        assert_nil(@signatory.get_association(assoc_handle, false))
       }
       # @failIf(@messages, @messages)
     end
@@ -2348,8 +2346,7 @@ module OpenID
       #   MAC keys.
       assoc_handle = makeAssoc(false)
       silence_logging {
-        assert_equal(
-                     @signatory.get_association(assoc_handle, true), nil)
+        assert_nil(@signatory.get_association(assoc_handle, true))
       }
       # @failIf(@messages, @messages)
     end

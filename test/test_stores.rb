@@ -218,7 +218,7 @@ module OpenID
       include StoreTestCase
 
       def setup
-        raise "filestoretest directory exists" if File.exists?('filestoretest')
+        raise "filestoretest directory exists" if File.exist?('filestoretest')
         @store = Filesystem.new('filestoretest')
       end
 

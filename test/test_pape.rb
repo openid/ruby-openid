@@ -13,7 +13,7 @@ module OpenID
 
       def test_construct
         assert_equal([], @req.preferred_auth_policies)
-        assert_equal(nil, @req.max_auth_age)
+        assert_nil(@req.max_auth_age)
         assert_equal('pape', @req.ns_alias)
 
         req2 = PAPE::Request.new([PAPE::AUTH_MULTI_FACTOR], 1000)
@@ -53,7 +53,7 @@ module OpenID
 
       def test_parse_extension_args_empty
         @req.parse_extension_args({})
-        assert_equal(nil, @req.max_auth_age)
+        assert_nil(@req.max_auth_age)
         assert_equal([], @req.preferred_auth_policies)
       end
 
@@ -110,9 +110,9 @@ module OpenID
 
       def test_construct
         assert_equal([], @req.auth_policies)
-        assert_equal(nil, @req.auth_time)
+        assert_nil(@req.auth_time)
         assert_equal('pape', @req.ns_alias)
-        assert_equal(nil, @req.nist_auth_level)
+        assert_nil(@req.nist_auth_level)
 
         req2 = PAPE::Response.new([PAPE::AUTH_MULTI_FACTOR], "1983-11-05T12:30:24Z", 3)
         assert_equal([PAPE::AUTH_MULTI_FACTOR], req2.auth_policies)
@@ -168,7 +168,7 @@ module OpenID
 
       def test_parse_extension_args_empty
         @req.parse_extension_args({})
-        assert_equal(nil, @req.auth_time)
+        assert_nil(@req.auth_time)
         assert_equal([], @req.auth_policies)
       end
 
@@ -205,8 +205,8 @@ module OpenID
                 'nist_auth_level' => 'some'}
         @req.parse_extension_args(args)
         assert_equal(['http://foo','http://bar'], @req.auth_policies)
-        assert_equal(nil, @req.auth_time)
-        assert_equal(nil, @req.nist_auth_level)
+        assert_nil(@req.auth_time)
+        assert_nil(@req.nist_auth_level)
       end
 
 

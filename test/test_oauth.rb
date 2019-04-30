@@ -143,7 +143,6 @@ module OpenID
           'mode' => 'id_res',
           'ns' => OPENID2_NS,
           'ns.oauth' => OAuth::NS_URI,
-          'ns.oauth' => OAuth::NS_URI,
           'oauth.request_token' => 'REQUESTTOKEN',
           'oauth.scope' => "http://sample.com/some_scope"
         })

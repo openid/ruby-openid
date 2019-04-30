@@ -154,7 +154,7 @@ module OpenID
           req = Request.new
           assert_equal([], req.optional)
           assert_equal([], req.required)
-          assert_equal(nil, req.policy_url)
+          assert_nil(req.policy_url)
           assert_equal(NS_URI, req.ns_uri)
         end
 
@@ -476,4 +476,3 @@ module OpenID
     end
   end
 end
-
