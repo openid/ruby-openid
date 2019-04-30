@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
   # RDoc
-  s.has_rdoc = true
   s.extra_rdoc_files = ['README.md', 'INSTALL.md', 'LICENSE', 'UPGRADE.md']
   s.rdoc_options << '--main' << 'README.md'
 
