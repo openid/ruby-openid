@@ -72,9 +72,9 @@ module OpenID
       def id_res
         check_for_fields
         verify_return_to
-        verify_discovery_results
         check_signature
         check_nonce
+        verify_discovery_results
       end
 
       def server_url
