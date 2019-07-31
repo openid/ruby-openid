@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   files << 'NOTICE' << 'CHANGELOG.md'
   s.files = files.delete_if {|f| f.include?('_darcs') || f.include?('admin')}
   s.require_paths = ['lib']
-  s.autorequire = 'openid'
   s.executables = s.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
