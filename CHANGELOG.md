@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.9.1
+
+* Updated CHANGELOG.md
+
+## 2.9.0
+
+* Remove deprecated `autorequire` from gemspec.
+  [#123](https://github.com/openid/ruby-openid/pull/123)
+* Rescue from `Yadis::XRI::XRIHTTPError` on discovery.
+  [#106](https://github.com/openid/ruby-openid/pull/106)
+* Avoid SSRF for claimed_id request.
+  [#121](https://github.com/openid/ruby-openid/pull/121)
+* Updated documentation.
+  [#115](https://github.com/openid/ruby-openid/pull/115), [#116](https://github.com/openid/ruby-openid/pull/116), [#117](https://github.com/openid/ruby-openid/pull/117), [#118](https://github.com/openid/ruby-openid/pull/118)
+* Reduce warnings output in test runs.
+  [#119](https://github.com/openid/ruby-openid/pull/119)
+* Drop deprecated option from gemspec.
+  [#120](https://github.com/openid/ruby-openid/pull/120)
+* Remove circular require.
+  [#113](https://github.com/openid/ruby-openid/pull/113)
+* Updated Travis CI config with Ruby 2.6
+  [#114](https://github.com/openid/ruby-openid/pull/114)
+* Simplify Bundler require; remove need for extra `:require`.
+  [#112](https://github.com/openid/ruby-openid/pull/112)
+
 ## 2.8.0
 
 * Fix `admin/mkassoc` script.
