@@ -71,9 +71,9 @@ module OpenID
       # verified information.
       def id_res
         check_for_fields
-        verify_return_to
         check_signature
         check_nonce
+        verify_return_to
         verify_discovery_results
       end
 
