@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.9.2
+
+* Perform all checks before verifying endpoints.
+  [#126](https://github.com/openid/ruby-openid/pull/126)
+
 ## 2.9.1
 
 * Updated CHANGELOG.md
