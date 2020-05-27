@@ -203,6 +203,21 @@ module OpenID
 
       # Raises ProtocolError if the signature is bad
       def check_signature
+        # ----------------------------------------------------------------------
+        # The server url must be defined within the endpoint instance for the
+        # OpenID2 namespace in order for the signature check to complete
+        # successfully.
+        #
+        # This fix corrects issue #125 - Unable to complete OpenID login
+        #                                with ruby-openid 2.9.0/2.9.1
+        # ---------------------------------------------------------------------
+        set_endpoint_flag = false
+        if @endpoint.nil? && openid_namespace == OPENID2_NS
+          @endpoint = OpenIDServiceEndpoint.new
+          @endpoint.server_url = fetch('op_endpoint')
+          set_endpoint_flag = true
+        end
+
         if @store.nil?
           assoc = nil
         else
@@ -223,6 +238,7 @@ module OpenID
             raise ProtocolError, "Bad signature in response from #{server_url}"
           end
         end
+        @endpoint = nil if set_endpoint_flag  # Clear endpoint if we defined it.
       end
 
       def check_auth
