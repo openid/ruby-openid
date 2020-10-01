@@ -15,7 +15,6 @@ rvm:
   - jruby
   - jruby-head
   - jruby-19mode
-  - rubinius-3
 
 before_install:
   - "gem install bundler || gem install bundler --version '< 2'"
