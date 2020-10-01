@@ -111,7 +111,7 @@ module OpenID
     @fetcher = StandardFetcher.new(proxy_uri.host, proxy_uri.port,
                                    proxy_uri.user, proxy_uri.password)
   end
-  
+
   class StandardFetcher
 
     USER_AGENT = "ruby-openid/#{OpenID::VERSION} (#{RUBY_PLATFORM})"
@@ -211,7 +211,7 @@ module OpenID
           if body.nil?
             conn.request_get(url.request_uri, headers, &body_size_limitter)
           else
-            headers["Content-type"] ||= "application/x-www-form-urlencoded"
+            headers["Content-type"] ||= "application/x-www-form-urlencoded; charset=utf-8"
             conn.request_post(url.request_uri, body, headers, &body_size_limitter)
           end
         }
