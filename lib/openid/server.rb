@@ -1240,7 +1240,7 @@ module OpenID
       # Raises ProtocolError when the query does not seem to be a valid
       # OpenID request.
       def decode(query)
-        if query.nil? or query.length == 0
+        if query.nil? or query.empty?
           return nil
         end
 
